@@ -1090,7 +1090,14 @@ _RFC3986_BAD_PCT_RE = re.compile(r"%(?![0-9A-Fa-f]{2})")
 
 
 def _validate_general_name_dns(raw: bytes, *, allow_wildcard: bool = True) -> str:
-    """Validate RFC 5280 §4.2.1.6 / RFC 1034 / RFC 1123 `dNSName` (strict printable IA5String, no whitespace/control chars)."""
+    """Validate `dNSName` against a strict RFC 5280 §4.2.1.6 / RFC 1034 / RFC 1123 LDH syntax subset.
+
+    Supported subset: printable IA5String (1..253 chars, no whitespace/control/NUL), dot-separated
+    LDH labels (1..63 chars, `[A-Za-z0-9]` with internal `-`), optional single leftmost wildcard
+    label `*` when >= 2 labels are present, and single-label hostnames (e.g., `localhost`).
+    Compatibility limitations: underscore service labels (`_svc._tcp...`), trailing root dot
+    (`example.com.`), and non-ASCII IDNs (must be punycode A-labels `xn--...`) are rejected.
+    """
     dns = _decode_asn1_string(0x16, raw)
     if not dns or len(dns) > 253:
         raise DerParseError(f"GeneralName dNSName uzunluğu [1..253] aralığında olmalıdır (bulunan: {len(dns)}).")
@@ -1109,7 +1116,15 @@ def _validate_general_name_dns(raw: bytes, *, allow_wildcard: bool = True) -> st
 
 
 def _validate_general_name_rfc822(raw: bytes) -> str:
-    """Validate RFC 5280 §4.2.1.6 `rfc822Name` (strict IA5String mailbox, no whitespace/control chars)."""
+    """Validate `rfc822Name` against a strict unquoted dot-atom IA5String mailbox subset.
+
+    Supported subset: `local-part@domain` (3..254 printable ASCII chars, no whitespace/control/NUL),
+    unquoted dot-atom `local-part` (1..64 chars matching `[A-Za-z0-9!#$%&'*+/=?^_`{|}~.-]+` with no
+    leading/trailing/consecutive dots), single `@`, and non-wildcard LDH `domain` (1..253 chars).
+    Compatibility limitations (does NOT claim full RFC 5321/5322 compliance): valid RFC 5321/5322
+    forms using quoted-string local parts (`"a.b"@example.com`), IP/IPv6 domain-literals
+    (`user@[192.0.2.1]`), or obsolete comments/CFWS are intentionally rejected fail-closed.
+    """
     email = _decode_asn1_string(0x16, raw)
     if len(email) < 3 or len(email) > 254:
         raise DerParseError(f"GeneralName rfc822Name geçersiz uzunlukta: {len(email)}")
@@ -1131,7 +1146,17 @@ def _validate_general_name_rfc822(raw: bytes) -> str:
 
 
 def _validate_general_name_uri(raw: bytes) -> str:
-    """Validate RFC 5280 §4.2.1.6 & RFC 3986 absolute `uniformResourceIdentifier` (strict IA5String, scheme required)."""
+    """Validate `uniformResourceIdentifier` against a strict absolute-scheme IA5String lexical subset.
+
+    Supported subset: non-empty printable ASCII IA5String (no whitespace/control/NUL) restricted to
+    the RFC 3986 URI character repertoire (`A-Za-z0-9-._~:/?#[]@!$&'()*+,;=%`) with well-formed
+    `%XX` hex escapes and a required RFC 3986 scheme prefix (`[A-Za-z][A-Za-z0-9+.-]*:`) followed
+    by a non-empty scheme-specific part (rejecting relative URIs per RFC 5280 §4.2.1.6).
+    Compatibility limitations (does NOT claim full RFC 3986 ABNF compliance): does NOT perform full
+    component-level ABNF validation (authority/userinfo, IPv6-literal bracket grammar, port range,
+    or scheme-specific syntax such as `urn:`/`ldap:`/`http:`), and rejects non-ASCII IRIs (RFC 3987)
+    and empty scheme-specific parts (`scheme:`).
+    """
     uri = _decode_asn1_string(0x16, raw)
     if not uri:
         raise DerParseError("GeneralName uniformResourceIdentifier boş olamaz.")

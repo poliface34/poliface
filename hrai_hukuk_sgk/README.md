@@ -49,9 +49,12 @@ Ayrıntılı mimari dokümanlar:
 ## Bağımsız Test, Canlı Prob ve Doğrulama Komutları
 
 ```bash
-# 1. Tam tek süreçli regresyon paketi (mevcut 230 test + yeni v1.0.5.1 DER/hrAI testleri)
+# 1. Tam tek süreçli regresyon paketi (mevcut 230 test + 8 yeni v1.0.5.1 DER/hrAI testi = 238 test)
 python3 -m unittest discover -s tests -v
 
-# 2. Gerçek canlı dış servis yapılandırma probu (5 durumlu dürüst 5070 + GCP/TSA/WORM + KVKK probu)
+# 2. Tek komutluk bağımsız X.509/ASN.1 çapraz doğrulama aracı (OpenSSL, pyasn1/rfc5280, cryptography, hrAI)
+python3 -m tests.cross_validate_x509
+
+# 3. Gerçek canlı dış servis yapılandırma probu (5 durumlu dürüst 5070 + GCP/TSA/WORM + KVKK probu)
 python3 -W error -m engine.trust_root.integration_probe
 ```
