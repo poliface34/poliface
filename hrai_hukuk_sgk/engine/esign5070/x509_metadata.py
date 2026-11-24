@@ -589,7 +589,8 @@ def _validate_and_collect_oids(
 def _decode_asn1_string(tag: int, raw: bytes) -> str:
     """Strictly decode an ASN.1 DER character string according to its exact Universal tag.
 
-    Fail-closed: never uses lossy replacement, ignore, or inaccurate Latin-1 fallback decoding.
+    Fail-closed: never uses lossy replacement, ignore, or inaccurate Latin-1 fallback decoding, and
+    uniformly rejects embedded NUL (U+0000) across all ASN.1 character string types.
     Supports exact Unicode/ASCII ASN.1 string types (`UTF8String`, `NumericString`, `PrintableString`,
     `IA5String`, `VisibleString`, `BMPString` UCS-2 without surrogates, `UniversalString` UTF-32-BE).
     Legacy T.61 / Videotex / ISO-2022 character string tags (`TeletexString` 0x14, `VideotexString`
@@ -602,37 +603,33 @@ def _decode_asn1_string(tag: int, raw: bytes) -> str:
             f"({_UNSUPPORTED_LEGACY_ASN1_STRING_TAGS[tag]} 0x{tag:02x}): fail-closed reddedildi."
         )
 
+    decoded: str
     if tag == 0x0C:  # UTF8String (RFC 3629 strict UTF-8)
         try:
-            return raw.decode("utf-8", errors="strict")
+            decoded = raw.decode("utf-8", errors="strict")
         except UnicodeDecodeError as exc:
             raise DerParseError("Geçersiz ASN.1 DER UTF8String bayt dizisi.") from exc
-
-    if tag == 0x13:  # PrintableString (ITU-T X.680 Table 10)
+    elif tag == 0x13:  # PrintableString (ITU-T X.680 Table 10)
         for b in raw:
             if b not in _PRINTABLE_STRING_ALLOWED_BYTES:
                 raise DerParseError(f"ASN.1 DER PrintableString izin verilmeyen bayt içeriyor: 0x{b:02x}")
-        return raw.decode("ascii", errors="strict")
-
-    if tag == 0x12:  # NumericString (ITU-T X.680 Table 9: '0'..'9' and space)
+        decoded = raw.decode("ascii", errors="strict")
+    elif tag == 0x12:  # NumericString (ITU-T X.680 Table 9: '0'..'9' and space)
         for b in raw:
             if b not in _NUMERIC_STRING_ALLOWED_BYTES:
                 raise DerParseError(f"ASN.1 DER NumericString izin verilmeyen bayt içeriyor: 0x{b:02x}")
-        return raw.decode("ascii", errors="strict")
-
-    if tag == 0x16:  # IA5String (ITU-T T.50: strict 7-bit ASCII 0x00..0x7F)
+        decoded = raw.decode("ascii", errors="strict")
+    elif tag == 0x16:  # IA5String (ITU-T T.50: strict 7-bit ASCII 0x00..0x7F)
         try:
-            return raw.decode("ascii", errors="strict")
+            decoded = raw.decode("ascii", errors="strict")
         except UnicodeDecodeError as exc:
             raise DerParseError("ASN.1 DER IA5String 7-bit ASCII (0x00..0x7F) dışı bayt içeriyor.") from exc
-
-    if tag == 0x1A:  # VisibleString / ISO646String (ISO-IR-6: strict 0x20..0x7E)
+    elif tag == 0x1A:  # VisibleString / ISO646String (ISO-IR-6: strict 0x20..0x7E)
         for b in raw:
             if b < 0x20 or b > 0x7E:
                 raise DerParseError(f"ASN.1 DER VisibleString izin verilmeyen bayt içeriyor: 0x{b:02x}")
-        return raw.decode("ascii", errors="strict")
-
-    if tag == 0x1E:  # BMPString (ITU-T X.680 §41.15: 2-byte big-endian UCS-2 BMP ONLY — no surrogates)
+        decoded = raw.decode("ascii", errors="strict")
+    elif tag == 0x1E:  # BMPString (ITU-T X.680 §41.15: 2-byte big-endian UCS-2 BMP ONLY — no surrogates)
         if (len(raw) % 2) != 0:
             raise DerParseError(f"ASN.1 DER BMPString bayt uzunluğu 2'nin katı olmalıdır (bulunan: {len(raw)}).")
         for i in range(0, len(raw), 2):
@@ -642,11 +639,10 @@ def _decode_asn1_string(tag: int, raw: bytes) -> str:
                     f"ASN.1 DER BMPString (UCS-2) içinde UTF-16 surrogate kod noktası (U+{code_unit:04X}) yasaktır."
                 )
         try:
-            return raw.decode("utf-16-be", errors="strict")
+            decoded = raw.decode("utf-16-be", errors="strict")
         except UnicodeDecodeError as exc:
             raise DerParseError("Geçersiz ASN.1 DER BMPString bayt dizisi.") from exc
-
-    if tag == 0x1C:  # UniversalString (ITU-T X.680 §41.15: 4-byte big-endian UCS-4 / UTF-32-BE)
+    elif tag == 0x1C:  # UniversalString (ITU-T X.680 §41.15: 4-byte big-endian UCS-4 / UTF-32-BE)
         if (len(raw) % 4) != 0:
             raise DerParseError(
                 f"ASN.1 DER UniversalString bayt uzunluğu 4'ün katı olmalıdır (bulunan: {len(raw)})."
@@ -658,11 +654,15 @@ def _decode_asn1_string(tag: int, raw: bytes) -> str:
                     f"ASN.1 DER UniversalString geçersiz Unicode kod noktası içeriyor: U+{cp:08X}"
                 )
         try:
-            return raw.decode("utf-32-be", errors="strict")
+            decoded = raw.decode("utf-32-be", errors="strict")
         except UnicodeDecodeError as exc:
             raise DerParseError("Geçersiz ASN.1 DER UniversalString bayt dizisi.") from exc
+    else:
+        raise DerParseError(f"Desteklenmeyen veya kanonik olmayan ASN.1 karakter dizisi etiketi: 0x{tag:02x}")
 
-    raise DerParseError(f"Desteklenmeyen veya kanonik olmayan ASN.1 karakter dizisi etiketi: 0x{tag:02x}")
+    if "\x00" in decoded:
+        raise DerParseError(f"ASN.1 DER karakter dizisi (0x{tag:02x}) içinde NUL (U+0000) karakteri yasaktır.")
+    return decoded
 
 
 def _escape_rfc2253_val(val: str) -> str:
@@ -818,7 +818,13 @@ def _decode_directory_string(data: bytes, start: int, end: int, *, depth: int = 
 
 
 def _validate_general_name_other_name(data: bytes, start: int, end: int, *, depth: int = 0) -> None:
-    """Validate RFC 5280 Appendix A.2 `OtherName ::= SEQUENCE { type-id OID, value [0] EXPLICIT ANY }`."""
+    """Validate RFC 5280 Appendix A.2 `OtherName ::= SEQUENCE { type-id OID, value [0] EXPLICIT ANY }`.
+
+    Enforces exact 2-field structure, canonical OID, constructed `[0] EXPLICIT` wrapper containing
+    exactly one complete DER TLV, and recursive strict DER validation (including fail-closed
+    rejection of unsupported legacy string encodings and embedded NUL). Does NOT claim semantic
+    validation of arbitrary open `ANY DEFINED BY type-id` OID definitions.
+    """
     parts = _iter_children(data, start, end, depth=depth)
     if len(parts) != 2:
         raise DerParseError("GeneralName otherName [0] tam olarak 2 alan (type-id OID + value [0] EXPLICIT) içermelidir.")
@@ -1076,6 +1082,69 @@ def _validate_general_name_x400_address(data: bytes, start: int, end: int, *, de
         )
 
 
+_DNS_LABEL_RE = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?$")
+_RFC822_LOCAL_RE = re.compile(r"^[A-Za-z0-9!#$%&'*+/=?^_`{|}~.-]+$")
+_RFC3986_URI_CHAR_RE = re.compile(r"^[A-Za-z0-9\-._~:/?#\[\]@!$&'()*+,;=%]+$")
+_RFC3986_SCHEME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
+_RFC3986_BAD_PCT_RE = re.compile(r"%(?![0-9A-Fa-f]{2})")
+
+
+def _validate_general_name_dns(raw: bytes, *, allow_wildcard: bool = True) -> str:
+    """Validate RFC 5280 §4.2.1.6 / RFC 1034 / RFC 1123 `dNSName` (strict printable IA5String, no whitespace/control chars)."""
+    dns = _decode_asn1_string(0x16, raw)
+    if not dns or len(dns) > 253:
+        raise DerParseError(f"GeneralName dNSName uzunluğu [1..253] aralığında olmalıdır (bulunan: {len(dns)}).")
+    if any(ord(ch) <= 0x20 or ord(ch) >= 0x7F for ch in dns):
+        raise DerParseError("GeneralName dNSName boşluk veya kontrol karakteri içeremez.")
+    labels = dns.split(".")
+    for idx, label in enumerate(labels):
+        if not label or len(label) > 63:
+            raise DerParseError(f"GeneralName dNSName geçersiz etiket uzunluğu içeriyor: {dns!r}")
+        if label == "*":
+            if not allow_wildcard or idx != 0 or len(labels) < 2:
+                raise DerParseError(f"GeneralName dNSName geçersiz joker (*) konumu: {dns!r}")
+        elif not _DNS_LABEL_RE.fullmatch(label):
+            raise DerParseError(f"GeneralName dNSName geçersiz DNS karakteri/sözdizimi içeriyor: {dns!r}")
+    return dns
+
+
+def _validate_general_name_rfc822(raw: bytes) -> str:
+    """Validate RFC 5280 §4.2.1.6 `rfc822Name` (strict IA5String mailbox, no whitespace/control chars)."""
+    email = _decode_asn1_string(0x16, raw)
+    if len(email) < 3 or len(email) > 254:
+        raise DerParseError(f"GeneralName rfc822Name geçersiz uzunlukta: {len(email)}")
+    if any(ord(ch) <= 0x20 or ord(ch) >= 0x7F for ch in email):
+        raise DerParseError("GeneralName rfc822Name boşluk veya kontrol karakteri içeremez.")
+    if email.count("@") != 1:
+        raise DerParseError(f"GeneralName rfc822Name tam olarak bir '@' ayırıcısı içermelidir: {email!r}")
+    local, domain = email.split("@", 1)
+    if (
+        not (1 <= len(local) <= 64)
+        or local.startswith(".")
+        or local.endswith(".")
+        or ".." in local
+        or not _RFC822_LOCAL_RE.fullmatch(local)
+    ):
+        raise DerParseError(f"GeneralName rfc822Name yerel (local-part) bölümü geçersiz: {email!r}")
+    _validate_general_name_dns(domain.encode("ascii"), allow_wildcard=False)
+    return email
+
+
+def _validate_general_name_uri(raw: bytes) -> str:
+    """Validate RFC 5280 §4.2.1.6 & RFC 3986 absolute `uniformResourceIdentifier` (strict IA5String, scheme required)."""
+    uri = _decode_asn1_string(0x16, raw)
+    if not uri:
+        raise DerParseError("GeneralName uniformResourceIdentifier boş olamaz.")
+    if any(ord(ch) <= 0x20 or ord(ch) >= 0x7F for ch in uri):
+        raise DerParseError("GeneralName uniformResourceIdentifier boşluk veya kontrol karakteri içeremez.")
+    if not _RFC3986_URI_CHAR_RE.fullmatch(uri) or _RFC3986_BAD_PCT_RE.search(uri):
+        raise DerParseError(f"GeneralName uniformResourceIdentifier RFC 3986 dışı karakter/kaçış içeriyor: {uri!r}")
+    m = _RFC3986_SCHEME_RE.match(uri)
+    if m is None or m.end() >= len(uri):
+        raise DerParseError(f"GeneralName uniformResourceIdentifier geçerli mutlak URI şeması içermelidir: {uri!r}")
+    return uri
+
+
 def _parse_san_dns_names(ext_bytes: bytes, *, depth: int = 0) -> tuple[str, ...]:
     """Validate RFC 5280 §4.2.1.6 `GeneralNames` (SubjectAltName / IssuerAltName) and return dNSName entries.
 
@@ -1085,7 +1154,8 @@ def _parse_san_dns_names(ext_bytes: bytes, *, depth: int = 0) -> tuple[str, ...]
         primitive encodings (`0x80`, `0x83`, `0x84`, `0x85`) are fail-closed rejected; constructed forms
         are validated strictly against their respective RFC 5280 ASN.1 schemas.
       - Primitive-required (`0x81` rfc822Name, `0x82` dNSName, `0x86` URI, `0x87` iPAddress, `0x88` registeredID):
-        constructed encodings (`0xA1`, `0xA2`, `0xA6`, `0xA7`, `0xA8`) are fail-closed rejected.
+        constructed encodings (`0xA1`, `0xA2`, `0xA6`, `0xA7`, `0xA8`) are fail-closed rejected;
+        `dNSName`, `rfc822Name`, and `uniformResourceIdentifier` enforce strict IA5String + RFC 5280/3986 rules.
       - Empty `GeneralNames` and any unknown GeneralName tag are fail-closed rejected.
     """
     tag, vs, ve, nxt = _read_tlv(ext_bytes, 0, len(ext_bytes), depth=depth)
@@ -1106,17 +1176,12 @@ def _parse_san_dns_names(ext_bytes: bytes, *, depth: int = 0) -> tuple[str, ...]
             )
         if ctag == 0xA0:  # [0] IMPLICIT OtherName
             _validate_general_name_other_name(ext_bytes, cvs, cve, depth=depth + 2)
+        elif ctag == 0x81:  # [1] IMPLICIT rfc822Name (IA5String)
+            _validate_general_name_rfc822(ext_bytes[cvs:cve])
         elif ctag == 0x82:  # [2] IMPLICIT dNSName (IA5String)
-            dns_decoded = _decode_asn1_string(0x16, ext_bytes[cvs:cve])
-            if "\x00" in dns_decoded:
-                raise DerParseError("SAN dNSName içinde NUL (0x00) karakteri yasaktır.")
-            dns = dns_decoded.strip()
-            if dns and dns not in names:
+            dns = _validate_general_name_dns(ext_bytes[cvs:cve])
+            if dns not in names:
                 names.append(dns)
-        elif ctag in (0x81, 0x86):  # [1] rfc822Name, [6] uniformResourceIdentifier (IMPLICIT IA5String)
-            ia5_decoded = _decode_asn1_string(0x16, ext_bytes[cvs:cve])
-            if "\x00" in ia5_decoded:
-                raise DerParseError("SAN IA5String alanında NUL (0x00) karakteri yasaktır.")
         elif ctag == 0xA3:  # [3] IMPLICIT ORAddress (x400Address)
             _validate_general_name_x400_address(ext_bytes, cvs, cve, depth=depth + 2)
         elif ctag == 0xA4:  # [4] EXPLICIT directoryName (Name)
@@ -1126,6 +1191,8 @@ def _parse_san_dns_names(ext_bytes: bytes, *, depth: int = 0) -> tuple[str, ...]
             _parse_name(ext_bytes, dn_vs, dn_ve, depth=depth + 3)
         elif ctag == 0xA5:  # [5] IMPLICIT EDIPartyName
             _validate_general_name_edi_party_name(ext_bytes, cvs, cve, depth=depth + 2)
+        elif ctag == 0x86:  # [6] IMPLICIT uniformResourceIdentifier (IA5String)
+            _validate_general_name_uri(ext_bytes[cvs:cve])
         elif ctag == 0x87:  # [7] IMPLICIT iPAddress (RFC 5280 §4.2.1.6: 4-octet IPv4 or 16-octet IPv6)
             ip_len = cve - cvs
             if ip_len not in (4, 16):

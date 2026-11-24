@@ -1028,6 +1028,35 @@ class TestHrAiV1051DerSetStringsAndBrand(unittest.TestCase):
             self.assertEqual(real_meta.signer_common_name, "GeneralName Real Cert")
             self.assertEqual(real_meta.san_dns_names, ("www.insenai.com.tr",))
 
+            # Independent OpenSSL 3 text + PEM/DER asn1parse verification on the same real certificate
+            der_p = tdp / "gn.der"
+            x509_txt = subprocess.check_output(
+                [openssl, "x509", "-in", str(crt_p), "-noout", "-text"],
+                stdin=subprocess.DEVNULL, text=True, timeout=30,
+            )
+            self.assertIn("othername: UPN::uzman@insenai.com.tr", x509_txt)
+            self.assertIn("email:hukuk@insenai.com.tr", x509_txt)
+            self.assertIn("DNS:www.insenai.com.tr", x509_txt)
+            self.assertIn("URI:https://www.insenai.com.tr", x509_txt)
+            self.assertIn("IP Address:192.0.2.10", x509_txt)
+            self.assertIn("IP Address:2001:DB8:0:0:0:0:0:1", x509_txt)
+            self.assertIn("Registered ID:1.2.3.4.5", x509_txt)
+            subprocess.run(
+                [openssl, "x509", "-in", str(crt_p), "-outform", "DER", "-out", str(der_p)],
+                stdin=subprocess.DEVNULL, check=True, capture_output=True, timeout=30,
+            )
+            pem_asn1 = subprocess.check_output(
+                [openssl, "asn1parse", "-in", str(crt_p), "-inform", "PEM", "-i"],
+                stdin=subprocess.DEVNULL, text=True, timeout=30,
+            )
+            der_asn1 = subprocess.check_output(
+                [openssl, "asn1parse", "-in", str(der_p), "-inform", "DER", "-i"],
+                stdin=subprocess.DEVNULL, text=True, timeout=30,
+            )
+            self.assertEqual(pem_asn1, der_asn1)
+            self.assertIn("X509v3 Subject Alternative Name", der_asn1)
+            self.assertIn("X509v3 Issuer Alternative Name", der_asn1)
+
         # 5. Negative real X.509 DER certificate mutations (BOTH SAN 2.5.29.17 AND IAN 2.5.29.18)
         with Ephemeral5070PkiFixture() as pki:
             base_pem, _, _ = pki.issue_signer_cert(tag="gn_neg_real", include_qc_compliance=True, include_qc_sscd=True)
@@ -1142,10 +1171,13 @@ class TestHrAiV1051DerSetStringsAndBrand(unittest.TestCase):
             ]
 
             def _assert_zero_partial_metadata(mut_der: bytes, tag_msg: str) -> None:
+                cache_key = (hashlib.sha256(mut_der).hexdigest(), len(mut_der))
                 with self.assertRaises(DerParseError, msg=f"Must reject {tag_msg}"):
                     parse_x509_certificate_metadata_der(mut_der)
+                self.assertNotIn(cache_key, x509_mod._METADATA_CACHE, f"cache polluted: {tag_msg}")
                 mut_pem = _der_to_pem(mut_der)
                 self.assertIsNone(parse_x509_certificate_metadata(mut_pem), tag_msg)
+                self.assertNotIn(cache_key, x509_mod._METADATA_CACHE, f"cache polluted: {tag_msg}")
                 insp = inspect_signer_certificate_x509(mut_pem, validation_time_utc=val_t)
                 self.assertFalse(insp.valid_x509, tag_msg)
                 self.assertEqual(insp.subject, "", tag_msg)
@@ -1177,6 +1209,185 @@ class TestHrAiV1051DerSetStringsAndBrand(unittest.TestCase):
             for ctx_name, ext_oid_b in (("SAN", san_oid), ("IAN", ian_oid)):
                 mut_der = _rebuild_cert_appending_extension(base_der, ext_oid_b, _tlv(b"\x30", b""))
                 _assert_zero_partial_metadata(mut_der, f"{ctx_name}/empty_general_names")
+
+    def test_08_general_name_exhaustive_boundaries_der_canonicality_and_cache_safety(self) -> None:
+        """Exhaustive real-cert boundary tests: DNS/email/URI syntax, ORAddress/EDI/OtherName cardinalities & bounds, DER canonicality, NUL uniformity, cache safety."""
+        val_t = "2026-11-24T00:00:00Z"
+        san_oid = bytes([0x55, 0x1D, 0x11])
+        ian_oid = bytes([0x55, 0x1D, 0x12])
+        upn_oid = bytes([0x2B, 0x06, 0x01, 0x04, 0x01, 0x82, 0x37, 0x14, 0x02, 0x03])
+
+        # 1. Consistent NUL (U+0000) rejection across ALL ASN.1 string types
+        for bad_tag, bad_bytes in (
+            (0x0C, b"hrAI\x00evil"),
+            (0x16, b"hrAI\x00evil"),
+            (0x1E, "hrAI\x00evil".encode("utf-16-be")),
+            (0x1C, "hrAI\x00evil".encode("utf-32-be")),
+            (0x13, b"hrAI\x00"),
+            (0x12, b"123\x00"),
+            (0x1A, b"hrAI\x00"),
+        ):
+            with self.assertRaises(DerParseError, msg=f"NUL must fail for tag 0x{bad_tag:02x}"):
+                x509_mod._decode_asn1_string(bad_tag, bad_bytes)
+
+        with Ephemeral5070PkiFixture() as pki:
+            base_pem, _, _ = pki.issue_signer_cert(tag="gn_bounds_real", include_qc_compliance=True, include_qc_sscd=True)
+            base_der = _pem_to_der(base_pem)
+
+            # 2. Positive boundary GeneralNames on real cert (wildcard DNS, numeric CountryName 3-digit, max bounds, all 4 PersonalName fields)
+            pos_bsa_bounds = _tlv(
+                b"\x30",
+                _tlv(b"\x61", _tlv(b"\x12", b"286"))                  # numeric CountryName (exact len 3)
+                + _tlv(b"\x62", _tlv(b"\x13", b""))                    # empty ADMD (RFC 5280 SIZE 0..16 allowed)
+                + _tlv(b"\x80", b"1" * 16)                             # network-address max 16
+                + _tlv(b"\x81", b"T" * 24)                             # terminal-identifier max 24
+                + _tlv(b"\xa2", _tlv(b"\x12", b"9" * 16))              # private-domain-name numeric max 16
+                + _tlv(b"\x83", b"O" * 64)                             # organization-name max 64
+                + _tlv(b"\x84", b"7" * 32)                             # numeric-user-identifier max 32
+                + _tlv(
+                    b"\xa5",
+                    _tlv(b"\x80", b"S" * 40)                           # surname max 40
+                    + _tlv(b"\x81", b"G" * 16)                         # given-name max 16
+                    + _tlv(b"\x82", b"I" * 5)                          # initials max 5
+                    + _tlv(b"\x83", b"JR."),                           # generation-qualifier max 3
+                )
+                + _tlv(b"\xa6", b"".join(_tlv(b"\x13", b"U" * 32) for _ in range(4))),  # 4 OUs max 32 each
+            )
+            pos_bdda_4 = _tlv(
+                b"\x30",
+                b"".join(_tlv(b"\x30", _tlv(b"\x13", f"T{i}".encode()) + _tlv(b"\x13", b"V" * 128)) for i in range(4)),
+            )
+            pos_ext_256 = _tlv(b"\x31", _tlv(b"\x30", _tlv(b"\x80", b"\x01\x00") + _tlv(b"\xa1", _tlv(b"\x02", b"\x00"))))
+            pos_san_bounds = _tlv(
+                b"\x30",
+                _tlv(b"\x82", b"*.insenai.com.tr")
+                + _tlv(b"\x82", b"localhost")
+                + _tlv(b"\x81", b"hukuk+sgk@insenai.com.tr")
+                + _tlv(b"\x86", b"https://www.insenai.com.tr/path?a=1%20b#top")
+                + _tlv(b"\xa3", pos_bsa_bounds + pos_bdda_4 + pos_ext_256),
+            )
+            for ext_oid_b in (san_oid, ian_oid):
+                pos_der = _rebuild_cert_appending_extension(base_der, ext_oid_b, pos_san_bounds)
+                pos_meta = parse_x509_certificate_metadata_der(pos_der)
+                self.assertTrue(pos_meta.qc_compliance)
+                if ext_oid_b == san_oid:
+                    self.assertEqual(pos_meta.san_dns_names, ("*.insenai.com.tr", "localhost"))
+
+            # 3. Exhaustive negative real-cert mutations: extra/duplicate fields, bounds, bad OIDs, DNS/email/URI syntax, DER canonicality
+            ea_ok = _tlv(b"\x30", _tlv(b"\x80", b"\x01") + _tlv(b"\xa1", _tlv(b"\x13", b"OK")))
+            bdda_ok = _tlv(b"\x30", _tlv(b"\x30", _tlv(b"\x13", b"T1") + _tlv(b"\x13", b"V1")))
+            bsa_min = _tlv(b"\x30", _tlv(b"\x83", b"hrAI"))
+
+            exhaustive_bad_gns: list[tuple[str, bytes]] = [
+                # --- DNS syntax & control char violations ---
+                ("dns_empty", _tlv(b"\x82", b"")),
+                ("dns_space", _tlv(b"\x82", b"www.insenai.com.tr ")),
+                ("dns_crlf", _tlv(b"\x82", b"www.insenai.com.tr\r\n")),
+                ("dns_leading_hyphen", _tlv(b"\x82", b"-bad.insenai.com.tr")),
+                ("dns_trailing_dot", _tlv(b"\x82", b"www.insenai.com.tr.")),
+                ("dns_double_dot", _tlv(b"\x82", b"www..insenai.com.tr")),
+                ("dns_bad_wildcard_pos", _tlv(b"\x82", b"a.*.insenai.com.tr")),
+                ("dns_solo_wildcard", _tlv(b"\x82", b"*")),
+                ("dns_label_64", _tlv(b"\x82", (b"a" * 64) + b".tr")),
+                ("dns_invalid_char_dollar", _tlv(b"\x82", b"evil$host.tr")),
+                # --- rfc822Name syntax & control char violations ---
+                ("email_no_at", _tlv(b"\x81", b"hukuk.insenai.com.tr")),
+                ("email_double_at", _tlv(b"\x81", b"a@b@insenai.com.tr")),
+                ("email_space", _tlv(b"\x81", b"hukuk @insenai.com.tr")),
+                ("email_ctrl_lf", _tlv(b"\x81", b"hukuk@insenai.com.tr\n")),
+                ("email_local_65", _tlv(b"\x81", (b"a" * 65) + b"@insenai.com.tr")),
+                ("email_wildcard_domain", _tlv(b"\x81", b"hukuk@*.insenai.com.tr")),
+                # --- URI syntax & control char violations ---
+                ("uri_empty", _tlv(b"\x86", b"")),
+                ("uri_relative_no_scheme", _tlv(b"\x86", b"/relative/path")),
+                ("uri_scheme_only", _tlv(b"\x86", b"https:")),
+                ("uri_space", _tlv(b"\x86", b"https://www.insenai.com.tr/bad path")),
+                ("uri_bad_pct_escape", _tlv(b"\x86", b"https://www.insenai.com.tr/%ZZ")),
+                ("uri_ctrl_tab", _tlv(b"\x86", b"https://www.insenai.com.tr/\t")),
+                ("uri_nul", _tlv(b"\x86", b"https://www.insenai.com.tr/\x00")),
+                # --- registeredID & OtherName OID / extra / NUL / DER canonicality violations ---
+                ("rid_empty_oid", _tlv(b"\x88", b"")),
+                ("rid_non_minimal_oid_0x80", _tlv(b"\x88", bytes([0x2A, 0x80, 0x03]))),
+                ("otherName_non_minimal_oid", _tlv(b"\xa0", _tlv(b"\x06", bytes([0x2A, 0x80, 0x03])) + _tlv(b"\xa0", _tlv(b"\x0c", b"v")))),
+                (
+                    "otherName_extra_3rd_field",
+                    _tlv(b"\xa0", _tlv(b"\x06", upn_oid) + _tlv(b"\xa0", _tlv(b"\x0c", b"v")) + _tlv(b"\x05", b"")),
+                ),
+                ("otherName_embedded_nul_utf8", _tlv(b"\xa0", _tlv(b"\x06", upn_oid) + _tlv(b"\xa0", _tlv(b"\x0c", b"u\x00x")))),
+                # Non-minimal long-form DER length (0x81 0x03 for length 3) inside OtherName value
+                ("otherName_non_minimal_der_len", _tlv(b"\xa0", _tlv(b"\x06", upn_oid) + _tlv(b"\xa0", b"\x0c\x81\x03abc"))),
+                # Non-minimal high-tag-number (0x1F 0x05 for tag 5 < 31) inside OtherName value
+                ("otherName_non_minimal_high_tag", _tlv(b"\xa0", _tlv(b"\x06", upn_oid) + _tlv(b"\xa0", b"\x1f\x05\x00"))),
+                # Indefinite BER length (0x80) inside OtherName value
+                ("otherName_indefinite_ber_len", _tlv(b"\xa0", _tlv(b"\x06", upn_oid) + _tlv(b"\xa0", b"\x30\x80\x00\x00"))),
+                # --- EDIPartyName extra, duplicate, multi-TLV, empty EXPLICIT ---
+                (
+                    "edi_extra_3rd_field",
+                    _tlv(
+                        b"\xa5",
+                        _tlv(b"\xa0", _tlv(b"\x13", b"A"))
+                        + _tlv(b"\xa1", _tlv(b"\x13", b"P"))
+                        + _tlv(b"\xa1", _tlv(b"\x13", b"Extra")),
+                    ),
+                ),
+                ("edi_duplicate_party", _tlv(b"\xa5", _tlv(b"\xa1", _tlv(b"\x13", b"P1")) + _tlv(b"\xa1", _tlv(b"\x13", b"P2")))),
+                ("edi_empty_explicit_party", _tlv(b"\xa5", _tlv(b"\xa1", b""))),
+                ("edi_multi_tlv_in_party", _tlv(b"\xa5", _tlv(b"\xa1", _tlv(b"\x13", b"P1") + _tlv(b"\x13", b"P2")))),
+                # --- ORAddress duplicate, reversed, extra, P/C-bit, & exact RFC 5280 length bounds ---
+                ("x400_duplicate_org", _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\x83", b"A") + _tlv(b"\x83", b"B")))),
+                ("x400_ext_before_bdda", _tlv(b"\xa3", bsa_min + _tlv(b"\x31", ea_ok) + bdda_ok)),
+                ("x400_duplicate_bdda", _tlv(b"\xa3", bsa_min + bdda_ok + bdda_ok)),
+                ("x400_4th_extra_component", _tlv(b"\xa3", bsa_min + bdda_ok + _tlv(b"\x31", ea_ok) + _tlv(b"\x05", b""))),
+                ("x400_prim_country_0x41", _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\x41", b"TR")))),
+                ("x400_prim_personal_0x85", _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\x85", b"Yilmaz")))),
+                ("x400_country_num_len_2", _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\x61", _tlv(b"\x12", b"90"))))),
+                ("x400_net_addr_len_17", _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\x80", b"1" * 17)))),
+                ("x400_term_id_len_25", _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\x81", b"T" * 25)))),
+                ("x400_prmd_empty", _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\xa2", _tlv(b"\x13", b""))))),
+                ("x400_org_len_65", _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\x83", b"O" * 65)))),
+                ("x400_num_uid_len_33", _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\x84", b"7" * 33)))),
+                ("x400_personal_dup_surname", _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\xa5", _tlv(b"\x80", b"A") + _tlv(b"\x80", b"B"))))),
+                ("x400_personal_unknown_tag_0x84", _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\xa5", _tlv(b"\x80", b"A") + _tlv(b"\x84", b"X"))))),
+                ("x400_personal_gen_qual_len_4", _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\xa5", _tlv(b"\x80", b"A") + _tlv(b"\x83", b"ABCD"))))),
+                ("x400_ous_count_5", _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\xa6", b"".join(_tlv(b"\x13", b"U") for _ in range(5)))))),
+                ("x400_ou_len_33", _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\xa6", _tlv(b"\x13", b"U" * 33))))),
+                (
+                    "x400_bdda_count_5",
+                    _tlv(b"\xa3", bsa_min + _tlv(b"\x30", b"".join(_tlv(b"\x30", _tlv(b"\x13", b"T") + _tlv(b"\x13", b"V")) for _ in range(5)))),
+                ),
+                ("x400_bdda_type_len_9", _tlv(b"\xa3", bsa_min + _tlv(b"\x30", _tlv(b"\x30", _tlv(b"\x13", b"T" * 9) + _tlv(b"\x13", b"V"))))),
+                ("x400_ext_attr_type_257", _tlv(b"\xa3", bsa_min + _tlv(b"\x31", _tlv(b"\x30", _tlv(b"\x80", b"\x01\x01") + _tlv(b"\xa1", _tlv(b"\x02", b"\x01")))))),
+                ("x400_ext_attr_type_neg", _tlv(b"\xa3", bsa_min + _tlv(b"\x31", _tlv(b"\x30", _tlv(b"\x80", b"\xff") + _tlv(b"\xa1", _tlv(b"\x02", b"\x01")))))),
+                ("x400_ext_attr_empty_val", _tlv(b"\xa3", bsa_min + _tlv(b"\x31", _tlv(b"\x30", _tlv(b"\x80", b"\x01") + _tlv(b"\xa1", b""))))),
+                (
+                    "x400_ext_attr_two_tlvs",
+                    _tlv(b"\xa3", bsa_min + _tlv(b"\x31", _tlv(b"\x30", _tlv(b"\x80", b"\x01") + _tlv(b"\xa1", _tlv(b"\x02", b"\x01") + _tlv(b"\x02", b"\x02"))))),
+                ),
+                ("dirName_empty_explicit", _tlv(b"\xa4", b"")),
+                ("ip_len_5", _tlv(b"\x87", bytes([192, 0, 2, 1, 0]))),
+            ]
+
+            for label, bad_gn in exhaustive_bad_gns:
+                san_val = _tlv(b"\x30", bad_gn)
+                for ctx_name, ext_oid_b in (("SAN", san_oid), ("IAN", ian_oid)):
+                    mut_der = _rebuild_cert_appending_extension(base_der, ext_oid_b, san_val)
+                    cache_key = (hashlib.sha256(mut_der).hexdigest(), len(mut_der))
+                    with self.assertRaises(DerParseError, msg=f"{ctx_name} must reject {label}"):
+                        parse_x509_certificate_metadata_der(mut_der)
+                    self.assertNotIn(cache_key, x509_mod._METADATA_CACHE, f"cache polluted: {ctx_name}/{label}")
+                    mut_pem = _der_to_pem(mut_der)
+                    self.assertIsNone(parse_x509_certificate_metadata(mut_pem), f"{ctx_name}/{label}")
+                    insp = inspect_signer_certificate_x509(mut_pem, validation_time_utc=val_t)
+                    self.assertFalse(insp.valid_x509, f"{ctx_name}/{label}")
+                    self.assertEqual(insp.subject, "", f"{ctx_name}/{label}")
+                    self.assertEqual(insp.issuer, "", f"{ctx_name}/{label}")
+                    self.assertEqual(insp.serial_number, "", f"{ctx_name}/{label}")
+                    self.assertEqual(insp.cert_sha256, "", f"{ctx_name}/{label}")
+                    self.assertEqual(insp.signature_algorithm, "", f"{ctx_name}/{label}")
+                    self.assertEqual(insp.public_key_algorithm, "", f"{ctx_name}/{label}")
+                    self.assertFalse(insp.qc_compliance, f"{ctx_name}/{label}")
+                    self.assertFalse(insp.qc_sscd, f"{ctx_name}/{label}")
+                    self.assertNotIn(cache_key, x509_mod._METADATA_CACHE, f"cache polluted after inspect: {ctx_name}/{label}")
 
 
 if __name__ == "__main__":
