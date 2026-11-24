@@ -923,6 +923,261 @@ class TestHrAiV1051DerSetStringsAndBrand(unittest.TestCase):
                     self.assertFalse(insp.qc_compliance, f"{label}/{ctx_name}")
                     self.assertFalse(insp.qc_sscd, f"{label}/{ctx_name}")
 
+    def test_07_general_name_rfc5280_pc_bit_and_schema_validation_real_certs(self) -> None:
+        """PR #1 second review remediation: RFC 5280 GeneralName P/C-bit & ASN.1 schema validation on real X.509 DER certs."""
+        val_t = "2026-11-24T00:00:00Z"
+        san_oid = bytes([0x55, 0x1D, 0x11])  # 2.5.29.17 SubjectAltName
+        ian_oid = bytes([0x55, 0x1D, 0x12])  # 2.5.29.18 IssuerAltName
+        upn_oid = bytes([0x2B, 0x06, 0x01, 0x04, 0x01, 0x82, 0x37, 0x14, 0x02, 0x03])  # 1.3.6.1.4.1.311.20.2.3
+
+        # --- Valid RFC 5280 constructed GeneralName payloads ---
+        # 1. otherName [0] (0xA0): OtherName ::= SEQUENCE { type-id OID, value [0] EXPLICIT ANY }
+        valid_other_name = _tlv(
+            b"\xa0",
+            _tlv(b"\x06", upn_oid) + _tlv(b"\xa0", _tlv(b"\x0c", "uzman@insenai.com.tr".encode("utf-8"))),
+        )
+
+        # 2. x400Address [3] (0xA3): full RFC 5280 ORAddress (BSA + PersonalName SET + BDDA + sorted ExtensionAttributes SET OF)
+        valid_bsa = _tlv(
+            b"\x30",
+            _tlv(b"\x61", _tlv(b"\x13", b"TR"))                              # country-name (ISO-3166 alpha-2)
+            + _tlv(b"\x62", _tlv(b"\x13", b"hrAI"))                          # administration-domain-name
+            + _tlv(b"\x80", b"902120001")                                    # network-address (NumericString)
+            + _tlv(b"\x81", b"TERM-01")                                      # terminal-identifier (PrintableString)
+            + _tlv(b"\xa2", _tlv(b"\x13", b"Insenai"))                       # private-domain-name
+            + _tlv(b"\x83", b"hrAI Insenai A.S.")                            # organization-name
+            + _tlv(b"\x84", b"1051001")                                      # numeric-user-identifier
+            + _tlv(                                                          # personal-name (SET: 0x80 < 0x81 < 0x82)
+                b"\xa5",
+                _tlv(b"\x80", b"Yilmaz") + _tlv(b"\x81", b"Ali") + _tlv(b"\x82", b"AY"),
+            )
+            + _tlv(b"\xa6", _tlv(b"\x13", b"HukukSGK") + _tlv(b"\x13", b"Uyum")),  # organizational-unit-names
+        )
+        valid_bdda = _tlv(b"\x30", _tlv(b"\x30", _tlv(b"\x13", b"DEPT") + _tlv(b"\x13", b"HukukSGK")))
+        ea_1 = _tlv(b"\x30", _tlv(b"\x80", b"\x01") + _tlv(b"\xa1", _tlv(b"\x13", b"Alpha")))
+        ea_2 = _tlv(b"\x30", _tlv(b"\x80", b"\x02") + _tlv(b"\xa1", _tlv(b"\x0c", "İstanbul".encode("utf-8"))))
+        self.assertLess(ea_1, ea_2)
+        valid_ext_attrs = _tlv(b"\x31", ea_1 + ea_2)
+        valid_x400_full = _tlv(b"\xa3", valid_bsa + valid_bdda + valid_ext_attrs)
+
+        # 3. ediPartyName [5] (0xA5): both (nameAssigner + partyName) and (partyName-only) forms
+        valid_edi_both = _tlv(
+            b"\xa5",
+            _tlv(b"\xa0", _tlv(b"\x0c", "hrAI İnsenai".encode("utf-8")))
+            + _tlv(b"\xa1", _tlv(b"\x13", b"HukukSGK-EDI")),
+        )
+        valid_edi_party_only = _tlv(b"\xa5", _tlv(b"\xa1", _tlv(b"\x1e", "hrAI EDI".encode("utf-16-be"))))
+
+        # 4. Positive real OpenSSL 3-signed X.509 certificate carrying ALL constructed + primitive GeneralName types
+        openssl = shutil.which("openssl")
+        self.assertIsNotNone(openssl)
+        combined_san = _tlv(
+            b"\x30",
+            valid_other_name
+            + _tlv(b"\x81", b"hukuk@insenai.com.tr")
+            + _tlv(b"\x82", b"www.insenai.com.tr")
+            + valid_x400_full
+            + valid_edi_both
+            + valid_edi_party_only
+            + _tlv(b"\x86", b"https://www.insenai.com.tr")
+            + _tlv(b"\x87", bytes([192, 0, 2, 10]))               # IPv4 (4 octets)
+            + _tlv(b"\x87", bytes([0x20, 0x01, 0x0d, 0xb8] + [0] * 11 + [1]))  # IPv6 (16 octets)
+            + _tlv(b"\x88", bytes([0x2A, 0x03, 0x04, 0x05])),     # registeredID 1.2.3.4.5
+        )
+        with tempfile.TemporaryDirectory(prefix="hrai_v1051_gn_") as td:
+            tdp = Path(td)
+            key_p = tdp / "gn.key"
+            crt_p = tdp / "gn.crt"
+            cfg_p = tdp / "gn.cnf"
+            cfg_p.write_text(
+                "\n".join(
+                    [
+                        "[req]",
+                        "distinguished_name = dn",
+                        "x509_extensions = v3_ext",
+                        "prompt = no",
+                        "[dn]",
+                        "C = TR",
+                        "O = hrAI",
+                        "CN = GeneralName Real Cert",
+                        "[v3_ext]",
+                        "basicConstraints = critical,CA:FALSE",
+                        "keyUsage = critical,digitalSignature",
+                        f"subjectAltName = DER:{combined_san.hex()}",
+                        f"issuerAltName = DER:{combined_san.hex()}",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            subprocess.run(
+                [openssl, "ecparam", "-name", "prime256v1", "-genkey", "-noout", "-out", str(key_p)],
+                stdin=subprocess.DEVNULL, check=True, capture_output=True, timeout=30,
+            )
+            subprocess.run(
+                [
+                    openssl, "req", "-x509", "-new", "-key", str(key_p), "-config", str(cfg_p),
+                    "-days", "365", "-out", str(crt_p),
+                ],
+                stdin=subprocess.DEVNULL, check=True, capture_output=True, timeout=30,
+            )
+            real_pem = crt_p.read_text(encoding="utf-8")
+            real_meta = parse_x509_certificate_metadata(real_pem)
+            self.assertIsNotNone(real_meta)
+            assert real_meta is not None
+            self.assertEqual(real_meta.signer_common_name, "GeneralName Real Cert")
+            self.assertEqual(real_meta.san_dns_names, ("www.insenai.com.tr",))
+
+        # 5. Negative real X.509 DER certificate mutations (BOTH SAN 2.5.29.17 AND IAN 2.5.29.18)
+        with Ephemeral5070PkiFixture() as pki:
+            base_pem, _, _ = pki.issue_signer_cert(tag="gn_neg_real", include_qc_compliance=True, include_qc_sscd=True)
+            base_der = _pem_to_der(base_pem)
+
+            # Positive sanity on Ephemeral5070PkiFixture real cert with each of the 3 constructed alternatives individually
+            for label, valid_gn in (
+                ("pos_other_name", valid_other_name),
+                ("pos_x400_full", valid_x400_full),
+                ("pos_edi_both", valid_edi_both),
+                ("pos_edi_party_only", valid_edi_party_only),
+            ):
+                for ext_oid_b in (san_oid, ian_oid):
+                    ok_der = _rebuild_cert_appending_extension(base_der, ext_oid_b, _tlv(b"\x30", valid_gn))
+                    ok_meta = parse_x509_certificate_metadata_der(ok_der)
+                    self.assertTrue(ok_meta.qc_compliance, label)
+                    self.assertTrue(ok_meta.qc_sscd, label)
+
+            # Negative GeneralName payloads (primitive P/C violations + schema violations for 0xA0, 0xA3, 0xA5 + GeneralNames bounds)
+            bad_general_names: list[tuple[str, bytes]] = [
+                # --- Primitive encodings of constructed-only GeneralName alternatives (0x80, 0x83, 0x84, 0x85) ---
+                ("prim_otherName_0x80", _tlv(b"\x80", b"raw-other-name")),
+                ("prim_x400Address_0x83", _tlv(b"\x83", b"raw-x400-address")),
+                ("prim_directoryName_0x84", _tlv(b"\x84", b"raw-dir-name")),
+                ("prim_ediPartyName_0x85", _tlv(b"\x85", b"raw-edi-party")),
+                # --- Constructed encodings of primitive-only GeneralName alternatives (0xA1, 0xA2, 0xA6, 0xA7, 0xA8) ---
+                ("constr_rfc822_0xA1", _tlv(b"\xa1", _tlv(b"\x16", b"hukuk@insenai.com.tr"))),
+                ("constr_dns_0xA2", _tlv(b"\xa2", _tlv(b"\x16", b"www.insenai.com.tr"))),
+                ("constr_uri_0xA6", _tlv(b"\xa6", _tlv(b"\x16", b"https://www.insenai.com.tr"))),
+                ("constr_ip_0xA7", _tlv(b"\xa7", _tlv(b"\x04", bytes([192, 0, 2, 1])))),
+                ("constr_rid_0xA8", _tlv(b"\xa8", _tlv(b"\x06", bytes([0x2A, 0x03, 0x04])))),
+                # --- Malformed constructed otherName [0] (0xA0) ---
+                ("otherName_empty", _tlv(b"\xa0", b"")),
+                ("otherName_missing_value", _tlv(b"\xa0", _tlv(b"\x06", upn_oid))),
+                ("otherName_first_not_oid", _tlv(b"\xa0", _tlv(b"\x0c", b"not-oid") + _tlv(b"\xa0", _tlv(b"\x0c", b"v")))),
+                ("otherName_value_primitive_0x80", _tlv(b"\xa0", _tlv(b"\x06", upn_oid) + _tlv(b"\x80", b"raw"))),
+                ("otherName_value_empty_explicit", _tlv(b"\xa0", _tlv(b"\x06", upn_oid) + _tlv(b"\xa0", b""))),
+                (
+                    "otherName_value_two_tlvs",
+                    _tlv(b"\xa0", _tlv(b"\x06", upn_oid) + _tlv(b"\xa0", _tlv(b"\x0c", b"a") + _tlv(b"\x0c", b"b"))),
+                ),
+                ("otherName_value_bad_utf8", _tlv(b"\xa0", _tlv(b"\x06", upn_oid) + _tlv(b"\xa0", _tlv(b"\x0c", b"bad\xff\xfe")))),
+                (
+                    "otherName_value_legacy_teletex",
+                    _tlv(b"\xa0", _tlv(b"\x06", upn_oid) + _tlv(b"\xa0", _tlv(b"\x14", b"\xcbcagri"))),
+                ),
+                # --- Malformed constructed x400Address [3] (0xA3 / ORAddress) ---
+                ("x400_empty", _tlv(b"\xa3", b"")),
+                ("x400_first_not_bsa_seq", _tlv(b"\xa3", _tlv(b"\x02", b"\x01"))),
+                ("x400_empty_bsa_only", _tlv(b"\xa3", _tlv(b"\x30", b""))),
+                ("x400_country_bad_len", _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\x61", _tlv(b"\x13", b"TUR"))))),
+                (
+                    "x400_bsa_out_of_order",
+                    _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\x62", _tlv(b"\x13", b"hrAI")) + _tlv(b"\x61", _tlv(b"\x13", b"TR")))),
+                ),
+                (
+                    "x400_personal_name_unsorted_set",
+                    _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\xa5", _tlv(b"\x81", b"Ali") + _tlv(b"\x80", b"Yilmaz")))),
+                ),
+                (
+                    "x400_personal_name_missing_surname",
+                    _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\xa5", _tlv(b"\x81", b"Ali")))),
+                ),
+                (
+                    "x400_bdda_bad_printable",
+                    _tlv(
+                        b"\xa3",
+                        _tlv(b"\x30", _tlv(b"\x83", b"hrAI"))
+                        + _tlv(b"\x30", _tlv(b"\x30", _tlv(b"\x13", b"BAD@") + _tlv(b"\x13", b"Val"))),
+                    ),
+                ),
+                (
+                    "x400_ext_attrs_unsorted_set_of",
+                    _tlv(b"\xa3", _tlv(b"\x30", _tlv(b"\x83", b"hrAI")) + _tlv(b"\x31", ea_2 + ea_1)),
+                ),
+                (
+                    "x400_ext_attr_prim_value_0x81",
+                    _tlv(
+                        b"\xa3",
+                        _tlv(b"\x30", _tlv(b"\x83", b"hrAI"))
+                        + _tlv(b"\x31", _tlv(b"\x30", _tlv(b"\x80", b"\x01") + _tlv(b"\x81", b"raw"))),
+                    ),
+                ),
+                (
+                    "x400_ext_attr_legacy_teletex",
+                    _tlv(
+                        b"\xa3",
+                        _tlv(b"\x30", _tlv(b"\x83", b"hrAI"))
+                        + _tlv(b"\x31", _tlv(b"\x30", _tlv(b"\x80", b"\x01") + _tlv(b"\xa1", _tlv(b"\x14", b"\xc2e")))),
+                    ),
+                ),
+                # --- Malformed constructed ediPartyName [5] (0xA5 / EDIPartyName) ---
+                ("edi_empty", _tlv(b"\xa5", b"")),
+                ("edi_missing_party_name", _tlv(b"\xa5", _tlv(b"\xa0", _tlv(b"\x0c", b"OnlyAssigner")))),
+                (
+                    "edi_reversed_fields",
+                    _tlv(b"\xa5", _tlv(b"\xa1", _tlv(b"\x13", b"Party")) + _tlv(b"\xa0", _tlv(b"\x13", b"Assigner"))),
+                ),
+                ("edi_prim_party_tag_0x81", _tlv(b"\xa5", _tlv(b"\x81", b"ImplicitParty"))),
+                ("edi_prim_assigner_tag_0x80", _tlv(b"\xa5", _tlv(b"\x80", b"Imp") + _tlv(b"\xa1", _tlv(b"\x13", b"P")))),
+                ("edi_empty_directory_string", _tlv(b"\xa5", _tlv(b"\xa1", _tlv(b"\x0c", b"")))),
+                ("edi_non_directory_string_ia5", _tlv(b"\xa5", _tlv(b"\xa1", _tlv(b"\x16", b"not-dirstr")))),
+                ("edi_legacy_teletex", _tlv(b"\xa5", _tlv(b"\xa1", _tlv(b"\x14", b"\xcbc")))),
+                (
+                    "edi_invalid_utf8_assigner",
+                    _tlv(b"\xa5", _tlv(b"\xa0", _tlv(b"\x0c", b"bad\xff")) + _tlv(b"\xa1", _tlv(b"\x13", b"Party"))),
+                ),
+                ("edi_embedded_nul", _tlv(b"\xa5", _tlv(b"\xa1", _tlv(b"\x0c", b"hrAI\x00EDI")))),
+                # --- Other GeneralNames boundary violations ---
+                ("invalid_ip_len_3", _tlv(b"\x87", bytes([192, 0, 2]))),
+                ("unknown_general_name_tag_0x89", _tlv(b"\x89", b"unknown")),
+            ]
+
+            def _assert_zero_partial_metadata(mut_der: bytes, tag_msg: str) -> None:
+                with self.assertRaises(DerParseError, msg=f"Must reject {tag_msg}"):
+                    parse_x509_certificate_metadata_der(mut_der)
+                mut_pem = _der_to_pem(mut_der)
+                self.assertIsNone(parse_x509_certificate_metadata(mut_pem), tag_msg)
+                insp = inspect_signer_certificate_x509(mut_pem, validation_time_utc=val_t)
+                self.assertFalse(insp.valid_x509, tag_msg)
+                self.assertEqual(insp.subject, "", tag_msg)
+                self.assertEqual(insp.issuer, "", tag_msg)
+                self.assertEqual(insp.serial_number, "", tag_msg)
+                self.assertEqual(insp.not_before_utc, "", tag_msg)
+                self.assertEqual(insp.not_after_utc, "", tag_msg)
+                self.assertEqual(insp.cert_sha256, "", tag_msg)
+                self.assertEqual(insp.signature_algorithm, "", tag_msg)
+                self.assertEqual(insp.public_key_algorithm, "", tag_msg)
+                self.assertFalse(insp.basic_constraints_ca, tag_msg)
+                self.assertEqual(insp.key_usage, (), tag_msg)
+                self.assertFalse(insp.qc_statements_present, tag_msg)
+                self.assertFalse(insp.qc_compliance, tag_msg)
+                self.assertFalse(insp.qc_sscd, tag_msg)
+                self.assertEqual(insp.certificate_policy_oids, (), tag_msg)
+                self.assertIsNone(insp.signer_common_name, tag_msg)
+                self.assertIsNone(insp.signer_serial_identifier, tag_msg)
+                self.assertIsNone(insp.issuer_country, tag_msg)
+                self.assertFalse(insp.valid_at_validation_time, tag_msg)
+
+            for label, bad_gn in bad_general_names:
+                san_val = _tlv(b"\x30", bad_gn)
+                for ctx_name, ext_oid_b in (("SAN", san_oid), ("IAN", ian_oid)):
+                    mut_der = _rebuild_cert_appending_extension(base_der, ext_oid_b, san_val)
+                    _assert_zero_partial_metadata(mut_der, f"{ctx_name}/{label}")
+
+            # Empty GeneralNames SEQUENCE (30 00) in SAN & IAN -> fail-closed, zero partial metadata
+            for ctx_name, ext_oid_b in (("SAN", san_oid), ("IAN", ian_oid)):
+                mut_der = _rebuild_cert_appending_extension(base_der, ext_oid_b, _tlv(b"\x30", b""))
+                _assert_zero_partial_metadata(mut_der, f"{ctx_name}/empty_general_names")
+
 
 if __name__ == "__main__":
     unittest.main()

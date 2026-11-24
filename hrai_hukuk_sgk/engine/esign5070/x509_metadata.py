@@ -89,6 +89,9 @@ _ASN1_UNIVERSAL_STRING_TAGS: frozenset[int] = _SUPPORTED_ASN1_STRING_TAGS | froz
     _UNSUPPORTED_LEGACY_ASN1_STRING_TAGS
 )
 
+# RFC 5280 Appendix A.1 DirectoryString supported Universal tags (TeletexString 0x14 fail-closed rejected)
+_DIRECTORY_STRING_TAGS: frozenset[int] = frozenset({0x0C, 0x13, 0x1C, 0x1E})
+
 # Universal tag numbers whose constructed encoding (P/C bit = 1) is forbidden in DER (X.690 §10.2)
 _DER_PRIMITIVE_ONLY_UNIVERSAL_TAGS: frozenset[int] = frozenset(
     {
@@ -797,20 +800,313 @@ def _parse_basic_constraints_ca(ext_bytes: bytes, *, depth: int = 0) -> bool:
     return is_ca
 
 
+def _decode_directory_string(data: bytes, start: int, end: int, *, depth: int = 0) -> str:
+    """Decode RFC 5280 DirectoryString (SIZE (1..MAX)), rejecting legacy TeletexString and non-DirectoryString tags."""
+    tag, vs, ve, nxt = _read_tlv(data, start, end, depth=depth)
+    if nxt != end:
+        raise DerParseError("DirectoryString alanı tekil ve artık baytsız DER TLV olmalıdır.")
+    if tag in _UNSUPPORTED_LEGACY_ASN1_STRING_TAGS:
+        _decode_asn1_string(tag, data[vs:ve])  # Always raises fail-closed DerParseError
+    if tag not in _DIRECTORY_STRING_TAGS:
+        raise DerParseError(f"DirectoryString için geçersiz ASN.1 karakter dizisi etiketi: 0x{tag:02x}")
+    text = _decode_asn1_string(tag, data[vs:ve])
+    if not text:
+        raise DerParseError("RFC 5280 DirectoryString boş (SIZE 0) olamaz.")
+    if "\x00" in text:
+        raise DerParseError("RFC 5280 DirectoryString içinde NUL (0x00) karakteri yasaktır.")
+    return text
+
+
+def _validate_general_name_other_name(data: bytes, start: int, end: int, *, depth: int = 0) -> None:
+    """Validate RFC 5280 Appendix A.2 `OtherName ::= SEQUENCE { type-id OID, value [0] EXPLICIT ANY }`."""
+    parts = _iter_children(data, start, end, depth=depth)
+    if len(parts) != 2:
+        raise DerParseError("GeneralName otherName [0] tam olarak 2 alan (type-id OID + value [0] EXPLICIT) içermelidir.")
+    if parts[0][0] != 0x06:
+        raise DerParseError(f"GeneralName otherName type-id OID (0x06) olmalıdır, bulunan: 0x{parts[0][0]:02x}")
+    _decode_oid(data[parts[0][1] : parts[0][2]])
+    if parts[1][0] != 0xA0:
+        raise DerParseError(
+            f"GeneralName otherName value alanı [0] EXPLICIT yapısal (0xA0) olmalıdır, bulunan: 0x{parts[1][0]:02x}"
+        )
+    v_vs, v_ve = parts[1][1], parts[1][2]
+    _, _, _, v_nxt = _read_tlv(data, v_vs, v_ve, depth=depth + 1)
+    if v_nxt != v_ve:
+        raise DerParseError("GeneralName otherName value [0] EXPLICIT tekil ve artık baytsız DER TLV içermelidir.")
+    _validate_and_collect_oids(data, v_vs, v_ve, set(), depth=depth + 1)
+
+
+def _validate_general_name_edi_party_name(data: bytes, start: int, end: int, *, depth: int = 0) -> None:
+    """Validate RFC 5280 Appendix A.2 `EDIPartyName ::= SEQUENCE { nameAssigner [0] DirectoryString OPTIONAL, partyName [1] DirectoryString }`."""
+    parts = _iter_children(data, start, end, depth=depth)
+    if len(parts) == 1:
+        if parts[0][0] != 0xA1:
+            raise DerParseError(
+                f"GeneralName ediPartyName zorunlu partyName [1] EXPLICIT (0xA1) içermelidir, bulunan: 0x{parts[0][0]:02x}"
+            )
+        _decode_directory_string(data, parts[0][1], parts[0][2], depth=depth + 1)
+    elif len(parts) == 2:
+        if parts[0][0] != 0xA0 or parts[1][0] != 0xA1:
+            raise DerParseError(
+                f"GeneralName ediPartyName alan sırası [0] EXPLICIT (0xA0) + [1] EXPLICIT (0xA1) olmalıdır, "
+                f"bulunan: 0x{parts[0][0]:02x}, 0x{parts[1][0]:02x}"
+            )
+        _decode_directory_string(data, parts[0][1], parts[0][2], depth=depth + 1)
+        _decode_directory_string(data, parts[1][1], parts[1][2], depth=depth + 1)
+    else:
+        raise DerParseError(
+            f"GeneralName ediPartyName 1 veya 2 alan (nameAssigner?, partyName) içermelidir, bulunan: {len(parts)}"
+        )
+
+
+def _decode_or_address_choice_num_or_pr(
+    data: bytes,
+    start: int,
+    end: int,
+    *,
+    num_bounds: tuple[int, int],
+    pr_bounds: tuple[int, int],
+    field_name: str,
+    depth: int = 0,
+) -> None:
+    """Validate an EXPLICIT CHOICE { numeric NumericString, printable PrintableString } inside ORAddress."""
+    tag, vs, ve, nxt = _read_tlv(data, start, end, depth=depth)
+    if nxt != end:
+        raise DerParseError(f"ORAddress {field_name} tekil ve artık baytsız DER TLV içermelidir.")
+    if tag == 0x12:
+        val = _decode_asn1_string(0x12, data[vs:ve])
+        lo, hi = num_bounds
+    elif tag == 0x13:
+        val = _decode_asn1_string(0x13, data[vs:ve])
+        lo, hi = pr_bounds
+    else:
+        raise DerParseError(
+            f"ORAddress {field_name} NumericString (0x12) veya PrintableString (0x13) olmalıdır, bulunan: 0x{tag:02x}"
+        )
+    if not (lo <= len(val) <= hi):
+        raise DerParseError(
+            f"ORAddress {field_name} uzunluğu [{lo}..{hi}] aralığında olmalıdır (bulunan: {len(val)})."
+        )
+
+
+def _validate_general_name_x400_address(data: bytes, start: int, end: int, *, depth: int = 0) -> None:
+    """Validate RFC 5280 Appendix A.1 `ORAddress` (`x400Address [3] IMPLICIT ORAddress`).
+
+    Enforces exact SEQUENCE structure for `BuiltInStandardAttributes` (including schema-known
+    `PersonalName` SET per X.690 §11.5), optional `BuiltInDomainDefinedAttributes`, and optional
+    schema-known `ExtensionAttributes` SET OF per X.690 §11.6.
+    """
+    parts = _iter_children(data, start, end, depth=depth)
+    if not parts or len(parts) > 3:
+        raise DerParseError(
+            f"GeneralName x400Address (ORAddress) 1..3 bileşen içermelidir, bulunan: {len(parts)}"
+        )
+    if parts[0][0] != 0x30:
+        raise DerParseError(
+            f"ORAddress ilk bileşeni BuiltInStandardAttributes SEQUENCE (0x30) olmalıdır, bulunan: 0x{parts[0][0]:02x}"
+        )
+
+    # 1. BuiltInStandardAttributes ::= SEQUENCE { country?, admd?, netAddr?, termId?, prmd?, org?, numUid?, personalName?, ous? }
+    bsa_children = _iter_children(data, parts[0][1], parts[0][2], depth=depth + 1)
+    if not bsa_children and len(parts) == 1:
+        raise DerParseError("ORAddress boş BuiltInStandardAttributes ve ek öznitelik olmadan geçersizdir.")
+
+    bsa_tag_order: dict[int, int] = {
+        0x61: 0,  # country-name [APPLICATION 1] EXPLICIT CHOICE
+        0x62: 1,  # administration-domain-name [APPLICATION 2] EXPLICIT CHOICE
+        0x80: 2,  # network-address [0] IMPLICIT NumericString (1..16)
+        0x81: 3,  # terminal-identifier [1] IMPLICIT PrintableString (1..24)
+        0xA2: 4,  # private-domain-name [2] EXPLICIT CHOICE
+        0x83: 5,  # organization-name [3] IMPLICIT PrintableString (1..64)
+        0x84: 6,  # numeric-user-identifier [4] IMPLICIT NumericString (1..32)
+        0xA5: 7,  # personal-name [5] IMPLICIT PersonalName (SET)
+        0xA6: 8,  # organizational-unit-names [6] IMPLICIT SEQUENCE SIZE (1..4) OF PrintableString
+    }
+    last_pos = -1
+    for ctag, cvs, cve, _ in bsa_children:
+        if ctag not in bsa_tag_order:
+            raise DerParseError(f"ORAddress BuiltInStandardAttributes geçersiz/beklenmeyen etiket: 0x{ctag:02x}")
+        pos_idx = bsa_tag_order[ctag]
+        if pos_idx <= last_pos:
+            raise DerParseError(
+                f"ORAddress BuiltInStandardAttributes alanları şema sırasına uymuyor veya yineleniyor: 0x{ctag:02x}"
+            )
+        last_pos = pos_idx
+
+        if ctag == 0x61:
+            _decode_or_address_choice_num_or_pr(
+                data, cvs, cve, num_bounds=(3, 3), pr_bounds=(2, 2), field_name="country-name", depth=depth + 2
+            )
+        elif ctag == 0x62:
+            _decode_or_address_choice_num_or_pr(
+                data,
+                cvs,
+                cve,
+                num_bounds=(0, 16),
+                pr_bounds=(0, 16),
+                field_name="administration-domain-name",
+                depth=depth + 2,
+            )
+        elif ctag == 0x80:
+            val = _decode_asn1_string(0x12, data[cvs:cve])
+            if not (1 <= len(val) <= 16):
+                raise DerParseError(f"ORAddress network-address uzunluğu [1..16] olmalıdır (bulunan: {len(val)}).")
+        elif ctag == 0x81:
+            val = _decode_asn1_string(0x13, data[cvs:cve])
+            if not (1 <= len(val) <= 24):
+                raise DerParseError(f"ORAddress terminal-identifier uzunluğu [1..24] olmalıdır (bulunan: {len(val)}).")
+        elif ctag == 0xA2:
+            _decode_or_address_choice_num_or_pr(
+                data,
+                cvs,
+                cve,
+                num_bounds=(1, 16),
+                pr_bounds=(1, 16),
+                field_name="private-domain-name",
+                depth=depth + 2,
+            )
+        elif ctag == 0x83:
+            val = _decode_asn1_string(0x13, data[cvs:cve])
+            if not (1 <= len(val) <= 64):
+                raise DerParseError(f"ORAddress organization-name uzunluğu [1..64] olmalıdır (bulunan: {len(val)}).")
+        elif ctag == 0x84:
+            val = _decode_asn1_string(0x12, data[cvs:cve])
+            if not (1 <= len(val) <= 32):
+                raise DerParseError(
+                    f"ORAddress numeric-user-identifier uzunluğu [1..32] olmalıdır (bulunan: {len(val)})."
+                )
+        elif ctag == 0xA5:  # PersonalName ::= SET { surname [0], given-name [1]?, initials [2]?, gen-qual [3]? }
+            pn_items = _validate_der_set_order(data, cvs, cve, depth=depth + 2)
+            pn_limits: dict[int, tuple[str, int]] = {
+                0x80: ("surname", 40),
+                0x81: ("given-name", 16),
+                0x82: ("initials", 5),
+                0x83: ("generation-qualifier", 3),
+            }
+            has_surname = False
+            for _p_s, p_tag, p_vs, p_ve, _p_nxt in pn_items:
+                if p_tag not in pn_limits:
+                    raise DerParseError(f"ORAddress PersonalName geçersiz alan etiketi: 0x{p_tag:02x}")
+                p_name, p_max = pn_limits[p_tag]
+                p_val = _decode_asn1_string(0x13, data[p_vs:p_ve])
+                if not (1 <= len(p_val) <= p_max):
+                    raise DerParseError(
+                        f"ORAddress PersonalName.{p_name} uzunluğu [1..{p_max}] olmalıdır (bulunan: {len(p_val)})."
+                    )
+                if p_tag == 0x80:
+                    has_surname = True
+            if not has_surname:
+                raise DerParseError("ORAddress PersonalName zorunlu surname [0] (0x80) alanını içermelidir.")
+        elif ctag == 0xA6:  # OrganizationalUnitNames ::= SEQUENCE SIZE (1..4) OF PrintableString (1..32)
+            ous = _iter_children(data, cvs, cve, depth=depth + 2)
+            if not (1 <= len(ous) <= 4):
+                raise DerParseError(
+                    f"ORAddress organizational-unit-names [1..4] öğe içermelidir (bulunan: {len(ous)})."
+                )
+            for ou_tag, ou_vs, ou_ve, _ in ous:
+                if ou_tag != 0x13:
+                    raise DerParseError(
+                        f"ORAddress OrganizationalUnitName PrintableString (0x13) olmalıdır, bulunan: 0x{ou_tag:02x}"
+                    )
+                ou_val = _decode_asn1_string(0x13, data[ou_vs:ou_ve])
+                if not (1 <= len(ou_val) <= 32):
+                    raise DerParseError(
+                        f"ORAddress OrganizationalUnitName uzunluğu [1..32] olmalıdır (bulunan: {len(ou_val)})."
+                    )
+
+    idx = 1
+    # 2. Optional BuiltInDomainDefinedAttributes ::= SEQUENCE SIZE (1..4) OF SEQUENCE { type PrintableString(1..8), value PrintableString(1..128) }
+    if idx < len(parts) and parts[idx][0] == 0x30:
+        bddas = _iter_children(data, parts[idx][1], parts[idx][2], depth=depth + 1)
+        if not (1 <= len(bddas) <= 4):
+            raise DerParseError(
+                f"ORAddress BuiltInDomainDefinedAttributes [1..4] öğe içermelidir (bulunan: {len(bddas)})."
+            )
+        for b_tag, b_vs, b_ve, _ in bddas:
+            if b_tag != 0x30:
+                raise DerParseError(
+                    f"ORAddress BuiltInDomainDefinedAttribute SEQUENCE (0x30) olmalıdır, bulunan: 0x{b_tag:02x}"
+                )
+            pair = _iter_children(data, b_vs, b_ve, depth=depth + 2)
+            if len(pair) != 2 or pair[0][0] != 0x13 or pair[1][0] != 0x13:
+                raise DerParseError(
+                    "ORAddress BuiltInDomainDefinedAttribute iki PrintableString (type, value) içermelidir."
+                )
+            t_str = _decode_asn1_string(0x13, data[pair[0][1] : pair[0][2]])
+            v_str = _decode_asn1_string(0x13, data[pair[1][1] : pair[1][2]])
+            if not (1 <= len(t_str) <= 8) or not (1 <= len(v_str) <= 128):
+                raise DerParseError("ORAddress BuiltInDomainDefinedAttribute type/value uzunluk sınırı aşıldı.")
+        idx += 1
+
+    # 3. Optional ExtensionAttributes ::= SET SIZE (1..256) OF ExtensionAttribute (schema-known SET OF: X.690 §11.6)
+    if idx < len(parts) and parts[idx][0] == 0x31:
+        ext_attrs = _validate_der_set_of_order(data, parts[idx][1], parts[idx][2], depth=depth + 1)
+        if not (1 <= len(ext_attrs) <= 256):
+            raise DerParseError(
+                f"ORAddress ExtensionAttributes [1..256] öğe içermelidir (bulunan: {len(ext_attrs)})."
+            )
+        for _ea_s, ea_tag, ea_vs, ea_ve, _ea_nxt in ext_attrs:
+            if ea_tag != 0x30:
+                raise DerParseError(
+                    f"ORAddress ExtensionAttribute SEQUENCE (0x30) olmalıdır, bulunan: 0x{ea_tag:02x}"
+                )
+            ea_parts = _iter_children(data, ea_vs, ea_ve, depth=depth + 2)
+            if len(ea_parts) != 2 or ea_parts[0][0] != 0x80 or ea_parts[1][0] != 0xA1:
+                raise DerParseError(
+                    "ORAddress ExtensionAttribute [0] IMPLICIT INTEGER (0x80) ve [1] EXPLICIT ANY (0xA1) içermelidir."
+                )
+            ea_type_raw = _validate_der_integer(data[ea_parts[0][1] : ea_parts[0][2]])
+            ea_type_int = int.from_bytes(ea_type_raw, "big", signed=True)
+            if not (0 <= ea_type_int <= 256):
+                raise DerParseError(
+                    f"ORAddress extension-attribute-type [0..256] aralığında olmalıdır (bulunan: {ea_type_int})."
+                )
+            av_vs, av_ve = ea_parts[1][1], ea_parts[1][2]
+            _, _, _, av_nxt = _read_tlv(data, av_vs, av_ve, depth=depth + 3)
+            if av_nxt != av_ve:
+                raise DerParseError(
+                    "ORAddress extension-attribute-value [1] EXPLICIT tekil ve artık baytsız DER TLV içermelidir."
+                )
+            _validate_and_collect_oids(data, av_vs, av_ve, set(), depth=depth + 3)
+        idx += 1
+
+    if idx != len(parts):
+        raise DerParseError(
+            f"ORAddress beklenmeyen veya sırasız bileşen içeriyor: 0x{parts[idx][0]:02x}"
+        )
+
+
 def _parse_san_dns_names(ext_bytes: bytes, *, depth: int = 0) -> tuple[str, ...]:
+    """Validate RFC 5280 §4.2.1.6 `GeneralNames` (SubjectAltName / IssuerAltName) and return dNSName entries.
+
+    Exhaustively enforces RFC 5280 tag & P/C-bit requirements and ASN.1 schemas for ALL 9 GeneralName
+    alternatives:
+      - Constructed-required (`0xA0` otherName, `0xA3` x400Address, `0xA4` directoryName, `0xA5` ediPartyName):
+        primitive encodings (`0x80`, `0x83`, `0x84`, `0x85`) are fail-closed rejected; constructed forms
+        are validated strictly against their respective RFC 5280 ASN.1 schemas.
+      - Primitive-required (`0x81` rfc822Name, `0x82` dNSName, `0x86` URI, `0x87` iPAddress, `0x88` registeredID):
+        constructed encodings (`0xA1`, `0xA2`, `0xA6`, `0xA7`, `0xA8`) are fail-closed rejected.
+      - Empty `GeneralNames` and any unknown GeneralName tag are fail-closed rejected.
+    """
     tag, vs, ve, nxt = _read_tlv(ext_bytes, 0, len(ext_bytes), depth=depth)
     if tag != 0x30 or nxt != len(ext_bytes):
         raise DerParseError("SubjectAltName / IssuerAltName uzantısı tekil DER SEQUENCE olmalıdır.")
+    children = _iter_children_with_spans(ext_bytes, vs, ve, depth=depth + 1)
+    if not children:
+        raise DerParseError("SubjectAltName / IssuerAltName (GeneralNames) en az bir GeneralName içermelidir.")
     names: list[str] = []
-    for c_start, ctag, cvs, cve, cnxt in _iter_children_with_spans(ext_bytes, vs, ve, depth=depth + 1):
-        _c_class, c_constructed, _c_num = _extract_tag_info(ext_bytes, c_start, cnxt)
+    for _c_start, ctag, cvs, cve, _cnxt in children:
         if ctag in (0xA1, 0xA2, 0xA6, 0xA7, 0xA8):
             raise DerParseError(
                 f"GeneralName ilkel alanı yapısal (constructed) kodlanamaz (X.690 §10.2): 0x{ctag:02x}"
             )
-        if ctag == 0x84:
-            raise DerParseError("GeneralName directoryName [4] EXPLICIT yapısal (0xA4) olmalıdır.")
-        if ctag == 0x82:  # [2] IMPLICIT dNSName (IA5String)
+        if ctag in (0x80, 0x83, 0x84, 0x85):
+            raise DerParseError(
+                f"GeneralName yapısal alanı ilkel (primitive) kodlanamaz (RFC 5280 / X.690): 0x{ctag:02x}"
+            )
+        if ctag == 0xA0:  # [0] IMPLICIT OtherName
+            _validate_general_name_other_name(ext_bytes, cvs, cve, depth=depth + 2)
+        elif ctag == 0x82:  # [2] IMPLICIT dNSName (IA5String)
             dns_decoded = _decode_asn1_string(0x16, ext_bytes[cvs:cve])
             if "\x00" in dns_decoded:
                 raise DerParseError("SAN dNSName içinde NUL (0x00) karakteri yasaktır.")
@@ -821,15 +1117,25 @@ def _parse_san_dns_names(ext_bytes: bytes, *, depth: int = 0) -> tuple[str, ...]
             ia5_decoded = _decode_asn1_string(0x16, ext_bytes[cvs:cve])
             if "\x00" in ia5_decoded:
                 raise DerParseError("SAN IA5String alanında NUL (0x00) karakteri yasaktır.")
-        elif ctag == 0x88:  # [8] IMPLICIT registeredID (OBJECT IDENTIFIER)
-            _decode_oid(ext_bytes[cvs:cve])
+        elif ctag == 0xA3:  # [3] IMPLICIT ORAddress (x400Address)
+            _validate_general_name_x400_address(ext_bytes, cvs, cve, depth=depth + 2)
         elif ctag == 0xA4:  # [4] EXPLICIT directoryName (Name)
             dn_tag, dn_vs, dn_ve, dn_nxt = _read_tlv(ext_bytes, cvs, cve, depth=depth + 2)
             if dn_tag != 0x30 or dn_nxt != cve:
                 raise DerParseError("SAN directoryName tekil DER Name SEQUENCE olmalıdır.")
             _parse_name(ext_bytes, dn_vs, dn_ve, depth=depth + 3)
-        elif c_constructed:
-            _validate_and_collect_oids(ext_bytes, cvs, cve, set(), depth=depth + 2)
+        elif ctag == 0xA5:  # [5] IMPLICIT EDIPartyName
+            _validate_general_name_edi_party_name(ext_bytes, cvs, cve, depth=depth + 2)
+        elif ctag == 0x87:  # [7] IMPLICIT iPAddress (RFC 5280 §4.2.1.6: 4-octet IPv4 or 16-octet IPv6)
+            ip_len = cve - cvs
+            if ip_len not in (4, 16):
+                raise DerParseError(
+                    f"GeneralName iPAddress 4 bayt (IPv4) veya 16 bayt (IPv6) olmalıdır (bulunan: {ip_len})."
+                )
+        elif ctag == 0x88:  # [8] IMPLICIT registeredID (OBJECT IDENTIFIER)
+            _decode_oid(ext_bytes[cvs:cve])
+        else:
+            raise DerParseError(f"Desteklenmeyen veya geçersiz RFC 5280 GeneralName etiketi: 0x{ctag:02x}")
     return tuple(names)
 
 
