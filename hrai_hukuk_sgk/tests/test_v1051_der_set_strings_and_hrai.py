@@ -3,12 +3,14 @@
 Covers all v1.0.5.1 independent audit remediations while preserving all 230 baseline tests,
 L1-L4 74/74 statutory core, L5/L6 autonomous norm architecture, OpenSSL 3 cryptographic
 verifications, and byte-identical `engine/esign5070/xmldsig.py`:
-  1. ITU-T X.690 §11.5 (`SET` canonical tag order, no duplicate tags) & §11.6 (`SET OF` ascending
-     octet order with trailing 0x00 comparison padding) at both primitive and full-certificate levels.
+  1. Schema-context ITU-T X.690 §11.5 (`SET` canonical tag order, no duplicate tags) & §11.6 (`SET OF`
+     and differently-tagged `SET OF CHOICE` ascending complete DER TLV octet order with trailing 0x00
+     comparison padding), plus the explicit schema-less boundary for unknown X.509 extensions.
   2. Strict per-type ASN.1 character string decoding (`UTF8String`, `PrintableString`, `NumericString`,
-     `IA5String`, `VisibleString`, `GraphicString`, `GeneralString`, `TeletexString`, `VideotexString`,
-     `BMPString` UCS-2 without surrogates, `UniversalString` UTF-32-BE) with zero lossy replacement
-     fallback and fail-closed zero partial metadata on any invalid certificate encoding.
+     `IA5String`, `VisibleString`, `BMPString` UCS-2 without surrogates, `UniversalString` UTF-32-BE)
+     with zero lossy replacement fallback and zero Latin-1 misdecoding; legacy ISO-2022/T.61/Videotex
+     string tags (`TeletexString` 0x14, `VideotexString` 0x15, `GraphicString` 0x19, `GeneralString`
+     0x1B) are explicitly fail-closed rejected with zero partial metadata.
   3. Positive boundary X.509 certificates generated via OpenSSL 3 (Turkish UTF-8 DN, multi-valued
      RDN `SET OF`, PrintableString punctuation, SAN `dNSName`/`rfc822Name`/`URI`/`dirName`,
      valid `BMPString` & `UniversalString`, Ed25519, RSA-PSS, leap-day UTCTime & GeneralizedTime).
@@ -194,13 +196,17 @@ class TestHrAiV1051DerSetStringsAndBrand(unittest.TestCase):
         with self.assertRaises(DerParseError):
             x509_mod._validate_der_set_of_order(bad_set_of, 0, len(bad_set_of))
 
-        # Generic 0x31 container validation inside `_validate_and_collect_oids`
+        # Schema-less 0x31 container validation inside `_validate_and_collect_oids`:
+        # rejects anything invalid under BOTH X.690 §11.5 (SET) AND X.690 §11.6 (SET OF)
         bad_set_of_tlv = _tlv(b"\x31", bad_set_of)
         with self.assertRaises(DerParseError):
             x509_mod._validate_and_collect_oids(bad_set_of_tlv, 0, len(bad_set_of_tlv), set(), depth=0)
-        bad_set_tlv = _tlv(b"\x31", bad_set_pc)
+        bad_both_tlv = _tlv(b"\x31", _tlv(b"\x13", b"aaa") + _tlv(b"\x0c", b"zzz"))  # fails both §11.5 & §11.6
         with self.assertRaises(DerParseError):
-            x509_mod._validate_and_collect_oids(bad_set_tlv, 0, len(bad_set_tlv), set(), depth=0)
+            x509_mod._validate_and_collect_oids(bad_both_tlv, 0, len(bad_both_tlv), set(), depth=0)
+        bad_class_tlv = _tlv(b"\x31", bad_set_class)  # fails both §11.5 & §11.6
+        with self.assertRaises(DerParseError):
+            x509_mod._validate_and_collect_oids(bad_class_tlv, 0, len(bad_class_tlv), set(), depth=0)
 
         # 3. Full X.509 certificate: multi-valued RDN (SET OF AttributeTypeAndValue) positive + swapped negative
         openssl = shutil.which("openssl")
@@ -262,7 +268,7 @@ class TestHrAiV1051DerSetStringsAndBrand(unittest.TestCase):
             self.assertEqual(insp_unsorted.not_before_utc, "")
             self.assertEqual(insp_unsorted.not_after_utc, "")
 
-            # 4. Unsorted SET / SET OF embedded inside a certificate extension (SubjectDirectoryAttributes 2.5.29.9)
+            # 4. Schema-known SubjectDirectoryAttributes (2.5.29.9) SET OF AttributeValue ordering
             sda_oid = bytes([0x55, 0x1D, 0x09])  # 2.5.29.9
             unsorted_ext_val = _tlv(
                 b"\x30",
@@ -273,8 +279,9 @@ class TestHrAiV1051DerSetStringsAndBrand(unittest.TestCase):
                 parse_x509_certificate_metadata_der(bad_ext_cert)
             self.assertIsNone(parse_x509_certificate_metadata(_der_to_pem(bad_ext_cert)))
 
-            unsorted_set_ext_val = _tlv(b"\x31", bad_set_pc)
-            bad_set_ext_cert = _rebuild_cert_appending_extension(valid_der, sda_oid, unsorted_set_ext_val)
+            # Malformed SubjectDirectoryAttributes (not SEQUENCE OF Attribute) -> rejected
+            bad_sda_shape = _tlv(b"\x31", bad_set_pc)
+            bad_set_ext_cert = _rebuild_cert_appending_extension(valid_der, sda_oid, bad_sda_shape)
             with self.assertRaises(DerParseError):
                 parse_x509_certificate_metadata_der(bad_set_ext_cert)
 
@@ -287,12 +294,14 @@ class TestHrAiV1051DerSetStringsAndBrand(unittest.TestCase):
             self.assertEqual(parse_x509_certificate_metadata_der(good_ext_cert).signer_common_name, "Imzaci")
 
     def test_02_strict_asn1_character_strings_no_replace_and_fail_closed_cert_mutations(self) -> None:
-        # 1. Static source audit: zero lossy errors="replace" / errors="ignore" anywhere in x509_metadata.py
+        # 1. Static source audit: zero lossy replacement/ignore AND zero latin-1 misdecoding in x509_metadata.py
         x509_src = (PROJECT_ROOT / "engine" / "esign5070" / "x509_metadata.py").read_text(encoding="utf-8")
         self.assertNotIn('errors="replace"', x509_src)
         self.assertNotIn("errors='replace'", x509_src)
         self.assertNotIn('errors="ignore"', x509_src)
         self.assertNotIn("errors='ignore'", x509_src)
+        self.assertNotIn('"latin-1"', x509_src)
+        self.assertNotIn("'latin-1'", x509_src)
 
         # 2. Direct per-type strict ASN.1 character string positive & negative vectors
         # UTF8String (0x0C)
@@ -319,24 +328,17 @@ class TestHrAiV1051DerSetStringsAndBrand(unittest.TestCase):
             with self.assertRaises(DerParseError, msg=f"Bad IA5String {bad_ia5!r}"):
                 x509_mod._decode_asn1_string(0x16, bad_ia5)
 
-        # VisibleString (0x1A) & GraphicString (0x19)
+        # VisibleString (0x1A — strict ISO-IR-6 0x20..0x7E)
         self.assertEqual(x509_mod._decode_asn1_string(0x1A, b"hrAI ~!@#$%^&*()"), "hrAI ~!@#$%^&*()")
-        self.assertEqual(x509_mod._decode_asn1_string(0x19, b"hrAI Graphic"), "hrAI Graphic")
         for bad_vis in (b"\x00", b"\x1f", b"\x7f", b"\x80"):
             with self.assertRaises(DerParseError):
                 x509_mod._decode_asn1_string(0x1A, bad_vis)
-            with self.assertRaises(DerParseError):
-                x509_mod._decode_asn1_string(0x19, bad_vis)
 
-        # GeneralString (0x1B), TeletexString (0x14), VideotexString (0x15)
-        self.assertEqual(x509_mod._decode_asn1_string(0x1B, b"hrAI General"), "hrAI General")
-        self.assertEqual(x509_mod._decode_asn1_string(0x14, b"hrAI Legacy T61"), "hrAI Legacy T61")
-        self.assertEqual(x509_mod._decode_asn1_string(0x15, b"hrAI Videotex"), "hrAI Videotex")
-        with self.assertRaises(DerParseError):
-            x509_mod._decode_asn1_string(0x1B, b"bad\x80")
-        for bad_t61 in (b"\x00", b"\x7f", b"\x85", b"\xa0", b"\xff"):
-            with self.assertRaises(DerParseError):
-                x509_mod._decode_asn1_string(0x14, bad_t61)
+        # Unsupported legacy T.61 / Videotex / ISO-2022 string tags -> ALWAYS fail-closed rejected (never latin-1!)
+        for legacy_tag in (0x14, 0x15, 0x19, 0x1B):
+            for sample_bytes in (b"hrAI", b"\xc2e", b"\xcbc", b"\xc8u", b"\x1b(Btest", b"\x00"):
+                with self.assertRaises(DerParseError, msg=f"Legacy tag 0x{legacy_tag:02x} {sample_bytes!r}"):
+                    x509_mod._decode_asn1_string(legacy_tag, sample_bytes)
 
         # BMPString (0x1E — strict 2-byte UCS-2 BMP, NO surrogates, NO odd lengths)
         bmp_tr = "hrAI İstanbul ĞÜŞİÖÇ €"
@@ -373,7 +375,7 @@ class TestHrAiV1051DerSetStringsAndBrand(unittest.TestCase):
         with self.assertRaises(DerParseError):
             x509_mod._validate_and_collect_oids(non_empty_null, 0, len(non_empty_null), set(), depth=0)
 
-        # 3. Full X.509 certificate mutations for invalid ASN.1 strings -> fail-closed, ZERO partial metadata!
+        # 3. Full X.509 certificate mutations for invalid / unsupported ASN.1 strings -> fail-closed, ZERO partial metadata!
         val_t = "2026-11-24T00:00:00Z"
         cn_oid = bytes([0x55, 0x04, 0x03])  # 2.5.4.3 CN
         email_oid = bytes([0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x09, 0x01])  # emailAddress
@@ -391,6 +393,11 @@ class TestHrAiV1051DerSetStringsAndBrand(unittest.TestCase):
                 ("invalid_universal_len", cn_oid, b"\x1c", b"\x00\x00A"),
                 ("embedded_nul_utf8", cn_oid, b"\x0c", b"www.insenai.com.tr\x00.evil"),
                 ("constructed_utf8_in_dn", cn_oid, b"\x2c", _tlv(b"\x0c", b"hrAI")),
+                ("unsupported_teletex_ascii", cn_oid, b"\x14", b"hrAI T61"),
+                ("unsupported_teletex_accented", cn_oid, b"\x14", b"\xcbcagri \xc8uz"),
+                ("unsupported_videotex", cn_oid, b"\x15", b"hrAI Videotex"),
+                ("unsupported_graphic", cn_oid, b"\x19", b"hrAI Graphic"),
+                ("unsupported_general", cn_oid, b"\x1b", b"hrAI General"),
             ]
             for label, oid_b, str_tag, str_val in bad_subject_cases:
                 bad_subj = _tlv(b"\x30", _tlv(b"\x31", _tlv(b"\x30", _tlv(b"\x06", oid_b) + _tlv(str_tag, str_val))))
@@ -749,6 +756,172 @@ class TestHrAiV1051DerSetStringsAndBrand(unittest.TestCase):
                 self.assertEqual(insp.serial_number, "", label)
                 self.assertFalse(insp.qc_compliance, label)
                 self.assertFalse(insp.qc_sscd, label)
+
+    def test_06_set_of_choice_schema_context_and_legacy_t61_videotex_fail_closed(self) -> None:
+        """PR #1 review remediation: schema-context SET/SET OF CHOICE, schema-less 0x31 boundary, IAN & legacy strings."""
+        val_t = "2026-11-24T00:00:00Z"
+
+        # 1. Cross-P/C-bit divergence between SET (X.690 §11.5) and differently-tagged SET OF CHOICE (X.690 §11.6)
+        pr_alpha = _tlv(b"\x13", b"alpha")          # UNIVERSAL 19 (PrintableString), first octet 0x13
+        seq_one = _tlv(b"\x30", _tlv(b"\x02", b"\x01"))  # UNIVERSAL 16 (SEQUENCE), first octet 0x30
+        seq_two = _tlv(b"\x30", _tlv(b"\x02", b"\x02"))  # UNIVERSAL 16 (SEQUENCE), first octet 0x30 (> seq_one)
+        ctx_p1 = _tlv(b"\x81", b"b")                # CONTEXT [1] PRIMITIVE, first octet 0x81
+        ctx_c0 = _tlv(b"\xa0", _tlv(b"\x02", b"\x01"))   # CONTEXT [0] CONSTRUCTED, first octet 0xA0
+
+        # [0x13, 0x30] and [0x81, 0xA0]: VALID as SET OF CHOICE (§11.6), INVALID as SET (§11.5)
+        valid_soc_univ = pr_alpha + seq_one
+        valid_soc_ctx = ctx_p1 + ctx_c0
+        self.assertEqual(len(x509_mod._validate_der_set_of_order(valid_soc_univ, 0, len(valid_soc_univ))), 2)
+        self.assertEqual(len(x509_mod._validate_der_set_of_order(valid_soc_ctx, 0, len(valid_soc_ctx))), 2)
+        with self.assertRaises(DerParseError):
+            x509_mod._validate_der_set_order(valid_soc_univ, 0, len(valid_soc_univ))
+        with self.assertRaises(DerParseError):
+            x509_mod._validate_der_set_order(valid_soc_ctx, 0, len(valid_soc_ctx))
+
+        # [0x30, 0x13] and [0xA0, 0x81]: VALID as SET (§11.5), INVALID as SET OF CHOICE (§11.6)
+        valid_set_univ = seq_one + pr_alpha
+        valid_set_ctx = ctx_c0 + ctx_p1
+        self.assertEqual(len(x509_mod._validate_der_set_order(valid_set_univ, 0, len(valid_set_univ))), 2)
+        self.assertEqual(len(x509_mod._validate_der_set_order(valid_set_ctx, 0, len(valid_set_ctx))), 2)
+        with self.assertRaises(DerParseError):
+            x509_mod._validate_der_set_of_order(valid_set_univ, 0, len(valid_set_univ))
+        with self.assertRaises(DerParseError):
+            x509_mod._validate_der_set_of_order(valid_set_ctx, 0, len(valid_set_ctx))
+
+        # 3-element mixed SET OF CHOICE: [0x13, 0x30(1), 0x30(2)] valid under §11.6; swapped variants invalid
+        valid_soc_mixed3 = pr_alpha + seq_one + seq_two
+        bad_soc_mixed3_interleaved = seq_one + pr_alpha + seq_two
+        bad_soc_mixed3_unsorted = pr_alpha + seq_two + seq_one
+        self.assertEqual(len(x509_mod._validate_der_set_of_order(valid_soc_mixed3, 0, len(valid_soc_mixed3))), 3)
+        for bad_mixed in (bad_soc_mixed3_interleaved, bad_soc_mixed3_unsorted):
+            with self.assertRaises(DerParseError):
+                x509_mod._validate_der_set_of_order(bad_mixed, 0, len(bad_mixed))
+            with self.assertRaises(DerParseError):
+                x509_mod._validate_schema_unknown_der_set(bad_mixed, 0, len(bad_mixed))
+
+        with Ephemeral5070PkiFixture() as pki:
+            base_pem, _, _ = pki.issue_signer_cert(tag="soc_ctx_test", include_qc_compliance=True, include_qc_sscd=True)
+            base_der = _pem_to_der(base_pem)
+
+            # Helper: wrap Attribute.values 0x31 payload inside RFC 5280 SubjectDirectoryAttributes (2.5.29.9)
+            sda_oid = bytes([0x55, 0x1D, 0x09])  # 2.5.29.9
+            attr_oid = bytes([0x2A, 0x03, 0x04, 0x05, 0x01])  # 1.2.3.4.5.1
+            unk_ext_oid = bytes([0x2A, 0x03, 0x04, 0x05, 0x63])  # 1.2.3.4.5.99 (schema-less custom extension)
+            ian_oid = bytes([0x55, 0x1D, 0x12])  # 2.5.29.18 IssuerAltName
+
+            def _sda_ext(set_of_inner: bytes) -> bytes:
+                return _tlv(b"\x30", _tlv(b"\x30", _tlv(b"\x06", attr_oid) + _tlv(b"\x31", set_of_inner)))
+
+            # 2. Schema-known SubjectDirectoryAttributes (2.5.29.9): strictly enforces SET OF (§11.6)
+            for label, valid_inner in (
+                ("sda_soc_univ_0x13_0x30", valid_soc_univ),
+                ("sda_soc_ctx_0x81_0xA0", valid_soc_ctx),
+                ("sda_soc_mixed3", valid_soc_mixed3),
+            ):
+                cert_ok = _rebuild_cert_appending_extension(base_der, sda_oid, _sda_ext(valid_inner))
+                meta_ok = parse_x509_certificate_metadata_der(cert_ok)
+                self.assertTrue(meta_ok.qc_compliance, label)
+
+            for label, bad_inner in (
+                ("sda_reject_set_ordered_0x30_0x13", valid_set_univ),
+                ("sda_reject_set_ordered_0xA0_0x81", valid_set_ctx),
+                ("sda_reject_mixed3_interleaved", bad_soc_mixed3_interleaved),
+                ("sda_reject_mixed3_unsorted", bad_soc_mixed3_unsorted),
+                ("sda_reject_empty_values", b""),
+            ):
+                cert_bad = _rebuild_cert_appending_extension(base_der, sda_oid, _sda_ext(bad_inner))
+                with self.assertRaises(DerParseError, msg=f"SubjectDirectoryAttributes must reject {label}"):
+                    parse_x509_certificate_metadata_der(cert_bad)
+                self.assertIsNone(parse_x509_certificate_metadata(_der_to_pem(cert_bad)), label)
+                insp = inspect_signer_certificate_x509(_der_to_pem(cert_bad), validation_time_utc=val_t)
+                self.assertFalse(insp.valid_x509, label)
+                self.assertEqual(insp.subject, "", label)
+                self.assertFalse(insp.qc_compliance, label)
+
+            # 3. Schema-less unknown extension (1.2.3.4.5.99): accepts valid SET AND valid SET OF CHOICE,
+            #    never guesses from tag repetition, and rejects any 0x31 invalid under BOTH §11.5 and §11.6
+            for label, ok_unknown_set in (
+                ("unk_valid_set_0xA0_0x81", valid_set_ctx),
+                ("unk_valid_set_0x30_0x13", valid_set_univ),
+                ("unk_valid_soc_0x81_0xA0", valid_soc_ctx),
+                ("unk_valid_soc_0x13_0x30", valid_soc_univ),
+                ("unk_valid_soc_mixed3", valid_soc_mixed3),
+            ):
+                cert_ok = _rebuild_cert_appending_extension(base_der, unk_ext_oid, _tlv(b"\x31", ok_unknown_set))
+                meta_ok = parse_x509_certificate_metadata_der(cert_ok)
+                self.assertTrue(meta_ok.qc_compliance, label)
+
+            for label, bad_unknown_set in (
+                ("unk_bad_both_0x13_0x0C", _tlv(b"\x13", b"a") + _tlv(b"\x0c", b"z")),
+                ("unk_bad_both_app_before_univ", _tlv(b"\x40", b"\x01") + _tlv(b"\x02", b"\x01")),
+                ("unk_bad_both_ctx2_before_ctx0", _tlv(b"\x82", b"b") + _tlv(b"\x80", b"a")),
+                ("unk_bad_same_tag_unsorted", _tlv(b"\x0c", b"bbb") + _tlv(b"\x0c", b"aaa")),
+                ("unk_bad_mixed3_unsorted", bad_soc_mixed3_unsorted),
+                ("unk_bad_mixed3_interleaved", bad_soc_mixed3_interleaved),
+            ):
+                cert_bad = _rebuild_cert_appending_extension(base_der, unk_ext_oid, _tlv(b"\x31", bad_unknown_set))
+                with self.assertRaises(DerParseError, msg=f"Unknown extension must reject {label}"):
+                    parse_x509_certificate_metadata_der(cert_bad)
+                self.assertIsNone(parse_x509_certificate_metadata(_der_to_pem(cert_bad)), label)
+                insp = inspect_signer_certificate_x509(_der_to_pem(cert_bad), validation_time_utc=val_t)
+                self.assertFalse(insp.valid_x509, label)
+                self.assertEqual(insp.subject, "", label)
+                self.assertFalse(insp.qc_sscd, label)
+
+            # 4. Schema-known IssuerAltName (2.5.29.18): positive + unsorted directoryName / bad IA5 / constructed dNSName
+            cn_oid = bytes([0x55, 0x04, 0x03])
+            ou_oid = bytes([0x55, 0x04, 0x0B])
+            ava_cn = _tlv(b"\x30", _tlv(b"\x06", cn_oid) + _tlv(b"\x0c", b"Zebra"))
+            ava_ou = _tlv(b"\x30", _tlv(b"\x06", ou_oid) + _tlv(b"\x0c", b"Alpha"))
+            self.assertLess(ava_cn, ava_ou)
+
+            good_ian = _tlv(
+                b"\x30",
+                _tlv(b"\x82", b"ca.insenai.com.tr")
+                + _tlv(b"\xa4", _tlv(b"\x30", _tlv(b"\x31", ava_cn + ava_ou))),
+            )
+            self.assertTrue(
+                parse_x509_certificate_metadata_der(
+                    _rebuild_cert_appending_extension(base_der, ian_oid, good_ian)
+                ).qc_compliance
+            )
+
+            for label, bad_ian in (
+                ("ian_unsorted_dirname_rdn", _tlv(b"\x30", _tlv(b"\xa4", _tlv(b"\x30", _tlv(b"\x31", ava_ou + ava_cn))))),
+                ("ian_bad_ia5_dns", _tlv(b"\x30", _tlv(b"\x82", b"ca-\xff.insenai.com.tr"))),
+                ("ian_constructed_dns", _tlv(b"\x30", _tlv(b"\xa2", _tlv(b"\x16", b"ca.insenai.com.tr")))),
+                ("ian_primitive_dirname", _tlv(b"\x30", _tlv(b"\x84", b"invalid"))),
+            ):
+                cert_bad = _rebuild_cert_appending_extension(base_der, ian_oid, bad_ian)
+                with self.assertRaises(DerParseError, msg=f"IssuerAltName must reject {label}"):
+                    parse_x509_certificate_metadata_der(cert_bad)
+                self.assertIsNone(parse_x509_certificate_metadata(_der_to_pem(cert_bad)), label)
+
+            # 5. Extension-embedded legacy TeletexString (0x14), VideotexString (0x15), GraphicString (0x19),
+            #    GeneralString (0x1B) -> ALWAYS fail-closed rejected with zero partial metadata!
+            legacy_ext_payloads = [
+                ("ext_teletex_ascii", _tlv(b"\x14", b"hrAI T61")),
+                ("ext_teletex_t61_accented", _tlv(b"\x14", b"\xcbcagri \xc2e")),
+                ("ext_videotex_ascii", _tlv(b"\x15", b"hrAI Videotex")),
+                ("ext_videotex_accented", _tlv(b"\x15", b"\xc8u\xcbc")),
+                ("ext_graphic", _tlv(b"\x19", b"hrAI Graphic")),
+                ("ext_general", _tlv(b"\x1b", b"\x1b(BhrAI")),
+            ]
+            for label, legacy_tlv in legacy_ext_payloads:
+                for ctx_name, ext_oid_b, ext_body in (
+                    ("sda", sda_oid, _sda_ext(legacy_tlv)),
+                    ("unknown_ext", unk_ext_oid, _tlv(b"\x30", legacy_tlv)),
+                ):
+                    cert_bad = _rebuild_cert_appending_extension(base_der, ext_oid_b, ext_body)
+                    with self.assertRaises(DerParseError, msg=f"Must reject {label} in {ctx_name}"):
+                        parse_x509_certificate_metadata_der(cert_bad)
+                    self.assertIsNone(parse_x509_certificate_metadata(_der_to_pem(cert_bad)), f"{label}/{ctx_name}")
+                    insp = inspect_signer_certificate_x509(_der_to_pem(cert_bad), validation_time_utc=val_t)
+                    self.assertFalse(insp.valid_x509, f"{label}/{ctx_name}")
+                    self.assertEqual(insp.subject, "", f"{label}/{ctx_name}")
+                    self.assertEqual(insp.issuer, "", f"{label}/{ctx_name}")
+                    self.assertFalse(insp.qc_compliance, f"{label}/{ctx_name}")
+                    self.assertFalse(insp.qc_sscd, f"{label}/{ctx_name}")
 
 
 if __name__ == "__main__":

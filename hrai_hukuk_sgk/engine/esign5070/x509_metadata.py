@@ -19,12 +19,17 @@ STRICT ARCHITECTURAL BOUNDARY:
       * Strict DER NULL (0 octets),
       * Strict DER OID (minimal base-128 subidentifiers; no leading 0x80 octets),
       * Strict DER BIT STRING (unused bits 0..7, empty requires unused=0, trailing unused bits MUST be 0),
-      * Strict DER SET (X.690 §11.5 / X.680 §8.6 canonical tag order, no duplicate tags) and
-        DER SET OF (X.690 §11.6 ascending octet order with trailing 0x00 padding comparison),
-      * Strict per-type ASN.1 character string decoding with zero lossy replacement fallback
-        (UTF8String, PrintableString, NumericString, IA5String, VisibleString, GraphicString,
-        GeneralString, TeletexString/T61String, VideotexString, BMPString UCS-2 without surrogates,
-        UniversalString UTF-32-BE),
+      * Schema-context DER SET (X.690 §11.5 / X.680 §8.6 canonical tag order, no duplicate tags) and
+        DER SET OF / SET OF CHOICE (X.690 §11.6 ascending complete DER TLV octet order with trailing
+        0x00 padding comparison) enforced on schema-known X.509 structures (Name RDNs,
+        SubjectDirectoryAttributes 2.5.29.9, SubjectAltName/IssuerAltName directoryName); for unknown
+        extensions without an ASN.1 schema, any 0x31 violating both §11.5 and §11.6 is rejected
+        without heuristic guessing between `SET` and differently-tagged `SET OF CHOICE`,
+      * Strict per-type ASN.1 character string decoding with zero lossy replacement fallback and
+        zero Latin-1 misdecoding (`UTF8String`, `PrintableString`, `NumericString`, `IA5String`,
+        `VisibleString`, `BMPString` UCS-2 without surrogates, `UniversalString` UTF-32-BE);
+        legacy ISO-2022/T.61/Videotex string tags (`TeletexString` 0x14, `VideotexString` 0x15,
+        `GraphicString` 0x19, `GeneralString` 0x1B) are explicitly fail-closed rejected,
       * Strict RFC 5280 UTCTime / GeneralizedTime calendar validation & zero trailing garbage,
       * Strict single-block RFC 7468 PEM / Base64 decoding (rejects multiple blocks & extra data),
       * Fail-closed: malformed DER NEVER returns partially parsed metadata.
@@ -52,25 +57,36 @@ from .models import (
 
 MAX_ASN1_DEPTH: int = 32
 
-OID_BASIC_CONSTRAINTS = "2.5.29.19"
+OID_SUBJECT_DIRECTORY_ATTRIBUTES = "2.5.29.9"
 OID_KEY_USAGE = "2.5.29.15"
 OID_SUBJECT_ALT_NAME = "2.5.29.17"
+OID_ISSUER_ALT_NAME = "2.5.29.18"
+OID_BASIC_CONSTRAINTS = "2.5.29.19"
 
-# Universal primitive ASN.1 character string tags (X.680 / X.690 §10.2: MUST be primitive in DER)
-_ASN1_UNIVERSAL_STRING_TAGS: frozenset[int] = frozenset(
+# Strictly supported Universal primitive ASN.1 character string tags (exact Unicode/ASCII mappings)
+_SUPPORTED_ASN1_STRING_TAGS: frozenset[int] = frozenset(
     {
-        0x0C,  # UTF8String
-        0x12,  # NumericString
-        0x13,  # PrintableString
-        0x14,  # TeletexString / T61String
-        0x15,  # VideotexString
-        0x16,  # IA5String
-        0x19,  # GraphicString
-        0x1A,  # VisibleString / ISO646String
-        0x1B,  # GeneralString
-        0x1C,  # UniversalString
-        0x1E,  # BMPString
+        0x0C,  # UTF8String (RFC 3629 strict UTF-8)
+        0x12,  # NumericString (ITU-T X.680 Table 9)
+        0x13,  # PrintableString (ITU-T X.680 Table 10)
+        0x16,  # IA5String (ITU-T T.50 strict 7-bit ASCII)
+        0x1A,  # VisibleString / ISO646String (ISO-IR-6 0x20..0x7E)
+        0x1C,  # UniversalString (UCS-4 / UTF-32-BE)
+        0x1E,  # BMPString (UCS-2 BMP only — no surrogates)
     }
+)
+
+# Legacy T.61 / Videotex / ISO-2022 ASN.1 string tags: NEVER misdecoded as Latin-1; fail-closed rejected
+_UNSUPPORTED_LEGACY_ASN1_STRING_TAGS: dict[int, str] = {
+    0x14: "TeletexString/T61String",
+    0x15: "VideotexString",
+    0x19: "GraphicString",
+    0x1B: "GeneralString",
+}
+
+# All Universal primitive ASN.1 character string tags (dispatched through strict `_decode_asn1_string`)
+_ASN1_UNIVERSAL_STRING_TAGS: frozenset[int] = _SUPPORTED_ASN1_STRING_TAGS | frozenset(
+    _UNSUPPORTED_LEGACY_ASN1_STRING_TAGS
 )
 
 # Universal tag numbers whose constructed encoding (P/C bit = 1) is forbidden in DER (X.690 §10.2)
@@ -338,6 +354,35 @@ def _iter_children(
     ]
 
 
+def _is_valid_der_set_order(
+    data: bytes,
+    children: list[tuple[int, int, int, int, int]],
+) -> bool:
+    """Return True iff `children` satisfy ITU-T X.690 §11.5 (`SET`: strictly ascending canonical tag order, no duplicates)."""
+    prev_key: tuple[int, int] | None = None
+    for tlv_start, _t, _vs, _ve, nxt in children:
+        tag_class, _is_constructed, tag_number = _extract_tag_info(data, tlv_start, nxt)
+        key = (tag_class, tag_number)
+        if prev_key is not None and key <= prev_key:
+            return False
+        prev_key = key
+    return True
+
+
+def _is_valid_der_set_of_order(
+    data: bytes,
+    children: list[tuple[int, int, int, int, int]],
+) -> bool:
+    """Return True iff `children` satisfy ITU-T X.690 §11.6 (`SET OF` / `SET OF CHOICE`: ascending DER TLV octets)."""
+    prev_raw: bytes | None = None
+    for tlv_start, _t, _vs, _ve, nxt in children:
+        curr_raw = data[tlv_start:nxt]
+        if prev_raw is not None and _compare_der_set_of_octets(prev_raw, curr_raw) > 0:
+            return False
+        prev_raw = curr_raw
+    return True
+
+
 def _validate_der_set_order(
     data: bytes,
     start: int,
@@ -345,7 +390,7 @@ def _validate_der_set_order(
     *,
     depth: int = 0,
 ) -> list[tuple[int, int, int, int, int]]:
-    """Validate ITU-T X.690 §11.5 / X.680 §8.6 canonical tag order for ASN.1 DER `SET`.
+    """Validate ITU-T X.690 §11.5 / X.680 §8.6 canonical tag order for schema-known ASN.1 DER `SET`.
 
     Components MUST appear in strictly ascending `(tag_class, tag_number)` order with no duplicate tags:
     UNIVERSAL (0) < APPLICATION (1) < CONTEXT-SPECIFIC (2) < PRIVATE (3), then ascending tag number.
@@ -376,9 +421,10 @@ def _validate_der_set_of_order(
     *,
     depth: int = 0,
 ) -> list[tuple[int, int, int, int, int]]:
-    """Validate ITU-T X.690 §11.6 canonical ascending octet order for ASN.1 DER `SET OF`.
+    """Validate ITU-T X.690 §11.6 canonical ascending octet order for schema-known ASN.1 DER `SET OF`.
 
-    Complete DER TLV encodings of elements MUST appear in ascending octet order (with shorter
+    Applies uniformly to both homogeneous `SET OF` and heterogeneous `SET OF CHOICE` (elements with
+    distinct tags): complete DER TLV encodings MUST appear in ascending octet order (shorter
     components conceptually padded with trailing 0x00 octets for comparison).
     """
     children = _iter_children_with_spans(data, start, end, depth=depth)
@@ -391,41 +437,38 @@ def _validate_der_set_of_order(
     return children
 
 
-def _validate_der_set_container(
+def _validate_schema_unknown_der_set(
     data: bytes,
     start: int,
     end: int,
     *,
     depth: int = 0,
 ) -> list[tuple[int, int, int, int, int]]:
-    """Validate X.690 canonical ordering for a universal `SET` / `SET OF` (tag 0x31) container.
+    """Validate a universal 0x31 (`SET` or `SET OF`) container where NO ASN.1 schema is known.
 
-    - If any `(tag_class, tag_number)` repeats across elements, the container MUST be a `SET OF`
-      (since ASN.1 `SET` forbids duplicate tags per X.680 §27.3), so X.690 §11.6 octet order is enforced.
-    - If all `(tag_class, tag_number)` keys are distinct, X.690 §11.5 / X.680 §8.6 canonical tag order
-      is enforced.
+    EXPLICIT SCHEMA-LESS VALIDATION BOUNDARY (ITU-T X.690 §§11.5–11.6):
+      - Universal tag 0x31 is shared by ASN.1 `SET` (§11.5 canonical tag order, distinct tags) and
+        ASN.1 `SET OF` (§11.6 ascending complete DER TLV octet order, including differently-tagged
+        `SET OF CHOICE`).
+      - For schema-known X.509 structures (`Name` RDNs, `SubjectDirectoryAttributes` 2.5.29.9,
+        `SubjectAltName`/`IssuerAltName` `directoryName`), callers MUST invoke `_validate_der_set_of_order`
+        or `_validate_der_set_order` directly according to the ASN.1 schema.
+      - For unknown X.509 extensions / open `ANY` fields where the ASN.1 type definition is absent,
+        this function NEVER heuristically guesses `SET` vs. `SET OF` from tag repetition: it rejects
+        any 0x31 container that violates BOTH X.690 §11.5 (`SET`) AND X.690 §11.6 (`SET OF`).
+        In the narrow cross-P/C-bit case where distinct tags satisfy one rule but not the other
+        (e.g., `[0xA0, 0x81]` valid as `SET` vs. `[0x81, 0xA0]` valid as `SET OF CHOICE`),
+        exact disambiguation requires the extension's ASN.1 schema; neither valid DER form is
+        falsely rejected.
     """
     children = _iter_children_with_spans(data, start, end, depth=depth)
     if len(children) <= 1:
         return children
-    tag_keys = [
-        (_extract_tag_info(data, tlv_start, nxt)[0], _extract_tag_info(data, tlv_start, nxt)[2])
-        for tlv_start, _t, _vs, _ve, nxt in children
-    ]
-    if len(set(tag_keys)) < len(tag_keys):
-        prev_raw: bytes | None = None
-        for tlv_start, _t, _vs, _ve, nxt in children:
-            curr_raw = data[tlv_start:nxt]
-            if prev_raw is not None and _compare_der_set_of_octets(prev_raw, curr_raw) > 0:
-                raise DerParseError("DER SET OF elemanları X.690 §11.6 kanonik artan oktet sırasına uymuyor.")
-            prev_raw = curr_raw
-    else:
-        for i in range(1, len(tag_keys)):
-            if tag_keys[i] <= tag_keys[i - 1]:
-                raise DerParseError(
-                    f"DER SET elemanları X.690 §11.5 kanonik etiket sırasına uymuyor "
-                    f"({tag_keys[i - 1]} sonrası {tag_keys[i]})."
-                )
+    if not (_is_valid_der_set_order(data, children) or _is_valid_der_set_of_order(data, children)):
+        raise DerParseError(
+            "Şeması bilinmeyen DER 0x31 (SET / SET OF) kapsayıcısı ne X.690 §11.5 (SET kanonik etiket "
+            "sırası) ne de X.690 §11.6 (SET OF artan oktet sırası) kurallarına uymuyor."
+        )
     return children
 
 
@@ -504,7 +547,7 @@ def _validate_and_collect_oids(
     *,
     depth: int = 0,
 ) -> None:
-    """Recursively validate strict DER structure (including SET/SET OF order and strings) and collect OIDs."""
+    """Recursively validate strict DER structure (schema-less boundary for generic 0x31) and collect OIDs."""
     if depth > MAX_ASN1_DEPTH:
         raise DerParseError(f"ASN.1 DER uzantı derinliği sınırını ({MAX_ASN1_DEPTH}) aştı.")
     pos = start
@@ -531,7 +574,7 @@ def _validate_and_collect_oids(
         elif tag in _ASN1_UNIVERSAL_STRING_TAGS:
             _decode_asn1_string(tag, data[vs:ve])
         elif tag == 0x31:
-            _validate_der_set_container(data, vs, ve, depth=depth + 1)
+            _validate_schema_unknown_der_set(data, vs, ve, depth=depth + 1)
             _validate_and_collect_oids(data, vs, ve, out, depth=depth + 1)
         elif is_constructed:  # Constructed SEQUENCE / explicit context / application / private
             _validate_and_collect_oids(data, vs, ve, out, depth=depth + 1)
@@ -543,10 +586,19 @@ def _validate_and_collect_oids(
 def _decode_asn1_string(tag: int, raw: bytes) -> str:
     """Strictly decode an ASN.1 DER character string according to its exact Universal tag.
 
-    Fail-closed: never uses lossy replacement or ignore decoding modes. Rejects invalid encodings,
-    disallowed characters, odd-length BMPString, UTF-16 surrogates in BMPString/UniversalString,
-    out-of-range code points, constructed string tags, and unsupported ASN.1 tags.
+    Fail-closed: never uses lossy replacement, ignore, or inaccurate Latin-1 fallback decoding.
+    Supports exact Unicode/ASCII ASN.1 string types (`UTF8String`, `NumericString`, `PrintableString`,
+    `IA5String`, `VisibleString`, `BMPString` UCS-2 without surrogates, `UniversalString` UTF-32-BE).
+    Legacy T.61 / Videotex / ISO-2022 character string tags (`TeletexString` 0x14, `VideotexString`
+    0x15, `GraphicString` 0x19, `GeneralString` 0x1B) and all constructed/unknown tags are
+    explicitly rejected fail-closed with `DerParseError`.
     """
+    if tag in _UNSUPPORTED_LEGACY_ASN1_STRING_TAGS:
+        raise DerParseError(
+            f"Desteklenmeyen eski ASN.1 karakter dizisi kodlaması "
+            f"({_UNSUPPORTED_LEGACY_ASN1_STRING_TAGS[tag]} 0x{tag:02x}): fail-closed reddedildi."
+        )
+
     if tag == 0x0C:  # UTF8String (RFC 3629 strict UTF-8)
         try:
             return raw.decode("utf-8", errors="strict")
@@ -571,35 +623,11 @@ def _decode_asn1_string(tag: int, raw: bytes) -> str:
         except UnicodeDecodeError as exc:
             raise DerParseError("ASN.1 DER IA5String 7-bit ASCII (0x00..0x7F) dışı bayt içeriyor.") from exc
 
-    if tag == 0x1A:  # VisibleString / ISO646String (0x20..0x7E)
+    if tag == 0x1A:  # VisibleString / ISO646String (ISO-IR-6: strict 0x20..0x7E)
         for b in raw:
             if b < 0x20 or b > 0x7E:
                 raise DerParseError(f"ASN.1 DER VisibleString izin verilmeyen bayt içeriyor: 0x{b:02x}")
         return raw.decode("ascii", errors="strict")
-
-    if tag == 0x19:  # GraphicString (0x20..0x7E printable graphic characters)
-        for b in raw:
-            if b < 0x20 or b > 0x7E:
-                raise DerParseError(f"ASN.1 DER GraphicString izin verilmeyen bayt içeriyor: 0x{b:02x}")
-        return raw.decode("ascii", errors="strict")
-
-    if tag == 0x1B:  # GeneralString (strict 7-bit ASCII, no NUL)
-        for b in raw:
-            if b == 0x00 or b > 0x7F:
-                raise DerParseError(f"ASN.1 DER GeneralString geçersiz bayt içeriyor: 0x{b:02x}")
-        return raw.decode("ascii", errors="strict")
-
-    if tag == 0x14:  # TeletexString / T61String (forbid NUL, illegal C0/C1 controls, DEL, 0xA0, 0xFF)
-        for b in raw:
-            if (b < 0x20 and b not in (0x0A, 0x0D)) or (0x7F <= b <= 0xA0) or b == 0xFF:
-                raise DerParseError(f"ASN.1 DER TeletexString (T61String) geçersiz bayt içeriyor: 0x{b:02x}")
-        return raw.decode("latin-1", errors="strict")
-
-    if tag == 0x15:  # VideotexString (forbid NUL, illegal C0/C1 controls, DEL, 0xFF)
-        for b in raw:
-            if (b < 0x20 and b not in (0x0A, 0x0D)) or (0x7F <= b <= 0x9F) or b == 0xFF:
-                raise DerParseError(f"ASN.1 DER VideotexString geçersiz bayt içeriyor: 0x{b:02x}")
-        return raw.decode("latin-1", errors="strict")
 
     if tag == 0x1E:  # BMPString (ITU-T X.680 §41.15: 2-byte big-endian UCS-2 BMP ONLY — no surrogates)
         if (len(raw) % 2) != 0:
@@ -772,10 +800,16 @@ def _parse_basic_constraints_ca(ext_bytes: bytes, *, depth: int = 0) -> bool:
 def _parse_san_dns_names(ext_bytes: bytes, *, depth: int = 0) -> tuple[str, ...]:
     tag, vs, ve, nxt = _read_tlv(ext_bytes, 0, len(ext_bytes), depth=depth)
     if tag != 0x30 or nxt != len(ext_bytes):
-        raise DerParseError("SubjectAltName uzantısı tekil DER SEQUENCE olmalıdır.")
+        raise DerParseError("SubjectAltName / IssuerAltName uzantısı tekil DER SEQUENCE olmalıdır.")
     names: list[str] = []
     for c_start, ctag, cvs, cve, cnxt in _iter_children_with_spans(ext_bytes, vs, ve, depth=depth + 1):
         _c_class, c_constructed, _c_num = _extract_tag_info(ext_bytes, c_start, cnxt)
+        if ctag in (0xA1, 0xA2, 0xA6, 0xA7, 0xA8):
+            raise DerParseError(
+                f"GeneralName ilkel alanı yapısal (constructed) kodlanamaz (X.690 §10.2): 0x{ctag:02x}"
+            )
+        if ctag == 0x84:
+            raise DerParseError("GeneralName directoryName [4] EXPLICIT yapısal (0xA4) olmalıdır.")
         if ctag == 0x82:  # [2] IMPLICIT dNSName (IA5String)
             dns_decoded = _decode_asn1_string(0x16, ext_bytes[cvs:cve])
             if "\x00" in dns_decoded:
@@ -787,6 +821,8 @@ def _parse_san_dns_names(ext_bytes: bytes, *, depth: int = 0) -> tuple[str, ...]
             ia5_decoded = _decode_asn1_string(0x16, ext_bytes[cvs:cve])
             if "\x00" in ia5_decoded:
                 raise DerParseError("SAN IA5String alanında NUL (0x00) karakteri yasaktır.")
+        elif ctag == 0x88:  # [8] IMPLICIT registeredID (OBJECT IDENTIFIER)
+            _decode_oid(ext_bytes[cvs:cve])
         elif ctag == 0xA4:  # [4] EXPLICIT directoryName (Name)
             dn_tag, dn_vs, dn_ve, dn_nxt = _read_tlv(ext_bytes, cvs, cve, depth=depth + 2)
             if dn_tag != 0x30 or dn_nxt != cve:
@@ -795,6 +831,33 @@ def _parse_san_dns_names(ext_bytes: bytes, *, depth: int = 0) -> tuple[str, ...]
         elif c_constructed:
             _validate_and_collect_oids(ext_bytes, cvs, cve, set(), depth=depth + 2)
     return tuple(names)
+
+
+def _parse_subject_directory_attributes(ext_bytes: bytes, *, depth: int = 0) -> None:
+    """Validate RFC 5280 §4.2.1.8 SubjectDirectoryAttributes (`SEQUENCE SIZE (1..MAX) OF Attribute`).
+
+    Each `Attribute ::= SEQUENCE { type AttributeType (OID), values SET OF AttributeValue }` carries
+    a schema-known `SET OF` (`0x31`) whose elements (including heterogeneous `SET OF CHOICE` values
+    with distinct tags) MUST satisfy ITU-T X.690 §11.6 ascending complete DER TLV octet order.
+    """
+    tag, vs, ve, nxt = _read_tlv(ext_bytes, 0, len(ext_bytes), depth=depth)
+    if tag != 0x30 or nxt != len(ext_bytes):
+        raise DerParseError("SubjectDirectoryAttributes uzantısı tekil DER SEQUENCE olmalıdır.")
+    attrs = _iter_children(ext_bytes, vs, ve, depth=depth + 1)
+    if not attrs:
+        raise DerParseError("SubjectDirectoryAttributes en az bir Attribute öğesi içermelidir.")
+    for attr_tag, attr_vs, attr_ve, _ in attrs:
+        if attr_tag != 0x30:
+            raise DerParseError("SubjectDirectoryAttributes Attribute öğesi SEQUENCE (0x30) olmalıdır.")
+        parts = _iter_children(ext_bytes, attr_vs, attr_ve, depth=depth + 2)
+        if len(parts) != 2 or parts[0][0] != 0x06 or parts[1][0] != 0x31:
+            raise DerParseError("SubjectDirectoryAttributes Attribute (OID + SET OF) yapısı geçersiz.")
+        _decode_oid(ext_bytes[parts[0][1] : parts[0][2]])
+        # Schema-known `SET OF AttributeValue` -> strictly enforce ITU-T X.690 §11.6 octet order!
+        values = _validate_der_set_of_order(ext_bytes, parts[1][1], parts[1][2], depth=depth + 3)
+        if not values:
+            raise DerParseError("SubjectDirectoryAttributes Attribute.values SET OF boş olamaz.")
+        _validate_and_collect_oids(ext_bytes, parts[1][1], parts[1][2], set(), depth=depth + 3)
 
 
 def _format_spki_pem(spki_der: bytes) -> str:
@@ -939,7 +1002,12 @@ def _parse_certificate_der_uncached(der_bytes: bytes) -> ParsedX509Metadata:
                     _validate_and_collect_oids(ext_val_bytes, p_vs, p_ve, policy_oids, depth=7)
                 elif ext_oid == OID_SUBJECT_ALT_NAME:
                     san_dns = _parse_san_dns_names(ext_val_bytes, depth=6)
+                elif ext_oid == OID_ISSUER_ALT_NAME:
+                    _parse_san_dns_names(ext_val_bytes, depth=6)
+                elif ext_oid == OID_SUBJECT_DIRECTORY_ATTRIBUTES:
+                    _parse_subject_directory_attributes(ext_val_bytes, depth=6)
                 else:
+                    # Unknown extension: enforce single complete DER TLV + schema-less DER validation boundary
                     _, _, _, u_nxt = _read_tlv(ext_val_bytes, 0, len(ext_val_bytes), depth=6)
                     if u_nxt != len(ext_val_bytes):
                         raise DerParseError(
