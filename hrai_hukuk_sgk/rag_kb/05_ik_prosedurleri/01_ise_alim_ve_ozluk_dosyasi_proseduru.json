@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0.5.1",
+  "layer_id": "L5_HR_PROCEDURES",
+  "product_brand": "hrAI",
+  "coordinator_agent": "@hrAI",
+  "specialist_agent": "@HukukSGK",
+  "procedure_id": "PROC-L5-ISE-ALIM-OZLUK",
+  "source_document_id": "HRAI-L5-PROC-01",
+  "title": "İşe Alım, SGK İşe Giriş ve Özlük Dosyası (4857 m.75 + 6698 KVKK) Referans Prosedürü",
+  "scope_summary": "Yeni çalışanların işe alımı, 5510 m.8 uyarınca en geç bir gün önceden SGK sigortalı işe giriş bildirgesinin verilmesi, 4857 m.75 uyarınca özlük dosyasının oluşturulması ve 6698 sayılı KVKK m.5/m.6/m.10 kapsamında çalışan kişisel verilerinin aydınlatma/hukuki sebep denetimi için kurumsal referans şablonudur.",
+  "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+  "template_only_not_binding_company_policy": true,
+  "no_flat_priority_supremacy": true,
+  "primary_statutory_basis_ids": [
+    "CARD-5510-M08-M09",
+    "CARD-SSIY-M11-M14",
+    "CARD-6698-M05-M06-M10",
+    "CARD-6331-M04-M06",
+    "MEVZUAT-4857"
+  ],
+  "mandatory_steps": [
+    {
+      "step_no": 1,
+      "action": "Çalışanın fiilen işe başlamasından en geç bir gün önce (inşaat/balıkçılık/tarım gibi istisnalar hariç) SGK sigortalı işe giriş bildirgesini düzenle ve barkodlu tahakkuk/bildirge çıktısını özlük dosyasına ekle.",
+      "responsible_role": "İK ve SGK Operasyon Uzmanı",
+      "required_record": "SGK Sigortalı İşe Giriş Bildirgesi",
+      "statutory_anchor_id": "CARD-5510-M08-M09"
+    },
+    {
+      "step_no": 2,
+      "action": "Çalışana 6698 sayılı KVKK m.10 aydınlatma metnini imza/doğrulanabilir onay karşılığı sun; sağlık raporu ve adli sicil gibi özel nitelikli kişisel veriler için m.6 şartlarını ayrı doğrula.",
+      "responsible_role": "İK ve KVKK İrtibat Sorumlusu",
+      "required_record": "İmzalı Çalışan KVKK Aydınlatma Metni ve Hukuki Sebep Kaydı",
+      "statutory_anchor_id": "CARD-6698-M05-M06-M10"
+    },
+    {
+      "step_no": 3,
+      "action": "İşe giriş sağlık raporu, İSG temel eğitim belgesi, kimlik/ikamet/mezuniyet belgeleri ve imzalı iş sözleşmesini 4857 m.75 özlük dosyasında gizlilik ilkesiyle arşivle.",
+      "responsible_role": "İK Özlük ve İSG Sorumlusu",
+      "required_record": "4857 m.75 Özlük Dosyası Kontrol Listesi",
+      "statutory_anchor_id": "CARD-6331-M04-M06"
+    }
+  ],
+  "escalation_triggers": [
+    "İşe giriş bildirgesinin fiili çalışma tarihinden sonra verilmesi (5510 m.102 İPC riski)",
+    "Özel nitelikli kişisel verilerin (sağlık/biyometrik) hukuki sebep veya açık rıza/kanuni öngörü olmadan toplanması",
+    "Çalışanın iş sözleşmesini veya zorunlu İSG belgelerini imzalamaktan kaçınması"
+  ],
+  "rules": [
+    {
+      "rule_id": "RULE-L5-01-SGK-GIRIS",
+      "title": "SGK İşe Giriş Bildirgesi Mutlak Süresi",
+      "rule_summary": "Kurumsal İK prosedürü, 5510 m.8 ve SSİY m.11 uyarınca sigortalı işe giriş bildirgesinin yasal süresinden daha geç verilmesini öngöremez; işveren içi onay gecikmesi yasal bildirimi erteleyemez.",
+      "norm_type": "STATUTORY_ABSOLUTE_MANDATORY",
+      "legal_basis_ids": [
+        "CARD-5510-M08-M09",
+        "CARD-SSIY-M11-M14",
+        "CARD-5510-M102"
+      ],
+      "source_document_id": "HRAI-L5-PROC-01",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": false,
+        "statutory_floor_nature": "ABSOLUTE_MANDATORY",
+        "can_improve_for_employee": false,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "5510 m.8 kamu düzenine ilişkin mutlak emredici bildirim yükümlülüğüdür; sözleşme veya İK prosedürüyle esnetilemez."
+      },
+      "conflict_resolution": {
+        "strategy": "STATUTORY_ABSOLUTE_PREVAILS",
+        "higher_authority_ref": "5510 s. Kanun m.8-9 ve SSİY m.11",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "Kurumsal İK prosedürü yalnızca iç operasyon akışını düzenler; TİS veya bireysel sözleşme ile dahi SGK bildirim süresi değiştirilemez.",
+        "rationale": "Mutlak emredici sosyal güvenlik bildirim kuralı karşısında her türlü kurum içi prosedür hükmü geri planda kalır."
+      },
+      "human_review_required": true
+    },
+    {
+      "rule_id": "RULE-L5-01-KVKK-OZLUK",
+      "title": "Özlük Dosyasında KVKK Veri Minimizasyonu ve Aydınlatma",
+      "rule_summary": "Özlük dosyasında toplanacak belgeler 4857 m.75 ve 6698 m.5-6-10 ilkeleriyle ölçülü olmalı; işin niteliğiyle ilgisiz özel nitelikli veri talep edilmemelidir.",
+      "norm_type": "CORPORATE_HR_PROCEDURE",
+      "legal_basis_ids": [
+        "CARD-6698-M05-M06-M10",
+        "MEVZUAT-4857"
+      ],
+      "source_document_id": "HRAI-L5-PROC-01",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": true,
+        "statutory_floor_nature": "ABSOLUTE_MANDATORY",
+        "can_improve_for_employee": true,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "Kurum içi veri koruma tedbirleri KVKK asgari güvencelerinin üzerine çıkabilir, ancak aydınlatma ve m.6 korumasının altına inemez."
+      },
+      "conflict_resolution": {
+        "strategy": "STATUTORY_ABSOLUTE_PREVAILS",
+        "higher_authority_ref": "6698 s. KVKK m.5, m.6, m.10",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "Tek taraflı İK prosedürü ile çalışanın KVKK haklarından feragat ettirilemez; iş sözleşmesine konulan genel rıza klozları ayrıca denetlenir.",
+        "rationale": "6698 sayılı Kanun kapsamındaki veri koruma güvenceleri mutlak emredici asgari sınırdır; şablon kurumca benimsenmeden yürürlükteki politika sayılamaz."
+      },
+      "human_review_required": true
+    }
+  ],
+  "disclaimer": "Bu kayıt hrAI @HukukSGK L5 kurumsal İK prosedürü referans şablonudur (REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION). İlgili şirket yönetimince kabul edilip hukuk müşavirince onaylanmadan yürürlükteki şirket politikası gibi uygulanamaz."
+}

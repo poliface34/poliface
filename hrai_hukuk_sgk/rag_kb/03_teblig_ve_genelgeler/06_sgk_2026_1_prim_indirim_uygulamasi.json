@@ -1,0 +1,116 @@
+{
+  "schema_version": "1.0.2b",
+  "law_no": "SGK-2026/1",
+  "law_title": "SGK 2026/1 No.lu Genelge Uygulaması (2026 Sigorta Primi Teşvikleri — 2 Puan Genel / 5 Puan İmalat)",
+  "source_id": "SGK-TESVIK-2026-1-REHBER",
+  "cards": [
+    {
+      "card_id": "CARD-SGK-2026-1-INDIRIM",
+      "source_id": "SGK-TESVIK-2026-1-REHBER",
+      "law_no": "SGK-2026/1",
+      "article_ref": "SGK 2026/1 Genelge Uygulaması (5510 m.81/1-ı & Geçici m.108)",
+      "topic": "2026 Yılı Hazine Prim İndirimi Uygulama Usulü: Genel 2 Puan (m.81/1-ı) vs. İmalat 5 Puan (Geçici m.108)",
+      "legal_basis": {
+        "source_id": "SGK-TESVIK-2026-1-REHBER",
+        "original_publication_ref": "SGK 2026 Sigorta Primi Teşvikleri Resmî Rehberi (2026/1 No.lu Genelge Uygulaması)",
+        "consolidated_text_url": "https://www.sgk.gov.tr/Download/DownloadFile?f=bffda8a4-202a-4af5-b1c4-d645f4f69aab.pdf&d=de85036d-ef64-49f1-834c-916a79f1a923",
+        "secondary_statutory_anchors": [
+          "5510 m.81/1-ı",
+          "5510 Geçici m.108",
+          "7566 Sayılı Kanun"
+        ],
+        "amendment_history": [
+          {
+            "amending_law_no": "7566",
+            "official_gazette_no": "33112",
+            "publication_date": "2025-12-19",
+            "effective_from": "2026-01-01",
+            "summary": "01.01.2026 itibarıyla 5510 m.81/1-ı kapsamındaki genel işveren prim indirimi 2 puana düşürüldü; imalat sektöründe faaliyet gösteren işyerleri için 5510 Geçici m.108 kapsamında 5 puanlık indirim 31.12.2026 sonuna kadar sürdürüldü."
+          }
+        ]
+      },
+      "scope_of_application": "CARD-5510-M81 ile uyumlu olarak 2026 yılında '5510' kanun numarasıyla verilen MUHSGK beyannamelerinde özel sektör işverenleri için genel 2 puanlık Hazine indiriminin (5510 m.81/1-ı) ve imalat sektörü NACE koduna sahip işyerleri için 5 puanlık indirimin (5510 Geçici m.108) yararlanma koşullarını (süresinde beyan, prim borcu olmaması/yapılandırılmış olması, kayıt dışı sigortalı çalıştırmama) düzenler.",
+      "application_scenarios": [
+        {
+          "scenario_id": "SGK_2026_1_GENERAL_2_POINTS_VS_MANUFACTURING_5_POINTS",
+          "condition": "2026 yılı MUHSGK bildiriminde '5510' kanun numarası ile prim indirimi kontrolü",
+          "legal_rule": "Genel özel sektör işyerleri 5510 m.81/1-ı uyarınca 2 puan indirimden; imalat sektöründe faaliyet gösteren işyerleri ise 5510 Geçici m.108 uyarınca 31.12.2026 sonuna kadar 5 puan indirimden yararlanır. Her iki halin de yasal dayanağı ayrı maddelerdir.",
+          "statutory_basis": "5510 m.81/1-ı, 5510 Geçici m.108, 7566 Sayılı Kanun ve SGK 2026/1 Genelge Uygulaması"
+        }
+      ],
+      "statutory_subordination": {
+        "concretizes_statutory_provisions": [
+          "5510 Sayılı Kanun m.81/1-ı",
+          "5510 Sayılı Kanun Geçici m.108",
+          "7566 Sayılı Kanun"
+        ],
+        "cannot_override_parent_law": true,
+        "hierarchy_note": "SGK 2026/1 uygulama rehberi/genelgesi, 5510 m.81/1-ı ve Geçici m.108'de kanunla belirlenen 2 puan / 5 puan indirim oranlarını ve 31.12.2026 süre sınırını değiştiremez veya imalat dışı sektörlere 5 puan tanıyamaz."
+      },
+      "exceptions": [
+        "SGK'ya vadesi geçmiş prim, işsizlik sigortası primi veya idari para cezası borcu bulunan işyerleri (tecil/taksitlendirme hariç) indirimden yararlanamaz.",
+        "SGDP'ye tabi çalışan emekliler, kamu idareleri ve 2886/4734 kapsamındaki ihale konusu işler (kanuni kapsam dışı haller) bu indirimden yararlanamaz."
+      ],
+      "required_documents": [
+        "SGK İşyeri NACE Kodu ve Borcu Yoktur sorgulama kaydı",
+        "5510 kanun numaralı MUHSGK tahakkuk fişi"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "SGK'nın resmî sgk.gov.tr 2026 Sigorta Primi Teşvikleri PDF belgesine dayanır; CARD-5510-M81 ile tam tutarlıdır.",
+      "effective_validity": {
+        "effective_from": "2026-01-01",
+        "effective_to": "2026-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "7566 sayılı Kanun ve SGK 2026/1 Genelge uygulaması 01.01.2026–31.12.2026 dönemini kapsar."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "2025 yılına ait 4 puanlık genel indirim oranının 2026 bordrolarında kullanılması eksik prim ödemesi ve gecikme zammı doğurur.",
+        "İmalat dışı bir işyerinde 5 puan indirim varsayılması hatalı maliyet ve SGK fark tahakkuku riski oluşturur."
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@UcretBordro"
+      ],
+      "disclaimer": "Bu bilgi kartı ikincil mevzuatın resmî metin ve değişiklik geçmişine dayalı yapılandırılmış teknik hukuki referansıdır; üst norm olan kanunu genişletemez veya bertaraf edemez. Bağlayıcı hukuki mütalaa yerine geçmez; somut uyuşmazlıklarda yetkili hukuk müşavirine danışılmalıdır.",
+      "verification_status": "VERIFIED",
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "SGK-TESVIK-2026-1-REHBER",
+        "source_audit_log_id": "AUD-20261120-SGK20261",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-SGK-REV-02",
+        "reviewer_role": "SGK_COMPLIANCE_SPECIALIST",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "SGK 2026/1 uygulaması kapsamında 5510 m.81/1-ı (2 puan) ile Geçici m.108 (5 puan imalat) yasal dayanak ayrımı ve üst kanuna bağlılığı doğrulandı."
+      },
+      "verification_audit": {
+        "verifier_id": "CALISORA-SGK-01",
+        "verifier_role": "SGK_COMPLIANCE_SPECIALIST",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-CARDSGK20261",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "keywords": [
+        "sgk 2026/1",
+        "2 puan",
+        "5 puan imalat",
+        "geçici m.108",
+        "5510 m.81/1-ı",
+        "nace",
+        "7566"
+      ]
+    }
+  ]
+}

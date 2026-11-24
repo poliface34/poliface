@@ -1,0 +1,2414 @@
+{
+  "schema_version": "1.0.5.1",
+  "description": "hrAI @HukukSGK resmî mevzuat kayıt defteri (v1.0.5.1 — Kaynak İçeriği, Dijital İmza, Doğrulayan Kimlik Güvencesi ve Değiştirilemez Denetim Zinciri, 4857 m.26 Takvim Bütünlüğü & Arife Doğrulama Güvencesi, 4857 m.109 / 7555 m.23 Tarihsel Sürümleme, Normlar Hiyerarşisi ve İçtihat Uygulama Modeli). L1 kanunlar, L2 İş Kanunu/SGK yönetmelikleri ve L3 GİB tebliğleri/Cumhurbaşkanı Kararları/SGK genelge-uygulama kaynakları için denetim izi, canlı HTTP/SHA-256 belge bütünlüğü, ilk metin/konsolide metin/değişiklik geçmişi ayrımı, Anayasa m.11 & m.90/5 uluslararası antlaşma ayrımı, CBK vs. Cumhurbaşkanı Kararı ayrımı ve madde bazlı yürürlük kurallarını içerir.",
+  "sources": {
+    "MEVZUAT-4857": {
+      "source_id": "MEVZUAT-4857",
+      "source_title": "4857 Sayılı İş Kanunu",
+      "source_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857&MevzuatTur=1&MevzuatTertip=5",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "OFFICIAL_GAZETTE_LAW",
+      "norm_layer": "STATUTORY_LAW",
+      "norm_priority": 3,
+      "legal_reference": "4857 Sayılı İş Kanunu",
+      "statute_number": "4857",
+      "official_gazette_no": "25134",
+      "publication_date": "2003-06-10",
+      "effective_from": "2003-06-10",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "1475 Sayılı İş Kanunu (m.14 hariç)",
+      "superseded_by": null,
+      "keywords": [
+        "iş kanunu",
+        "fesih",
+        "savunma",
+        "iş güvencesi",
+        "fazla çalışma",
+        "yıllık izin",
+        "ihbar",
+        "belirli süreli",
+        "alt işveren",
+        "toplu işçi çıkarma",
+        "madde 109",
+        "yazılı bildirim",
+        "7555"
+      ],
+      "content_sha256": "cd75c7fe92bd438443549c3e973e7ea6d03137e9a6bb2652aded52a8ca95e84e",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-MEVZUAT4857",
+        "verified_at": "2026-11-20T08:38:37Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "cd75c7fe92bd438443549c3e973e7ea6d03137e9a6bb2652aded52a8ca95e84e",
+        "expected_text_markers": [
+          "İŞ KANUNU",
+          "4857",
+          "Madde 19",
+          "Madde 25"
+        ],
+        "matched_text_markers": [
+          "İŞ KANUNU",
+          "4857",
+          "Madde 19",
+          "Madde 25"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "25134",
+        "publication_date": "2003-06-10",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": null
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857&MevzuatTur=1&MevzuatTertip=5",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": true,
+        "latest_tracked_amendment": "7555"
+      },
+      "amendment_history": [
+        {
+          "amending_law_no": "6552",
+          "official_gazette_no": "29116 (Mükerrer)",
+          "publication_date": "2014-09-11",
+          "affected_articles": [
+            "Madde 41",
+            "Madde 53"
+          ],
+          "effective_from": "2014-09-11",
+          "summary": "Yer altı maden işçileri için fazla çalışma sınırlaması ve yıllık izin sürelerine +4 gün eklenmesi."
+        },
+        {
+          "amending_law_no": "6645",
+          "official_gazette_no": "29335",
+          "publication_date": "2015-04-23",
+          "affected_articles": [
+            "Madde 41",
+            "Madde 63"
+          ],
+          "effective_from": "2015-04-23",
+          "summary": "6645 m.34 ve m.36 ile yer altı maden işçilerinde haftalık normal çalışma süresi 36 saatten 37,5 saate (günlük 7,5 saat) çıkarılmış; 37,5 saati aşan zorunlu/olağanüstü fazla çalışma ücretinin en az %100 zamlı ödenmesi düzenlenmiştir."
+        },
+        {
+          "amending_law_no": "7036",
+          "official_gazette_no": "30221",
+          "publication_date": "2017-10-25",
+          "affected_articles": [
+            "Madde 20",
+            "Madde 21",
+            "Ek Madde 3",
+            "Geçici Madde 8"
+          ],
+          "effective_from": "2017-10-25",
+          "summary": "Ek m.3 ile yıllık izin ve tazminatlarda 5 yıllık zamanaşımı (25.10.2017); m.20-21 işe iade arabuluculuk değişikliği (01.01.2018)."
+        },
+        {
+          "amending_law_no": "7555",
+          "official_gazette_no": "32965",
+          "publication_date": "2025-07-24",
+          "affected_articles": [
+            "Madde 109"
+          ],
+          "effective_from": "2025-07-24",
+          "summary": "7555 sayılı Kanun m.23 (yürürlük m.27/1-d: 24.07.2025) ile 4857 m.109 başlığıyla birlikte değiştirilerek işçinin yazılı kabulü şartıyla KEP üzerinden bildirim imkânı getirilmiş; ancak 'İş sözleşmesinin feshi sonucunu doğuracak bildirimler her hâlde yazılı yapılır.' emredici hükmü öngörülmüştür."
+        }
+      ],
+      "article_effective_rules": [
+        {
+          "article_ref": "Ek Madde 3",
+          "effective_from": "2017-10-25",
+          "effective_to": "2099-12-31",
+          "basis": "7036 m.15 ve m.38/1-b",
+          "amended_by": "7036"
+        },
+        {
+          "article_ref": "Madde 20",
+          "effective_from": "2018-01-01",
+          "effective_to": "2099-12-31",
+          "basis": "7036 m.11 ve m.38/1-a (zorunlu arabuluculuk sonrası işe iade)",
+          "amended_by": "7036"
+        },
+        {
+          "article_ref": "Madde 109 (7555 Öncesi İlk Metin)",
+          "effective_from": "2003-06-10",
+          "effective_to": "2025-07-23",
+          "basis": "4857 Sayılı İş Kanunu m.109 ilk metin (RG 10.06.2003 / 25134) — 7555 m.23 öncesi yazılı bildirim rejimi",
+          "amended_by": null
+        },
+        {
+          "article_ref": "Madde 109",
+          "effective_from": "2025-07-24",
+          "effective_to": "2099-12-31",
+          "basis": "7555 Sayılı Kanun m.23 ve m.27/1-d (RG 24.07.2025 / 32965) — İş sözleşmesinin feshi sonucunu doğuracak bildirimler her hâlde yazılı yapılır (KEP ile fesih yapılamaz)",
+          "amended_by": "7555"
+        }
+      ]
+    },
+    "MEVZUAT-1475": {
+      "source_id": "MEVZUAT-1475",
+      "source_title": "1475 Sayılı İş Kanunu (Yürürlükteki Madde 14 - Kıdem Tazminatı)",
+      "source_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=1475&MevzuatTur=1&MevzuatTertip=5",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "OFFICIAL_GAZETTE_LAW",
+      "norm_layer": "STATUTORY_LAW",
+      "norm_priority": 3,
+      "legal_reference": "1475 Sayılı Kanun m.14",
+      "statute_number": "1475",
+      "official_gazette_no": "13943",
+      "publication_date": "1971-09-01",
+      "effective_from": "1971-09-01",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "NONE",
+      "superseded_by": null,
+      "keywords": [
+        "kıdem tazminatı",
+        "1475",
+        "madde 14",
+        "emeklilik",
+        "evlilik",
+        "askerlik"
+      ],
+      "content_sha256": "8e5f61cb598bb2d4a5bdea6391aef0079b699f16c1857eb779bcc18eb10d25ce",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-MEVZUAT1475",
+        "verified_at": "2026-11-20T08:38:38Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "8e5f61cb598bb2d4a5bdea6391aef0079b699f16c1857eb779bcc18eb10d25ce",
+        "expected_text_markers": [
+          "1475",
+          "Madde 14",
+          "kıdem tazminatı"
+        ],
+        "matched_text_markers": [
+          "1475",
+          "Madde 14",
+          "kıdem tazminatı"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "13943",
+        "publication_date": "1971-09-01",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": null
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=1475&MevzuatTur=1&MevzuatTertip=5",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": true,
+        "latest_tracked_amendment": "4857"
+      },
+      "amendment_history": [
+        {
+          "amending_law_no": "4857",
+          "official_gazette_no": "25134",
+          "publication_date": "2003-06-10",
+          "affected_articles": [
+            "Madde 14 (yürürlükte bırakıldı)"
+          ],
+          "effective_from": "2003-06-10",
+          "summary": "4857 m.120 ile m.14 dışındaki tüm maddeler mülga edilmiş, kıdem tazminatı maddesi yürürlükte bırakılmıştır."
+        }
+      ],
+      "article_effective_rules": []
+    },
+    "MEVZUAT-5510": {
+      "source_id": "MEVZUAT-5510",
+      "source_title": "5510 Sayılı Sosyal Sigortalar ve Genel Sağlık Sigortası Kanunu",
+      "source_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=5510&MevzuatTur=1&MevzuatTertip=5",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "OFFICIAL_GAZETTE_LAW",
+      "norm_layer": "STATUTORY_LAW",
+      "norm_priority": 3,
+      "legal_reference": "5510 Sayılı Kanun",
+      "statute_number": "5510",
+      "official_gazette_no": "26200",
+      "publication_date": "2006-06-16",
+      "effective_from": "2008-10-01",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-SGK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "506 Sayılı Sosyal Sigortalar Kanunu",
+      "superseded_by": null,
+      "keywords": [
+        "sgk",
+        "5510",
+        "işe giriş",
+        "işten ayrılış",
+        "pek",
+        "prime esas kazanç",
+        "idari para cezası",
+        "ipc",
+        "m.102",
+        "eksik gün",
+        "istirahat"
+      ],
+      "content_sha256": "4437a2d33bc61b08787822fbf4670d23ffb7efb10ad334ae6be594759be2c530",
+      "verification_audit": {
+        "verifier_id": "CALISORA-SGK-01",
+        "verifier_role": "SGK_COMPLIANCE_SPECIALIST",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-MEVZUAT5510",
+        "verified_at": "2026-11-20T08:38:39Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "4437a2d33bc61b08787822fbf4670d23ffb7efb10ad334ae6be594759be2c530",
+        "expected_text_markers": [
+          "5510",
+          "SOSYAL SİGORTALAR",
+          "Madde 102"
+        ],
+        "matched_text_markers": [
+          "5510",
+          "SOSYAL SİGORTALAR",
+          "Madde 102"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "26200",
+        "publication_date": "2006-06-16",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": null
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=5510&MevzuatTur=1&MevzuatTertip=5",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": true,
+        "latest_tracked_amendment": "7566"
+      },
+      "amendment_history": [
+        {
+          "amending_law_no": "7538",
+          "official_gazette_no": "32783",
+          "publication_date": "2025-01-15",
+          "affected_articles": [
+            "Madde 81/1-ı",
+            "Geçici Madde 108"
+          ],
+          "effective_from": "2025-02-01",
+          "summary": "7538 m.10 ile 5510 m.81/1-ı genel indirimi 4 puana indirildi; 7538 m.17 ile eklenen Geçici Madde 108 ile imalat sektöründe 5 puanlık indirim 31.12.2026'ya kadar korundu."
+        },
+        {
+          "amending_law_no": "7566",
+          "official_gazette_no": "33112",
+          "publication_date": "2025-12-19",
+          "affected_articles": [
+            "Madde 81/1-a",
+            "Madde 81/1-ı",
+            "Madde 82",
+            "Geçici Madde 108"
+          ],
+          "effective_from": "2026-01-01",
+          "summary": "7566 m.23 ile MYÖ işveren payı %12'ye (toplam MYÖ %21) çıkarıldı ve m.81/1-ı genel indirimi 2 puana düşürüldü; m.24 ile m.82 PEK tavanı 9 kata yükseltildi; m.27 ile Geçici m.108 güncellenerek imalat sektöründe 5 puanlık indirim 31.12.2026'ya kadar (Cumhurbaşkanı yetkisiyle 31.12.2027) ayrı yasal dayanakla sürdürüldü."
+        }
+      ],
+      "article_effective_rules": [
+        {
+          "article_ref": "Madde 81/1-a",
+          "effective_from": "2026-01-01",
+          "effective_to": "2099-12-31",
+          "basis": "7566 m.23 — MYÖ işveren %12, toplam MYÖ %21",
+          "amended_by": "7566"
+        },
+        {
+          "article_ref": "Madde 81/1-ı",
+          "effective_from": "2026-01-01",
+          "effective_to": "2099-12-31",
+          "basis": "7566 m.23 — Özel sektör genel 2 puanlık Hazine indirimi",
+          "amended_by": "7566"
+        },
+        {
+          "article_ref": "Geçici Madde 108",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "basis": "7538 m.17 ve 7566 m.27 — İmalat sektöründe 5 puanlık Hazine indirimi (31.12.2026'ya kadar; CB uzatma yetkisi 31.12.2027)",
+          "amended_by": "7566"
+        },
+        {
+          "article_ref": "Madde 81",
+          "effective_from": "2026-01-01",
+          "effective_to": "2099-12-31",
+          "basis": "7566 m.23 — 2026 prim oranı ve genel 2 puan indirim güncellemesi",
+          "amended_by": "7566"
+        },
+        {
+          "article_ref": "Madde 82",
+          "effective_from": "2026-01-01",
+          "effective_to": "2099-12-31",
+          "basis": "7566 m.24 — Günlük PEK üst sınırı 9 kat",
+          "amended_by": "7566"
+        }
+      ]
+    },
+    "MEVZUAT-6331": {
+      "source_id": "MEVZUAT-6331",
+      "source_title": "6331 Sayılı İş Sağlığı ve Güvenliği Kanunu",
+      "source_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6331&MevzuatTur=1&MevzuatTertip=5",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "OFFICIAL_GAZETTE_LAW",
+      "norm_layer": "STATUTORY_LAW",
+      "norm_priority": 3,
+      "legal_reference": "6331 Sayılı İSG Kanunu",
+      "statute_number": "6331",
+      "official_gazette_no": "28339",
+      "publication_date": "2012-06-30",
+      "effective_from": "2012-06-30",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "4857 Sayılı Kanun İSG Hükümleri",
+      "superseded_by": null,
+      "keywords": [
+        "isg",
+        "iş sağlığı",
+        "iş kazası",
+        "3 iş günü",
+        "meslek hastalığı",
+        "6331",
+        "m.14",
+        "risk değerlendirmesi"
+      ],
+      "content_sha256": "2c4862501446271079d88776109717df747a9030dc355c941f21cf2afbec0404",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-MEVZUAT6331",
+        "verified_at": "2026-11-20T08:38:41Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "2c4862501446271079d88776109717df747a9030dc355c941f21cf2afbec0404",
+        "expected_text_markers": [
+          "6331",
+          "İŞ SAĞLIĞI VE GÜVENLİĞİ",
+          "MADDE 14"
+        ],
+        "matched_text_markers": [
+          "6331",
+          "İŞ SAĞLIĞI VE GÜVENLİĞİ",
+          "MADDE 14"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "28339",
+        "publication_date": "2012-06-30",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": null
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6331&MevzuatTur=1&MevzuatTertip=5",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": true,
+        "latest_tracked_amendment": "7491"
+      },
+      "amendment_history": [
+        {
+          "amending_law_no": "7491",
+          "official_gazette_no": "32413",
+          "publication_date": "2023-12-28",
+          "affected_articles": [
+            "Madde 6",
+            "Madde 38"
+          ],
+          "effective_from": "2025-01-01",
+          "summary": "50'den az çalışanı bulunan az tehlikeli işyerleri ile kamu kurumları için m.6 İSG profesyoneli yükümlülüğü 01.01.2025 tarihinde yürürlüğe girdi."
+        }
+      ],
+      "article_effective_rules": [
+        {
+          "article_ref": "Madde 14",
+          "effective_from": "2012-12-30",
+          "effective_to": "2099-12-31",
+          "basis": "6331 m.38/1-c (yayımından 6 ay sonra)",
+          "amended_by": null
+        },
+        {
+          "article_ref": "Madde 6",
+          "effective_from": "2025-01-01",
+          "effective_to": "2099-12-31",
+          "basis": "7491 m.71 — 50'den az az tehlikeli işyerleri tam kapsama girişi",
+          "amended_by": "7491"
+        }
+      ]
+    },
+    "MEVZUAT-6356": {
+      "source_id": "MEVZUAT-6356",
+      "source_title": "6356 Sayılı Sendikalar ve Toplu İş Sözleşmesi Kanunu",
+      "source_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6356&MevzuatTur=1&MevzuatTertip=5",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "OFFICIAL_GAZETTE_LAW",
+      "norm_layer": "STATUTORY_LAW",
+      "norm_priority": 3,
+      "legal_reference": "6356 Sayılı STİSK",
+      "statute_number": "6356",
+      "official_gazette_no": "28460",
+      "publication_date": "2012-11-07",
+      "effective_from": "2012-11-07",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "2821 ve 2822 Sayılı Kanunlar",
+      "superseded_by": null,
+      "keywords": [
+        "sendika",
+        "toplu iş sözleşmesi",
+        "tis",
+        "sendikal tazminat",
+        "işyeri sendika temsilcisi",
+        "6356"
+      ],
+      "content_sha256": "15cf621ac432118320fce416e432cc3fbc8e40d8d3eed0ad8f425822fb8d80c2",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-MEVZUAT6356",
+        "verified_at": "2026-11-20T08:38:41Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "15cf621ac432118320fce416e432cc3fbc8e40d8d3eed0ad8f425822fb8d80c2",
+        "expected_text_markers": [
+          "6356",
+          "SENDİKALAR VE TOPLU İŞ SÖZLEŞMESİ",
+          "MADDE 24"
+        ],
+        "matched_text_markers": [
+          "6356",
+          "SENDİKALAR VE TOPLU İŞ SÖZLEŞMESİ",
+          "MADDE 24"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "28460",
+        "publication_date": "2012-11-07",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": null
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6356&MevzuatTur=1&MevzuatTertip=5",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": true,
+        "latest_tracked_amendment": null
+      },
+      "amendment_history": [],
+      "article_effective_rules": []
+    },
+    "MEVZUAT-7036": {
+      "source_id": "MEVZUAT-7036",
+      "source_title": "7036 Sayılı İş Mahkemeleri Kanunu",
+      "source_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=7036&MevzuatTur=1&MevzuatTertip=5",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "OFFICIAL_GAZETTE_LAW",
+      "norm_layer": "STATUTORY_LAW",
+      "norm_priority": 3,
+      "legal_reference": "7036 Sayılı İş Mahkemeleri Kanunu",
+      "statute_number": "7036",
+      "official_gazette_no": "30221",
+      "publication_date": "2017-10-25",
+      "effective_from": "2017-10-25",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "5521 Sayılı İş Mahkemeleri Kanunu",
+      "superseded_by": null,
+      "keywords": [
+        "arabuluculuk",
+        "dava şartı",
+        "işe iade",
+        "zamanaşımı",
+        "5 yıl",
+        "iş mahkemeleri",
+        "7036"
+      ],
+      "content_sha256": "b717e14a8d199d2d22f0f854b75a14cf642e565209f029656bafa82abd1dd842",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-MEVZUAT7036",
+        "verified_at": "2026-11-20T08:38:42Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "b717e14a8d199d2d22f0f854b75a14cf642e565209f029656bafa82abd1dd842",
+        "expected_text_markers": [
+          "7036",
+          "İŞ MAHKEMELERİ KANUNU",
+          "arabulucu"
+        ],
+        "matched_text_markers": [
+          "7036",
+          "İŞ MAHKEMELERİ KANUNU",
+          "arabulucu"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "30221",
+        "publication_date": "2017-10-25",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": null
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=7036&MevzuatTur=1&MevzuatTertip=5",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": true,
+        "latest_tracked_amendment": null
+      },
+      "amendment_history": [],
+      "article_effective_rules": [
+        {
+          "article_ref": "Madde 3",
+          "effective_from": "2018-01-01",
+          "effective_to": "2099-12-31",
+          "basis": "7036 m.38/1-a — Dava şartı arabuluculuk 01.01.2018 tarihinde yürürlüğe girdi",
+          "amended_by": null
+        },
+        {
+          "article_ref": "Madde 11",
+          "effective_from": "2018-01-01",
+          "effective_to": "2099-12-31",
+          "basis": "7036 m.38/1-a",
+          "amended_by": null
+        },
+        {
+          "article_ref": "Madde 12",
+          "effective_from": "2018-01-01",
+          "effective_to": "2099-12-31",
+          "basis": "7036 m.38/1-a",
+          "amended_by": null
+        }
+      ]
+    },
+    "MEVZUAT-4447": {
+      "source_id": "MEVZUAT-4447",
+      "source_title": "4447 Sayılı İşsizlik Sigortası Kanunu",
+      "source_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4447&MevzuatTur=1&MevzuatTertip=5",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "OFFICIAL_GAZETTE_LAW",
+      "norm_layer": "STATUTORY_LAW",
+      "norm_priority": 3,
+      "legal_reference": "4447 Sayılı Kanun",
+      "statute_number": "4447",
+      "official_gazette_no": "23810",
+      "publication_date": "1999-09-08",
+      "effective_from": "1999-09-08",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-SGK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "NONE",
+      "superseded_by": null,
+      "keywords": [
+        "işsizlik sigortası",
+        "işsizlik ödeneği",
+        "kısa çalışma",
+        "4447",
+        "işten ayrılış kodu"
+      ],
+      "content_sha256": "475d05ce475d350b60ccf7b7955cc9952ca1d1e109e7952acd249e483a22df3e",
+      "verification_audit": {
+        "verifier_id": "CALISORA-SGK-01",
+        "verifier_role": "SGK_COMPLIANCE_SPECIALIST",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-MEVZUAT4447",
+        "verified_at": "2026-11-20T08:38:43Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "475d05ce475d350b60ccf7b7955cc9952ca1d1e109e7952acd249e483a22df3e",
+        "expected_text_markers": [
+          "4447",
+          "İŞSİZLİK SİGORTASI",
+          "Madde 50"
+        ],
+        "matched_text_markers": [
+          "4447",
+          "İŞSİZLİK SİGORTASI",
+          "Madde 50"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "23810",
+        "publication_date": "1999-09-08",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": null
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4447&MevzuatTur=1&MevzuatTertip=5",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": true,
+        "latest_tracked_amendment": "7161"
+      },
+      "amendment_history": [
+        {
+          "amending_law_no": "7161",
+          "official_gazette_no": "30659",
+          "publication_date": "2019-01-18",
+          "affected_articles": [
+            "Madde 50"
+          ],
+          "effective_from": "2019-01-18",
+          "summary": "İşsizlik ödeneğinde son 120 gün kesintisiz prim yerine son 120 gün hizmet akdine tabi olma şartı getirildi."
+        }
+      ],
+      "article_effective_rules": []
+    },
+    "MEVZUAT-6698": {
+      "source_id": "MEVZUAT-6698",
+      "source_title": "6698 Sayılı Kişisel Verilerin Korunması Kanunu",
+      "source_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6698&MevzuatTur=1&MevzuatTertip=5",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "OFFICIAL_GAZETTE_LAW",
+      "norm_layer": "STATUTORY_LAW",
+      "norm_priority": 3,
+      "legal_reference": "6698 Sayılı KVKK",
+      "statute_number": "6698",
+      "official_gazette_no": "29677",
+      "publication_date": "2016-04-07",
+      "effective_from": "2016-04-07",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "NONE",
+      "superseded_by": null,
+      "keywords": [
+        "kvkk",
+        "kişisel veri",
+        "özlük dosyası",
+        "aydınlatma metni",
+        "sağlık verisi",
+        "biyometrik pdks",
+        "6698"
+      ],
+      "content_sha256": "1ad27253b0068d4c3d991b92b68c6bc1104439430160f4350a3f04fbb211f2b5",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-MEVZUAT6698",
+        "verified_at": "2026-11-20T08:38:44Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "1ad27253b0068d4c3d991b92b68c6bc1104439430160f4350a3f04fbb211f2b5",
+        "expected_text_markers": [
+          "6698",
+          "KİŞİSEL VERİLERİN KORUNMASI",
+          "MADDE 6"
+        ],
+        "matched_text_markers": [
+          "6698",
+          "KİŞİSEL VERİLERİN KORUNMASI",
+          "MADDE 6"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "29677",
+        "publication_date": "2016-04-07",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": null
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6698&MevzuatTur=1&MevzuatTertip=5",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": true,
+        "latest_tracked_amendment": "7499"
+      },
+      "amendment_history": [
+        {
+          "amending_law_no": "7499",
+          "official_gazette_no": "32487",
+          "publication_date": "2024-03-12",
+          "affected_articles": [
+            "Madde 6",
+            "Madde 9",
+            "Madde 18"
+          ],
+          "effective_from": "2024-06-01",
+          "summary": "Özel nitelikli kişisel verilerin istihdam/İSG/SGK hukuki yükümlülükleri kapsamında işlenmesi (m.6/3-f) ve standart sözleşme yurt dışı aktarım rejimi getirildi."
+        }
+      ],
+      "article_effective_rules": [
+        {
+          "article_ref": "Madde 6",
+          "effective_from": "2024-06-01",
+          "effective_to": "2099-12-31",
+          "basis": "7499 m.33 — Yeni m.6/3 özel nitelikli veri işleme rejimi 01.06.2024",
+          "amended_by": "7499"
+        }
+      ]
+    },
+    "MEVZUAT-6098": {
+      "source_id": "MEVZUAT-6098",
+      "source_title": "6098 Sayılı Türk Borçlar Kanunu (Hizmet Sözleşmesi, m.420 İbraname ve Cezai Şart)",
+      "source_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6098&MevzuatTur=1&MevzuatTertip=5",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "OFFICIAL_GAZETTE_LAW",
+      "norm_layer": "STATUTORY_LAW",
+      "norm_priority": 3,
+      "legal_reference": "6098 Sayılı TBK",
+      "statute_number": "6098",
+      "official_gazette_no": "27836",
+      "publication_date": "2011-02-04",
+      "effective_from": "2012-07-01",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "818 Sayılı Borçlar Kanunu",
+      "superseded_by": null,
+      "keywords": [
+        "tbk",
+        "ibraname",
+        "m.420",
+        "1 ay",
+        "cezai şart",
+        "rekabet yasağı",
+        "hizmet sözleşmesi",
+        "6098"
+      ],
+      "content_sha256": "052287d8111a07612974f31a71ed3c90e9743aa28d77a005846e4c392316b9d9",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-MEVZUAT6098",
+        "verified_at": "2026-11-20T08:38:44Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "052287d8111a07612974f31a71ed3c90e9743aa28d77a005846e4c392316b9d9",
+        "expected_text_markers": [
+          "6098",
+          "TÜRK BORÇLAR KANUNU",
+          "MADDE 420"
+        ],
+        "matched_text_markers": [
+          "6098",
+          "TÜRK BORÇLAR KANUNU",
+          "MADDE 420"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "27836",
+        "publication_date": "2011-02-04",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": null
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6098&MevzuatTur=1&MevzuatTertip=5",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": true,
+        "latest_tracked_amendment": null
+      },
+      "amendment_history": [],
+      "article_effective_rules": []
+    },
+    "MEVZUAT-193": {
+      "source_id": "MEVZUAT-193",
+      "source_title": "193 Sayılı Gelir Vergisi Kanunu",
+      "source_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=193&MevzuatTur=1&MevzuatTertip=4",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "OFFICIAL_GAZETTE_LAW",
+      "norm_layer": "STATUTORY_LAW",
+      "norm_priority": 3,
+      "legal_reference": "193 Sayılı Gelir Vergisi Kanunu",
+      "statute_number": "193",
+      "official_gazette_no": "10700",
+      "publication_date": "1961-01-06",
+      "effective_from": "1961-01-01",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "5421 Sayılı Gelir Vergisi Kanunu",
+      "superseded_by": null,
+      "keywords": [
+        "gelir vergisi",
+        "ücret istisnası",
+        "asgari ücret istisnası",
+        "193",
+        "stopaj"
+      ],
+      "content_sha256": "3d45f709bcca1ef30f976077ec6f874fb2c01a8e32dfdef4393822fd0fdd87f9",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-MEVZUAT193",
+        "verified_at": "2026-11-20T08:38:45Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "3d45f709bcca1ef30f976077ec6f874fb2c01a8e32dfdef4393822fd0fdd87f9",
+        "expected_text_markers": [
+          "193",
+          "GELİR VERGİSİ KANUNU",
+          "Madde 23"
+        ],
+        "matched_text_markers": [
+          "193",
+          "GELİR VERGİSİ KANUNU",
+          "Madde 23"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "10700",
+        "publication_date": "1961-01-06",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": null
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=193&MevzuatTur=1&MevzuatTertip=4",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": true,
+        "latest_tracked_amendment": null
+      },
+      "amendment_history": [],
+      "article_effective_rules": []
+    },
+    "MEVZUAT-488": {
+      "source_id": "MEVZUAT-488",
+      "source_title": "488 Sayılı Damga Vergisi Kanunu",
+      "source_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=488&MevzuatTur=1&MevzuatTertip=5",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "OFFICIAL_GAZETTE_LAW",
+      "norm_layer": "STATUTORY_LAW",
+      "norm_priority": 3,
+      "legal_reference": "488 Sayılı Damga Vergisi Kanunu",
+      "statute_number": "488",
+      "official_gazette_no": "11751",
+      "publication_date": "1964-07-11",
+      "effective_from": "1964-07-11",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "1324 Sayılı Damga Resmi Kanunu",
+      "superseded_by": null,
+      "keywords": [
+        "damga vergisi",
+        "488",
+        "kıdem tazminatı damga vergisi"
+      ],
+      "content_sha256": "723c12437086ae2f26c7072a5158d78fa6900a96ec34ce2b569550bff717a986",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-MEVZUAT488",
+        "verified_at": "2026-11-20T08:38:47Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "723c12437086ae2f26c7072a5158d78fa6900a96ec34ce2b569550bff717a986",
+        "expected_text_markers": [
+          "488",
+          "DAMGA VERGİSİ KANUNU"
+        ],
+        "matched_text_markers": [
+          "488",
+          "DAMGA VERGİSİ KANUNU"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "11751",
+        "publication_date": "1964-07-11",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": null
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=488&MevzuatTur=1&MevzuatTertip=5",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": true,
+        "latest_tracked_amendment": null
+      },
+      "amendment_history": [],
+      "article_effective_rules": []
+    },
+    "MEVZUAT-2004": {
+      "source_id": "MEVZUAT-2004",
+      "source_title": "2004 Sayılı İcra ve İflas Kanunu (m.83 Ücret Haczi Sınırı)",
+      "source_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=2004&MevzuatTur=1&MevzuatTertip=3",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "OFFICIAL_GAZETTE_LAW",
+      "norm_layer": "STATUTORY_LAW",
+      "norm_priority": 3,
+      "legal_reference": "2004 Sayılı İİK m.83",
+      "statute_number": "2004",
+      "official_gazette_no": "2128",
+      "publication_date": "1932-06-19",
+      "effective_from": "1932-09-04",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "NONE",
+      "superseded_by": null,
+      "keywords": [
+        "icra",
+        "ücret haczi",
+        "nafaka",
+        "m.83",
+        "dörtte bir",
+        "2004"
+      ],
+      "content_sha256": "1365a10578f7a12cd77cd067fcb15dc43969fa5762b7c23a4151651d3baef5b8",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-MEVZUAT2004",
+        "verified_at": "2026-11-20T08:38:48Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "1365a10578f7a12cd77cd067fcb15dc43969fa5762b7c23a4151651d3baef5b8",
+        "expected_text_markers": [
+          "2004",
+          "İCRA VE İFLAS KANUNU",
+          "Madde 83"
+        ],
+        "matched_text_markers": [
+          "2004",
+          "İCRA VE İFLAS KANUNU",
+          "Madde 83"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "2128",
+        "publication_date": "1932-06-19",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": null
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=2004&MevzuatTur=1&MevzuatTertip=3",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": true,
+        "latest_tracked_amendment": null
+      },
+      "amendment_history": [],
+      "article_effective_rules": []
+    },
+    "MEVZUAT-5746": {
+      "source_id": "MEVZUAT-5746",
+      "source_title": "5746 Sayılı Araştırma, Geliştirme ve Tasarım Faaliyetlerinin Desteklenmesi Hakkında Kanun",
+      "source_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=5746&MevzuatTur=1&MevzuatTertip=5",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "OFFICIAL_GAZETTE_LAW",
+      "norm_layer": "STATUTORY_LAW",
+      "norm_priority": 3,
+      "legal_reference": "5746 Sayılı Kanun m.3",
+      "statute_number": "5746",
+      "official_gazette_no": "26814",
+      "publication_date": "2008-03-12",
+      "effective_from": "2008-04-01",
+      "effective_to": "2028-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "NONE",
+      "superseded_by": null,
+      "keywords": [
+        "ar-ge",
+        "tasarım merkezi",
+        "5746",
+        "stopaj teşviki",
+        "sgk teşviki"
+      ],
+      "content_sha256": "e09a789e9e82f7eeab6819426a71055d06a544c7bbf5b0b309b67853c6aa9ef6",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-MEVZUAT5746",
+        "verified_at": "2026-11-20T08:38:49Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "e09a789e9e82f7eeab6819426a71055d06a544c7bbf5b0b309b67853c6aa9ef6",
+        "expected_text_markers": [
+          "5746",
+          "ARAŞTIRMA",
+          "MADDE 3"
+        ],
+        "matched_text_markers": [
+          "5746",
+          "ARAŞTIRMA",
+          "MADDE 3"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "26814",
+        "publication_date": "2008-03-12",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": null
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=5746&MevzuatTur=1&MevzuatTertip=5",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": true,
+        "latest_tracked_amendment": null
+      },
+      "amendment_history": [],
+      "article_effective_rules": []
+    },
+    "MEVZUAT-4691": {
+      "source_id": "MEVZUAT-4691",
+      "source_title": "4691 Sayılı Teknoloji Geliştirme Bölgeleri Kanunu",
+      "source_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4691&MevzuatTur=1&MevzuatTertip=5",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "OFFICIAL_GAZETTE_LAW",
+      "norm_layer": "STATUTORY_LAW",
+      "norm_priority": 3,
+      "legal_reference": "4691 Sayılı Kanun Geçici m.2",
+      "statute_number": "4691",
+      "official_gazette_no": "24454",
+      "publication_date": "2001-07-06",
+      "effective_from": "2001-07-06",
+      "effective_to": "2028-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "NONE",
+      "superseded_by": null,
+      "keywords": [
+        "teknokent",
+        "teknoloji geliştirme bölgesi",
+        "4691",
+        "geçici m.2"
+      ],
+      "content_sha256": "703f35608dc1930c5e5ba92b884b7521efb245d6d459128cb89b9d724152951d",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-MEVZUAT4691",
+        "verified_at": "2026-11-20T08:38:49Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "703f35608dc1930c5e5ba92b884b7521efb245d6d459128cb89b9d724152951d",
+        "expected_text_markers": [
+          "4691",
+          "TEKNOLOJİ GELİŞTİRME BÖLGELERİ",
+          "Geçici Madde 2"
+        ],
+        "matched_text_markers": [
+          "4691",
+          "TEKNOLOJİ GELİŞTİRME BÖLGELERİ",
+          "Geçici Madde 2"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "24454",
+        "publication_date": "2001-07-06",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": null
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4691&MevzuatTur=1&MevzuatTertip=5",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": true,
+        "latest_tracked_amendment": null
+      },
+      "amendment_history": [],
+      "article_effective_rules": []
+    },
+    "RG-7566-20251219": {
+      "source_id": "RG-7566-20251219",
+      "source_title": "7566 Sayılı Vergi Kanunları ile Bazı Kanun ve KHK'larda Değişiklik Yapılmasına Dair Kanun (9 Kat SGK Tavanı, %12 MYÖ, 2/5 Puan 5510)",
+      "source_url": "https://www.resmigazete.gov.tr/eskiler/2025/12/20251219-1.htm",
+      "secondary_official_url": "https://www.gib.gov.tr/mevzuat/kanun/651",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "OFFICIAL_GAZETTE_LAW",
+      "norm_layer": "STATUTORY_LAW",
+      "norm_priority": 3,
+      "legal_reference": "7566 Sayılı Kanun m.24",
+      "statute_number": "7566",
+      "official_gazette_no": "33112",
+      "publication_date": "2025-12-19",
+      "effective_from": "2026-01-01",
+      "effective_to": "2026-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "7538 Sayılı Kanun m.10 (2025 4 Puan İndirimi & 7.5 Kat Tavan)",
+      "superseded_by": null,
+      "keywords": [
+        "7566",
+        "sgk tavanı",
+        "9 kat",
+        "myö",
+        "5510 indirim",
+        "2 puan",
+        "5 puan",
+        "2026"
+      ],
+      "content_sha256": "88cd55c233a781de25d99811137c60e3f7dd1983698084b15628ccc3bde7410b",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-RG756620251219",
+        "verified_at": "2026-11-20T08:38:52Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "88cd55c233a781de25d99811137c60e3f7dd1983698084b15628ccc3bde7410b",
+        "expected_text_markers": [
+          "7566",
+          "5510",
+          "MADDE 24"
+        ],
+        "matched_text_markers": [
+          "7566",
+          "5510",
+          "MADDE 24"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "33112",
+        "publication_date": "2025-12-19",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": "https://www.resmigazete.gov.tr/eskiler/2025/12/20251219-1.htm"
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.resmigazete.gov.tr/eskiler/2025/12/20251219-1.htm",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": false,
+        "latest_tracked_amendment": null
+      },
+      "amendment_history": [],
+      "article_effective_rules": []
+    },
+    "RG-7555-20250724": {
+      "source_id": "RG-7555-20250724",
+      "source_title": "7555 Sayılı Kanun (m.23: 4857 m.109 Yazılı/KEP Bildirimi [24.07.2025]; m.19-20: 5746/4691 40 Kat Brüt Asgari Ücret Sınırı [01.08.2025])",
+      "source_url": "https://www.resmigazete.gov.tr/eskiler/2025/07/20250724-2.htm",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "OFFICIAL_GAZETTE_LAW",
+      "norm_layer": "STATUTORY_LAW",
+      "norm_priority": 3,
+      "legal_reference": "7555 Sayılı Kanun",
+      "statute_number": "7555",
+      "official_gazette_no": "32965",
+      "publication_date": "2025-07-24",
+      "effective_from": "2025-08-01",
+      "effective_to": "2028-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "5746/4691 Sınırsız Stopaj Terkin Uygulaması; 4857 m.109 İlk Metin",
+      "superseded_by": null,
+      "keywords": [
+        "7555",
+        "40 kat",
+        "5746",
+        "4691",
+        "stopaj sınırı",
+        "4857 m.109",
+        "madde 23",
+        "yazılı fesih bildirimi",
+        "kep"
+      ],
+      "secondary_official_url": "https://gib.gov.tr/mevzuat/kanun/650",
+      "content_sha256": "c514d8e6f1ae79e9dcb84ce09eb6324eb8f73e4bfa42f9d5774789c6971f3dff",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-RG755520250724",
+        "verified_at": "2026-11-20T08:38:53Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "c514d8e6f1ae79e9dcb84ce09eb6324eb8f73e4bfa42f9d5774789c6971f3dff",
+        "expected_text_markers": [
+          "7555",
+          "5746",
+          "4691"
+        ],
+        "matched_text_markers": [
+          "7555",
+          "5746",
+          "4691"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "32965",
+        "publication_date": "2025-07-24",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": "https://www.resmigazete.gov.tr/eskiler/2025/07/20250724-2.htm"
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.resmigazete.gov.tr/eskiler/2025/07/20250724-2.htm",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": false,
+        "latest_tracked_amendment": null
+      },
+      "amendment_history": [],
+      "article_effective_rules": [
+        {
+          "article_ref": "Madde 23",
+          "effective_from": "2025-07-24",
+          "effective_to": "2099-12-31",
+          "basis": "7555 m.27/1-d (RG 24.07.2025 / 32965) — 4857 m.109 değişikliği yayımı tarihinde yürürlüğe girmiştir; fesih sonucunu doğuracak bildirimler her hâlde yazılı yapılır",
+          "amended_by": "7555"
+        },
+        {
+          "article_ref": "Madde 19",
+          "effective_from": "2025-08-01",
+          "effective_to": "2028-12-31",
+          "basis": "7555 m.27/1-c — 4691 s. Kanun 40 kat brüt asgari ücret sınırı",
+          "amended_by": "7555"
+        },
+        {
+          "article_ref": "Madde 20",
+          "effective_from": "2025-08-01",
+          "effective_to": "2028-12-31",
+          "basis": "7555 m.27/1-c — 5746 s. Kanun 40 kat brüt asgari ücret sınırı",
+          "amended_by": "7555"
+        }
+      ]
+    },
+    "RG-10766-20251225": {
+      "source_id": "RG-10766-20251225",
+      "source_title": "10766 Sayılı Cumhurbaşkanı Kararı (2026 Ar-Ge/Tasarım/Teknokent Uzaktan Çalışma Oranları: Bilişim %100, Diğer %75)",
+      "source_url": "https://www.resmigazete.gov.tr/eskiler/2025/12/20251225-20.pdf",
+      "secondary_official_url": "https://gib.gov.tr/mevzuat/kanun/485/cbk/410",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "PRESIDENTIAL_DECISION",
+      "norm_layer": "PRESIDENTIAL_DECISION",
+      "norm_priority": 5,
+      "legal_reference": "10766 Sayılı Cumhurbaşkanı Kararı",
+      "statute_number": "10766",
+      "official_gazette_no": "33118",
+      "publication_date": "2025-12-25",
+      "effective_from": "2026-01-01",
+      "effective_to": "2026-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "RG-9368-20241228",
+      "superseded_by": null,
+      "keywords": [
+        "10766",
+        "ck",
+        "cumhurbaşkanı kararı",
+        "uzaktan çalışma",
+        "2026",
+        "bilişim %100",
+        "diğer %75",
+        "teknokent",
+        "ar-ge"
+      ],
+      "content_sha256": "492480deaf469e4c3d822fe00769d99aae0933709ae0962fd3da10849c125047",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-RG1076620251225",
+        "verified_at": "2026-11-20T08:38:53Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "492480deaf469e4c3d822fe00769d99aae0933709ae0962fd3da10849c125047",
+        "expected_text_markers": [
+          "33118",
+          "CUMHURBAŞKANI KARARI",
+          "10766"
+        ],
+        "matched_text_markers": [
+          "33118",
+          "CUMHURBAŞKANI KARARI",
+          "10766"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "33118",
+        "publication_date": "2025-12-25",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": "https://www.resmigazete.gov.tr/eskiler/2025/12/20251225-20.pdf"
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.resmigazete.gov.tr/eskiler/2025/12/20251225-20.pdf",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": false,
+        "latest_tracked_amendment": null
+      },
+      "amendment_history": [],
+      "article_effective_rules": []
+    },
+    "RG-9368-20241228": {
+      "source_id": "RG-9368-20241228",
+      "source_title": "9368 Sayılı Cumhurbaşkanı Kararı (2025 Ar-Ge/Tasarım/Teknokent Uzaktan Çalışma Oranları — 31.12.2025 itibarıyla süresi dolmuştur)",
+      "source_url": "https://www.resmigazete.gov.tr/eskiler/2024/12/20241228-19.pdf",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "PRESIDENTIAL_DECISION",
+      "norm_layer": "PRESIDENTIAL_DECISION",
+      "norm_priority": 5,
+      "legal_reference": "9368 Sayılı Cumhurbaşkanı Kararı",
+      "statute_number": "9368",
+      "official_gazette_no": "32766",
+      "publication_date": "2024-12-28",
+      "effective_from": "2025-01-01",
+      "effective_to": "2025-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "SUPERSEDED",
+      "supersedes": "8004 Sayılı Cumhurbaşkanı Kararı (2024)",
+      "superseded_by": "RG-10766-20251225",
+      "keywords": [
+        "9368",
+        "ck",
+        "cumhurbaşkanı kararı",
+        "uzaktan çalışma",
+        "2025",
+        "mülga",
+        "süresi dolmuş"
+      ],
+      "content_sha256": "d3e2c09e5973fbcf9bd305cb036748bff0447dc10086ec5fae49dd08fd60ab31",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-RG936820241228",
+        "verified_at": "2026-11-20T08:38:55Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "d3e2c09e5973fbcf9bd305cb036748bff0447dc10086ec5fae49dd08fd60ab31",
+        "expected_text_markers": [
+          "32766",
+          "CUMHURBAŞKANI KARARI",
+          "9368"
+        ],
+        "matched_text_markers": [
+          "32766",
+          "CUMHURBAŞKANI KARARI",
+          "9368"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "32766",
+        "publication_date": "2024-12-28",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": "https://www.resmigazete.gov.tr/eskiler/2024/12/20241228-19.pdf"
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.resmigazete.gov.tr/eskiler/2024/12/20241228-19.pdf",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": false,
+        "latest_tracked_amendment": null
+      },
+      "amendment_history": [],
+      "article_effective_rules": []
+    },
+    "YONETMELIK-SSIY-20100512": {
+      "source_id": "YONETMELIK-SSIY-20100512",
+      "source_title": "Sosyal Sigorta İşlemleri Yönetmeliği (SSİY)",
+      "source_url": "https://www.resmigazete.gov.tr/eskiler/2010/05/20100512-3.htm",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "REGULATION",
+      "norm_layer": "REGULATION",
+      "norm_priority": 6,
+      "legal_reference": "Sosyal Sigorta İşlemleri Yönetmeliği (RG 12.05.2010 / 27579)",
+      "statute_number": "SSIY-27579",
+      "official_gazette_no": "27579",
+      "publication_date": "2010-05-12",
+      "effective_from": "2010-05-12",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-SGK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "28.08.2008 tarihli SSİY",
+      "superseded_by": null,
+      "keywords": [
+        "ssiy",
+        "sosyal sigorta işlemleri yönetmeliği",
+        "eksik gün",
+        "işe giriş bildirgesi",
+        "işten ayrılış",
+        "m.102",
+        "prim belgesi"
+      ],
+      "secondary_official_url": "https://mevzuat.adalet.gov.tr/mevzuat/110489",
+      "content_sha256": "6a5817cfbe4d5bddddc7066a844dd0145c11049abb496c6d6cc3179fb47cdd64",
+      "verification_audit": {
+        "verifier_id": "CALISORA-SGK-01",
+        "verifier_role": "SGK_COMPLIANCE_SPECIALIST",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-YONETMELIKSSIY20100512",
+        "verified_at": "2026-11-20T08:38:57Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "6a5817cfbe4d5bddddc7066a844dd0145c11049abb496c6d6cc3179fb47cdd64",
+        "expected_text_markers": [
+          "SOSYAL SİGORTA İŞLEMLERİ YÖNETMELİĞİ",
+          "5510",
+          "MADDE 102"
+        ],
+        "matched_text_markers": [
+          "SOSYAL SİGORTA İŞLEMLERİ YÖNETMELİĞİ",
+          "5510",
+          "MADDE 102"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "27579",
+        "publication_date": "2010-05-12",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": "https://www.resmigazete.gov.tr/eskiler/2010/05/20100512-3.htm"
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.resmigazete.gov.tr/eskiler/2010/05/20100512-3.htm",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": false,
+        "latest_tracked_amendment": "RG-20210818-31572"
+      },
+      "amendment_history": [
+        {
+          "amending_law_no": "SSİY Değişiklik Yönetmeliği (2013)",
+          "official_gazette_no": "28742",
+          "publication_date": "2013-08-21",
+          "affected_articles": [
+            "Madde 13",
+            "Madde 102"
+          ],
+          "effective_from": "2013-08-21",
+          "summary": "Eksik gün bildirimleri, sigortalılık kontrolleri ve işveren bildirim usullerinde güncelleme."
+        },
+        {
+          "amending_law_no": "SSİY Değişiklik Yönetmeliği (2017)",
+          "official_gazette_no": "30261",
+          "publication_date": "2017-12-05",
+          "affected_articles": [
+            "Madde 11",
+            "Madde 14",
+            "Madde 102"
+          ],
+          "effective_from": "2017-12-05",
+          "summary": "İşe giriş/işten ayrılış bildirim usulleri, re'sen işten ayrılış ve eksik gün belgelerinin işyerinde muhafaza ve Kurumca istendiğinde ibrazı hükümlerinde kapsamlı değişiklik."
+        },
+        {
+          "amending_law_no": "SSİY Değişiklik Yönetmeliği (2021)",
+          "official_gazette_no": "31572",
+          "publication_date": "2021-08-18",
+          "affected_articles": [
+            "Madde 11",
+            "Madde 102",
+            "Ek Madde 9 Uygulaması"
+          ],
+          "effective_from": "2021-08-18",
+          "summary": "MUHSGK uyumu, elektronik bildirimler ve sosyal sigorta işlemlerinin güncel mevzuata uyarlanması."
+        }
+      ],
+      "article_effective_rules": []
+    },
+    "GIB-TEBLIG-331-20250904": {
+      "source_id": "GIB-TEBLIG-331-20250904",
+      "source_title": "331 Seri No.lu Gelir Vergisi Genel Tebliği (4691 ve 5746 40 Kat Tavan Uygulama Esasları)",
+      "source_url": "https://www.resmigazete.gov.tr/eskiler/2025/09/20250904-6.htm",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "GIB_COMMUNIQUE",
+      "norm_layer": "COMMUNIQUE_AND_SGK_CIRCULAR",
+      "norm_priority": 7,
+      "legal_reference": "331 Seri No.lu GVK Genel Tebliği",
+      "statute_number": "331",
+      "official_gazette_no": "33007",
+      "publication_date": "2025-09-04",
+      "effective_from": "2025-08-01",
+      "effective_to": "2028-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "NONE",
+      "superseded_by": null,
+      "keywords": [
+        "331",
+        "tebliğ",
+        "40 kat",
+        "5746",
+        "4691"
+      ],
+      "secondary_official_url": "https://cdn.gib.gov.tr/api/gibportal-file/file/getFile?objectKey=DUYURU/UNIVERSAL/2025/331_serno_gelverteb_abn.pdf",
+      "content_sha256": "392fc2b5e79b7ffbd050fca68c8be217fb14e7a28b059e04133035c0d2c5a62c",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-GIBTEBLIG33120250904",
+        "verified_at": "2026-11-20T08:38:57Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "392fc2b5e79b7ffbd050fca68c8be217fb14e7a28b059e04133035c0d2c5a62c",
+        "expected_text_markers": [
+          "331",
+          "4691",
+          "7555",
+          "33007"
+        ],
+        "matched_text_markers": [
+          "331",
+          "4691",
+          "7555",
+          "33007"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "33007",
+        "publication_date": "2025-09-04",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": "https://www.resmigazete.gov.tr/eskiler/2025/09/20250904-6.htm"
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.resmigazete.gov.tr/eskiler/2025/09/20250904-6.htm",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": false,
+        "latest_tracked_amendment": null
+      },
+      "amendment_history": [],
+      "article_effective_rules": []
+    },
+    "GIB-TEBLIG-332-20251231": {
+      "source_id": "GIB-TEBLIG-332-20251231",
+      "source_title": "332 Seri No.lu Gelir Vergisi Genel Tebliği (2026 Gelir Vergisi Dilimleri, Günlük 300 TL Yemek İstisnası, Engellilik İndirimi)",
+      "source_url": "https://cdn.gib.gov.tr/api/gibportal-file/file/getFile?objectKey=MEVZUAT_TEBLIGLER/UNIVERSAL/2025/193_Teblig332.pdf",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "GIB_COMMUNIQUE",
+      "norm_layer": "COMMUNIQUE_AND_SGK_CIRCULAR",
+      "norm_priority": 7,
+      "legal_reference": "332 Seri No.lu GVK Genel Tebliği",
+      "statute_number": "332",
+      "official_gazette_no": "33124 (5. Mükerrer)",
+      "publication_date": "2025-12-31",
+      "effective_from": "2026-01-01",
+      "effective_to": "2026-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "PENDING_REVIEW",
+      "supersedes": "329 Seri No.lu GVK Genel Tebliği (2025)",
+      "superseded_by": null,
+      "keywords": [
+        "332",
+        "tebliğ",
+        "gelir vergisi dilimleri",
+        "yemek istisnası",
+        "300 tl",
+        "engellilik indirimi",
+        "2026"
+      ],
+      "secondary_official_url": "https://www.resmigazete.gov.tr/eskiler/2025/12/20251231M5-30.pdf",
+      "content_sha256": "28ca08a5d6be1fe8b19c45c596caa9a58b413d7ab3ab7dc1ce253ba92d6f1596",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "OFFICIAL_GAZETTE_ARCHIVE_CHECK",
+        "audit_log_id": "AUD-20261120-GIBTEBLIG33220251231",
+        "verified_at": "2026-11-20T08:38:58Z",
+        "document_fetch_status": "METADATA_VERIFIED_PENDING_LIVE_FETCH",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "28ca08a5d6be1fe8b19c45c596caa9a58b413d7ab3ab7dc1ce253ba92d6f1596",
+        "expected_text_markers": [
+          "332",
+          "193",
+          "300"
+        ],
+        "matched_text_markers": []
+      },
+      "original_publication": {
+        "official_gazette_no": "33124 (5. Mükerrer)",
+        "publication_date": "2025-12-31",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": "https://cdn.gib.gov.tr/api/gibportal-file/file/getFile?objectKey=MEVZUAT_TEBLIGLER/UNIVERSAL/2025/193_Teblig332.pdf"
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://cdn.gib.gov.tr/api/gibportal-file/file/getFile?objectKey=MEVZUAT_TEBLIGLER/UNIVERSAL/2025/193_Teblig332.pdf",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": false,
+        "latest_tracked_amendment": null
+      },
+      "amendment_history": [],
+      "article_effective_rules": []
+    },
+    "GIB-TEBLIG-319-20220127": {
+      "source_id": "GIB-TEBLIG-319-20220127",
+      "source_title": "319 Seri No.lu Gelir Vergisi Genel Tebliği (Asgari Ücret Vergi İstisnası ve Kısmi Dönem Uygulaması)",
+      "source_url": "https://cdn.gib.gov.tr/api/gibportal-file/file/getFileResources?objectKey=arsiv/fileadmin/mevzuatek/mevzuatbilginotu/319_serno_gelverteb_abn.pdf",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "GIB_COMMUNIQUE",
+      "norm_layer": "COMMUNIQUE_AND_SGK_CIRCULAR",
+      "norm_priority": 7,
+      "legal_reference": "319 Seri No.lu GVK Genel Tebliği",
+      "statute_number": "319",
+      "official_gazette_no": "31732",
+      "publication_date": "2022-01-27",
+      "effective_from": "2022-01-01",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "AGİ Uygulaması (7349 Sayılı Kanun öncesi)",
+      "superseded_by": null,
+      "keywords": [
+        "319",
+        "tebliğ",
+        "asgari ücret vergi istisnası",
+        "kısmi dönem"
+      ],
+      "content_sha256": "834afead00a7ff99c78366437512c01574ca812b7145ec4c4b5d4ae690bd0dd0",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-GIBTEBLIG31920220127",
+        "verified_at": "2026-11-20T08:39:00Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "834afead00a7ff99c78366437512c01574ca812b7145ec4c4b5d4ae690bd0dd0",
+        "expected_text_markers": [
+          "319",
+          "asgari ücret"
+        ],
+        "matched_text_markers": [
+          "319",
+          "asgari ücret"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "31732",
+        "publication_date": "2022-01-27",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": "https://cdn.gib.gov.tr/api/gibportal-file/file/getFileResources?objectKey=arsiv/fileadmin/mevzuatek/mevzuatbilginotu/319_serno_gelverteb_abn.pdf"
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://cdn.gib.gov.tr/api/gibportal-file/file/getFileResources?objectKey=arsiv/fileadmin/mevzuatek/mevzuatbilginotu/319_serno_gelverteb_abn.pdf",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": false,
+        "latest_tracked_amendment": null
+      },
+      "amendment_history": [],
+      "article_effective_rules": []
+    },
+    "YONETMELIK-YILLIK-IZIN-20040303": {
+      "source_id": "YONETMELIK-YILLIK-IZIN-20040303",
+      "source_title": "Yıllık Ücretli İzin Yönetmeliği (4857 Sayılı İş Kanunu m.60 Uygulama Yönetmeliği)",
+      "source_url": "https://www.resmigazete.gov.tr/eskiler/2017/08/20170818-2.htm",
+      "secondary_official_url": "https://www.resmigazete.gov.tr/eskiler/2004/03/20040303.htm",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "REGULATION",
+      "norm_layer": "REGULATION",
+      "norm_priority": 6,
+      "legal_reference": "Yıllık Ücretli İzin Yönetmeliği (RG 03.03.2004 / 25391; Değ. RG 18.08.2017 / 30158)",
+      "statute_number": "YON-25391",
+      "official_gazette_no": "25391",
+      "publication_date": "2004-03-03",
+      "effective_from": "2004-03-03",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "1475 Sayılı Kanun Dönemi Yıllık Ücretli İzin Yönetmeliği",
+      "superseded_by": null,
+      "keywords": [
+        "yıllık ücretli izin yönetmeliği",
+        "yıllık izin",
+        "izin bölünmesi",
+        "alt işveren izin",
+        "izin kayıt belgesi",
+        "yer altı +4 gün",
+        "4857 m.53",
+        "4857 m.56",
+        "4857 m.60"
+      ],
+      "content_sha256": "10927061b68f36f2ba43c80f2e44a8baf12d893435c6b94db8eaae05101f1a15",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-YONYILLIKIZIN",
+        "verified_at": "2026-11-20T11:25:00Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "10927061b68f36f2ba43c80f2e44a8baf12d893435c6b94db8eaae05101f1a15",
+        "expected_text_markers": [
+          "30158",
+          "18 Ağustos 2017",
+          "YÖNETMELİK"
+        ],
+        "matched_text_markers": [
+          "30158",
+          "18 Ağustos 2017",
+          "YÖNETMELİK"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "25391",
+        "publication_date": "2004-03-03",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": "https://www.resmigazete.gov.tr/eskiler/2004/03/20040303.htm"
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.resmigazete.gov.tr/eskiler/2017/08/20170818-2.htm",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": false,
+        "latest_tracked_amendment": "RG-20170818-30158"
+      },
+      "amendment_history": [
+        {
+          "amending_law_no": "Yıllık Ücretli İzin Yönetmeliğinde Değişiklik (2017)",
+          "official_gazette_no": "30158",
+          "publication_date": "2017-08-18",
+          "affected_articles": [
+            "Madde 4",
+            "Madde 6",
+            "Madde 9"
+          ],
+          "effective_from": "2017-08-18",
+          "summary": "6552 ve 6704 sayılı Kanunlara uyum: yer altı işçilerine +4 gün, alt işveren değişse de aynı işyerinde süre birleştirme ve asıl işverenin izin kontrol yükümlülüğü, bir bölümü en az 10 gün olmak üzere bölünme."
+        }
+      ],
+      "article_effective_rules": [
+        {
+          "article_ref": "Madde 6",
+          "effective_from": "2017-08-18",
+          "effective_to": "2099-12-31",
+          "basis": "RG 18.08.2017 / 30158 Yönetmelik değişikliği (izin bölünmesi ve alt işveren süre hesabı)",
+          "amended_by": "RG-20170818-30158"
+        }
+      ]
+    },
+    "YONETMELIK-CALISMA-SURELERI-20040406": {
+      "source_id": "YONETMELIK-CALISMA-SURELERI-20040406",
+      "source_title": "İş Kanununa İlişkin Çalışma Süreleri Yönetmeliği (4857 Sayılı İş Kanunu m.63 Uygulama Yönetmeliği)",
+      "source_url": "https://www.resmigazete.gov.tr/eskiler/2017/08/20170825-2.htm",
+      "secondary_official_url": "https://www.resmigazete.gov.tr/eskiler/2004/04/20040406.htm",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "REGULATION",
+      "norm_layer": "REGULATION",
+      "norm_priority": 6,
+      "legal_reference": "İş Kanununa İlişkin Çalışma Süreleri Yönetmeliği (RG 06.04.2004 / 25425; Değ. RG 25.08.2017 / 30165)",
+      "statute_number": "YON-25425-CS",
+      "official_gazette_no": "25425",
+      "publication_date": "2004-04-06",
+      "effective_from": "2004-04-06",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "1475 Sayılı Kanun Dönemi Çalışma Süreleri Tüzüğü/Yönetmeliği",
+      "superseded_by": null,
+      "keywords": [
+        "çalışma süreleri yönetmeliği",
+        "45 saat",
+        "günlük 11 saat",
+        "denkleştirme",
+        "turizm 4 ay",
+        "yer altı 37,5 saat",
+        "kısmi süreli çalışma",
+        "telafi çalışması",
+        "4857 m.63"
+      ],
+      "content_sha256": "83f248712439585084e7679682c6cff0c5d26a1e3c48858020eed101d6c820b0",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-YONCALISMASUR",
+        "verified_at": "2026-11-20T11:25:00Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "83f248712439585084e7679682c6cff0c5d26a1e3c48858020eed101d6c820b0",
+        "expected_text_markers": [
+          "30165",
+          "25 Ağustos 2017",
+          "YÖNETMELİK"
+        ],
+        "matched_text_markers": [
+          "30165",
+          "25 Ağustos 2017",
+          "YÖNETMELİK"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "25425",
+        "publication_date": "2004-04-06",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": "https://www.resmigazete.gov.tr/eskiler/2004/04/20040406.htm"
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.resmigazete.gov.tr/eskiler/2017/08/20170825-2.htm",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": false,
+        "latest_tracked_amendment": "RG-20170825-30165"
+      },
+      "amendment_history": [
+        {
+          "amending_law_no": "Çalışma Süreleri Yönetmeliğinde Değişiklik (2017)",
+          "official_gazette_no": "30165",
+          "publication_date": "2017-08-25",
+          "affected_articles": [
+            "Madde 4",
+            "Madde 5",
+            "Madde 10 (Mülga)"
+          ],
+          "effective_from": "2017-08-25",
+          "summary": "6645 ve 6715 sayılı Kanunlara uyum: yer altı maden işlerinde günlük en çok 7,5 saat / haftalık 37,5 saat sınırı; turizm sektöründe denkleştirme süresinin 4 ay (TİS ile 6 ay) olarak uygulanması; m.10 yürürlükten kaldırıldı."
+        }
+      ],
+      "article_effective_rules": [
+        {
+          "article_ref": "Madde 4",
+          "effective_from": "2017-08-25",
+          "effective_to": "2099-12-31",
+          "basis": "RG 25.08.2017 / 30165 Yönetmelik değişikliği (yer altı maden 7,5/37,5 saat)",
+          "amended_by": "RG-20170825-30165"
+        },
+        {
+          "article_ref": "Madde 5",
+          "effective_from": "2017-08-25",
+          "effective_to": "2099-12-31",
+          "basis": "RG 25.08.2017 / 30165 Yönetmelik değişikliği (turizm 4 ay / TİS 6 ay denkleştirme)",
+          "amended_by": "RG-20170825-30165"
+        }
+      ]
+    },
+    "YONETMELIK-FAZLA-CALISMA-20040406": {
+      "source_id": "YONETMELIK-FAZLA-CALISMA-20040406",
+      "source_title": "İş Kanununa İlişkin Fazla Çalışma ve Fazla Sürelerle Çalışma Yönetmeliği (4857 Sayılı İş Kanunu m.41 Uygulama Yönetmeliği)",
+      "source_url": "https://www.resmigazete.gov.tr/eskiler/2017/08/20170825-3.htm",
+      "secondary_official_url": "https://www.resmigazete.gov.tr/eskiler/2004/04/20040406.htm",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "REGULATION",
+      "norm_layer": "REGULATION",
+      "norm_priority": 6,
+      "legal_reference": "Fazla Çalışma ve Fazla Sürelerle Çalışma Yönetmeliği (RG 06.04.2004 / 25425; Değ. RG 25.08.2017 / 30165)",
+      "statute_number": "YON-25425-FC",
+      "official_gazette_no": "25425",
+      "publication_date": "2004-04-06",
+      "effective_from": "2004-04-06",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "1475 Sayılı Kanun Dönemi Fazla Çalışma Tüzüğü",
+      "superseded_by": null,
+      "keywords": [
+        "fazla çalışma yönetmeliği",
+        "m.4/son",
+        "m.7 yasak",
+        "m.8 yaptırılamayacak işçiler",
+        "m.9 yazılı onay",
+        "30 gün önceden geri alma",
+        "serbest zaman",
+        "yer altı maden %100",
+        "270 saat"
+      ],
+      "content_sha256": "50c4b7d0afa630004c4b9f2927d71b8bb3d5ae089174675243551427e19274e3",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-YONFAZLACAL",
+        "verified_at": "2026-11-20T11:25:00Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "50c4b7d0afa630004c4b9f2927d71b8bb3d5ae089174675243551427e19274e3",
+        "expected_text_markers": [
+          "30165",
+          "25 Ağustos 2017",
+          "YÖNETMELİK"
+        ],
+        "matched_text_markers": [
+          "30165",
+          "25 Ağustos 2017",
+          "YÖNETMELİK"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "25425",
+        "publication_date": "2004-04-06",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": "https://www.resmigazete.gov.tr/eskiler/2004/04/20040406.htm"
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.resmigazete.gov.tr/eskiler/2017/08/20170825-3.htm",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": false,
+        "latest_tracked_amendment": "RG-20170825-30165"
+      },
+      "amendment_history": [
+        {
+          "amending_law_no": "Fazla Çalışma Yönetmeliğinde Değişiklik (2017)",
+          "official_gazette_no": "30165",
+          "publication_date": "2017-08-25",
+          "affected_articles": [
+            "Madde 4/son",
+            "Madde 8/e",
+            "Madde 9/2"
+          ],
+          "effective_from": "2017-08-25",
+          "summary": "m.9/2 ile yıllık yenileme şartı kaldırılarak sözleşmede veya ihtiyaç halinde alınan yazılı onayın özlük dosyasında saklanması ve 30 gün önceden yazılı bildirimle geri alınabilmesi; m.4/son ve m.8/e ile 4857 m.41/9-10 yer altı maden 37,5 saat üzeri %100 zamlı ücret uyumu."
+        }
+      ],
+      "article_effective_rules": [
+        {
+          "article_ref": "Madde 9/2",
+          "effective_from": "2017-08-25",
+          "effective_to": "2099-12-31",
+          "basis": "RG 25.08.2017 / 30165 Yönetmelik değişikliği (yazılı onay ve 30 gün önceden geri alma)",
+          "amended_by": "RG-20170825-30165"
+        },
+        {
+          "article_ref": "Madde 4/son",
+          "effective_from": "2017-08-25",
+          "effective_to": "2099-12-31",
+          "basis": "RG 25.08.2017 / 30165 (yer altı maden 37,5 saat üzeri %100 zamlı ücret)",
+          "amended_by": "RG-20170825-30165"
+        },
+        {
+          "article_ref": "Madde 8/e",
+          "effective_from": "2017-08-25",
+          "effective_to": "2099-12-31",
+          "basis": "RG 25.08.2017 / 30165 (yer altı maden işçileri fazla çalışma yasağı / m.42-43 özel düzenlemesi)",
+          "amended_by": "RG-20170825-30165"
+        }
+      ]
+    },
+    "YONETMELIK-ALT-ISVERENLIK-20080927": {
+      "source_id": "YONETMELIK-ALT-ISVERENLIK-20080927",
+      "source_title": "Alt İşverenlik Yönetmeliği (4857 Sayılı İş Kanunu m.2 ve m.3 Uygulama Yönetmeliği)",
+      "source_url": "https://www.resmigazete.gov.tr/eskiler/2008/09/20080927-6.htm",
+      "secondary_official_url": "https://www.resmigazete.gov.tr/eskiler/2017/08/20170825-1.htm",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "REGULATION",
+      "norm_layer": "REGULATION",
+      "norm_priority": 6,
+      "legal_reference": "Alt İşverenlik Yönetmeliği (RG 27.09.2008 / 27010; Değ. RG 25.08.2017 / 30165)",
+      "statute_number": "YON-27010",
+      "official_gazette_no": "27010",
+      "publication_date": "2008-09-27",
+      "effective_from": "2008-09-27",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "NONE",
+      "superseded_by": null,
+      "keywords": [
+        "alt işverenlik yönetmeliği",
+        "taşeron",
+        "muvazaa",
+        "m.13",
+        "30 iş günü itiraz",
+        "asıl işveren",
+        "işletmenin ve işin gereği",
+        "4857 m.2"
+      ],
+      "content_sha256": "254bc6a044eb57ebcaeb671ab5c4bec996a132d7083a53cc40834585cfe16efd",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-YONALTISVEREN",
+        "verified_at": "2026-11-20T11:25:00Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "254bc6a044eb57ebcaeb671ab5c4bec996a132d7083a53cc40834585cfe16efd",
+        "expected_text_markers": [
+          "27010",
+          "27 Eylül 2008",
+          "YÖNETMELİK"
+        ],
+        "matched_text_markers": [
+          "27010",
+          "27 Eylül 2008",
+          "YÖNETMELİK"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "27010",
+        "publication_date": "2008-09-27",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": "https://www.resmigazete.gov.tr/eskiler/2008/09/20080927-6.htm"
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.resmigazete.gov.tr/eskiler/2017/08/20170825-1.htm",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": false,
+        "latest_tracked_amendment": "RG-20170825-30165"
+      },
+      "amendment_history": [
+        {
+          "amending_law_no": "Alt İşverenlik Yönetmeliğinde Değişiklik (2017)",
+          "official_gazette_no": "30165",
+          "publication_date": "2017-08-25",
+          "affected_articles": [
+            "Madde 5",
+            "Madde 13"
+          ],
+          "effective_from": "2017-08-25",
+          "summary": "6552 sayılı Kanunla 4857 m.3/2'de yapılan değişikliğe uyum: muvazaa raporuna iş mahkemesinde itiraz süresi 6 iş gününden 30 iş gününe çıkarılmış, basit yargılama (4 ay) ve Yargıtay kesin karar (6 ay) süreleri işlenmiştir."
+        }
+      ],
+      "article_effective_rules": [
+        {
+          "article_ref": "Madde 13",
+          "effective_from": "2017-08-25",
+          "effective_to": "2099-12-31",
+          "basis": "RG 25.08.2017 / 30165 Yönetmelik değişikliği (muvazaa raporuna 30 iş günü itiraz)",
+          "amended_by": "RG-20170825-30165"
+        }
+      ]
+    },
+    "YONETMELIK-UZAKTAN-CALISMA-20210310": {
+      "source_id": "YONETMELIK-UZAKTAN-CALISMA-20210310",
+      "source_title": "Uzaktan Çalışma Yönetmeliği (4857 Sayılı İş Kanunu m.14 Uygulama Yönetmeliği — 2026 Hibrit Çalışma Değişikliği Dahil)",
+      "source_url": "https://www.resmigazete.gov.tr/eskiler/2021/03/20210310-2.htm",
+      "secondary_official_url": "https://www.resmigazete.gov.tr/eskiler/2026/09/20260925-2.htm",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "REGULATION",
+      "norm_layer": "REGULATION",
+      "norm_priority": 6,
+      "legal_reference": "Uzaktan Çalışma Yönetmeliği (RG 10.03.2021 / 31419; Değ. RG 25.09.2026 / 33381)",
+      "statute_number": "YON-31419",
+      "official_gazette_no": "31419",
+      "publication_date": "2021-03-10",
+      "effective_from": "2021-03-10",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-HUKUK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "NONE",
+      "superseded_by": null,
+      "keywords": [
+        "uzaktan çalışma yönetmeliği",
+        "hibrit çalışma",
+        "m.9/2",
+        "33381",
+        "uzaktan çalışma sözleşmesi",
+        "isg uzaktan",
+        "veri güvenliği",
+        "4857 m.14"
+      ],
+      "content_sha256": "1d6780b9d127b83191f1873663a9e6509a50c1687d1645e4c0b8f71d56f68c76",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-YONUZAKTANCAL",
+        "verified_at": "2026-11-20T11:25:00Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "1d6780b9d127b83191f1873663a9e6509a50c1687d1645e4c0b8f71d56f68c76",
+        "expected_text_markers": [
+          "31419",
+          "UZAKTAN ÇALIŞMA YÖNETMELİĞİ",
+          "MADDE 1"
+        ],
+        "matched_text_markers": [
+          "31419",
+          "UZAKTAN ÇALIŞMA YÖNETMELİĞİ",
+          "MADDE 1"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "31419",
+        "publication_date": "2021-03-10",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": "https://www.resmigazete.gov.tr/eskiler/2021/03/20210310-2.htm"
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.resmigazete.gov.tr/eskiler/2026/09/20260925-2.htm",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": false,
+        "latest_tracked_amendment": "RG-20260925-33381"
+      },
+      "amendment_history": [
+        {
+          "amending_law_no": "Uzaktan Çalışma Yönetmeliğinde Değişiklik (2026 Hibrit Çalışma)",
+          "official_gazette_no": "33381",
+          "publication_date": "2026-09-25",
+          "affected_articles": [
+            "Madde 9/2"
+          ],
+          "effective_from": "2026-09-25",
+          "summary": "m.9/2 eklendi: İş görme ediminin bir kısmının işyerinde, bir kısmının uzaktan çalışma usulüyle (hibrit) yerine getirilmesi kararlaştırılabilir; bu durumda işçinin işyerinde ve uzaktan çalışacağı günler ile çalışma saatleri iş sözleşmesinde belirlenir. (RG 20260925-2.htm SHA-256: eed91f517953d643e40ffee18c7e23654686c45e2f0374d01743112ee40c9d22)."
+        }
+      ],
+      "article_effective_rules": [
+        {
+          "article_ref": "Madde 9/2",
+          "effective_from": "2026-09-25",
+          "effective_to": "2099-12-31",
+          "basis": "RG 25.09.2026 / 33381 Uzaktan Çalışma Yönetmeliğinde Değişiklik m.1 (Hibrit Çalışma)",
+          "amended_by": "RG-20260925-33381"
+        }
+      ]
+    },
+    "SGK-GENELGE-2020-20": {
+      "source_id": "SGK-GENELGE-2020-20",
+      "source_title": "SGK 2020/20 Sayılı İşveren İşlemleri Genelgesi (İşyeri Tescil, İşveren Vekili, Prim Belgesi ve 07-Puantaj Uygulaması)",
+      "source_url": "https://www.sgk.gov.tr/download/downloadfile?f=b30d135d-a189-41c1-a848-577e4d9985fe.pdf&d=65521b2e-039e-4819-abd1-77503ab4383e",
+      "secondary_official_url": "https://www.sgk.gov.tr/duyuru/detay/07-Puantaj-Kayitlari-Eksik-Gun-Nedeninin-0-Gun-ve-0-Kazancli-Bildirimler-Icin-Secilememesi-2023-11-20-04-29-06",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "SGK_CIRCULAR",
+      "norm_layer": "COMMUNIQUE_AND_SGK_CIRCULAR",
+      "norm_priority": 7,
+      "legal_reference": "SGK 2020/20 Sayılı İşveren İşlemleri Genelgesi (18.06.2020)",
+      "statute_number": "2020/20",
+      "official_gazette_no": "SGK-2020/20",
+      "publication_date": "2020-06-18",
+      "effective_from": "2020-06-18",
+      "effective_to": "2099-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-SGK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "SGK İşveren İşlemleri Önceki Münferit Genelgeleri (2020/20 ile konsolide edilenler)",
+      "superseded_by": null,
+      "keywords": [
+        "sgk 2020/20",
+        "işveren işlemleri genelgesi",
+        "07 puantaj",
+        "eksik gün",
+        "işveren vekili",
+        "alt işveren dosya",
+        "muhsgk"
+      ],
+      "content_sha256": "8876dc9e681ecb58ed70f784d0c14b8e6f989951d1daba40eb40927d770a1430",
+      "verification_audit": {
+        "verifier_id": "CALISORA-SGK-01",
+        "verifier_role": "SGK_COMPLIANCE_SPECIALIST",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-SGK202020",
+        "verified_at": "2026-11-20T11:29:40Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "8876dc9e681ecb58ed70f784d0c14b8e6f989951d1daba40eb40927d770a1430",
+        "expected_text_markers": [
+          "2020/20",
+          "İşveren İşlemleri",
+          "5510"
+        ],
+        "matched_text_markers": [
+          "2020/20",
+          "İşveren İşlemleri",
+          "5510"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "SGK-2020/20",
+        "publication_date": "2020-06-18",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": "https://www.sgk.gov.tr/download/downloadfile?f=b30d135d-a189-41c1-a848-577e4d9985fe.pdf&d=65521b2e-039e-4819-abd1-77503ab4383e"
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.sgk.gov.tr/download/downloadfile?f=b30d135d-a189-41c1-a848-577e4d9985fe.pdf&d=65521b2e-039e-4819-abd1-77503ab4383e",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": false,
+        "latest_tracked_amendment": "SGK-DUYURU-20231120-07PUANTAJ"
+      },
+      "amendment_history": [
+        {
+          "amending_law_no": "SGK 07-Puantaj Kayıtları Uygulama Duyurusu (2023)",
+          "official_gazette_no": "SGK-DUYURU-20231120",
+          "publication_date": "2023-11-20",
+          "affected_articles": [
+            "07-Puantaj Kayıtları Eksik Gün Bildirimi"
+          ],
+          "effective_from": "2023-11-20",
+          "summary": "2020/20 Genelge uygulaması kapsamında 0 gün ve 0 kazançlı bildirimlerde '07-Puantaj Kayıtları' eksik gün kodunun seçilemeyeceği resmî SGK duyurusuyla netleştirilmiştir."
+        }
+      ],
+      "article_effective_rules": [
+        {
+          "article_ref": "07-Puantaj",
+          "effective_from": "2023-11-20",
+          "effective_to": "2099-12-31",
+          "basis": "SGK 20.11.2023 tarihli resmî duyurusu (0 gün / 0 kazanç kısıtı) ve 2020/20 Genelgesi",
+          "amended_by": "SGK-DUYURU-20231120"
+        }
+      ]
+    },
+    "SGK-TESVIK-2026-1-REHBER": {
+      "source_id": "SGK-TESVIK-2026-1-REHBER",
+      "source_title": "SGK 2026 Sigorta Primi Teşvikleri Resmî Rehberi (2026/1 No.lu Genelge — 5510 m.81/1-ı 2 Puan Genel & Geçici m.108 5 Puan İmalat)",
+      "source_url": "https://www.sgk.gov.tr/Download/DownloadFile?f=bffda8a4-202a-4af5-b1c4-d645f4f69aab.pdf&d=de85036d-ef64-49f1-834c-916a79f1a923",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "SGK_CIRCULAR",
+      "norm_layer": "COMMUNIQUE_AND_SGK_CIRCULAR",
+      "norm_priority": 7,
+      "legal_reference": "SGK 2026/1 No.lu Genelge Uygulaması (SGK Resmî Sigorta Primi Teşvikleri Rehberi)",
+      "statute_number": "2026/1",
+      "official_gazette_no": "SGK-2026/1-REHBER",
+      "publication_date": "2026-01-06",
+      "effective_from": "2026-01-01",
+      "effective_to": "2026-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-SGK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "SGK 2025/6 No.lu Genelge (2025 yılı 4 puan genel / 5 puan imalat uygulaması)",
+      "superseded_by": null,
+      "keywords": [
+        "sgk 2026/1",
+        "2 puan indirim",
+        "5 puan imalat",
+        "geçici m.108",
+        "5510 m.81/1-ı",
+        "sigorta primi teşvikleri",
+        "7566"
+      ],
+      "content_sha256": "6c698ed022b276d870fb2385e1f5e6d1b85cbd543ee428963baafc6986a00915",
+      "verification_audit": {
+        "verifier_id": "CALISORA-SGK-01",
+        "verifier_role": "SGK_COMPLIANCE_SPECIALIST",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-SGK20261",
+        "verified_at": "2026-11-20T11:29:40Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "6c698ed022b276d870fb2385e1f5e6d1b85cbd543ee428963baafc6986a00915",
+        "expected_text_markers": [
+          "2026/1",
+          "5510",
+          "81"
+        ],
+        "matched_text_markers": [
+          "2026/1",
+          "5510",
+          "81"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "SGK-2026/1-REHBER",
+        "publication_date": "2026-01-06",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": "https://www.sgk.gov.tr/Download/DownloadFile?f=bffda8a4-202a-4af5-b1c4-d645f4f69aab.pdf&d=de85036d-ef64-49f1-834c-916a79f1a923"
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.sgk.gov.tr/Download/DownloadFile?f=bffda8a4-202a-4af5-b1c4-d645f4f69aab.pdf&d=de85036d-ef64-49f1-834c-916a79f1a923",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": false,
+        "latest_tracked_amendment": "7566-RG-33112"
+      },
+      "amendment_history": [
+        {
+          "amending_law_no": "7566",
+          "official_gazette_no": "33112",
+          "publication_date": "2025-12-19",
+          "affected_articles": [
+            "5510 m.81/1-ı",
+            "5510 Geçici m.108"
+          ],
+          "effective_from": "2026-01-01",
+          "summary": "7566 sayılı Kanun uyarınca genel işveren prim indirimi 2 puana düşürülmüş, imalat sektöründe Geçici m.108 kapsamında 5 puanlık indirim 31.12.2026 sonuna kadar korunmuştur; SGK 2026/1 Genelgesi ile uygulama usulü belirlenmiştir."
+        }
+      ],
+      "article_effective_rules": [
+        {
+          "article_ref": "Madde 81/1-ı",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "basis": "7566 sayılı Kanun ve SGK 2026/1 Genelge uygulaması (2 puan genel indirim)",
+          "amended_by": "7566"
+        },
+        {
+          "article_ref": "Geçici Madde 108",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "basis": "7566 sayılı Kanun ve SGK 2026/1 Genelge uygulaması (5 puan imalat indirimi)",
+          "amended_by": "7566"
+        }
+      ]
+    },
+    "SGK-PEK-2026-UYGULAMA": {
+      "source_id": "SGK-PEK-2026-UYGULAMA",
+      "source_title": "SGK 2026 Yılı Prime Esas Kazanç Alt ve Üst Sınırları ile İstisna Tutarları Resmî Portal Duyurusu (2026/2 Genelge Tutarları)",
+      "source_url": "https://www.sgk.gov.tr/Content/Post/2e0c9e1a-2cfe-4456-af10-49d3de0c58ba/Prime-Esas-Kazanc-Miktarlari-2026-01-14-10-35-39",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "source_type": "SGK_CIRCULAR",
+      "norm_layer": "COMMUNIQUE_AND_SGK_CIRCULAR",
+      "norm_priority": 7,
+      "legal_reference": "SGK 2026 Prime Esas Kazanç Miktarları Resmî Duyurusu (14.01.2026 — 2026/2 Genelge Tutarları)",
+      "statute_number": "2026-PEK",
+      "official_gazette_no": "SGK-PEK-20260114",
+      "publication_date": "2026-01-14",
+      "effective_from": "2026-01-01",
+      "effective_to": "2026-12-31",
+      "last_verified_at": "2026-11-20",
+      "verified_by": "CALISORA-SGK-01",
+      "verification_status": "VERIFIED",
+      "supersedes": "SGK 2025 Prime Esas Kazanç Alt/Üst Sınırları (7,5 Kat Tavan)",
+      "superseded_by": null,
+      "keywords": [
+        "sgk pek 2026",
+        "33.030",
+        "297.270",
+        "1.101",
+        "9.909",
+        "9 kat tavan",
+        "aile yardımı 3.303",
+        "sgk 2026/2",
+        "5510 m.82"
+      ],
+      "content_sha256": "987fe77543c0af619f077a6eae358f019af031a2272f37ec46fc24f1e3edfbc0",
+      "verification_audit": {
+        "verifier_id": "CALISORA-SGK-01",
+        "verifier_role": "SGK_COMPLIANCE_SPECIALIST",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-SGKPEK2026",
+        "verified_at": "2026-11-20T11:29:40Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "987fe77543c0af619f077a6eae358f019af031a2272f37ec46fc24f1e3edfbc0",
+        "expected_text_markers": [
+          "33.030,00",
+          "297.270,00",
+          "5510"
+        ],
+        "matched_text_markers": [
+          "33.030,00",
+          "297.270,00",
+          "5510"
+        ]
+      },
+      "original_publication": {
+        "official_gazette_no": "SGK-PEK-20260114",
+        "publication_date": "2026-01-14",
+        "text_type": "ORIGINAL_PUBLISHED_TEXT",
+        "original_url": "https://www.sgk.gov.tr/Content/Post/2e0c9e1a-2cfe-4456-af10-49d3de0c58ba/Prime-Esas-Kazanc-Miktarlari-2026-01-14-10-35-39"
+      },
+      "consolidated_text": {
+        "consolidated_url": "https://www.sgk.gov.tr/Content/Post/2e0c9e1a-2cfe-4456-af10-49d3de0c58ba/Prime-Esas-Kazanc-Miktarlari-2026-01-14-10-35-39",
+        "last_checked_at": "2026-11-20",
+        "is_consolidated_portal": false,
+        "latest_tracked_amendment": "7566-RG-33112"
+      },
+      "amendment_history": [
+        {
+          "amending_law_no": "7566",
+          "official_gazette_no": "33112",
+          "publication_date": "2025-12-19",
+          "affected_articles": [
+            "5510 m.82 (PEK Üst Sınırı 9 Kat)"
+          ],
+          "effective_from": "2026-01-01",
+          "summary": "7566 sayılı Kanun ile 01.01.2026'dan itibaren günlük kazanç üst sınırı 7,5 kattan 9 kata çıkarılmış; 2026 günlük alt sınır 1.101,00 TL, aylık alt sınır 33.030,00 TL, günlük üst sınır 9.909,00 TL, aylık üst sınır 297.270,00 TL olmuştur."
+        }
+      ],
+      "article_effective_rules": [
+        {
+          "article_ref": "Madde 82",
+          "effective_from": "2026-01-01",
+          "effective_to": "2026-12-31",
+          "basis": "5510 m.82 (7566 değişikliği — 9 kat tavan) ve SGK 14.01.2026 resmî duyurusu",
+          "amended_by": "7566"
+        }
+      ]
+    }
+  }
+}

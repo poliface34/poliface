@@ -1,0 +1,157 @@
+{
+  "schema_version": "1.0.5.1",
+  "ledger_id": "CALISORA-HOLIDAY-CALENDAR-ATTESTATION-LEDGER",
+  "description": "hrAI @HukukSGK v1.0.5.1 — 4857 m.26 dinî bayram takvimi kaynak belgelerinin teknik SHA-256 + ayrıştırıcı doğrulaması ile yetkili hukuk müşaviri imzalı onaylarının değiştirilemez SHA-256 hash zinciri (RFC 8785 / JCS). Üretim yetkilendirme kapısı hiçbir çağıran Boolean'ını güven kaynağı kabul etmez; katı RFC 5280 X.509/TLS zinciri, ayrı güvenlik projesindeki KMS/HSM imzalı ve WORM korumalı harici güven çapası ve gerçek kriptografik hukuk müşaviri onayı doğrulanmadan üretim izni verilmez.",
+  "hash_algorithm": "SHA-256",
+  "canonicalization_standard": "RFC-8785-JCS",
+  "worm_storage_policy": "WORM_AND_INDEPENDENT_TSA_REQUIRED_FOR_PRODUCTION",
+  "external_legal_counsel_signoff_status": "PENDING_SIGNED_EXTERNAL_ATTESTATION",
+  "entries": [
+    {
+      "sequence_no": 1,
+      "entry_id": "LED-TECH-DIYANET-2024-V1",
+      "entry_type": "TECHNICAL_SOURCE_VERIFICATION",
+      "recorded_at_utc": "2026-11-21T02:22:49Z",
+      "payload": {
+        "year": 2024,
+        "snapshot_id": "SNAP-DIYANET-2024-V1",
+        "snapshot_version": "v1",
+        "snapshot_path": "evidence/holiday_snapshots/diyanet_2024_v1.html",
+        "official_source_url": "https://vakithesaplama.diyanet.gov.tr/icerik.php?icerik=151",
+        "source_document_sha256": "fc7f54298ef94893049145314bc00bbf9f02ac0eec5bf57592e224f7f5788958",
+        "parser_version": "tr_diyanet_holiday_parser_v1.0.5.1",
+        "extraction_method": "NATIVE_HTML_TABLE",
+        "extracted_dates_summary": {
+          "ramazan_arife": "2024-04-09",
+          "ramazan_day_1": "2024-04-10",
+          "ramazan_day_2": "2024-04-11",
+          "ramazan_day_3": "2024-04-12",
+          "kurban_arife": "2024-06-15",
+          "kurban_day_1": "2024-06-16",
+          "kurban_day_2": "2024-06-17",
+          "kurban_day_3": "2024-06-18",
+          "kurban_day_4": "2024-06-19"
+        },
+        "technical_verification_status": "TECHNICAL_VERIFIED",
+        "legal_attestation_status": "PENDING_SIGNED_EXTERNAL_ATTESTATION"
+      },
+      "prev_entry_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "entry_hash": "066bd6bced3d44f7f2cb8e9589d448403d9c7d8de3c3ce39e5e746db325cb79b"
+    },
+    {
+      "sequence_no": 2,
+      "entry_id": "LED-TECH-DIYANET-2025-V1",
+      "entry_type": "TECHNICAL_SOURCE_VERIFICATION",
+      "recorded_at_utc": "2026-11-21T02:22:49Z",
+      "payload": {
+        "year": 2025,
+        "snapshot_id": "SNAP-DIYANET-2025-V1",
+        "snapshot_version": "v1",
+        "snapshot_path": "evidence/holiday_snapshots/diyanet_2025_v1.html",
+        "official_source_url": "https://vakithesaplama.diyanet.gov.tr/icerik.php?icerik=152",
+        "source_document_sha256": "05c7886bbbed3fcb11aedbcf024d8e6a81ee0e568d90c2e870390496300351da",
+        "parser_version": "tr_diyanet_holiday_parser_v1.0.5.1",
+        "extraction_method": "NATIVE_HTML_TABLE",
+        "extracted_dates_summary": {
+          "ramazan_arife": "2025-03-29",
+          "ramazan_day_1": "2025-03-30",
+          "ramazan_day_2": "2025-03-31",
+          "ramazan_day_3": "2025-04-01",
+          "kurban_arife": "2025-06-05",
+          "kurban_day_1": "2025-06-06",
+          "kurban_day_2": "2025-06-07",
+          "kurban_day_3": "2025-06-08",
+          "kurban_day_4": "2025-06-09"
+        },
+        "technical_verification_status": "TECHNICAL_VERIFIED",
+        "legal_attestation_status": "PENDING_SIGNED_EXTERNAL_ATTESTATION"
+      },
+      "prev_entry_hash": "066bd6bced3d44f7f2cb8e9589d448403d9c7d8de3c3ce39e5e746db325cb79b",
+      "entry_hash": "4953b5b2e1a33ab48c93f333fa6521a6f00117b1abb8f5f0866836a54f1aeef4"
+    },
+    {
+      "sequence_no": 3,
+      "entry_id": "LED-TECH-DIYANET-2026-V1",
+      "entry_type": "TECHNICAL_SOURCE_VERIFICATION",
+      "recorded_at_utc": "2026-11-21T02:22:49Z",
+      "payload": {
+        "year": 2026,
+        "snapshot_id": "SNAP-DIYANET-2026-V1",
+        "snapshot_version": "v1",
+        "snapshot_path": "evidence/holiday_snapshots/diyanet_2026_v1.html",
+        "official_source_url": "https://vakithesaplama.diyanet.gov.tr/icerik.php?icerik=153",
+        "source_document_sha256": "cd7f14617212cf67df5bc7598a34ada56e8ff7f81aa4d2a30e4133c7c50d729b",
+        "parser_version": "tr_diyanet_holiday_parser_v1.0.5.1",
+        "extraction_method": "NATIVE_HTML_TABLE",
+        "extracted_dates_summary": {
+          "ramazan_arife": "2026-03-19",
+          "ramazan_day_1": "2026-03-20",
+          "ramazan_day_2": "2026-03-21",
+          "ramazan_day_3": "2026-03-22",
+          "kurban_arife": "2026-05-26",
+          "kurban_day_1": "2026-05-27",
+          "kurban_day_2": "2026-05-28",
+          "kurban_day_3": "2026-05-29",
+          "kurban_day_4": "2026-05-30"
+        },
+        "technical_verification_status": "TECHNICAL_VERIFIED",
+        "legal_attestation_status": "PENDING_SIGNED_EXTERNAL_ATTESTATION"
+      },
+      "prev_entry_hash": "4953b5b2e1a33ab48c93f333fa6521a6f00117b1abb8f5f0866836a54f1aeef4",
+      "entry_hash": "ee3d2edede0de938842a4e517f874ebac7c6c597d7966a9c3093c4bdae5f9e95"
+    },
+    {
+      "sequence_no": 4,
+      "entry_id": "LED-TECH-DIYANET-2027-V1",
+      "entry_type": "TECHNICAL_SOURCE_VERIFICATION",
+      "recorded_at_utc": "2026-11-21T02:22:49Z",
+      "payload": {
+        "year": 2027,
+        "snapshot_id": "SNAP-DIYANET-2027-V1",
+        "snapshot_version": "v1",
+        "snapshot_path": "evidence/holiday_snapshots/diyanet_2027_v1.html",
+        "official_source_url": "https://vakithesaplama.diyanet.gov.tr/icerik.php?icerik=154",
+        "source_document_sha256": "e1ba5c8f0b45f4dc58a32a5ed359afc8481c441997d3a9d37eeced0fc2f2bbad",
+        "parser_version": "tr_diyanet_holiday_parser_v1.0.5.1",
+        "extraction_method": "NATIVE_HTML_TABLE",
+        "extracted_dates_summary": {
+          "ramazan_arife": "2027-03-08",
+          "ramazan_day_1": "2027-03-09",
+          "ramazan_day_2": "2027-03-10",
+          "ramazan_day_3": "2027-03-11",
+          "kurban_arife": "2027-05-15",
+          "kurban_day_1": "2027-05-16",
+          "kurban_day_2": "2027-05-17",
+          "kurban_day_3": "2027-05-18",
+          "kurban_day_4": "2027-05-19"
+        },
+        "technical_verification_status": "TECHNICAL_VERIFIED",
+        "legal_attestation_status": "PENDING_SIGNED_EXTERNAL_ATTESTATION"
+      },
+      "prev_entry_hash": "ee3d2edede0de938842a4e517f874ebac7c6c597d7966a9c3093c4bdae5f9e95",
+      "entry_hash": "090ff1f117102c341c67bd769f0d114b57301468784e5eafb153287ee4697aa5"
+    }
+  ],
+  "checkpoints": [
+    {
+      "checkpoint_id": "CHK-RELEASE-1.0.5.1-20261124",
+      "checkpoint_scope": "RELEASE_1.0.5.1",
+      "created_at_utc": "2026-11-24T01:30:00Z",
+      "from_sequence_no": 1,
+      "to_sequence_no": 4,
+      "entry_count": 4,
+      "head_entry_hash": "090ff1f117102c341c67bd769f0d114b57301468784e5eafb153287ee4697aa5",
+      "chain_digest_sha256": "3e43bb6df75ae086c839dff82291bd65d59fac3f9245e54c0af6ccb1d3cfb32d",
+      "nonce": "CHK-NONCE-1051-20261124-001",
+      "worm_storage_policy": "WORM_AND_INDEPENDENT_TSA_REQUIRED_FOR_PRODUCTION",
+      "external_tsa_token_status": "PENDING_EXTERNAL_TSA_INTEGRATION",
+      "signer_approver_id": "CALISORA-LEDGER-SEALER-01",
+      "key_id": "KEY-CALISORA-SEALER-01-PENDING",
+      "key_version": "v1",
+      "algorithm": null,
+      "public_key_fingerprint_sha256": null,
+      "checkpoint_signature_b64": null,
+      "checkpoint_signature_status": "PENDING_PRODUCTION_SEALER_KEY_ENROLLMENT"
+    }
+  ]
+}

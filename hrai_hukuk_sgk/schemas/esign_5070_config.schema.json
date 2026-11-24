@@ -1,0 +1,315 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://calisora.internal/schemas/esign_5070_config.schema.json",
+  "title": "hrAI @HukukSGK 5070 Sayılı Kanun NES & CAdES/XAdES Yapılandırma Şeması (v1.0.5.1)",
+  "description": "BTK yetkili ESHS listesi, ayrı ESHS kök/ara CA sertifika zinciri ve politika paketi, OCSP/CRL iptal servisleri, ETSI EN 319 122/132 profil ayarları ve 5070 sayılı Kanun m.4/m.6/m.9 kabul kapısı yapılandırması.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "description",
+    "deployment_status",
+    "qualified_e_signature_5070_production_ready",
+    "etsi_standards",
+    "probe_statuses_supported",
+    "btk_eshs_registry",
+    "eshs_ca_certificate_bundles",
+    "revocation_services",
+    "law_5070_governance",
+    "scope_boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.5.1"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 20
+    },
+    "deployment_status": {
+      "type": "string",
+      "enum": [
+        "NOT_CONFIGURED",
+        "CONFIGURED_UNVERIFIED",
+        "LIVE_VERIFIED",
+        "FAILED",
+        "INDETERMINATE"
+      ]
+    },
+    "qualified_e_signature_5070_production_ready": {
+      "type": "boolean"
+    },
+    "etsi_standards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cades_standard",
+        "xades_standard",
+        "canonical_baseline_profiles",
+        "legacy_profile_aliases",
+        "profile_compliance_separate_from_crypto_validity"
+      ],
+      "properties": {
+        "cades_standard": {
+          "type": "string",
+          "const": "ETSI EN 319 122-1/-2"
+        },
+        "xades_standard": {
+          "type": "string",
+          "const": "ETSI EN 319 132-1/-2"
+        },
+        "canonical_baseline_profiles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "B-B",
+              "B-T",
+              "B-LT",
+              "B-LTA"
+            ]
+          },
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true
+        },
+        "legacy_profile_aliases": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "enum": [
+              "B-B",
+              "B-T",
+              "B-LT",
+              "B-LTA"
+            ]
+          }
+        },
+        "profile_compliance_separate_from_crypto_validity": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "probe_statuses_supported": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "NOT_CONFIGURED",
+          "CONFIGURED_UNVERIFIED",
+          "LIVE_VERIFIED",
+          "FAILED",
+          "INDETERMINATE"
+        ]
+      },
+      "minItems": 5,
+      "maxItems": 5,
+      "uniqueItems": true
+    },
+    "btk_eshs_registry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "separated_from_ca_bundles",
+        "registry_source_url",
+        "env_var_registry_url",
+        "require_active_status_at_validation_time",
+        "reject_sandbox_registry_in_production"
+      ],
+      "properties": {
+        "separated_from_ca_bundles": {
+          "type": "boolean",
+          "const": true
+        },
+        "registry_source_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "env_var_registry_url": {
+          "type": "string"
+        },
+        "require_active_status_at_validation_time": {
+          "type": "boolean",
+          "const": true
+        },
+        "reject_sandbox_registry_in_production": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "eshs_ca_certificate_bundles": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "separated_from_btk_registry",
+        "bundle_source_ref",
+        "env_var_bundle_path",
+        "enforce_x509_strict_chain",
+        "require_policy_oid_evaluation",
+        "reject_sandbox_ca_in_production"
+      ],
+      "properties": {
+        "separated_from_btk_registry": {
+          "type": "boolean",
+          "const": true
+        },
+        "bundle_source_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "env_var_bundle_path": {
+          "type": "string"
+        },
+        "enforce_x509_strict_chain": {
+          "type": "boolean",
+          "const": true
+        },
+        "require_policy_oid_evaluation": {
+          "type": "boolean",
+          "const": true
+        },
+        "reject_sandbox_ca_in_production": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "revocation_services": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ocsp_responder_url",
+        "crl_distribution_url",
+        "env_var_ocsp_url",
+        "env_var_crl_url",
+        "supported_statuses",
+        "fail_closed_on_unavailable",
+        "indeterminate_blocks_production_gate",
+        "historical_archive_revocation_supported"
+      ],
+      "properties": {
+        "ocsp_responder_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "crl_distribution_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "env_var_ocsp_url": {
+          "type": "string"
+        },
+        "env_var_crl_url": {
+          "type": "string"
+        },
+        "supported_statuses": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "GOOD",
+              "REVOKED",
+              "UNKNOWN",
+              "UNAVAILABLE"
+            ]
+          },
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true
+        },
+        "fail_closed_on_unavailable": {
+          "type": "boolean",
+          "const": true
+        },
+        "indeterminate_blocks_production_gate": {
+          "type": "boolean",
+          "const": true
+        },
+        "historical_archive_revocation_supported": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "law_5070_governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "separate_crypto_and_5070_legal_outcomes",
+        "article_4_sub_elements_evaluated_separately",
+        "article_6_sscd_requires_external_evidence",
+        "article_9_qc_statements_evaluated_in_policy_context",
+        "kms_hsm_non_equivalence_enforced",
+        "timestamp_alone_never_proves_5070",
+        "caller_self_asserted_booleans_forbidden",
+        "separation_notice"
+      ],
+      "properties": {
+        "separate_crypto_and_5070_legal_outcomes": {
+          "type": "boolean",
+          "const": true
+        },
+        "article_4_sub_elements_evaluated_separately": {
+          "type": "boolean",
+          "const": true
+        },
+        "article_6_sscd_requires_external_evidence": {
+          "type": "boolean",
+          "const": true
+        },
+        "article_9_qc_statements_evaluated_in_policy_context": {
+          "type": "boolean",
+          "const": true
+        },
+        "kms_hsm_non_equivalence_enforced": {
+          "type": "boolean",
+          "const": true
+        },
+        "timestamp_alone_never_proves_5070": {
+          "type": "boolean",
+          "const": true
+        },
+        "caller_self_asserted_booleans_forbidden": {
+          "type": "boolean",
+          "const": true
+        },
+        "separation_notice": {
+          "type": "string",
+          "minLength": 20
+        }
+      }
+    },
+    "scope_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "v1_0_4_scope",
+        "l5_l6_hr_cba_cards_deferred_to"
+      ],
+      "properties": {
+        "v1_0_4_scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 4
+        },
+        "l5_l6_hr_cba_cards_deferred_to": {
+          "type": "string",
+          "const": "v1.0.5"
+        }
+      }
+    }
+  }
+}

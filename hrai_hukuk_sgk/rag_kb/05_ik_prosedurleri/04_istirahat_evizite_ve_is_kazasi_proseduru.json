@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0.5.1",
+  "layer_id": "L5_HR_PROCEDURES",
+  "product_brand": "hrAI",
+  "coordinator_agent": "@hrAI",
+  "specialist_agent": "@HukukSGK",
+  "procedure_id": "PROC-L5-ISTIRAHAT-IS-KAZASI",
+  "source_document_id": "HRAI-L5-PROC-04",
+  "title": "İstirahat Raporu, e-Vizite Onayı ve İş Kazası Bildirim (6331 m.14 + SSİY) Referans Prosedürü",
+  "scope_summary": "İş kazası ve meslek hastalığının 6331 m.14 uyarınca 3 iş günü içinde SGK'ya bildirilmesi, istirahat raporlarının e-Vizite/Çalışılmadığına Dair Bildirim sisteminde yasal sürede onaylanması ve SSİY m.102 eksik gün belgelerinin saklanması için kurumsal referans şablonudur.",
+  "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+  "template_only_not_binding_company_policy": true,
+  "no_flat_priority_supremacy": true,
+  "primary_statutory_basis_ids": [
+    "CARD-6331-M14",
+    "CARD-6331-M04-M06",
+    "CARD-SSIY-M102",
+    "CARD-5510-M102"
+  ],
+  "mandatory_steps": [
+    {
+      "step_no": 1,
+      "action": "İş kazası meydana geldiğinde derhal acil müdahale, işyeri hekimi/İSG uzmanı bilgilendirmesi ve olay yeri tespit tutanağı düzenlenmesini sağla.",
+      "responsible_role": "İSG Uzmanı, İşyeri Hekimi ve Birim Amiri",
+      "required_record": "İş Kazası Olay Tespit ve Tanık Tutanağı",
+      "statutory_anchor_id": "CARD-6331-M14"
+    },
+    {
+      "step_no": 2,
+      "action": "İş kazasını kazadan sonraki 3 iş günü içinde (meslek hastalığını öğrenmeden itibaren 3 iş günü içinde) SGK e-Bildirim sisteminden bildir.",
+      "responsible_role": "İK / SGK Bildirim Sorumlusu",
+      "required_record": "SGK İş Kazası / Meslek Hastalığı Bildirim Çıktısı",
+      "statutory_anchor_id": "CARD-6331-M14"
+    },
+    {
+      "step_no": 3,
+      "action": "İstirahat raporlarını SGK e-Vizite sisteminde takip et, çalışılmadığına dair bildirimi yasal sürede onayla ve eksik gün dayanak belgelerini SSİY m.102 kapsamında muhafaza et.",
+      "responsible_role": "İK ve Bordro Operasyon Sorumlusu",
+      "required_record": "e-Vizite Onay Kaydı ve SSİY m.102 Eksik Gün Arşivi",
+      "statutory_anchor_id": "CARD-SSIY-M102"
+    }
+  ],
+  "escalation_triggers": [
+    "İş kazasının 6331 m.14 kapsamındaki 3 iş günü içinde bildirilmemesi (ağır İPC ve rücu riski)",
+    "Ölümlü, uzuv kayıplı veya ağır yaralanmalı iş kazası (derhal kolluk + hukuk müşaviri eskalasyonu)",
+    "İstirahatli çalışanın rapor süresince fiilen çalıştırılması riski"
+  ],
+  "rules": [
+    {
+      "rule_id": "RULE-L5-04-IS-KAZASI-3-IS-GUNU",
+      "title": "6331 m.14 İş Kazası 3 İş Günü Mutlak Bildirim Kuralı",
+      "rule_summary": "İş kazası ve meslek hastalığı bildirimi kamu düzenine ilişkin mutlak emredici kuraldır; kurum içi onay hiyerarşisi veya çalışan talebi ile bildirim ertelenemez ya da yapılmaktan vazgeçilemez.",
+      "norm_type": "STATUTORY_ABSOLUTE_MANDATORY",
+      "legal_basis_ids": [
+        "CARD-6331-M14",
+        "CARD-6331-M04-M06",
+        "CARD-5510-M102"
+      ],
+      "source_document_id": "HRAI-L5-PROC-04",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": false,
+        "statutory_floor_nature": "ABSOLUTE_MANDATORY",
+        "can_improve_for_employee": false,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "6331 m.14 mutlak emredici İSG bildirim yükümlülüğüdür; işçi rızası veya işçi lehine anlaşma gerekçesiyle bildirimden kaçınılamaz."
+      },
+      "conflict_resolution": {
+        "strategy": "STATUTORY_ABSOLUTE_PREVAILS",
+        "higher_authority_ref": "6331 s. İSG Kanunu m.14",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "TİS, bireysel iş sözleşmesi veya kurum içi İK prosedürü 6331 m.14 bildirim süresini ve zorunluluğunu değiştiremez.",
+        "rationale": "İSG bildirim yükümlülüğü kamu düzenindendir; aksine her uygulama idari para cezası ve hukuki/cezai sorumluluk doğurur."
+      },
+      "human_review_required": true
+    },
+    {
+      "rule_id": "RULE-L5-04-RAPOR-UCRET-TAMAMLAMA",
+      "title": "İstirahat Süresinde Ücret Tamamlama (İşyeri Politikası / Tamamlayıcı Alan)",
+      "rule_summary": "Kanunen zorunlu olmamakla birlikte işveren, geçici iş göremezlik ödeneği dönemindeki ücret farkını tamamlamayı iç politika veya TİS ile üstlenebilir; bu uygulama süreklilik kazanırsa yerleşik işyeri uygulamasına dönüşebilir.",
+      "norm_type": "CORPORATE_HR_PROCEDURE",
+      "legal_basis_ids": [
+        "CARD-SSIY-M102",
+        "CARD-5510-M80-M82"
+      ],
+      "source_document_id": "HRAI-L5-PROC-04",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": true,
+        "statutory_floor_nature": "SUPPLEMENTARY_DEFAULT",
+        "can_improve_for_employee": true,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "İstirahat farkı ödemesi kanuni zorunluluğun ötesinde işçi lehine bir menfaattir; ancak süreklilik kazanırsa 4857 m.22 rızası olmadan kaldırılamaz."
+      },
+      "conflict_resolution": {
+        "strategy": "ESSENTIAL_CHANGE_WRITTEN_CONSENT_4857_M22",
+        "higher_authority_ref": "5510 s. Kanun m.80 ve 4857 s. Kanun m.22",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "Tek taraflı İK prosedürüyle başlatılan rapor farkı ödemesi düzenli tekrarlandığında L6 yerleşik işyeri uygulamasına dönüşebilir; iki kaynak ayrı değerlendirilir.",
+        "rationale": "Tamamlayıcı alanda işçi lehine sağlanan düzenli menfaatlerin kaldırılması esaslı değişiklik denetimi ve hukuk müşaviri incelemesi gerektirir."
+      },
+      "human_review_required": true
+    }
+  ],
+  "disclaimer": "Bu kayıt hrAI @HukukSGK L5 kurumsal İK prosedürü referans şablonudur (REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION). Şirket tarafından benimsenip hukuk müşavirince onaylanmadan yürürlükteki İSG/rapor prosedürü gibi uygulanamaz."
+}

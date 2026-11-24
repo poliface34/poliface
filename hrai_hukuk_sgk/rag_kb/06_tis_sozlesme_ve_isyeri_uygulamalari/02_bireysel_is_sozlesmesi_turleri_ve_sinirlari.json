@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0.5.1",
+  "layer_id": "L6_CBA_CONTRACTS_AND_WORKPLACE_PRACTICES",
+  "product_brand": "hrAI",
+  "coordinator_agent": "@hrAI",
+  "specialist_agent": "@HukukSGK",
+  "module_id": "MOD-L6-BIREYSEL-SOZLESME",
+  "source_document_id": "HRAI-L6-SOZ-02",
+  "autonomous_source_kind": "INDIVIDUAL_EMPLOYMENT_CONTRACT",
+  "title": "Bireysel İş Sözleşmesi Türleri (Belirli/Belirsiz/Uzaktan) ve Emredicilik Sınırları Referans Modülü",
+  "scope_summary": "Belirli süreli (4857 m.11 objektif koşul), belirsiz süreli, uzaktan/hibrit çalışma (Yön. m.9/2) ve rekabet yasağı (6098 TBK m.444-447) bireysel iş sözleşmesi hükümlerinin kanuni emredicilik türlerine ve TİS hükümlerine göre geçerlilik denetimi için referans şablondur.",
+  "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+  "template_only_not_binding_company_policy": true,
+  "no_flat_priority_supremacy": true,
+  "non_reducible_source_distinction": "Bireysel iş sözleşmesi tarafların karşılıklı iradesine dayanır; TİS'in kolektif normatif gücünden, işverenin tek taraflı iç yönetmeliğinden ve zımni işyeri uygulamasından ayrı değerlendirilir.",
+  "primary_statutory_basis_ids": [
+    "CARD-4857-M11",
+    "CARD-4857-M17",
+    "CARD-4857-M53",
+    "CARD-6098-M444-M447",
+    "CARD-YON-UZAKTAN-CALISMA",
+    "YIBBGK-2017-10-2019-1"
+  ],
+  "rules": [
+    {
+      "rule_id": "RULE-L6-02-BELIRLI-SURELI-OBJEKTIF-KOSUL",
+      "title": "Belirli Süreli İş Sözleşmesinde Objektif Koşul ve Cezai Şart (4857 m.11 + YİBBGK 2019/1)",
+      "rule_summary": "Belirli süreli iş sözleşmesi yazılı yapılsa dahi 4857 m.11 anlamında objektif koşul yoksa veya esaslı neden olmadan zincirleme yenilenirse baştan itibaren belirsiz süreli sayılır; cezai şart geçerliliği YİBBGK 2017/10 E., 2019/1 K. sınırlarına tabidir.",
+      "norm_type": "INDIVIDUAL_EMPLOYMENT_CONTRACT",
+      "legal_basis_ids": [
+        "CARD-4857-M11",
+        "YIBBGK-2017-10-2019-1"
+      ],
+      "source_document_id": "HRAI-L6-SOZ-02",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": true,
+        "statutory_floor_nature": "RELATIVE_MANDATORY_FLOOR",
+        "can_improve_for_employee": true,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "Sözleşmeye objektif koşul olmadan 'belirli süreli' başlığı verilerek işçinin ihbar/iş güvencesi hakları bertaraf edilemez."
+      },
+      "conflict_resolution": {
+        "strategy": "EMPLOYEE_FAVORABLE_COMPARISON_WITH_MANDATORY_FLOOR",
+        "higher_authority_ref": "4857 s. Kanun m.11 ve YİBBGK E. 2017/10, K. 2019/1",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "Bireysel sözleşmenin belirli süreli niteliği tarafların somut iş ilişkisine özgüdür; genel İK prosedürü veya işyeri uygulamasıyla objektif koşul ikame edilemez.",
+        "rationale": "4857 m.11 nispi emredici koruma getirir; objektif koşul eksikliğinde sözleşme belirsiz süreliye dönüşür."
+      },
+      "human_review_required": true
+    },
+    {
+      "rule_id": "RULE-L6-02-UZAKTAN-HIBRIT-TAMAMLAYICI",
+      "title": "Uzaktan / Hibrit Çalışma Esasları ve Araç-Gider Paylaşımı (Tamamlayıcı & Nispi Alan)",
+      "rule_summary": "Uzaktan veya hibrit çalışma gün sayısı, iletişim zamanları ve iş araçlarının temin esasları Yönetmelik çerçevesinde bireysel iş sözleşmesiyle yazılı olarak belirlenebilir; ancak iş sağlığı/güvenliği ve asgari ücret/fazla çalışma sınırları ihlal edilemez.",
+      "norm_type": "STATUTORY_SUPPLEMENTARY",
+      "legal_basis_ids": [
+        "CARD-YON-UZAKTAN-CALISMA",
+        "CARD-6331-M04-M06",
+        "CARD-4857-M41"
+      ],
+      "source_document_id": "HRAI-L6-SOZ-02",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": true,
+        "statutory_floor_nature": "SUPPLEMENTARY_DEFAULT",
+        "can_improve_for_employee": true,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "Çalışma yeri ve hibrit gün dağılımı tamamlayıcı alanda sözleşmeyle düzenlenebilir; her kanun hükmü mutlak emredici sayılmadan ilgili hükmün niteliğine göre değerlendirme yapılır."
+      },
+      "conflict_resolution": {
+        "strategy": "SUPPLEMENTARY_CONTRACT_OR_PRACTICE_APPLIES",
+        "higher_authority_ref": "Uzaktan Çalışma Yönetmeliği (m.9/2 hibrit değişiklik dahil)",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "Bireysel uzaktan çalışma sözleşmesi hükümleri, TİS'te daha elverişli uzaktan çalışma hakkı varsa TİS'in altına inemez ve sonradan işçi aleyhine tek taraflı değiştirilemez (4857 m.22).",
+        "rationale": "Tamamlayıcı kurallar tarafların yazılı anlaşmasıyla esnek biçimde düzenlenebilir; ancak çalışma süresi ve İSG tabanları korunur."
+      },
+      "human_review_required": true
+    },
+    {
+      "rule_id": "RULE-L6-02-REKABET-YASAGI-SINIRI",
+      "title": "Rekabet Yasağı Sözleşmesi Yer, Zaman ve Konu Sınırları (6098 TBK m.444-447)",
+      "rule_summary": "Bireysel iş sözleşmesine eklenen rekabet yasağı kaydı yalnızca işçinin müşteri çevresi veya üretim sırlarına erişimi varsa, ekonomik geleceğini hakkaniyete aykırı sınırlamıyorsa ve kural olarak 2 yılı aşmıyorsa geçerlidir.",
+      "norm_type": "INDIVIDUAL_EMPLOYMENT_CONTRACT",
+      "legal_basis_ids": [
+        "CARD-6098-M444-M447"
+      ],
+      "source_document_id": "HRAI-L6-SOZ-02",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": true,
+        "statutory_floor_nature": "RELATIVE_MANDATORY_FLOOR",
+        "can_improve_for_employee": true,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "Rekabet yasağı süresi 2 yıldan kısa veya daha dar kapsamlı (işçi lehine) kararlaştırılabilir, ancak TBK m.444-445 emredici sınırlarını işçi aleyhine aşamaz."
+      },
+      "conflict_resolution": {
+        "strategy": "EMPLOYEE_FAVORABLE_COMPARISON_WITH_MANDATORY_FLOOR",
+        "higher_authority_ref": "6098 s. TBK m.444-447",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "Rekabet yasağı yalnızca yazılı bireysel anlaşmayla kurulabilir; tek taraflı işyeri iç yönetmeliği veya işyeri uygulamasıyla rekabet yasağı getirilemez.",
+        "rationale": "TBK m.444-445 yazılı bireysel sözleşme ve ölçülülük şartı arar; aşan kısım hâkim müdahalesi veya geçersizlik riskine tabidir."
+      },
+      "human_review_required": true
+    }
+  ],
+  "disclaimer": "Bu kayıt hrAI @HukukSGK L6 bireysel iş sözleşmesi referans şablonudur (REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION). Şirket tarafından benimsenip hukuk müşavirince uyarlanmadan imzalı sözleşme yerine geçmez."
+}

@@ -1,0 +1,176 @@
+{
+  "schema_version": "1.0.2a.3",
+  "law_no": "7036",
+  "law_title": "7036 Sayılı İş Mahkemeleri Kanunu",
+  "source_id": "MEVZUAT-7036",
+  "cards": [
+    {
+      "card_id": "CARD-7036-M03",
+      "source_id": "MEVZUAT-7036",
+      "law_no": "7036",
+      "article_ref": "Madde 3",
+      "topic": "İş uyuşmazlıklarında dava şartı olarak zorunlu arabuluculuk (Yürürlük: 01.01.2018)",
+      "legal_basis": {
+        "source_id": "MEVZUAT-7036",
+        "original_publication_ref": "RG 25.10.2017 / Sayı 30221 (m.38/1-a uyarınca m.3 yürürlük tarihi: 01.01.2018)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=7036&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": []
+      },
+      "scope_of_application": "Kanuna, bireysel veya toplu iş sözleşmesine dayanan işçi veya işveren alacağı ve tazminatı ile işe iade talebiyle açılan davalarda, arabulucuya başvurulmuş olması dava şartıdır. Arabuluculuk sürecinde zamanaşımı durur ve hak düşürücü süre işlemez (m.3/17). İlk toplantıya geçerli mazeret olmadan katılmayan taraf davada kısmen veya tamamen haklı çıksa bile yargılama giderinin tamamından sorumlu tutulur ve lehine vekâlet ücretine hükmedilmez (m.3/12).",
+      "exceptions": [
+        "İş kazası veya meslek hastalığından kaynaklanan maddi ve manevi tazminat ile bunlarla ilgili tespit, itiraz ve rücu davaları zorunlu arabuluculuk kapsamı dışındadır (m.3/3)",
+        "01.01.2018 tarihinden önce açılmış davalar bakımından m.3 yürürlükte değildi (m.38/1-a)"
+      ],
+      "required_documents": [
+        "Arabuluculuk davet yazısı ve toplantı katılım yetki belgesi (işvereni yazılı belgeyle yetkilendirilmiş çalışan temsil edebilir — m.3/18)",
+        "Arabuluculuk son tutanağı (anlaşma veya anlaşmama)",
+        "Anlaşma sağlanmışsa taraflar, avukatları ve arabulucu imzalı anlaşma belgesi (ilam niteliğinde — 6325 m.18)"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde 7036 m.3'e özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2018-01-01",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "7036 Sayılı Kanun m.38/1-a — Kanun 25.10.2017'de yayımlanmış, 3., 11. ve 12. maddeler ise 01.01.2018 tarihinde yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "Arabuluculuk ilk toplantısına mazeretsiz katılmama nedeniyle işverenin davayı kazansa dahi yargılama giderlerine mahkûm olması",
+        "Yetkisiz temsilci ile arabuluculuk görüşmesine katılım nedeniyle tutanak geçersizliği",
+        "Anlaşma tutanağının gerçek iradeyi ve tüm kalemleri net içermemesi"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD7036M03",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "7036",
+        "madde 3",
+        "arabuluculuk",
+        "dava şartı",
+        "01.01.2018",
+        "ilk toplantı",
+        "son tutanak"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-7036",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT7036",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 7036 Madde 3 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    },
+    {
+      "card_id": "CARD-7036-M11-M12",
+      "source_id": "MEVZUAT-7036",
+      "law_no": "7036",
+      "article_ref": "Madde 11 ve Madde 12",
+      "topic": "İşe iade talebinde 1 ay arabuluculuk başvurusu, 2 hafta dava süresi ve parasal belirleme (Yürürlük: 01.01.2018)",
+      "legal_basis": {
+        "source_id": "MEVZUAT-7036",
+        "original_publication_ref": "RG 25.10.2017 / Sayı 30221 (4857 m.20 ve m.21'i değiştiren m.11-12 yürürlük: 01.01.2018)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=7036&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": [
+          {
+            "amending_law_no": "7036",
+            "official_gazette_no": "30221",
+            "publication_date": "2017-10-25",
+            "effective_from": "2018-01-01",
+            "summary": "4857 m.20 (fesih tebliğinden itibaren 1 ay içinde arabulucuya başvuru + anlaşamama son tutanağından itibaren 2 hafta içinde dava) ve m.21 (boşta geçen süre/işe başlatmama tutarlarının dava tarihindeki ücretten parasal belirlenmesi) değiştirildi."
+          }
+        ]
+      },
+      "scope_of_application": "İş sözleşmesi feshedilen iş güvencesi kapsamındaki işçi, fesih bildiriminin tebliğinden itibaren 1 ay içinde işe iade talebiyle arabulucuya başvurmak zorundadır. Anlaşma sağlanamazsa son tutanak tarihinden itibaren 2 hafta içinde iş mahkemesinde dava açılabilir. Arabuluculukta işe başlatma konusunda anlaşılması halinde işe başlatma tarihi, boşta geçen süre ücreti ve işe başlatmama tazminatının parasal tutarları tutanakta açıkça belirlenmelidir (aksi halde anlaşma sağlanamamış sayılır).",
+      "exceptions": [
+        "İş güvencesi kapsamı dışında kalan çalışanlar (4857 m.18 — 30 işçi / 6 ay kıdem eşiği altı)",
+        "İşe iade davalarında istinaf (Bölge Adliye Mahkemesi) kararı kesindir; temyiz yolu kapalıdır (7036 m.8/1-a)"
+      ],
+      "required_documents": [
+        "Fesih bildirimi tebliğ tarihi ispat belgesi (1 aylık hak düşürücü sürenin başlangıcı)",
+        "Arabuluculuk son tutanağı (tarih + anlaşma halinde 3 zorunlu parasal/tarih unsuru)",
+        "Dava tarihindeki giydirilmiş/çıplak brüt ücret bordro kayıtları (@ÜcretBordro)"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde 7036 m.11-12'ye özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2018-01-01",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "7036 Sayılı Kanun m.38/1-a — 11. ve 12. maddeler 01.01.2018 tarihinde yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "Arabuluculukta işe başlatma anlaşmasında 3 zorunlu kalemden (tarih, boşta geçen süre, başlatmama tazminatı) birinin yazılmaması halinde anlaşmanın geçersiz sayılması",
+        "İşe iade sonrasında 4 aylık boşta geçen süre SGK ek bildirgesi verilmemesi nedeniyle SGK İPC riski"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD7036M11",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "7036",
+        "madde 11",
+        "madde 12",
+        "işe iade",
+        "1 ay",
+        "2 hafta",
+        "boşta geçen süre",
+        "01.01.2018"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-7036",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT7036",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 7036 Madde 11 ve Madde 12 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    }
+  ]
+}

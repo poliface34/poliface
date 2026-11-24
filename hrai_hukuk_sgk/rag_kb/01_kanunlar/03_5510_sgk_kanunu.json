@@ -1,0 +1,380 @@
+{
+  "schema_version": "1.0.2a.3",
+  "law_no": "5510",
+  "law_title": "5510 Sayılı Sosyal Sigortalar ve Genel Sağlık Sigortası Kanunu",
+  "source_id": "MEVZUAT-5510",
+  "cards": [
+    {
+      "card_id": "CARD-5510-M08-M09",
+      "source_id": "MEVZUAT-5510",
+      "law_no": "5510",
+      "article_ref": "Madde 8 ve Madde 9",
+      "topic": "Sigortalı işe giriş bildirimi (en geç bir gün önce) ve işten ayrılış bildirimi (10 gün)",
+      "legal_basis": {
+        "source_id": "MEVZUAT-5510",
+        "original_publication_ref": "RG 16.06.2006 / Sayı 26200 (Genel yürürlük: 01.10.2008)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=5510&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": []
+      },
+      "scope_of_application": "4/1-a kapsamındaki sigortalıların işe giriş bildirgesi kural olarak çalışmaya başlamadan en geç 1 gün önce SGK'ya elektronik ortamda verilir. Sigortalılığın sona ermesi halinde işten ayrılış bildirgesi, ayrılış tarihini takip eden 10 gün içinde SGK'ya bildirilir (10 gün içinde düzeltme/silme mümkündür).",
+      "exceptions": [
+        "İnşaat, balıkçılık ve tarım işyerlerinde işe giriş bildirgesi en geç çalışmaya başlanan gün verilebilir (m.8/1-a)",
+        "İlk defa işyeri bildirgesi verilen işyerlerinde 1 ay içinde işe alınan sigortalıların bildirgeleri 1 aylık süre sonuna kadar verilebilir",
+        "Pazartesi günü işe başlayan sigortalılar için (hafta tatiline rastlayan bildirimler) pazartesi günü bildirim yapılabilir (SSİY)"
+      ],
+      "required_documents": [
+        "e-SGK Sigortalı İşe Giriş Bildirgesi barkodlu onay çıktısı",
+        "e-SGK Sigortalı İşten Ayrılış Bildirgesi ve hukuki nedene uygun SGK çıkış kodu teyidi"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde 5510 m.8-9'a özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2008-10-01",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "5510 Sayılı Kanun m.108 (5754 sayılı Kanun değişikliğiyle 01.10.2008 tarihinde yürürlüğe girmiştir)."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "Geç işe giriş bildirgesinde 5510 m.102/1-a uyarınca 1 ila 2 asgari ücret İPC ve müfettiş tespitinde 1 yıl SGK teşvik yasaklılığı",
+        "10 günü aşan işten ayrılış bildiriminde her sigortalı için 1/10 asgari ücret İPC",
+        "Yanlış SGK çıkış kodu bildiriminin 10 gün sonra ancak belge/mahkeme/arabuluculuk tutanağı ile düzeltilebilmesi"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-SGK-01",
+        "verifier_role": "SGK_COMPLIANCE_SPECIALIST",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD5510M08",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "5510",
+        "madde 8",
+        "madde 9",
+        "işe giriş",
+        "işten ayrılış",
+        "10 gün",
+        "sgk çıkış kodu"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-5510",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT5510",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-SGK-REV-02",
+        "reviewer_role": "SGK_COMPLIANCE_SPECIALIST",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 5510 Madde 8 ve Madde 9 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    },
+    {
+      "card_id": "CARD-5510-M80-M82",
+      "source_id": "MEVZUAT-5510",
+      "law_no": "5510",
+      "article_ref": "Madde 80 ve Madde 82",
+      "topic": "Prime Esas Kazanç (PEK) kapsamı, istisnalar, alt sınır ve 2026 yılı 9 kat üst sınırı",
+      "legal_basis": {
+        "source_id": "MEVZUAT-5510",
+        "original_publication_ref": "RG 16.06.2006 / Sayı 26200 (Genel yürürlük: 01.10.2008)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=5510&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": [
+          {
+            "amending_law_no": "7566",
+            "official_gazette_no": "33112",
+            "publication_date": "2025-12-19",
+            "effective_from": "2026-01-01",
+            "summary": "7566 m.24 ile 5510 m.82'deki günlük PEK üst sınırı günlük asgari ücretin 7,5 katından 9 katına çıkarıldı (01.01.2026 itibarıyla yürürlükte)."
+          }
+        ]
+      },
+      "scope_of_application": "Hak edilen ücretler, prim, ikramiye ve bu nitelikteki her türlü istihkak PEK matrahına dahildir. Günlük PEK alt sınırı günlük asgari ücret; 01.01.2026 itibarıyla üst sınır ise günlük asgari ücretin 9 katıdır (7566 m.24). Aşan prim/ikramiye kazançları 2 ay süreyle devreden SGK matrahı olarak takip edilir. Bildirilen PEK alt sınırın altında kalırsa aradaki farkın işçi ve işveren primleri işverence ödenir ve PEK alt sınıra tamamlanır.",
+      "exceptions": [
+        "Ayni yardımlar ve ölüm, doğum, evlenme yardımları ile kıdem/ihbar tazminatları, görev yollukları ve keşif ücretleri PEK'e tabi değildir (m.80/1-b)",
+        "Yemek, çocuk ve aile zamları SGK Yönetim Kurulunca belirlenen istisna tutarları dahilinde PEK'ten muaftır"
+      ],
+      "required_documents": [
+        "Dönemsel SGK PEK taban/tavan parametre tablosu (@ÜcretBordro)",
+        "MUHSGK tahakkuk fişi ve hizmet listesi",
+        "Devreden SGK matrahı takip kaydı (prim/ikramiye ödemeleri için)"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde 5510 m.80-82'ye özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2026-01-01",
+        "effective_to": "2026-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "7566 Sayılı Kanun m.24 (RG 19.12.2025 / 33112) ile 9 kat tavan hükmü 01.01.2026 tarihinde yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "2026 döneminde eski 7,5 kat tavanın kullanılması nedeniyle eksik prim bildirimi, gecikme zammı ve İPC",
+        "PEK alt sınır farkının bildirilen matraha eklenmemesi sonucu bordro-MUHSGK tutarsızlığı",
+        "Ücret niteliğindeki nakdi yardımların ayni yardım gibi gösterilerek prim dışı bırakılması"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-SGK-01",
+        "verifier_role": "SGK_COMPLIANCE_SPECIALIST",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-CARD5510M82",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "5510",
+        "madde 80",
+        "madde 82",
+        "pek",
+        "9 kat",
+        "7566",
+        "devreden matrah",
+        "sgk tavanı",
+        "2026"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-5510",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT5510",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-SGK-REV-02",
+        "reviewer_role": "SGK_COMPLIANCE_SPECIALIST",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 5510 Madde 80 ve Madde 82 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    },
+    {
+      "card_id": "CARD-5510-M81",
+      "source_id": "MEVZUAT-5510",
+      "law_no": "5510",
+      "article_ref": "Madde 81/1-a, Madde 81/1-ı ve Geçici Madde 108",
+      "topic": "2026 SGK prim oranları ile genel 2 puan (m.81/1-ı) ve imalat 5 puan (Geçici m.108) işveren indirimlerinin ayrı yasal dayanakları",
+      "legal_basis": {
+        "source_id": "MEVZUAT-5510",
+        "original_publication_ref": "RG 16.06.2006 / Sayı 26200 (Genel yürürlük: 01.10.2008)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=5510&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": [
+          {
+            "amending_law_no": "7538",
+            "official_gazette_no": "32783",
+            "publication_date": "2025-01-15",
+            "effective_from": "2025-02-01",
+            "summary": "7538 m.10 ile m.81/1-ı genel indirimi 4 puana düşürüldü; 7538 m.17 ile eklenen Geçici Madde 108 ile imalat sektöründe 5 puanlık indirim ayrı geçici maddeyle 31.12.2026'ya kadar korundu."
+          },
+          {
+            "amending_law_no": "7566",
+            "official_gazette_no": "33112",
+            "publication_date": "2025-12-19",
+            "effective_from": "2026-01-01",
+            "summary": "7566 m.23 ile MYÖ işveren payı %12'ye (toplam SGK işveren %21,75) çıkarıldı ve m.81/1-ı genel indirimi 2 puana düşürüldü; m.27 ile Geçici m.108 güncellenerek imalat sektöründe 5 puanlık indirim ayrı yasal dayanakla sürdürüldü."
+          }
+        ],
+        "secondary_statutory_anchors": [
+          "5510 m.81/1-a (7566 m.23: MYÖ işveren payı %12, toplam MYÖ %21)",
+          "5510 m.81/1-ı (7566 m.23: Özel sektör genel 2 puanlık Hazine indirimi)",
+          "5510 Geçici Madde 108 (7538 m.17 & 7566 m.27: İmalat sektöründe 5 puanlık Hazine indirimi — 31.12.2026'ya kadar)",
+          "SGK 2026/1 Sayılı Genelge (2 puan genel ve 5 puan imalat indirimlerinin uygulama esasları)"
+        ]
+      },
+      "scope_of_application": "01.01.2026 itibarıyla uzun vadeli MYÖ sigortası işveren hissesi 5510 m.81/1-a (7566 m.23) gereği %12, işsizlik hariç toplam SGK işveren prim oranı %21,75'tir. Hazinece karşılanan işveren prim indirimi iki ayrı yasal dayanağa bölünmüştür (SGK 2026/1 Genelgesi): (1) İmalat dışı tüm özel sektör işverenleri için genel 2 puanlık indirim doğrudan 5510 m.81/1-ı hükmüne dayanır; (2) İmalat sektöründe faaliyet gösteren özel sektör işverenleri için 5 puanlık indirim ise 5510 m.81/1-ı şartlarıyla birlikte ayrı ve süreli bir yasal dayanak olan 5510 Geçici Madde 108 hükmüne dayanır (31.12.2026'ya kadar geçerli; Cumhurbaşkanı 31.12.2027'ye kadar uzatmaya yetkilidir).",
+      "exceptions": [
+        "SGK'ya vadesi geçmiş prim, İPC veya gecikme zammı borcu bulunan (yapılandırılmamış) işyerleri 5510 indiriminden yararlanamaz",
+        "Kayıt dışı sigortalı çalıştırdığı tespit edilen işyerleri yasaklılık süresince indirimden yararlanamaz",
+        "SGDP'ye tabi emekli çalışanlar 5510 m.81/1-ı 2/5 puan indiriminden yararlanamaz"
+      ],
+      "required_documents": [
+        "SGK Borcu Yoktur doğrulama kaydı (VERIFIED olmadan teşvik uygulanmaz)",
+        "İşyeri NACE kodu teyidi (imalat / imalat dışı ayrımı)",
+        "Süresinde verilmiş MUHSGK beyannamesi"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde 5510 m.81'e özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2026-01-01",
+        "effective_to": "2026-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "7566 m.23 (m.81/1-a ve m.81/1-ı) ile m.27 (Geçici m.108) hükümleri 01.01.2026 tarihinde yürürlüğe girmiştir; Geçici m.108 31.12.2026 tarihine kadar geçerlidir (CB uzatma yetkisi 31.12.2027)."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "SGK borçsuzluk durumu teyit edilmeden (UNKNOWN) 2/5 puan indirimi uygulanması sonucu yersiz teşvik iadesi ve gecikme zammı",
+        "İmalat dışı NACE koduna sahip işyerinde 5 puan indirimi uygulanması",
+        "İmalat sektöründeki 5 puanlık indirimin kalıcı m.81/1-ı kuralı sanılarak 31.12.2026 sonrası süresinin (Geçici m.108) takip edilmemesi"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-SGK-01",
+        "verifier_role": "SGK_COMPLIANCE_SPECIALIST",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-CARD5510M81",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "5510",
+        "madde 81",
+        "5 puan",
+        "2 puan",
+        "imalat",
+        "myö %12",
+        "borcu yoktur",
+        "7566",
+        "2026",
+        "geçici madde 108",
+        "7538",
+        "2026/1 genelge",
+        "m.81/1-ı"
+      ],
+      "application_scenarios": [
+        {
+          "scenario_id": "SGK_2026_GENERAL_NON_MANUFACTURING_2PT",
+          "condition": "İmalat sektörü dışındaki özel sektör işyerleri (SGK borcu yok, süresinde MUHSGK ve ödeme)",
+          "legal_rule": "MYÖ işveren payından 2 puanlık Hazine indirimi uygulanır (net SGK işveren payı %19,75).",
+          "statutory_basis": "5510 m.81/1-ı (7566 m.23 değişikliği) ve SGK 2026/1 Genelgesi"
+        },
+        {
+          "scenario_id": "SGK_2026_MANUFACTURING_5PT",
+          "condition": "NACE kodu imalat sektöründe (Kısım C) yer alan özel sektör işyerleri (m.81/1-ı şartları + borçsuzluk tam)",
+          "legal_rule": "m.81/1-ı'daki 2 puan ibaresi yerine 5 puanlık Hazine indirimi uygulanır (net SGK işveren payı %16,75); 31.12.2026 sonuna kadar yürürlüktedir.",
+          "statutory_basis": "5510 Geçici Madde 108 (7538 m.17 & 7566 m.27) ve SGK 2026/1 Genelgesi"
+        }
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-5510",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT5510",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-SGK-REV-02",
+        "reviewer_role": "SGK_COMPLIANCE_SPECIALIST",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki inceleme: 5510 m.81/1-a (%12 MYÖ), m.81/1-ı (genel 2 puan) ve Geçici m.108 (imalat 5 puan, 31.12.2026) ile SGK 2026/1 Genelgesi ayrımı doğrulandı."
+      }
+    },
+    {
+      "card_id": "CARD-5510-M102",
+      "source_id": "MEVZUAT-5510",
+      "law_no": "5510",
+      "article_ref": "Madde 102",
+      "topic": "SGK İdari Para Cezaları (İPC), indirim şartları ve teşvik yasaklılığı",
+      "legal_basis": {
+        "source_id": "MEVZUAT-5510",
+        "original_publication_ref": "RG 16.06.2006 / Sayı 26200 (Genel yürürlük: 01.10.2008)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=5510&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": []
+      },
+      "scope_of_application": "İşe giriş/çıkış bildirgesi, MUHSGK/APHB, işyeri bildirgesi, defter-belge ibrazı, eksik gün belgesi ve istirahat raporu (e-Vizite) onay yükümlülüklerinin ihlali halinde fiilin işlendiği tarihteki brüt asgari ücretin katları/kesirleri üzerinden SGK İPC uygulanır. Tebliğden itibaren 15 gün içinde peşin ödemede 1/4 (%25) indirim uygulanır; itiraz süresi tebliğden itibaren 15 gündür.",
+      "exceptions": [
+        "İşe giriş bildirgesinin yasal süresinden sonra 30 gün içinde kendiliğinden verilip tebliğden itibaren 15 gün içinde ödenmesi halinde İPC'de 1/4 oranına indirim (m.102/2)",
+        "Mücbir sebep (afet vb.) dönemlerinde SGK Yönetim Kurulunca tanınan erteleme süreleri"
+      ],
+      "required_documents": [
+        "SGK İPC tebliğ zarfı / e-Tebligat teslim tarihi kaydı",
+        "İlgili işe giriş/çıkış, e-Vizite veya MUHSGK barkodlu işlem çıktıları",
+        "İtiraz edilecekse 15 günlük süreyi belgeleyen SGK İPC İtiraz Komisyonu başvuru evrakı"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde 5510 m.102'ye özgü teyitli bir Yargıtay/Danıştay kararı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2008-10-01",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "5510 Sayılı Kanun m.108 (01.10.2008 tarihinde yürürlüğe girmiştir)."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "e-Vizite çalışılmadığına dair rapor bildiriminin istirahat bitim tarihini içeren aya ait MUHSGK verilme son gününe (takip eden ayın 26'sı) kadar yapılmaması halinde 5510 m.102/1-i gereği asgari ücretin 1/2'si (hiç bildirilmezse) veya 1/10'u (geç bildirilirse) İPC",
+        "Kayıt dışı istihdam tespitinde yüksek İPC + 1 yıl SGK teşvik yasaklılığı",
+        "15 günlük itiraz veya peşin ödeme indirim süresinin kaçırılması"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-SGK-01",
+        "verifier_role": "SGK_COMPLIANCE_SPECIALIST",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD5510M102",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "5510",
+        "madde 102",
+        "ipc",
+        "idari para cezası",
+        "e-vizite",
+        "teşvik yasaklılığı",
+        "15 gün"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-5510",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT5510",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-SGK-REV-02",
+        "reviewer_role": "SGK_COMPLIANCE_SPECIALIST",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 5510 Madde 102 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    }
+  ]
+}

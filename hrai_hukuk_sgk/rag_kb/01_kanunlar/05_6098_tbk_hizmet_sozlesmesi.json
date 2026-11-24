@@ -1,0 +1,169 @@
+{
+  "schema_version": "1.0.2a.3",
+  "law_no": "6098",
+  "law_title": "6098 Sayılı Türk Borçlar Kanunu (Hizmet Sözleşmesi, İbraname ve Rekabet Yasağı)",
+  "source_id": "MEVZUAT-6098",
+  "cards": [
+    {
+      "card_id": "CARD-6098-M420",
+      "source_id": "MEVZUAT-6098",
+      "law_no": "6098",
+      "article_ref": "Madde 420",
+      "topic": "İbraname geçerlilik şartları (1 ay bekleme, yazılılık, banka ödemesi) ve tek taraflı cezai şart yasağı",
+      "legal_basis": {
+        "source_id": "MEVZUAT-6098",
+        "original_publication_ref": "RG 04.02.2011 / Sayı 27836 (Yürürlük: 01.07.2012)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6098&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": []
+      },
+      "scope_of_application": "Hizmet sözleşmelerine sadece işçi aleyhine konulan ceza koşulu geçersizdir (m.420/1). İşçinin işverenden alacağına ilişkin ibra sözleşmesinin geçerli olması için: (1) yazılı olması, (2) ibra tarihi itibarıyla sözleşmenin sona ermesinden başlayarak en az 1 aylık sürenin geçmiş bulunması, (3) ibra konusu alacağın türünün ve miktarının açıkça belirtilmesi, (4) ödemenin hak tutarına nazaran noksansız ve banka aracılığıyla yapılması zorunludur (m.420/2). Bu şartları taşımayan ibra sözleşmeleri kesin olarak hükümsüzdür.",
+      "exceptions": [
+        "Hakkın gerçek tutarda ödendiğini ihtiva etmeyen ibra sözleşmeleri veya diğer ödeme belgeleri, içerdikleri miktarla sınırlı olarak makbuz hükmündedir (m.420/3 — yine banka ödemesi şartıyla)",
+        "7036 / 6325 kapsamında usulüne uygun imzalanan zorunlu/ihtiyari arabuluculuk anlaşma tutanakları ayrı kanuni rejime tabidir"
+      ],
+      "required_documents": [
+        "Fesih tarihinden en az 1 tam ay sonra tarihli ve imzalı yazılı ibraname",
+        "Her bir alacak kaleminin (kıdem, ihbar, yıllık izin, fazla çalışma vb.) net/brüt tutar dökümü",
+        "Banka EFT/havale ödeme dekontu (elden ödeme makbuzu ibraname geçerliliği sağlamaz)"
+      ],
+      "related_precedent_ids": [
+        "YIBBGK-2017-10-2019-1"
+      ],
+      "precedent_note": "YİBBGK E. 2017/10, K. 2019/1 kararında belirli süreli yapılıp belirsiz süreliye dönüşen sözleşmedeki cezai şartın belirlenen süreyle sınırlı geçerliliği kabul edilirken, TBK m.420/1'deki sadece işçi aleyhine cezai şart yasağı saklı tutulmaktadır.",
+      "effective_validity": {
+        "effective_from": "2012-07-01",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "6098 Sayılı Kanun m.648 — 01.07.2012 tarihinde yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "Fesih günü veya 1 ay dolmadan imzalatılan ibranamenin kesin hükümsüz sayılması",
+        "Alacak kalemleri tek tek tutar belirtilmeden ('tüm haklarımı aldım') düzenlenen ibranamenin geçersizliği",
+        "Ödemenin banka yerine elden yapılması nedeniyle ispat ve geçerlilik kaybı"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD6098M420",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "6098",
+        "tbk",
+        "madde 420",
+        "ibraname",
+        "1 ay",
+        "banka ödemesi",
+        "cezai şart",
+        "kesin hükümsüz"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-6098",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT6098",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 6098 Madde 420 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    },
+    {
+      "card_id": "CARD-6098-M444-M447",
+      "source_id": "MEVZUAT-6098",
+      "law_no": "6098",
+      "article_ref": "Madde 444 – Madde 447",
+      "topic": "Rekabet yasağı sözleşmesinin geçerlilik şartları, yer/zaman/iş türü sınırları ve sona ermesi",
+      "legal_basis": {
+        "source_id": "MEVZUAT-6098",
+        "original_publication_ref": "RG 04.02.2011 / Sayı 27836 (Yürürlük: 01.07.2012)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6098&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": []
+      },
+      "scope_of_application": "Rekabet yasağı kaydı yalnızca yazılı şekilde yapılabilir; işçinin müşteri çevresi veya üretim/iş sırları hakkında bilgi edinme imkânı varsa ve bu bilgilerin kullanılması işverene önemli zarar verecek nitelikteyse geçerlidir. Yer, zaman (özel koşullar dışında en fazla 2 yıl) ve işlerin türü bakımından işçinin ekonomik geleceğini hakkaniyete aykırı biçimde tehlikeye düşürecek sınırlamalar yapılamaz.",
+      "exceptions": [
+        "İşveren haklı bir sebep olmaksızın sözleşmeyi feshederse veya işveren kaynaklı nedenle işçi feshederse rekabet yasağı kendiliğinden sona erer (m.447/2)",
+        "İşverenin yasağın sürdürülmesinde gerçek bir yararı kalmadığı belirlenirse yasak sona erer (m.447/1)"
+      ],
+      "required_documents": [
+        "Yazılı rekabet yasağı sözleşmesi (yer, azami 2 yıl süre ve somut faaliyet alanı sınırlı)",
+        "İşçinin eriştiği ticari sır/müşteri portföyü yetki tanımı",
+        "Fesih sebebinin işveren haksız feshi olmadığını kanıtlayan çıkış dosyası"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde TBK m.444-447'ye özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2012-07-01",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "6098 Sayılı Kanun m.648 — 01.07.2012 tarihinde yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "'Tüm Türkiye'de ve her sektörde 5 yıl' gibi ölçüsüz kayıtların geçersiz sayılması veya hâkim tarafından daraltılması",
+        "İşverenin geçerli/haklı sebep olmadan işten çıkardığı çalışana karşı rekabet yasağı cezai şartı talep etmesi"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD6098M444",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "6098",
+        "tbk",
+        "madde 444",
+        "madde 445",
+        "madde 447",
+        "rekabet yasağı",
+        "2 yıl",
+        "ticari sır"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-6098",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT6098",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 6098 Madde 444 – Madde 447 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    }
+  ]
+}

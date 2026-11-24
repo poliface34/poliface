@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0.2b",
+  "law_no": "YON-25391",
+  "law_title": "Yıllık Ücretli İzin Yönetmeliği",
+  "source_id": "YONETMELIK-YILLIK-IZIN-20040303",
+  "cards": [
+    {
+      "card_id": "CARD-YON-YILLIK-IZIN",
+      "source_id": "YONETMELIK-YILLIK-IZIN-20040303",
+      "law_no": "YON-25391",
+      "article_ref": "Madde 4, 6, 9, 13 ve 20",
+      "topic": "Yıllık Ücretli İzin Kullanımı, Bölünmesi, Alt İşveren Süre Hesabı ve İzin Kayıt Belgesi",
+      "legal_basis": {
+        "source_id": "YONETMELIK-YILLIK-IZIN-20040303",
+        "original_publication_ref": "RG 03.03.2004 / 25391",
+        "consolidated_text_url": "https://www.resmigazete.gov.tr/eskiler/2017/08/20170818-2.htm",
+        "secondary_statutory_anchors": [
+          "4857 m.53",
+          "4857 m.56",
+          "4857 m.57",
+          "4857 m.60"
+        ],
+        "amendment_history": [
+          {
+            "amending_law_no": "Yıllık Ücretli İzin Yönetmeliğinde Değişiklik (2017)",
+            "official_gazette_no": "30158",
+            "publication_date": "2017-08-18",
+            "effective_from": "2017-08-18",
+            "summary": "6552 ve 6704 sayılı Kanunlara uyum sağlandı: yer altı işçilerine +4 gün, bir bölümü en az 10 gün olmak üzere bölünme esnekliği, alt işveren değişse de aynı işyerinde süre hesabı ve asıl işverenin izin kontrol yükümlülüğü getirildi."
+          }
+        ]
+      },
+      "scope_of_application": "4857 sayılı İş Kanunu m.53–60 kapsamındaki yıllık ücretli iznin talep edilmesi, işverence kullandırılması, tarafların anlaşmasıyla bir bölümü 10 günden aşağı olmamak üzere bölümler hâlinde kullanılması, alt işveren işçilerinin aynı işyerinde geçen hizmet sürelerinin birleştirilmesi ve izin kayıt belgesi/defteri tutulması usulünü düzenler.",
+      "application_scenarios": [
+        {
+          "scenario_id": "LEAVE_REG_SPLITTING_10_DAYS",
+          "condition": "İşçinin yıllık ücretli iznini bölerek kullanmak istemesi",
+          "legal_rule": "Tarafların anlaşması ile bir bölümü en az 10 gün olmak üzere bölümler hâlinde kullanılabilir (18.08.2017 değişikliği ile 6704 m.16 uyumu: artık en çok 3'e bölünme sınırı yoktur; ancak en az bir parçanın kesintisiz 10 gün olması şarttır).",
+          "statutory_basis": "4857 m.56/3 ve Yıllık Ücretli İzin Yönetmeliği m.6"
+        },
+        {
+          "scenario_id": "LEAVE_REG_SUBCONTRACTOR_CONTINUITY",
+          "condition": "Alt işveren değişmesine rağmen işçinin aynı işyerinde çalışmaya devam etmesi",
+          "legal_rule": "Alt işveren değişse bile aynı işyerinde çalışmaya devam eden işçilerin yıllık izin hakları aynı işyerinde çalıştıkları toplam süreler dikkate alınarak hesaplanır; asıl işveren, alt işveren işçilerinin izin kullanımını kontrol etmekle yükümlüdür.",
+          "statutory_basis": "4857 m.56/son ve Yıllık Ücretli İzin Yönetmeliği m.6"
+        }
+      ],
+      "statutory_subordination": {
+        "concretizes_statutory_provisions": [
+          "4857 Sayılı İş Kanunu m.53",
+          "4857 Sayılı İş Kanunu m.56",
+          "4857 Sayılı İş Kanunu m.60"
+        ],
+        "cannot_override_parent_law": true,
+        "hierarchy_note": "Yıllık Ücretli İzin Yönetmeliği 4857 m.60'a dayanır; Kanundaki asgari izin sürelerini (14/20/26 gün; 18 yaş altı ve 50 yaş üstü en az 20 gün; yer altı +4 gün) daraltamaz ve çalışırken iznin paraya çevrilmesine izin veremez."
+      },
+      "exceptions": [
+        "Kısmi süreli veya çağrı üzerine çalışan işçiler de yıllık ücretli izin hakkından tam süreli işçiler gibi yararlanır; salt kısmi süreli çalışma nedeniyle farklı işleme tabi tutulamaz (m.13).",
+        "İzin süresine rastlayan ulusal bayram, hafta tatili ve genel tatil günleri izin süresinden sayılmaz (4857 m.56/5).",
+        "Yol izni (4 güne kadar ücretsiz) işçinin izni işyerinin kurulu bulunduğu yerden başka bir yerde geçireceğini belgelemesi hâlinde talep üzerine verilir."
+      ],
+      "required_documents": [
+        "Yıllık İzin Kayıt Belgesi / Defteri (işçi ıslak/elektronik doğrulamalı imzalı)",
+        "Alt işverenlik halinde asıl işveren izin takip kayıtları",
+        "İzin ücretinin peşin ödendiğini veya avans verildiğini gösteren bordro/banka kaydı"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Yıllık izin kullanımının ispat yükü işverendedir (yazılı izin defteri veya eşdeğer imzalı belge); bu kart doğrudan 4857 m.53-60 ve Yönetmelik metnine dayanır.",
+      "effective_validity": {
+        "effective_from": "2017-08-18",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "Yıllık Ücretli İzin Yönetmeliği (RG 03.03.2004/25391) güncel metni RG 18.08.2017 / 30158 değişikliği ile yürürlüktedir."
+      },
+      "norm_character": "RELATIVE_EMPLOYEE_FAVORABLE",
+      "risks": [
+        "İmzalı yıllık izin kayıt belgesi olmadan kullanılan izinler iş mahkemesinde ispatlanamaz ve fesih halinde tüm yılların izin ücreti son ücret üzerinden ödenmek zorunda kalınır.",
+        "Alt işveren işçilerinin izin kullanımını denetlemeyen asıl işveren müteselsil sorumluluk riskiyle karşılaşır."
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@UcretBordro",
+        "@OzlukUyum"
+      ],
+      "disclaimer": "Bu bilgi kartı ikincil mevzuatın resmî metin ve değişiklik geçmişine dayalı yapılandırılmış teknik hukuki referansıdır; üst norm olan kanunu genişletemez veya bertaraf edemez. Bağlayıcı hukuki mütalaa yerine geçmez; somut uyuşmazlıklarda yetkili hukuk müşavirine danışılmalıdır.",
+      "verification_status": "VERIFIED",
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "YONETMELIK-YILLIK-IZIN-20040303",
+        "source_audit_log_id": "AUD-20261120-YONYILLIKIZIN",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS"
+        ],
+        "review_notes": "RG 18.08.2017/30158 değişikliğiyle 10 gün bölünme, alt işveren süre birleştirme ve yer altı +4 gün kuralları 4857 m.53-60 ile uyumlu olarak doğrulandı."
+      },
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-CARDYONYILLIKIZIN",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "keywords": [
+        "yıllık izin yönetmeliği",
+        "10 gün bölünme",
+        "alt işveren izin",
+        "izin kayıt belgesi",
+        "kısmi süreli izin",
+        "30158"
+      ]
+    }
+  ]
+}

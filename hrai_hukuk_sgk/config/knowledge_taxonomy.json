@@ -1,0 +1,454 @@
+{
+  "schema_version": "1.0.5.1",
+  "product_brand": "hrAI",
+  "coordinator_agent": "@hrAI",
+  "specialist_agent": "@HukukSGK",
+  "product_website": "https://www.insenai.com.tr",
+  "agent": "hrAI_@HukukSGK",
+  "status": "V1_0_5_1_HRAI_STRICT_DER_SET_STRINGS_AND_L5_L6_AUTONOMOUS_NORMS_ACTIVE",
+  "norm_hierarchy": [
+    {
+      "priority": 1,
+      "layer": "CONSTITUTION",
+      "binding": "SUPREME_ANAYASA_M11",
+      "legal_basis": "Anayasa m.11 — En üstün hukuk normu; hiçbir uluslararası antlaşma/ILO sözleşmesi Anayasa ile aynı basamakta değildir."
+    },
+    {
+      "priority": 2,
+      "layer": "INTERNATIONAL_TREATY_FUNDAMENTAL_RIGHTS",
+      "binding": "CONFLICT_PRIORITY_OVER_STATUTE_ANAYASA_M90_SON",
+      "legal_basis": "Anayasa m.90/5 son cümle — Usulüne göre yürürlüğe konulmuş temel hak ve özgürlüklere ilişkin uluslararası antlaşmalar; Anayasa'nın altında olup kanunlarla aynı konuda çatışmada esas alınır."
+    },
+    {
+      "priority": 3,
+      "layer": "STATUTORY_LAW",
+      "binding": "MANDATORY_STATUTE",
+      "legal_basis": "TBMM tarafından çıkarılan kanunlar (4857, 1475 m.14, 5510, 6098, 6331, 6356, 7036, 4447, 6698 vb.)."
+    },
+    {
+      "priority": 3,
+      "layer": "INTERNATIONAL_TREATY_GENERAL",
+      "binding": "STATUTORY_EQUIVALENT_ANAYASA_M90_5",
+      "legal_basis": "Anayasa m.90/5 cümle 1 — Temel hak kategorisi dışındaki usulüne uygun uluslararası/ILO/ikili sosyal güvenlik antlaşmaları kanun hükmündedir (kanunla eş basamak; çatışmada otomatik üstün değil, hukuk müşaviri incelemesi gerektirir)."
+    },
+    {
+      "priority": 4,
+      "layer": "PRESIDENTIAL_DECREE",
+      "binding": "MANDATORY_IN_CONSTITUTIONAL_SCOPE_CBK",
+      "legal_basis": "Anayasa m.104/17 — Cumhurbaşkanlığı Kararnamesi (CBK)."
+    },
+    {
+      "priority": 5,
+      "layer": "PRESIDENTIAL_DECISION",
+      "binding": "STATUTORY_DELEGATED_EXECUTIVE_DECISION_CK",
+      "legal_basis": "Kanuni yetkiye dayalı idari Cumhurbaşkanı Kararı (CK — ör. 10766 ve mülga 9368)."
+    },
+    {
+      "priority": 6,
+      "layer": "REGULATION",
+      "binding": "IMPLEMENTING_ANAYASA_M124",
+      "legal_basis": "Anayasa m.124 — Yönetmelikler (üst kanuna bağlıdır)."
+    },
+    {
+      "priority": 7,
+      "layer": "COMMUNIQUE_AND_SGK_CIRCULAR",
+      "binding": "ADMINISTRATIVE_GUIDANCE_SUBORDINATE_TO_LAW",
+      "legal_basis": "GİB tebliğleri ve SGK genelgeleri (üst kanunu genişletemez veya bertaraf edemez)."
+    },
+    {
+      "priority": 8,
+      "layer": "CBA_CONTRACT_AND_HR_PROCEDURE",
+      "binding": "RULE_LEVEL_AUTONOMOUS_NORM_MODEL_NO_FLAT_PRIORITY",
+      "legal_basis": "Özerk norm şemsiye referansı (TİS, bireysel iş sözleşmesi, işyeri iç yönetmeliği, yerleşik işyeri uygulaması ve kurumsal İK prosedürleri). Tekil 'priority: 8' üstünlük kuralıyla birbirine indirgenmez; her kural autonomous_norm_evaluation_model altındaki 7 zorunlu alanla (mutlak emredici / nispi emredici taban / tamamlayıcı kanun ayrımı, 6356 m.36 TİS önceliği, 4857 m.22 yazılı rıza, adoption_status) ayrı değerlendirilir."
+    }
+  ],
+  "knowledge_layers": [
+    {
+      "id": "L1_LAWS",
+      "folder": "rag_kb/01_kanunlar",
+      "population_status": "POPULATED_9_CORE_LAWS_25_CARDS",
+      "scope": [
+        "4857 Sayılı İş Kanunu",
+        "1475 Sayılı İş Kanunu m.14 (Kıdem Tazminatı)",
+        "5510 Sayılı Sosyal Sigortalar ve Genel Sağlık Sigortası Kanunu",
+        "6331 Sayılı İş Sağlığı ve Güvenliği Kanunu",
+        "6098 Sayılı Türk Borçlar Kanunu (Hizmet Sözleşmesi, İbraname, Rekabet Yasağı)",
+        "7036 Sayılı İş Mahkemeleri Kanunu",
+        "6356 Sayılı Sendikalar ve Toplu İş Sözleşmesi Kanunu",
+        "4447 Sayılı İşsizlik Sigortası Kanunu",
+        "6698 Sayılı Kişisel Verilerin Korunması Kanunu"
+      ]
+    },
+    {
+      "id": "L2_REGULATIONS",
+      "folder": "rag_kb/02_yonetmelikler",
+      "population_status": "POPULATED_6_REGULATIONS_7_CARDS_V1_0_2B",
+      "scope": [
+        "Sosyal Sigorta İşlemleri Yönetmeliği — SSİY (RG 12.05.2010 / 27579; Değ. RG 05.12.2017 / 30261 & RG 18.08.2021 / 31572)",
+        "Yıllık Ücretli İzin Yönetmeliği (RG 03.03.2004 / 25391; Değ. RG 18.08.2017 / 30158)",
+        "İş Kanununa İlişkin Çalışma Süreleri Yönetmeliği (RG 06.04.2004 / 25425; Değ. RG 25.08.2017 / 30165)",
+        "İş Kanununa İlişkin Fazla Çalışma ve Fazla Sürelerle Çalışma Yönetmeliği (RG 06.04.2004 / 25425; Değ. RG 25.08.2017 / 30165)",
+        "Alt İşverenlik Yönetmeliği (RG 27.09.2008 / 27010; Değ. RG 25.08.2017 / 30165)",
+        "Uzaktan Çalışma Yönetmeliği (RG 10.03.2021 / 31419; Değ. RG 25.09.2026 / 33381 Hibrit Çalışma)"
+      ]
+    },
+    {
+      "id": "L3_COMMUNIQUES_AND_CIRCULARS",
+      "folder": "rag_kb/03_teblig_ve_genelgeler",
+      "population_status": "POPULATED_7_L3_CARDS_6_VERIFIED_1_PENDING_V1_0_2B_1",
+      "scope": [
+        "GİB 319 Seri No.lu Gelir Vergisi Genel Tebliği (Asgari Ücret Vergi İstisnası — VERIFIED)",
+        "GİB 331 Seri No.lu Gelir Vergisi Genel Tebliği (7555 sonrası 4691/5746 40 Kat Sınırı — VERIFIED)",
+        "GİB 332 Seri No.lu Gelir Vergisi Genel Tebliği (2026 Tarife/Hadler — PENDING_REVIEW / PENDING_LEGAL_REVIEW; tam metin PDF OCR teyidi bekleniyor)",
+        "10766 Sayılı Cumhurbaşkanı Kararı [PRESIDENTIAL_DECISION] (2026 Ar-Ge/Teknokent Uzaktan Çalışma Oranları — VERIFIED)",
+        "SGK 2020/20 İşveren İşlemleri Genelgesi (07-Puantaj, İşveren Vekili ve Alt İşveren Dosyası — VERIFIED)",
+        "SGK 2026 Sigorta Primi Teşvikleri Resmî Rehberi (2026/1 Genelge — 2 Puan Genel vs. 5 Puan İmalat — VERIFIED)",
+        "SGK 2026 Prime Esas Kazanç Alt/Üst Sınırları Resmî Duyurusu (2026/2 Tutarları — 9 Kat Tavan — VERIFIED)"
+      ]
+    },
+    {
+      "id": "L4_YARGITAY_PRECEDENTS",
+      "folder": "rag_kb/04_yargitay_ictihatlari",
+      "population_status": "POPULATED_5_YIBBGK_4_VERIFIED_1_PENDING_V1_0_2B_1",
+      "registry_file": "config/yargitay_precedents.json",
+      "zero_fabrication_rule": true,
+      "initial_verified_anchors": [
+        "YIBBGK-2017-9-2018-10",
+        "YIBBGK-2017-10-2019-1",
+        "YIBBGK-2017-8-2019-3",
+        "YIBBGK-2023-1-2025-3"
+      ],
+      "pending_full_text_verification_anchors": [
+        "YIBBGK-2021-8-2026-1"
+      ]
+    },
+    {
+      "id": "L5_HR_PROCEDURES",
+      "folder": "rag_kb/05_ik_prosedurleri",
+      "population_status": "POPULATED_5_CORPORATE_HR_PROCEDURES_REFERENCE_TEMPLATES_V1_0_5",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "template_only_not_binding_company_policy": true,
+      "no_flat_priority_supremacy": true,
+      "independent_audit_log": "config/autonomous_norms_audit_log.json",
+      "reused_calisora_docs": [
+        "../calisora_ucret_bordro/rag_kb/01_aylik_bordro_is_akisi.md",
+        "../calisora_ucret_bordro/rag_kb/02_uretim_vardiya_ve_fazla_calisma.md",
+        "../calisora_ucret_bordro/rag_kb/03_istisnalar_kesintiler_ve_fesih.md",
+        "../calisora_ucret_bordro/rag_kb/04_ozel_tesvikler_5746_4691.md"
+      ],
+      "populated_corporate_hr_procedures": [
+        "01_ise_alim_ve_ozluk_dosyasi_proseduru.json (İşe Alım ve Özlük Dosyası — 4857 m.75 + 5510 m.8 + KVKK)",
+        "02_disiplin_tutanak_ve_savunma_proseduru.json (Disiplin Kurulu, Tutanak ve Savunma Alma — 4857 m.19, m.26, m.109)",
+        "03_performans_ve_son_care_fesih_proseduru.json (Performans Yönetimi ve Son Çare İlkesi — 4857 m.18-21)",
+        "04_istirahat_evizite_ve_is_kazasi_proseduru.json (İstirahat Raporu, e-Vizite ve İş Kazası Bildirim — 6331 m.14 + 5510 m.13)",
+        "05_zorunlu_arabuluculuk_ve_calisan_iliskileri_proseduru.json (Zorunlu Arabuluculuk ve Çalışan İlişkileri — 7036 m.3 + TBK m.420)"
+      ]
+    },
+    {
+      "id": "L6_CBA_CONTRACTS_AND_WORKPLACE_PRACTICES",
+      "folder": "rag_kb/06_tis_sozlesme_ve_isyeri_uygulamalari",
+      "population_status": "POPULATED_4_DISTINCT_AUTONOMOUS_NORM_MODULES_REFERENCE_TEMPLATES_V1_0_5",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "template_only_not_binding_company_policy": true,
+      "no_flat_priority_supremacy": true,
+      "independent_audit_log": "config/autonomous_norms_audit_log.json",
+      "norm_layer_ref": "CBA_CONTRACT_AND_HR_PROCEDURE",
+      "distinct_autonomous_source_kinds": [
+        "COLLECTIVE_BARGAINING_AGREEMENT",
+        "INDIVIDUAL_EMPLOYMENT_CONTRACT",
+        "WORKPLACE_INTERNAL_REGULATION",
+        "ESTABLISHED_WORKPLACE_PRACTICE"
+      ],
+      "scope": [
+        "01_toplu_is_sozlesmesi_hukumleri.json — Toplu İş Sözleşmesi (TİS — 6356 m.36 doğrudan ve emredici etki)",
+        "02_bireysel_is_sozlesmesi_turleri_ve_sinirlari.json — Bireysel İş Sözleşmesi Türleri ve Sınırları (4857 m.11-13, TBK m.444-447)",
+        "03_isyeri_ic_yonetmelikleri.json — İşyeri İç Yönetmelikleri ve Yönetim Hakkı Sınırı (4857 m.22)",
+        "04_yerlesik_isyeri_uygulamalari.json — Yerleşik İşyeri Uygulamaları (prim, ikramiye, ek izin bağlayıcılığı ve 4857 m.22 yazılı rıza)"
+      ]
+    }
+  ],
+  "verification_infrastructure": {
+    "description": "Resmî kaynak kayıt defteri, Yargıtay içtihat kayıt defteri, bilgi kartı şeması, bağımsız L5/L6 özerk norm denetim defteri ve canlı belge bütünlüğü denetleyicisi; 6 bilgi katmanından ayrı tutulan bağımsız doğrulama altyapısıdır.",
+    "schemas": {
+      "legal_source_registry_schema": "schemas/legal_source_registry.schema.json",
+      "yargitay_precedent_registry_schema": "schemas/yargitay_precedent_registry.schema.json",
+      "legal_knowledge_card_schema": "schemas/legal_knowledge_card.schema.json",
+      "legal_scenario_evaluation_schema": "schemas/legal_scenario_evaluation.schema.json",
+      "authorized_approvers_schema": "schemas/authorized_approvers.schema.json",
+      "calendar_attestation_ledger_schema": "schemas/calendar_attestation_ledger.schema.json",
+      "trust_root_config_schema": "schemas/trust_root_config.schema.json",
+      "source_acquisition_evidence_schema": "schemas/source_acquisition_evidence.schema.json",
+      "external_trust_anchor_manifest_schema": "schemas/external_trust_anchor_manifest.schema.json",
+      "esign_5070_config_schema": "schemas/esign_5070_config.schema.json",
+      "esign_5070_verification_evidence_schema": "schemas/esign_5070_verification_evidence.schema.json",
+      "corporate_hr_procedure_card_schema": "schemas/corporate_hr_procedure_card.schema.json",
+      "cba_contract_practice_card_schema": "schemas/cba_contract_practice_card.schema.json"
+    },
+    "registries": {
+      "legal_sources_registry": "config/legal_sources_registry.json",
+      "yargitay_precedents_registry": "config/yargitay_precedents.json",
+      "verification_audit_log": "config/verification_audit_log.json",
+      "autonomous_norms_audit_log": "config/autonomous_norms_audit_log.json",
+      "authorized_approvers_registry": "config/authorized_approvers.json",
+      "calendar_attestation_ledger": "config/calendar_attestation_ledger.json",
+      "production_trust_root_config": "config/production_trust_root_config.json",
+      "esign_5070_config": "config/esign_5070_config.json"
+    },
+    "strict_rules": {
+      "allow_bare_homepage_urls": false,
+      "require_official_gazette_no_and_date": true,
+      "require_live_document_content_verification": true,
+      "require_original_vs_consolidated_separation": true,
+      "require_article_level_effective_date_tracking": true,
+      "require_verified_audit_trail": true,
+      "require_dual_source_and_legal_interpretation_verification": true,
+      "require_statutory_subordination_for_secondary_legislation": true,
+      "require_fetched_and_matched_for_verified_status": true,
+      "distinguish_presidential_decree_and_decision": true,
+      "separate_constitution_from_international_treaties_m90": true,
+      "treat_yargitay_precedent_as_judicial_interpretation_not_legislative_layer": true,
+      "require_treaty_provision_nature_for_anayasa_m90_preservation": true,
+      "require_application_rationale_for_persuasive_precedents": true,
+      "exclude_turkish_ubgt_holidays_in_m26_working_days": true,
+      "separate_m26_six_day_one_year_material_gain_and_authority_checks": true,
+      "separate_m19_validity_condition_from_m109_written_notice_obligation": true,
+      "separate_effective_legal_bases_from_historical_context": true,
+      "distinguish_statutory_weekly_rest_from_contractual_off_saturday_in_m26": true,
+      "enforce_m109_law_7555_mandatory_written_termination_from_2025_07_24": true,
+      "block_and_escalate_uncovered_holiday_calendar_years_in_m26": true,
+      "require_legal_review_for_half_day_holiday_eves_in_m26": true,
+      "require_full_yearly_calendar_and_arife_provenance_for_uncovered_years_in_m26": true,
+      "require_mandatory_holiday_calendar_audit_in_central_log": true,
+      "require_archived_source_snapshot_and_9_slot_content_match": true,
+      "require_cryptographic_legal_attestation_for_uncovered_holiday_years": true,
+      "require_externally_verifiable_hash_chained_ledger_with_signed_checkpoints": true,
+      "block_test_sandbox_signing_keys_in_production": true,
+      "separate_technical_source_verification_from_legal_counsel_attestation": true,
+      "forbid_private_keys_in_repository_and_package": true,
+      "disclose_law_5070_non_equivalence_for_asymmetric_signatures": true,
+      "enforce_snapshot_path_containment_within_project_root": true,
+      "require_external_trust_anchor_for_ledger_immutability": true,
+      "forbid_self_declared_ledger_trust_anchors": true,
+      "reject_unsigned_checkpoints_in_production": true,
+      "require_rfc8785_jcs_canonicalization": true,
+      "require_provider_agnostic_trust_root_interfaces": true,
+      "require_separate_security_project_external_trust_anchor": true,
+      "require_hsm_protection_level_in_production": true,
+      "require_bucket_lock_legal_approval_before_lock": true,
+      "enforce_tls_non_historical_proof_boundary": true,
+      "require_three_way_production_authorization_gate": true,
+      "defer_law_5070_nes_and_l5_l6_to_v1_0_4": true,
+      "forbid_caller_self_asserted_booleans_in_production_gate": true,
+      "require_direct_cryptographic_legal_attestation_verification": true,
+      "require_real_https_tls_verification_and_domain_allowlist": true,
+      "enforce_strict_rfc5280_x509_ca_and_leaf_verification": true,
+      "separate_5070_crypto_validity_from_legal_qualification": true,
+      "separate_btk_eshs_registry_from_ca_certificate_bundles": true,
+      "forbid_kms_hsm_as_5070_qualified_signature": true,
+      "fail_closed_indeterminate_revocation_in_production": true,
+      "defer_l5_l6_hr_cba_cards_to_v1_0_5": false,
+      "l5_l6_autonomous_norm_layers_active_as_unadopted_templates": true,
+      "forbid_plain_dict_sscd_control_evidence": true,
+      "enforce_xmldsig_c14n_sigmethod_transforms_and_anti_xsw": true,
+      "enforce_strict_itu_t_x690_der_canonicality": true,
+      "max_asn1_depth_32_enforced": true,
+      "reject_flat_priority_8_autonomous_norm_supremacy": true,
+      "require_explicit_adoption_status_for_l5_l6_templates": true,
+      "separate_l5_l6_audit_log_from_l1_l4_core": true
+    }
+  },
+  "autonomous_norm_evaluation_model": {
+    "version": "1.0.5.1",
+    "no_flat_priority_supremacy": true,
+    "separated_from_l1_l4_official_core": true,
+    "independent_audit_registry": "config/autonomous_norms_audit_log.json",
+    "default_builtin_adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+    "mandatory_per_rule_fields": [
+      "norm_type",
+      "legal_basis_ids",
+      "source_document_id",
+      "adoption_status",
+      "employee_favorable_check",
+      "conflict_resolution",
+      "human_review_required"
+    ],
+    "statutory_floor_natures": [
+      "ABSOLUTE_MANDATORY",
+      "RELATIVE_MANDATORY_FLOOR",
+      "SUPPLEMENTARY_DEFAULT"
+    ],
+    "distinct_autonomous_norm_types": [
+      "COLLECTIVE_BARGAINING_AGREEMENT",
+      "INDIVIDUAL_EMPLOYMENT_CONTRACT",
+      "CORPORATE_HR_PROCEDURE",
+      "WORKPLACE_INTERNAL_REGULATION",
+      "ESTABLISHED_WORKPLACE_PRACTICE"
+    ],
+    "evaluation_tools": [
+      "lookup_autonomous_norm_guidance",
+      "evaluate_autonomous_norm_conflict"
+    ],
+    "conflict_rules_summary": "TİS (6356 m.36), bireysel iş sözleşmesi, işyeri iç yönetmeliği, kurumsal İK prosedürü ve yerleşik işyeri uygulaması birbirine indirgenmez; mutlak emredici hükümler işçi lehine dahi değiştirilemez, nispi emredici hükümlerde tabanın altı hükümsüzdür, tamamlayıcı hükümlerde yasal sınır içinde sözleşme/uygulama serbestisi tanınır ve yerleşik işyeri uygulamasının/sözleşmenin işçi aleyhine daraltılmasında 4857 m.22 yazılı rıza aranır."
+  },
+  "judicial_precedent_application_model": {
+    "layer_id": "YARGITAY_PRECEDENT",
+    "is_legislative_norm_layer": false,
+    "statutory_binding_basis": "2797 sayılı Yargıtay Kanunu m.45 (YİBBGK kararlarının içtihadı birleştirme bağlayıcılığı)",
+    "internal_judicial_rank": [
+      "STATUTORY_BINDING_YIBBGK",
+      "HGK_PERSUASIVE",
+      "CHAMBER_SETTLED",
+      "CHAMBER_ISOLATED"
+    ],
+    "conflict_evaluation_rule": "Yargıtay içtihadı mevzuat katmanı gibi sayısal öncelikle TİS/sözleşme/prosedür veya mevzuatla karşılaştırılamaz. İçtihadın yorumladığı dayanak kanun, kararın bağlayıcılık kapsamı (applies_to / does_not_apply_to), karar sonrası kanun değişiklikleri ve somut uyuşmazlık birlikte evaluate_precedent_application aracıyla değerlendirilir.",
+    "evaluation_tool": "evaluate_precedent_application",
+    "persuasive_precedent_rationale_rule": "YİBBGK dışındaki ikna edici kararlar (HGK_PERSUASIVE, CHAMBER_SETTLED, CHAMBER_ISOLATED) tek başına otomatik sonuç üretmez; somut uyuşmazlığa neden uygulandığını açıklayan en az 25 karakterlik application_rationale zorunludur. Gerekçe yoksa MISSING_PERSUASIVE_PRECEDENT_RATIONALE ile hukuk müşavirine eskalasyon yapılır; münferit daire kararları (CHAMBER_ISOLATED) gerekçe olsa dahi avukat onayı gerektirir."
+  },
+  "legal_reasoning_engine": {
+    "version": "1.0.5.1",
+    "tool_name": "evaluate_hr_legal_scenario",
+    "output_schema": "schemas/legal_scenario_evaluation.schema.json",
+    "mandatory_output_blocks": [
+      "legal_bases",
+      "historical_context",
+      "counter_arguments",
+      "risks",
+      "missing_information",
+      "human_approval"
+    ],
+    "supported_scenarios": [
+      "TERMINATION_VALIDITY",
+      "REINSTATEMENT_CLAIM",
+      "SEVERANCE_AND_NOTICE",
+      "OVERTIME_COMPLIANCE",
+      "ANNUAL_LEAVE_COMPLIANCE",
+      "SGK_EXIT_CODE_AND_UNEMPLOYMENT",
+      "EMPLOYEE_FAVORABLE_NORM_COMPARISON"
+    ],
+    "verified_only_basis_rule": true,
+    "human_approval_always_explicit": true,
+    "payroll_calculation_boundary": "Kuruş/TL bordro hesaplamaları yapılmaz; yalnızca payroll_handoff_allowed=true olduğunda @ÜcretBordro ajanına devredilir.",
+    "m26_deadline_engine": {
+      "six_working_day_rule": "Yalnızca hukuken belirlenen hafta tatili günü (varsayılan Pazar veya açıkça tanımlı weekly_rest_day / legally_verified_weekly_rest_days — 4857 m.46) ve 2429 s. Kanun kapsamındaki UBGT günleri dışlanır; 5 günlük çalışma düzenindeki akdi Cumartesi tatili (saturday_is_working_day=false) kendiliğinden m.26 hesabından çıkarılmaz. Feshe yetkili makamın öğrenme tarihi (discovering_authority_status) ayrı doğrulanır.",
+      "religious_holiday_calendar_coverage": "Dahili 2024–2027 Diyanet dinî bayram takvimi (zorunlu verification_audit_log.json.holiday_calendar_audit + yearly_records altında kayıtlı) evidence/holiday_snapshots/ altında gerçek resmî HTML kopyalarıyla arşivlenmiş, SHA-256 + katı 9 slotlu Türkçe ayrıştırıcı ile teknik doğrulanmış (TECHNICAL_VERIFIED) ve config/calendar_attestation_ledger.json hash zincirine bağlanmıştır; yetkili harici hukuk müşavirinin kriptografik imzalı üretim onayı ayrı aşama olarak beklenmektedir (PENDING_SIGNED_EXTERNAL_ATTESTATION). Kapsam dışındaki yıllar (<=2023 veya >=2028) sentetik/imzasız JSON, boş/kısmi additional_public_holidays veya kayıtsız verified_by metinleriyle açılmaz; her kapsam dışı yıl için external_verified_holiday_calendars altında Aşama 1 (arşivli kaynak SHA-256 + 9 slot içerik eşleşmesi + OCR eşiği) ve Aşama 2 (authorized_approvers kimlik/zaman/kapsam/iptal/ortam + Ed25519/RSA-PSS-SHA256 RFC 8785 imza + değiştirilemez hash zinciri/imzalı checkpoint) tamamlanmadıkça HOLIDAY_CALENDAR_COVERAGE_INCOMPLETE blokajı devam eder.",
+      "half_day_holiday_eve_rule": "28 Ekim ile gerek dahili gerek harici doğrulanmış yıllık takvim kayıtlarındaki Ramazan/Kurban Bayramı arifesi (13:00 sonrası yarım gün tatil) içeren pencerelerde half_day_eve_legal_rule hukuk müşaviri tarafından doğrulanmadan varsayımla sonuç üretilmez; M26_YARIM_GUN_TATIL_HUKUKI_INCELEME_GEREKLI ile her iki sınır tarih raporlanarak hukuk müşavirine eskalasyon yapılır (arife tarihleri eksikse UNVERIFIED_REQUIRE_LEGAL_REVIEW kapısı ve blokaj birlikte çalışır).",
+      "one_year_upper_limit_rule": "Fiil tarihinden (act_date) itibaren 1 takvim yılı ayrı hesaplanır; 4857 m.26/1 son cümle maddi çıkar istisnası yalnızca 1 yıllık üst süreyi kaldırır (6 iş günü devam eder).",
+      "missing_date_or_uncertain_authority_policy": "ESCALATE_TO_LEGAL_COUNSEL"
+    },
+    "cryptographic_attestation_and_evidence_governance": {
+      "authorized_approvers_registry": "config/authorized_approvers.json",
+      "authorized_approvers_schema": "schemas/authorized_approvers.schema.json",
+      "attestation_ledger": "config/calendar_attestation_ledger.json",
+      "attestation_ledger_schema": "schemas/calendar_attestation_ledger.schema.json",
+      "supported_signature_algorithms": [
+        "ED25519",
+        "RSA-PSS-SHA256"
+      ],
+      "canonicalization_standard": "RFC-8785-JCS",
+      "replay_protection_fields": [
+        "record_id",
+        "nonce"
+      ],
+      "key_management_policy": "EXTERNAL_KMS_HSM_REQUIRED_NO_PRIVATE_KEYS_IN_REPO",
+      "test_sandbox_keys_allowed_in_production": false,
+      "qualified_e_signature_5070_equivalent": false,
+      "two_stage_verification_separation": {
+        "stage_1": "TECHNICAL_SOURCE_VERIFICATION (arşivlenmiş kaynak belgesi SHA-256 + 9 slot bayram/arife kesin eşleşmesi + OCR>=0.95 & manuel onay kapısı; kaynak URL bugün erişilemez olsa dahi arşivli kopya geçerliliğini korur)",
+        "stage_2": "LEGAL_COUNSEL_ATTESTATION (yetkili onaylayan kimlik/zaman/kapsam/iptal politikası + Ed25519/RSA-PSS-SHA256 imza + değiştirilemez hash zinciri ve imzalı checkpoint/WORM çapa)"
+      },
+      "revocation_policy": {
+        "compromise_reasons_retroactively_invalidated": [
+          "KEY_COMPROMISE",
+          "CA_COMPROMISE"
+        ],
+        "non_compromise_reasons_require_trusted_timestamp": [
+          "SUPERSEDED_ROTATION",
+          "ROLE_CHANGE",
+          "ADMINISTRATIVE_SUSPENSION"
+        ]
+      },
+      "snapshot_path_containment_policy": "STRICT_PROJECT_ROOT_RELATIVE_NO_TRAVERSAL_NO_SYMLINK_ESCAPE",
+      "mandatory_external_trust_anchor_policy": "SIGNED_CHECKPOINT_COVERING_HEAD_OR_OUT_OF_BAND_WORM_TSA_REQUIRED",
+      "unsigned_checkpoints_allowed_in_production": false,
+      "self_declared_ledger_anchor_fields_forbidden": true
+    },
+    "m19_vs_m109_written_notice_separation": {
+      "m19_1_statutory_validity_scope": "Yalnızca iş güvencesi kapsamındaki geçerli nedenle fesih rejimi (4857 m.18-19).",
+      "m109_pre_7555_scope_until_2025_07_23": "23.07.2025 ve öncesi fesihlerde 4857 m.109 ilk metni uygulanır; m.25 ve iş güvencesi dışı fesihler otomatik m.19/1 ihlali sayılmaz, m.109 yazılı bildirim ve ispat sonuçları değerlendirilir.",
+      "m109_post_7555_scope_from_2025_07_24": "24.07.2025 ve sonrası fesihlerde 7555 s. Kanun m.23 ile değişik 4857 m.109 ('İş sözleşmesinin feshi sonucunu doğuracak bildirimler her hâlde yazılı yapılır') zorunlu olarak denetlenir; m.25 ve iş güvencesi dışı fesihlerde dahi m.19/1'den ayrı olarak M109_7555_YAZILI_FESIH_BILDIRIMI_IHLALI + hukuk müşaviri eskalasyonu üretilir ve KEP ile fesih bildirimi reddedilir (sendika temsilcisi 6356 m.24 geçerlilik şartı saklıdır)."
+    },
+    "historical_validity_separation": {
+      "legal_bases_invariant": "Yalnızca VERIFIED ve olay tarihinde fiilen yürürlükte (effective_on_date=true) hükümler.",
+      "historical_context_invariant": "Olay tarihinde yürürlükte olmayan tarihsel/mülga hükümler (effective_on_date=false).",
+      "undeterminable_effectiveness_policy": "ESCALATE_TO_LEGAL_COUNSEL"
+    },
+    "production_trust_root_integration": {
+      "version": "1.0.5.1",
+      "architecture_mode": "GCP_PRIMARY_PROVIDER_AGNOSTIC_HYBRID",
+      "primary_cloud_region": "europe-west3",
+      "alternative_hsm_adapter": "Pkcs11HsmSignerAdapter",
+      "config_path": "config/production_trust_root_config.json",
+      "live_probe_command": "python3 -m engine.trust_root.integration_probe",
+      "provider_agnostic_interfaces": [
+        "KeySignerProvider",
+        "TimestampAuthorityProvider",
+        "ImmutableEvidenceStorageProvider",
+        "ExternalTrustAnchorProvider",
+        "SourceAcquisitionProvider",
+        "ProductionAuthorizationProvider"
+      ],
+      "three_way_status_separation": [
+        "technical_verification_status",
+        "legal_counsel_attestation_status",
+        "production_authorization_status"
+      ],
+      "production_use_authorized": false,
+      "external_legal_counsel_signoff_status": "PENDING_SIGNED_EXTERNAL_ATTESTATION",
+      "qualified_e_signature_5070_equivalent": false,
+      "kvkk_m9_assessment_status": "PENDING_KVKK_M9_DATA_RESIDENCY_ASSESSMENT",
+      "law_5070_nes_target_release": "1.0.4",
+      "l5_l6_cards_target_release": "1.0.5",
+      "caller_self_asserted_booleans_forbidden": true,
+      "live_https_tls_verification_required_in_production": true
+    },
+    "law_5070_nes_cades_xades_module": {
+      "version": "1.0.5.1",
+      "config_path": "config/esign_5070_config.json",
+      "cades_standard": "ETSI EN 319 122-1/-2",
+      "xades_standard": "ETSI EN 319 132-1/-2",
+      "canonical_baseline_profiles": [
+        "B-B",
+        "B-T",
+        "B-LT",
+        "B-LTA"
+      ],
+      "legacy_profile_aliases": [
+        "BES",
+        "T",
+        "LT",
+        "LTA"
+      ],
+      "provider_agnostic_interfaces": [
+        "EshsTrustListProvider",
+        "CertificateRevocationProvider",
+        "QualifiedSignature5070VerifierProvider"
+      ],
+      "probe_statuses_supported": [
+        "NOT_CONFIGURED",
+        "CONFIGURED_UNVERIFIED",
+        "LIVE_VERIFIED",
+        "FAILED",
+        "INDETERMINATE"
+      ],
+      "qualified_e_signature_5070_production_ready": false,
+      "kms_hsm_5070_equivalent": false,
+      "verified_sscd_evidence_required": true,
+      "plain_dict_sscd_claims_forbidden": true,
+      "xmldsig_standards_and_anti_xsw_enforced": true,
+      "strict_der_x690_canonicality_enforced": true,
+      "max_asn1_depth": 32,
+      "strict_der_set_ordering_enforced": true,
+      "strict_asn1_string_decoding_enforced": true
+    }
+  }
+}

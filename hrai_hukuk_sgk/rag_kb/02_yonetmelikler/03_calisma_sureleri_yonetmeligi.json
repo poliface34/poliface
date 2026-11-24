@@ -1,0 +1,126 @@
+{
+  "schema_version": "1.0.2b",
+  "law_no": "YON-25425-CS",
+  "law_title": "İş Kanununa İlişkin Çalışma Süreleri Yönetmeliği",
+  "source_id": "YONETMELIK-CALISMA-SURELERI-20040406",
+  "cards": [
+    {
+      "card_id": "CARD-YON-CALISMA-SURELERI",
+      "source_id": "YONETMELIK-CALISMA-SURELERI-20040406",
+      "law_no": "YON-25425-CS",
+      "article_ref": "Madde 4, 5, 6 ve 7",
+      "topic": "Haftalık 45 Saat, Günlük 11 Saat, Denkleştirme, Yer Altı Maden 7,5/37,5 Saat ve Telafi Çalışması",
+      "legal_basis": {
+        "source_id": "YONETMELIK-CALISMA-SURELERI-20040406",
+        "original_publication_ref": "RG 06.04.2004 / 25425",
+        "consolidated_text_url": "https://www.resmigazete.gov.tr/eskiler/2017/08/20170825-2.htm",
+        "secondary_statutory_anchors": [
+          "4857 m.63",
+          "4857 m.64",
+          "4857 m.13",
+          "6645 m.36",
+          "7226 m.43"
+        ],
+        "amendment_history": [
+          {
+            "amending_law_no": "Çalışma Süreleri Yönetmeliğinde Değişiklik (2017)",
+            "official_gazette_no": "30165",
+            "publication_date": "2017-08-25",
+            "effective_from": "2017-08-25",
+            "summary": "Yer altı maden işlerinde günlük en çok 7,5 saat ve haftalık en çok 37,5 saat sınırı; turizm sektöründe 4 ay (TİS ile 6 ay) denkleştirme süresi eklendi; m.10 yürürlükten kaldırıldı."
+          }
+        ]
+      },
+      "scope_of_application": "4857 m.63 uyarınca genel haftalık çalışma süresinin en çok 45 saat, günlük çalışma süresinin hiçbir şekilde 11 saati aşamayacağı (yer altı maden işlerinde günlük 7,5 / haftalık 37,5 saat), tarafların yazılı anlaşmasıyla 2 aylık (TİS ile 4 ay; turizmde 4 ay, TİS ile 6 ay) denkleştirme esasları, kısmi süreli çalışmada 2/3 ölçütü (ör. haftalık 30 saat ve altı) ve telafi çalışması sınırlarını düzenler.",
+      "application_scenarios": [
+        {
+          "scenario_id": "WORKTIME_EQUALIZATION_GENERAL_AND_TOURISM",
+          "condition": "Yoğunlaştırılmış iş haftası ve denkleştirme uygulaması",
+          "legal_rule": "Günlük 11 saat sınırı aşılmamak ve yazılı anlaşma bulunmak kaydıyla 2 aylık (TİS ile 4 ay; turizm sektöründe 4 ay, TİS ile 6 ay) denkleştirme döneminde haftalık ortalama 45 saati aşmayan yoğun haftalar fazla çalışma sayılmaz.",
+          "statutory_basis": "4857 m.63/2 ve Çalışma Süreleri Yönetmeliği m.5"
+        },
+        {
+          "scenario_id": "WORKTIME_UNDERGROUND_MINING_37_5H",
+          "condition": "Yer altı maden işlerinde normal çalışma süresi planlaması",
+          "legal_rule": "Yer altı maden işlerinde çalışan işçilerin çalışma süresi günde en çok 7,5, haftada en çok 37,5 saattir; genel 45 saat veya günlük 11 saat sınırı bu işçiler için uygulanamaz.",
+          "statutory_basis": "4857 m.63/1 (6645 m.36) ve Çalışma Süreleri Yönetmeliği m.4"
+        }
+      ],
+      "statutory_subordination": {
+        "concretizes_statutory_provisions": [
+          "4857 Sayılı İş Kanunu m.63",
+          "4857 Sayılı İş Kanunu m.64",
+          "4857 Sayılı İş Kanunu m.13"
+        ],
+        "cannot_override_parent_law": true,
+        "hierarchy_note": "Çalışma Süreleri Yönetmeliği 4857 m.63/son uyarınca çıkarılmıştır; günlük 11 saat, yer altı 7,5/37,5 saat ve kanuni denkleştirme tavanlarını işçi aleyhine esnetemez; telafi süresinde de 7226 m.43 ile güncellenen 4857 m.64 (4 ay) üst norm olarak Yönetmelikteki eski 2 ay ibaresinden önceliklidir."
+      },
+      "exceptions": [
+        "Telafi çalışması (4857 m.64) günlük en çok çalışma süresi olan 11 saati aşmamak koşuluyla günde 3 saatten fazla olamaz ve tatil günlerinde yaptırılamaz (kanuni telafi süresi 7226 m.43 sonrası 4857 m.64'teki güncel 4 aylık yasal sınıra tabidir; Yönetmelik m.7'deki eski 2 ay ibaresine karşı üst kanun esastır).",
+        "Gece çalışmalarında 7,5 saat sınırı ve 4857 m.69/3 sektörel istisnaları ayrıca denetlenir."
+      ],
+      "required_documents": [
+        "Denkleştirme uygulamasına ilişkin iş sözleşmesi hükmü veya yazılı işçi onayı",
+        "Günlük ve haftalık vardiya/puantaj çizelgeleri",
+        "Telafi çalışması yazılı bildirim kayıtları"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Günlük 11 saat sınırını aşan çalışmalar, haftalık 45 saat dolmasa dahi Yargıtay yerleşik uygulaması ve 4857 m.63 gereği fazla çalışma olarak değerlendirilir; bağlı YİBBGK yoktur.",
+      "effective_validity": {
+        "effective_from": "2017-08-25",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "Çalışma Süreleri Yönetmeliği (RG 06.04.2004/25425) RG 25.08.2017 / 30165 değişikliğiyle güncellenmiştir; 4857 m.64 telafi süresi kanun değişikliği (7226 m.43) üst norm olarak gözetilir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "4857 m.64'teki kanuni telafi süresinin (4 ay) yönetmelikteki eski 2 ay metniyle karıştırılması veya denkleştirmede günlük 11 saat sınırının aşılması fazla mesai ve İPC riski doğurur.",
+        "Yer altı maden işçilerine 45 saatlik genel rejimin uygulanması mutlak emredici kural ihlalidir."
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@UcretBordro",
+        "@ISGUzmani"
+      ],
+      "disclaimer": "Bu bilgi kartı ikincil mevzuatın resmî metin ve değişiklik geçmişine dayalı yapılandırılmış teknik hukuki referansıdır; üst norm olan kanunu genişletemez veya bertaraf edemez. Bağlayıcı hukuki mütalaa yerine geçmez; somut uyuşmazlıklarda yetkili hukuk müşavirine danışılmalıdır.",
+      "verification_status": "VERIFIED",
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "YONETMELIK-CALISMA-SURELERI-20040406",
+        "source_audit_log_id": "AUD-20261120-YONCALISMASUR",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "RG 25.08.2017/30165 yer altı 7,5/37,5 saat, turizm denkleştirme ve 4857 m.64 (7226 m.43) üst norm önceliği açıkça doğrulandı."
+      },
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-CARDYONCALISMA",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "keywords": [
+        "çalışma süreleri yönetmeliği",
+        "45 saat",
+        "11 saat",
+        "denkleştirme",
+        "turizm 4 ay",
+        "yer altı 37,5",
+        "telafi çalışması"
+      ]
+    }
+  ]
+}

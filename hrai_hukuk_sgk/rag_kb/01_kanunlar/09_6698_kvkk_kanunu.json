@@ -1,0 +1,150 @@
+{
+  "schema_version": "1.0.2a.3",
+  "law_no": "6698",
+  "law_title": "6698 Sayılı Kişisel Verilerin Korunması Kanunu (İK Özlük ve Özel Nitelikli Veri İşleme)",
+  "source_id": "MEVZUAT-6698",
+  "cards": [
+    {
+      "card_id": "CARD-6698-M05-M06-M10",
+      "source_id": "MEVZUAT-6698",
+      "law_no": "6698",
+      "article_ref": "Madde 5, Madde 6 ve Madde 10",
+      "topic": "Çalışan özlük verileri, aydınlatma yükümlülüğü ve özel nitelikli sağlık/biyometrik PDKS verileri (7499 değişikliği: 01.06.2024)",
+      "legal_basis": {
+        "source_id": "MEVZUAT-6698",
+        "original_publication_ref": "RG 07.04.2016 / Sayı 29677 (İlk yayımlanan metin)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6698&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": [
+          {
+            "amending_law_no": "7499",
+            "official_gazette_no": "32487",
+            "publication_date": "2024-03-12",
+            "effective_from": "2024-06-01",
+            "summary": "7499 m.33 ile 6698 m.6/3 tamamen değiştirilerek istihdam, iş sağlığı ve güvenliği, sosyal güvenlik veya sosyal hizmetler ile sosyal yardım alanlarındaki hukuki yükümlülüklerin yerine getirilmesi için zorunlu özel nitelikli veri işleme şartı eklendi (01.06.2024 yürürlük)."
+          }
+        ]
+      },
+      "scope_of_application": "İşveren (veri sorumlusu), 4857 m.75 uyarınca özlük dosyası oluştururken çalışanı m.10 kapsamında açıkça aydınlatmak zorundadır. Sağlık verileri, ceza mahkûmiyeti/adli sicil ve biyometrik veriler m.6 kapsamında özel nitelikli kişisel veridir. 7499 değişikliği (01.06.2024) işverene sınırsız işleme yetkisi vermez; KVKK rehberine göre her özel nitelikli veri işlemi için doğru hukuki sebep (m.6/3 bentleri) somut olarak ayrıca belirlenmelidir ve 'işverenin genel güvenlik ihtiyacı' veya 'işin niteliği' tek başına m.6/3-f hukuki sebebi yerine geçmez. Adli sicil verilerinde açık kanuni yükümlülük (m.6/3-b veya m.6/3-f kapsamındaki somut kanuni zorunluluk) ile geçerli açık rıza (m.6/3-a) yolları ayrı denetlenmeli; biyometrik PDKS'de ise alternatif yöntemlerin varlığı ve somut olayın ölçülülük koşulları (m.4) incelenmelidir.",
+      "exceptions": [
+        "İstihdam, İSG ve sosyal güvenlik hukuki yükümlülüklerinin yerine getirilmesi için zorunlu olan özel nitelikli veriler (m.6/3-f — 01.06.2024 sonrası)",
+        "Bir hakkın tesisi, kullanılması veya korunması için zorunlu olan veri işleme (m.6/3-e — ör. iş davası savunma delili)"
+      ],
+      "required_documents": [
+        "Çalışan ve Çalışan Adayı KVKK Aydınlatma Metni (tebliğ/imza ispatlı)",
+        "Kişisel Veri İşleme Envanteri ve Saklama-İmha Politikası",
+        "Özel nitelikli sağlık verileri için erişim kısıtlı/şifreli İSG arşivi (İK genel klasöründen ayrı)",
+        "Yurt dışına aktarım (bulut İK/bordro SaaS) varsa 7499 sonrası Standart Sözleşme ve 5 iş günü içinde KVKK bildirimi"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde 6698 m.5-6-10'a özgü teyitli bir Yargıtay/Danıştay kararı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2024-06-01",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "6698 temel yürürlüğü 07.04.2016; güncel m.6 özel nitelikli veri işleme rejimi 7499 Sayılı Kanun ile 01.06.2024 tarihinde yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "Kartlı geçiş alternatifi varken zorunlu parmak izi/yüz tanıma PDKS kullanılması nedeniyle KVKK Kurul idari para cezası (m.18)",
+        "Aydınlatma yükümlülüğünün yerine getirilmemesi ve sağlık verilerinin yetkisiz kişilere açık tutulması nedeniyle yüksek İPC",
+        "Yurt dışı bulut İK/bordro aktarımında Standart Sözleşme bildirim yükümlülüğünün (5 iş günü) ihlali",
+        "7499 sonrası m.6/3-f istisnasının sağlık, biyometrik veya adli sicil verilerinde sınırsız işleme izni gibi yorumlanarak ölçülülük (m.4) ve erişim güvenliğinin ihlal edilmesi"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD6698M06",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "6698",
+        "kvkk",
+        "madde 5",
+        "madde 6",
+        "madde 10",
+        "7499",
+        "01.06.2024",
+        "biyometrik pdks",
+        "sağlık verisi",
+        "aydınlatma"
+      ],
+      "data_category_controls": [
+        {
+          "category": "SAĞLIK_VERİLERİ",
+          "legal_basis": "6698 m.6/3-f (istihdam/İSG/SGK hukuki yükümlülüğünün yerine getirilmesi için zorunluluk) ve 6331 m.15",
+          "purpose_and_necessity_limit": "Yalnızca işe giriş/periyodik sağlık gözetimi, iş kazası, engelli istihdamı ve SGK rapor/e-Vizite süreçleri için kanunen zorunlu asgari veri işlenebilir; işe elverişlilikle ilgisiz tanı/genetik/geçmiş tıbbi detaylar toplanamaz.",
+          "explicit_consent_rule": "Kanuni İSG/SGK zorunluluğu dışındaki ek sağlık verileri için m.6/3-f kullanılamaz; geçerli ve özgür iradeli açık rıza (m.6/3-a) ve ölçülülük (m.4) şartı aranır.",
+          "proportionality_rule": "m.4 uyarınca İK ile yalnızca göreve uygunluk sonucu paylaşılır; tıbbi tanı ayrıntıları sır saklama yükümlülüğüne tabi işyeri hekiminde kalır.",
+          "access_control": "İK genel özlük klasöründen fiziksel ve mantıksal olarak ayrılmış, erişim loglu ve şifreli İSG sağlık dosyası (yalnızca işyeri hekimi / yetkili sağlık personeli).",
+          "retention_policy": "İSG mevzuatı uyarınca işten ayrılmadan itibaren en az 15 yıl (meslek hastalığı riskli işlerde ilgili mevzuattaki daha uzun süreler) saklanır, süre sonunda imha edilir."
+        },
+        {
+          "category": "BİYOMETRİK_VERİLER_PDKS",
+          "legal_basis": "6698 m.4 (ölçülülük/veri minimizasyonu) ve m.6/3 (özel nitelikli kişisel veri işleme şartları)",
+          "purpose_and_necessity_limit": "Genel mesai/giriş-çıkış takibi (PDKS) tek başına m.6/3-f kapsamında zorunlu hukuki yükümlülük veya 'işverenin genel güvenlik ihtiyacı' gerekçesiyle biyometrik veri işlenmesine dayanak yapılamaz.",
+          "explicit_consent_rule": "İşçi-işveren arasındaki güç dengesizliği nedeniyle çalışanın istihdam şartına bağlı verdiği biyometrik PDKS açık rızası kural olarak özgür iradeye dayanmadığı gerekçesiyle geçersizlik riski taşır; m.4 ölçülülük testi aşılamazsa açık rıza dahi işlemi hukuka uygun kılmaz.",
+          "proportionality_rule": "Kartlı geçiş, turnike, mobil veya şifreli giriş gibi daha az müdahaleci alternatif yöntemlerin varlığı ve somut olayın koşulları (ör. kritik/yüksek güvenlikli tesiste özel kanuni zorunluluk bulunup bulunmadığı) ayrı ayrı değerlendirilmelidir.",
+          "access_control": "İstisnai hukuka uygun hallerde şablon şifreleme, ham biyometrik görüntüyü saklamama, erişim loglama ve Kurulun belirlediği yeterli güvenlik önlemleri zorunludur.",
+          "retention_policy": "Ölçülülük testini geçemeyen biyometrik veriler toplanmamalı/derhal imha edilmelidir; istisnai hukuka uygun hallerde yetki/iş ilişkisi bitiminde derhal silinir."
+        },
+        {
+          "category": "CEZA_MAHKÛMİYETİ_VE_ADLİ_SİCİL",
+          "legal_basis": "6698 m.6/3-b (kanunlarda açıkça öngörülme), m.6/3-f (somut kanuni istihdam yükümlülüğü için zorunluluk) veya m.6/3-a (geçerli açık rıza — ayrı değerlendirilir)",
+          "purpose_and_necessity_limit": "Adli sicil belgesi her pozisyonda rutin olarak istenemez. 'İşin niteliği' veya 'işverenin genel güven ihtiyacı' tek başına m.6/3-f hukuki sebebi sayılmaz; açık rıza olmaksızın işleme yapılabilmesi için özel kanunda açıkça öngörülen somut kanuni yükümlülük ve zorunluluk (ör. 5188 Özel Güvenlik Kanunu, 5411 Bankacılık Kanunu vb.) şarttır.",
+          "explicit_consent_rule": "Somut kanuni yükümlülük bulunmayan hallerde açık rıza (m.6/3-a) yoluna gidilmesi ancak rızanın belirli bir konuya ilişkin, bilgilendirmeye dayalı, özgür iradeyle verilmiş (istihdam/işe alım ön şartına zorlanmamış) ve m.4 ölçülülük ilkesiyle uyumlu olması halinde değerlendirilebilir; iş ilişkisinde güç dengesizliği nedeniyle yüksek geçersizlik riski taşır.",
+          "proportionality_rule": "Yalnızca açık kanuni yasak veya somut hukuki sebeple doğrudan bağlantılı suç tipleri bakımından değerlendirme yapılır; gereksiz arşiv kaydı çoğaltılmaz.",
+          "access_control": "Sınırlı İK/Hukuk yetkilisi erişimi; işe alınmayan adayların adli sicil belgeleri süreç sonunda derhal imha edilir.",
+          "retention_policy": "Kanuni dayanak yoksa toplanmaz; kanuni zorunluluk kapsamındaki pozisyonlarda ilgili kanuni süre ve zamanaşımı sonunda saklama-imha politikasına göre silinir."
+        }
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-6698",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT6698",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a.1 hukuki inceleme: Adli sicil verilerinde 'işin niteliği' tek başına hukuki sebep olmaktan çıkarıldı; kanuni yükümlülük, somut zorunluluk ve geçerli açık rıza yolları ayrıştırıldı. Biyometrik PDKS'de alternatif yöntemler ve somut olayın koşulları açıkça modellendi."
+      },
+      "application_scenarios": [
+        {
+          "scenario_id": "KVKK_CRIMINAL_RECORD_STATUTORY_MANDATE",
+          "condition": "Özel kanunda adli sicil/sabıka kaydı kontrolünün açıkça zorunlu tutulduğu pozisyonlar (ör. özel güvenlik, bankacılık)",
+          "legal_rule": "Somut kanuni hüküm ve zorunluluk mevcut olduğundan m.6/3-b veya m.6/3-f kapsamında amaçla sınırlı işlenebilir; açık rıza aranmaz ancak m.10 aydınlatma ve erişim güvenliği zorunludur.",
+          "statutory_basis": "6698 m.6/3-b, m.6/3-f ve m.10"
+        },
+        {
+          "scenario_id": "KVKK_CRIMINAL_RECORD_NO_STATUTORY_MANDATE",
+          "condition": "Özel kanunda adli sicil zorunluluğu öngörülmeyen genel işyeri pozisyonları",
+          "legal_rule": "'İşin niteliği' veya 'genel güven ihtiyacı' tek başına m.6/3-f hukuki sebebi oluşturmaz ve adli sicil her pozisyonda rutin olarak istenemez. İstisnai açık rıza (m.6/3-a) ancak özgür irade + ölçülülük (m.4) + aydınlatma şartlarını birlikte sağlıyorsa hukuk onayıyla değerlendirilebilir.",
+          "statutory_basis": "6698 m.4, m.6/3-a ve 7499 sonrası KVKK Rehberi"
+        },
+        {
+          "scenario_id": "KVKK_BIOMETRIC_PDKS_CASE_BY_CASE",
+          "condition": "İşyerinde parmak izi / yüz tanıma tabanlı PDKS veya erişim kontrolü planlanması",
+          "legal_rule": "Kartlı/mobil/turnike gibi daha az müdahaleci alternatiflerin varlığı ve somut olayın güvenlik/kanuni zorunluluk koşulları birlikte incelenir; standart mesai takibinde alternatif varken zorunlu biyometrik PDKS m.4 ölçülülük ilkesine aykırıdır.",
+          "statutory_basis": "6698 m.4 ve m.6"
+        }
+      ]
+    }
+  ]
+}

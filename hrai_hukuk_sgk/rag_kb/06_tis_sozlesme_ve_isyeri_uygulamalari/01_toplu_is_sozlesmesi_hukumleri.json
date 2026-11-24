@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0.5.1",
+  "layer_id": "L6_CBA_CONTRACTS_AND_WORKPLACE_PRACTICES",
+  "product_brand": "hrAI",
+  "coordinator_agent": "@hrAI",
+  "specialist_agent": "@HukukSGK",
+  "module_id": "MOD-L6-TIS-6356",
+  "source_document_id": "HRAI-L6-TIS-01",
+  "autonomous_source_kind": "COLLECTIVE_BARGAINING_AGREEMENT",
+  "title": "Toplu İş Sözleşmesi (TİS — 6356 s. Kanun) Hükümleri ve Doğrudan/Emredici Etki Referans Modülü",
+  "scope_summary": "6356 sayılı Sendikalar ve Toplu İş Sözleşmesi Kanunu kapsamında toplu iş sözleşmesinin normatif hükümleri, bireysel iş sözleşmeleriyle çatışmada TİS üstünlüğü (m.36), işçi lehine bireysel sapma istisnası, sendika temsilcisi güvencesi (m.24) ve sendikal fesih yasağı (m.25) sınırları için referans şablondur.",
+  "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+  "template_only_not_binding_company_policy": true,
+  "no_flat_priority_supremacy": true,
+  "non_reducible_source_distinction": "Toplu İş Sözleşmesi (6356 m.36) doğrudan ve emredici normatif etkiye sahiptir; bireysel iş sözleşmesine, tek taraflı işyeri iç yönetmeliğine veya zımni işyeri uygulamasına indirgenemez.",
+  "primary_statutory_basis_ids": [
+    "MEVZUAT-6356",
+    "CARD-6356-M24",
+    "CARD-6356-M25",
+    "CARD-4857-M17",
+    "CARD-4857-M53"
+  ],
+  "rules": [
+    {
+      "rule_id": "RULE-L6-01-TIS-DOGRUDAN-ETKI",
+      "title": "TİS Hükümlerinin Bireysel Sözleşmeye Üstünlüğü ve İşçi Lehine Sapma Sınırı (6356 m.36)",
+      "rule_summary": "TİS'te aksi belirtilmedikçe bireysel iş sözleşmeleri TİS'e aykırı olamaz; TİS'e aykırı iş sözleşmesi hükümlerinin yerini TİS hükümleri alır. Ancak bireysel iş sözleşmesindeki işçi lehine hükümler (TİS açıkça yasaklamamışsa) geçerliliğini korur.",
+      "norm_type": "COLLECTIVE_BARGAINING_AGREEMENT",
+      "legal_basis_ids": [
+        "MEVZUAT-6356",
+        "CARD-4857-M17",
+        "CARD-4857-M53"
+      ],
+      "source_document_id": "HRAI-L6-TIS-01",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": true,
+        "statutory_floor_nature": "RELATIVE_MANDATORY_FLOOR",
+        "can_improve_for_employee": true,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "Nispi emredici haklarda (ihbar, yıllık izin, fazla çalışma zammı) TİS kanuni tabanın üzerine çıkabilir; bireysel sözleşme TİS'in altına inemez, ancak TİS açıkça yasaklamıyorsa TİS'ten daha işçi lehine hüküm getirebilir."
+      },
+      "conflict_resolution": {
+        "strategy": "CBA_OVERRIDES_LESS_FAVORABLE_CONTRACT_6356_M36",
+        "higher_authority_ref": "6356 s. Kanun m.36 ve ilgili nispi emredici 4857 hükümleri",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "TİS, bireysel iş sözleşmesi ve tek taraflı İK prosedüründen ayrı, üst düzey kolektif özerk normdur.",
+        "rationale": "6356 m.36 uyarınca TİS normatif hükümleri bireysel sözleşmenin işçi aleyhine hükümlerinin yerini doğrudan alır; bu etki tekil bir priority:8 eşitliğiyle modellenemez."
+      },
+      "human_review_required": true
+    },
+    {
+      "rule_id": "RULE-L6-01-TIS-MUTLAK-EMREDICI-SINIR",
+      "title": "TİS ile Değiştirilemeyen Mutlak Emredici Sınırlar (6356 m.24-25 & 1475 m.14 Kıdem Tavanı)",
+      "rule_summary": "Toplu iş sözleşmesi dahi kamu düzenine ilişkin mutlak emredici hükümleri (sendika temsilcisi güvencesi, zorunlu SGK/İSG kuralları, kıdem tazminatı yasal tavanı sınırları veya fesih yazılılığı) ortadan kaldıramaz.",
+      "norm_type": "STATUTORY_ABSOLUTE_MANDATORY",
+      "legal_basis_ids": [
+        "CARD-6356-M24",
+        "CARD-6356-M25",
+        "CARD-1475-M14"
+      ],
+      "source_document_id": "HRAI-L6-TIS-01",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": false,
+        "statutory_floor_nature": "ABSOLUTE_MANDATORY",
+        "can_improve_for_employee": false,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "Mutlak emredici hükümler hem işçi aleyhine hem de kanunun çizdiği kamu düzeni sınırlarını aşacak biçimde TİS ile değiştirilemez (ör. kıdem tazminatı tavanı ve temsilci güvencesi)."
+      },
+      "conflict_resolution": {
+        "strategy": "STATUTORY_ABSOLUTE_PREVAILS",
+        "higher_authority_ref": "6356 s. Kanun m.24-25 ve 1475 s. Kanun m.14",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "Kolektif özerklik (TİS) dâhil hiçbir L5/L6 normu mutlak emredici kanun kuralını bertaraf edemez.",
+        "rationale": "Her kanun hükmü aynı emredicilikte değildir; nispi emredici alanlarda TİS serbestisi bulunurken mutlak emredici hükümlerde kanun kesin üstündür."
+      },
+      "human_review_required": true
+    }
+  ],
+  "disclaimer": "Bu kayıt hrAI @HukukSGK L6 TİS referans şablonudur (REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION). İşyerinde fiilen yürürlükte olan imzalı TİS metni yüklenip hukuk müşavirince doğrulanmadan bağlayıcı TİS hükmü gibi uygulanamaz."
+}

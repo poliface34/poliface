@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0.2a.3",
+  "law_no": "1475",
+  "law_title": "1475 Sayılı İş Kanunu (Yürürlükteki Madde 14 — Kıdem Tazminatı)",
+  "source_id": "MEVZUAT-1475",
+  "cards": [
+    {
+      "card_id": "CARD-1475-M14",
+      "source_id": "MEVZUAT-1475",
+      "law_no": "1475",
+      "article_ref": "Madde 14",
+      "topic": "Kıdem tazminatına hak kazanma şartları, sigortalılık başlangıcına göre yaş dışı emeklilik senaryoları ve kıdem tavanı",
+      "legal_basis": {
+        "source_id": "MEVZUAT-1475",
+        "original_publication_ref": "RG 01.09.1971 / Sayı 13943 (İlk yayımlanan metin; 4857 m.120 ile yalnızca m.14 yürürlükte bırakılmıştır)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=1475&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": [
+          {
+            "amending_law_no": "4857",
+            "official_gazette_no": "25134",
+            "publication_date": "2003-06-10",
+            "effective_from": "2003-06-10",
+            "summary": "4857 m.120 ile 1475 sayılı Kanunun 14 üncü maddesi hariç diğer maddeleri yürürlükten kaldırılmış; m.14 kıdem tazminatı hükmü yürürlükte bırakılmıştır."
+          }
+        ]
+      },
+      "scope_of_application": "Aynı işverene bağlı bir veya değişik işyerlerinde en az 1 tam yıl çalışmış işçinin sözleşmesinin; işveren tarafından 4857 m.25/II dışındaki bir sebeple feshi, işçi tarafından 4857 m.24 haklı sebeple feshi, muvazzaf askerlik, yaşlılık/malullük aylığı veya toptan ödeme alma amacıyla ayrılma, 1475 m.14/1-5 uyarınca yaş dışındaki emeklilik koşullarını (sigortalılık başlangıç tarihine göre değişen prim günü ve sigortalılık süresi şartlarını) tamamlayarak kendi isteğiyle ayrılma, kadın işçinin evlendiği tarihten itibaren 1 yıl içinde kendi arzusuyla ayrılması veya işçinin ölümü hallerinde her tam yıl için 30 günlük giydirilmiş brüt ücret tutarında (kıdem tavanıyla sınırlı) kıdem tazminatı ödenir.",
+      "exceptions": [
+        "1 tam yıldan az kıdemi bulunan çalışanlar",
+        "İşçinin haklı neden olmaksızın kendi istifası (evlilik, askerlik, emeklilik/SGK yazısı istisnaları hariç)",
+        "İşverenin 4857 m.25/II (ahlak ve iyi niyet kurallarına aykırılık) kapsamında ispatlı ve süresinde (m.26) haklı feshi",
+        "Kıdem tavanını aşan sözleşmesel ek ödemeler (gelir vergisi istisnası tavanla sınırlıdır — @ÜcretBordro)"
+      ],
+      "required_documents": [
+        "Fesih hukuki nedenini ve tarihini teyit eden yazılı bildirim / dilekçe",
+        "Yaş dışı emeklilik/emeklilik ayrılışında SGK'dan alınmış güncel 'Kıdem Tazminatına Esas Yazı' (e-Devlet ham gün ekranı tek başına yeterli değildir; 18 yaş öncesi başlangıç ve hizmet birleştirmeleri SGK yazısıyla teyit edilmelidir)",
+        "Evlilik feshi için evlilik cüzdanı fotokopisi (nikâhtan itibaren 1 yıl içinde)",
+        "Askerlik feshi için resmî sevk belgesi",
+        "Giydirilmiş brüt ücret bileşenleri ve dönem tavan kontrolü (@ÜcretBordro hesaplama raporu)"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde 1475 m.14'e özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "1971-09-01",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "1475 Sayılı Kanun (01.09.1971) ve 4857 Sayılı Kanun m.120 yürürlükte bırakma hükmü (10.06.2003)."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "Sadece SGK çıkış koduna bakılarak hukuki fesih nedeni doğrulanmadan kıdem reddi veya fazla ödeme yapılması",
+        "Kıdem tavanının dönemine (Ocak-Haziran / Temmuz-Aralık) göre güncellenmemesi",
+        "Ödemede gecikme halinde mevduata uygulanan en yüksek faiz yükümlülüğü",
+        "3600/4500/7000/5400 gün koşullarının sigortalılık başlangıç tarihine göre ayrıştırılmaması nedeniyle SGK yazısı olmadan hatalı kıdem onayı veya haksız ret"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD1475M14",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "1475",
+        "madde 14",
+        "kıdem tazminatı",
+        "tavan",
+        "giydirilmiş brüt",
+        "emeklilik",
+        "evlilik",
+        "askerlik",
+        "18 yaş öncesi",
+        "5510 m.38",
+        "sigortalılık süresi başlangıcı",
+        "prim günü",
+        "staj"
+      ],
+      "application_scenarios": [
+        {
+          "scenario_id": "RETIREMENT_PRE_1999_09_08",
+          "condition": "İlk sigortalılık başlangıç tarihi 08.09.1999 öncesi olan 4/1-a çalışanları (yaş dışı emeklilik ayrılışı)",
+          "legal_rule": "En az 15 yıl sigortalılık süresi ve 3600 prim ödeme gününün tamamlanması + SGK'dan 'Kıdem Tazminatına Esas Yazı' ibrazı + son işverende en az 1 tam yıl çalışma.",
+          "statutory_basis": "1475 m.14/1-5 ve 506 Geçici m.81 geçiş hükümleri"
+        },
+        {
+          "scenario_id": "RETIREMENT_1999_09_08_TO_2008_04_30",
+          "condition": "İlk sigortalılık başlangıç tarihi 08.09.1999 – 30.04.2008 arası olan 4/1-a çalışanları (yaş dışı emeklilik ayrılışı)",
+          "legal_rule": "İki alternatiften birinin sağlanması: (a) sigortalılık süresi aranmaksızın 7000 prim ödeme günü VEYA (b) 25 yıl sigortalılık süresi ve 4500 prim ödeme günü + SGK resmî yazısı ibrazı + son işverende en az 1 tam yıl çalışma.",
+          "statutory_basis": "1475 m.14/1-5 ve mülga 506 m.60/A-(a)-(b)"
+        },
+        {
+          "scenario_id": "RETIREMENT_POST_2008_05_01",
+          "condition": "İlk sigortalılık başlangıç tarihi 01.05.2008 ve sonrası olan 4/1-a çalışanları (yaş dışı emeklilik ayrılışı)",
+          "legal_rule": "Sigortalılık süresi aranmaksızın 7200 prim günü (tam yaşlılık) VEYA 5510 Geçici m.6/7 kapsamındaki ilk sigortalılık yılına göre kademeli kısmi prim günü (2008 için 4600 günden başlayıp her yıl +100 gün artarak 2016 ve sonrası için 5400 gün eşiği) + SGK resmî yazısı ibrazı + son işverende en az 1 tam yıl çalışma.",
+          "statutory_basis": "1475 m.14/1-5, 5510 m.28 ve 5510 Geçici m.6"
+        },
+        {
+          "scenario_id": "RETIREMENT_PRE_18_INSURANCE_DISTINCTION",
+          "condition": "18 yaşını doldurmadan önce uzun vadeli (MYÖ) sigorta kollarına tabi çalışması bulunan sigortalılar",
+          "legal_rule": "Sigortalılık süresinin (15 yıl / 25 yıl) başlangıcı 18 yaşın doldurulduğu tarih kabul edilir; buna karşılık 18 yaşından önce ödenen uzun vadeli (MYÖ) prim günleri toplam prim ödeme gün sayısına dahil edilir (staj/çıraklık hariç). SGK resmî yazısı her iki unsuru birlikte teyit etmelidir.",
+          "statutory_basis": "5510 m.38/2 ve 1475 m.14/1-5"
+        }
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-1475",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT1475",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a.1 hukuki inceleme: 1475 m.14/1-5 üç dönemli emeklilik senaryosuna ek olarak 5510 m.38/2 uyarınca 18 yaş öncesi sigortalılık süresi başlangıcı ile MYÖ prim günlerinin sayılması ayrı kurallara ve SGK yazı kontrol listesine bağlandı."
+      },
+      "special_calculation_rules": {
+        "pre_18_insurance_period_start_rule": "5510 m.38/2 (ve mülga 506 m.60/G) uyarınca 18 yaşından önce uzun vadeli sigorta kollarına (MYÖ) tabi çalışmaya başlayanların 15 yıl / 25 yıl gibi sigortalılık süresi, kural olarak 18 yaşını doldurdukları tarihte başlamış kabul edilir (01.04.1981 öncesi ilk tescillerdeki mülga geçiş istisnası saklıdır).",
+        "pre_18_premium_days_counting_rule": "5510 m.38/2 uyarınca 18 yaşını doldurmadan önceki süreler için ödenen malûllük, yaşlılık ve ölüm (MYÖ) sigortaları primleri, 3600 / 4500 / 7000 / 7200 / kademeli prim ödeme gün sayılarının hesabına DAHİL EDİLİR.",
+        "internship_and_apprenticeship_exclusion": "Yalnızca kısa vadeli sigorta kollarına tabi olan staj ve çıraklık sigortası girişleri uzun vadeli (MYÖ) sigortalılık başlangıcı veya emeklilik prim ödeme günü olarak sayılmaz.",
+        "sgk_letter_verification_checklist": [
+          "SGK 'Kıdem Tazminatına Esas Yazı' üzerinde ilk uzun vadeli (MYÖ) tescil tarihinin teyidi (staj/çıraklık girişi ayrıştırılmış mı?)",
+          "18 yaş öncesi MYÖ çalışması varsa: 15 yıl / 25 yıl sigortalılık süresinin 18 yaş ikmal tarihinden hesaplandığının teyidi",
+          "18 yaş öncesi MYÖ prim günlerinin toplam prim ödeme gün sayısına dahil edildiğinin teyidi",
+          "4/a, 4/b, 4/c hizmet birleştirmeleri, fiili hizmet zammı ve borçlanmaların SGK tarafından resmen hesaplandığının teyidi"
+        ]
+      }
+    }
+  ]
+}

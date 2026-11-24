@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0.2b",
+  "law_no": "SGK-2020/20",
+  "law_title": "SGK 2020/20 Sayılı İşveren İşlemleri Genelgesi",
+  "source_id": "SGK-GENELGE-2020-20",
+  "cards": [
+    {
+      "card_id": "CARD-SGK-2020-20-ISVEREN",
+      "source_id": "SGK-GENELGE-2020-20",
+      "law_no": "SGK-2020/20",
+      "article_ref": "SGK 2020/20 Genelgesi (İşyeri Tescili, İşveren Vekili, Alt İşveren & 07-Puantaj Kısıtı)",
+      "topic": "İşveren İşlemleri, İşveren Vekili Tanımı, Alt İşveren/Geçici İş İlişkisi Dosyası ve 07-Puantaj Kayıtları Kuralı",
+      "legal_basis": {
+        "source_id": "SGK-GENELGE-2020-20",
+        "original_publication_ref": "SGK 18.06.2020 tarih ve 2020/20 Sayılı Genelge",
+        "consolidated_text_url": "https://www.sgk.gov.tr/download/downloadfile?f=b30d135d-a189-41c1-a848-577e4d9985fe.pdf&d=65521b2e-039e-4819-abd1-77503ab4383e",
+        "secondary_statutory_anchors": [
+          "5510 m.11",
+          "5510 m.12",
+          "5510 m.86",
+          "SSİY m.27-31",
+          "SSİY m.102"
+        ],
+        "amendment_history": [
+          {
+            "amending_law_no": "SGK 07-Puantaj Kayıtları Uygulama Duyurusu",
+            "official_gazette_no": "SGK-DUYURU-20231120",
+            "publication_date": "2023-11-20",
+            "effective_from": "2023-11-20",
+            "summary": "2020/20 Genelgesi uygulaması kapsamında ay içinde 0 gün ve 0 kazanç bildirilen sigortalılar için '07-Puantaj Kayıtları' eksik gün kodunun seçilemeyeceği resmî SGK duyurusuyla açıklandı."
+          }
+        ]
+      },
+      "scope_of_application": "5510 sayılı Kanun ve SSİY çerçevesinde işyeri tescil esaslarını, yalnızca e-sigorta şifresi almaya yetkili vekilin 'işveren vekili' sayılamayacağını (5510 m.12/2 işin bütününün yönetimi ölçütü), alt işveren ve geçici iş ilişkisinde devralan işverenin ayrı dosya açmaksızın asıl işveren dosyası üzerinden aracı numarasıyla bildirim yapmasını ve '07-Puantaj Kayıtları' eksik gün kodunun 0 gün/0 kazanç bildiriminde kullanılamayacağını düzenler.",
+      "application_scenarios": [
+        {
+          "scenario_id": "SGK_2020_20_CODE_07_ZERO_DAY_PROHIBITION",
+          "condition": "Ay içinde hiç çalışması (0 gün ve 0 kazanç) olmayan sigortalı için MUHSGK eksik gün kodu seçimi",
+          "legal_rule": "'07-Puantaj Kayıtları' kodu yalnızca ay içinde en az kısmi fiili çalışması bulunan puantajlı sigortalılar içindir; 0 gün ve 0 kazançlı bildirimlerde '07-Puantaj Kayıtları' seçilemez (gerçek nedene göre ücretsiz izin '21', istirahat '01' vb. uygun kod seçilmelidir).",
+          "statutory_basis": "SGK 2020/20 Genelgesi ve SGK 20.11.2023 Resmî Duyurusu"
+        },
+        {
+          "scenario_id": "SGK_2020_20_EMPLOYER_REPRESENTATIVE_LIMIT",
+          "condition": "Yalnızca e-sigorta kullanıcı kodu almaya vekaletname ile yetkilendirilen muhasebeci veya şube müdürünün işveren vekili olarak tescil edilmesi",
+          "legal_rule": "Yalnızca e-sigorta işlemleri için vekalet verilen kişi 5510 m.12 anlamında işveren vekili sayılmaz; işveren vekili işin/hizmetin bütününün yönetim görevini yapan yetkilidir.",
+          "statutory_basis": "5510 m.12/2 ve SGK 2020/20 Genelgesi"
+        }
+      ],
+      "statutory_subordination": {
+        "concretizes_statutory_provisions": [
+          "5510 Sayılı Kanun m.11",
+          "5510 Sayılı Kanun m.12",
+          "5510 Sayılı Kanun m.86"
+        ],
+        "cannot_override_parent_law": true,
+        "hierarchy_note": "SGK 2020/20 Genelgesi idari uygulama genelgesidir; 5510 sayılı Kanun ve SSİY hükümlerini değiştiremez, kanuni müteselsil sorumluluk kapsamını daraltamaz veya kanunda olmayan yeni ceza ihdas edemez."
+      },
+      "exceptions": [
+        "Genelge ile 5510 sayılı Kanun arasında çatışma doğarsa normlar hiyerarşisi gereği 5510 sayılı Kanun üstün tutulur.",
+        "Alt işveren ve geçici iş ilişkisinde devralan işveren ayrı işyeri dosyası açmaz; asıl işveren işyeri sicil numarası üzerinden verilecek aracı koduyla işlem yapar (SSİY m.31)."
+      ],
+      "required_documents": [
+        "SGK İşyeri Bildirgesi ve yetkilendirme belgeleri",
+        "Alt işveren aracı kodu başvuru sözleşmesi",
+        "İmzalı puantaj cetvelleri (07 kodu için en az 1 gün çalışma koşuluyla)"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrudan resmî sgk.gov.tr 2020/20 Genelgesi PDF'i ve 20.11.2023 tarihli 07-Puantaj resmî duyurusuna dayanır.",
+      "effective_validity": {
+        "effective_from": "2020-06-18",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "SGK 2020/20 Genelgesi 18.06.2020 tarihinde yürürlüğe girmiş olup 20.11.2023 tarihli 07-Puantaj duyurusuyla birlikte uygulanmaktadır."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "0 gün ve 0 kazançlı sigortalı için 07-Puantaj kodu seçilmesi MUHSGK hata/reddi veya SGK incelemesinde 30 güne tamamlama riskine yol açar.",
+        "Yetkisiz kişinin işveren vekili olarak tescili 5510 m.12/2 müteselsil prim sorumluluğu yönünden hukuki uyuşmazlık yaratır."
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@UcretBordro",
+        "@OzlukUyum"
+      ],
+      "disclaimer": "Bu bilgi kartı ikincil mevzuatın resmî metin ve değişiklik geçmişine dayalı yapılandırılmış teknik hukuki referansıdır; üst norm olan kanunu genişletemez veya bertaraf edemez. Bağlayıcı hukuki mütalaa yerine geçmez; somut uyuşmazlıklarda yetkili hukuk müşavirine danışılmalıdır.",
+      "verification_status": "VERIFIED",
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "SGK-GENELGE-2020-20",
+        "source_audit_log_id": "AUD-20261120-SGK202020",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-SGK-REV-02",
+        "reviewer_role": "SGK_COMPLIANCE_SPECIALIST",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS"
+        ],
+        "review_notes": "SGK 2020/20 Genelgesi resmî PDF'i ve 07-Puantaj duyurusu ile 5510 m.11-12-86 üst norm bağlılığı doğrulandı."
+      },
+      "verification_audit": {
+        "verifier_id": "CALISORA-SGK-01",
+        "verifier_role": "SGK_COMPLIANCE_SPECIALIST",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-CARDSGK202020",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "keywords": [
+        "sgk 2020/20",
+        "07 puantaj",
+        "işveren vekili",
+        "alt işveren aracı",
+        "eksik gün",
+        "5510 m.12"
+      ]
+    }
+  ]
+}

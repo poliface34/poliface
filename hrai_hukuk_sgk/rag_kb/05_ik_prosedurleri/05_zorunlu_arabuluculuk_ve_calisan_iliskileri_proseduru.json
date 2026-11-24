@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0.5.1",
+  "layer_id": "L5_HR_PROCEDURES",
+  "product_brand": "hrAI",
+  "coordinator_agent": "@hrAI",
+  "specialist_agent": "@HukukSGK",
+  "procedure_id": "PROC-L5-ARABULUCULUK-ILISKILER",
+  "source_document_id": "HRAI-L5-PROC-05",
+  "title": "Zorunlu Arabuluculuk (7036 m.3) ve Çalışan İlişkileri / İbraname (6098 m.420) Referans Prosedürü",
+  "scope_summary": "İşçi-işveren alacak ve işe iade uyuşmazlıklarında 7036 sayılı Kanun m.3 dava şartı arabuluculuk süreci, temsil yetkisi, zamanaşımı/hak düşürücü süre (1 ay işe iade başvurusu) ve 6098 TBK m.420 ibraname geçerlilik koşullarının yönetimi için kurumsal referans şablonudur.",
+  "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+  "template_only_not_binding_company_policy": true,
+  "no_flat_priority_supremacy": true,
+  "primary_statutory_basis_ids": [
+    "CARD-7036-M03",
+    "CARD-7036-M11-M12",
+    "CARD-6098-M420",
+    "CARD-4857-EKM3"
+  ],
+  "mandatory_steps": [
+    {
+      "step_no": 1,
+      "action": "Arabuluculuk davet yazısı tebliğ edildiğinde derhal şirket hukuk müşavirine ilet; yetkili temsil belgesi ve özlük/bordro delil paketini hazırla.",
+      "responsible_role": "İK Çalışan İlişkileri Sorumlusu ve Hukuk Müşaviri",
+      "required_record": "Arabuluculuk Tebliğ Kaydı ve Delil Dosyası",
+      "statutory_anchor_id": "CARD-7036-M03"
+    },
+    {
+      "step_no": 2,
+      "action": "İş sözleşmesi sona ermesinde düzenlenecek ibranamelerde 6098 TBK m.420 şartlarını (fesihten itibaren en az 1 ay geçmesi, yazılılık, alacak tür/miktarının açıkça yazılması, banka aracılığıyla eksiksiz ödeme) ayrı denetle.",
+      "responsible_role": "İK ve Hukuk Müşaviri",
+      "required_record": "TBK m.420 Uyumluluk Kontrol Listesi ve Banka Dekontu",
+      "statutory_anchor_id": "CARD-6098-M420"
+    },
+    {
+      "step_no": 3,
+      "action": "Arabuluculuk anlaşma veya son tutanağını imza ve icra edilebilirlik değerlendirmesi için hukuk müşaviri onayından geçir; bordro tahakkuku gereken tutarları @ÜcretBordro devriyle ayır.",
+      "responsible_role": "Hukuk Müşaviri ve İK",
+      "required_record": "Arabuluculuk Son Tutanağı ve Hukuk Onay Notu",
+      "statutory_anchor_id": "CARD-7036-M11-M12"
+    }
+  ],
+  "escalation_triggers": [
+    "Fesih tarihinde (1 aylık bekleme süresi dolmadan) çalışandan ibraname alınmak istenmesi (TBK m.420 kesin hükümsüzlük)",
+    "Arabuluculuk ilk toplantısına mazeretsiz katılmama (7036 m.3/12 yargılama gideri yaptırımı)",
+    "İş kazası/meslek hastalığı maddi-manevi tazminat veya sendikal fesih iddiası (Avukatlık Kanunu m.35 zorunlu avukat yönlendirmesi)"
+  ],
+  "rules": [
+    {
+      "rule_id": "RULE-L5-05-TBK420-IBRANAME",
+      "title": "6098 TBK m.420 İbraname Geçerlilik Şartları (Mutlak Emredici)",
+      "rule_summary": "Kurum içi işten çıkış prosedürü, fesihten itibaren 1 ay geçmeden veya banka ödemesi olmadan alınan ibranameleri geçerli sayamaz; TBK m.420 şartlarına aykırı ibra sözleşmesi kesin olarak hükümsüzdür.",
+      "norm_type": "STATUTORY_ABSOLUTE_MANDATORY",
+      "legal_basis_ids": [
+        "CARD-6098-M420",
+        "CARD-4857-EKM3"
+      ],
+      "source_document_id": "HRAI-L5-PROC-05",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": false,
+        "statutory_floor_nature": "ABSOLUTE_MANDATORY",
+        "can_improve_for_employee": false,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "TBK m.420 şekil, 1 aylık bekleme ve banka ödeme şartları mutlak emredici geçerlilik koşullarıdır; işçi rızasıyla dahi bertaraf edilemez."
+      },
+      "conflict_resolution": {
+        "strategy": "STATUTORY_ABSOLUTE_PREVAILS",
+        "higher_authority_ref": "6098 s. TBK m.420",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "Ne işten çıkış İK prosedürü ne de bireysel sözleşmeye eklenen peşin ibra maddesi TBK m.420'yi aşabilir.",
+        "rationale": "Kesin hükümsüzlük yaptırımına bağlı kanuni geçerlilik koşulları karşısında kurum içi çıkış formları hukuki sonuç doğurmaz."
+      },
+      "human_review_required": true
+    },
+    {
+      "rule_id": "RULE-L5-05-ARABULUCULUK-DAVA-SARTI",
+      "title": "7036 m.3 Zorunlu Arabuluculuk ve Temsil Yetkisi",
+      "rule_summary": "Kanuna, bireysel veya toplu iş sözleşmesine dayanan işçi/işveren alacak ve işe iade taleplerinde 7036 m.3 dava şartı arabuluculuk esastır; hukuki uzlaşma kapsamı şirket avukatı olmaksızın kesinleştirilmemelidir.",
+      "norm_type": "STATUTORY_ABSOLUTE_MANDATORY",
+      "legal_basis_ids": [
+        "CARD-7036-M03",
+        "CARD-7036-M11-M12"
+      ],
+      "source_document_id": "HRAI-L5-PROC-05",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": false,
+        "statutory_floor_nature": "ABSOLUTE_MANDATORY",
+        "can_improve_for_employee": false,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "7036 m.3 dava şartı arabuluculuk usul hukuku kuralıdır; kurum prosedürü veya sözleşme ile dava şartı kaldırılamaz."
+      },
+      "conflict_resolution": {
+        "strategy": "STATUTORY_ABSOLUTE_PREVAILS",
+        "higher_authority_ref": "7036 s. İş Mahkemeleri Kanunu m.3 ve m.11-12",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "Kurum içi çalışan ilişkileri prosedürü yalnızca iç iletişim ve hazırlık adımlarını düzenler; yargısal/arabuluculuk usul kurallarını değiştiremez.",
+        "rationale": "Dava şartı ve arabuluculuk anlaşmasının kesin hüküm niteliği nedeniyle her uyuşmazlıkta hukuk müşaviri incelemesi zorunludur."
+      },
+      "human_review_required": true
+    }
+  ],
+  "disclaimer": "Bu kayıt hrAI @HukukSGK L5 kurumsal İK prosedürü referans şablonudur (REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION). Avukatlık Kanunu m.35 uyarınca arabuluculuk anlaşması veya hukuki mütalaa yerine geçmez; şirket onayı ve hukuk müşaviri incelemesi gerektirir."
+}

@@ -1,0 +1,114 @@
+{
+  "schema_version": "1.0.2b.1",
+  "law_no": "CK-10766",
+  "law_title": "10766 Sayılı Cumhurbaşkanı Kararı (2026 Ar-Ge/Tasarım/Teknokent Uzaktan Çalışma Oranları)",
+  "source_id": "RG-10766-20251225",
+  "cards": [
+    {
+      "card_id": "CARD-CK-10766-2026",
+      "source_id": "RG-10766-20251225",
+      "law_no": "CK-10766",
+      "article_ref": "10766 Sayılı Cumhurbaşkanı Kararı (Madde 1-2)",
+      "topic": "2026 Yılı 5746 ve 4691 Kapsamında Gelir Vergisi Stopajı Teşvikine Esas Uzaktan Çalışma Oranları",
+      "legal_basis": {
+        "source_id": "RG-10766-20251225",
+        "original_publication_ref": "RG 25.12.2025 / 33118",
+        "consolidated_text_url": "https://www.resmigazete.gov.tr/eskiler/2025/12/20251225-20.pdf",
+        "secondary_statutory_anchors": [
+          "5746 Sayılı Kanun m.3/2",
+          "4691 Sayılı Kanun Geçici m.2"
+        ],
+        "amendment_history": [
+          {
+            "amending_law_no": "10766 Sayılı Cumhurbaşkanı Kararı",
+            "official_gazette_no": "33118",
+            "publication_date": "2025-12-25",
+            "effective_from": "2026-01-01",
+            "summary": "31.12.2025 itibarıyla süresi dolan 9368 Sayılı Cumhurbaşkanı Kararı yerine 01.01.2026–31.12.2026 döneminde bilişim personeli için %100, diğer Ar-Ge/Tasarım/TGB personeli için %75 uzaktan çalışma teşvik oranı belirlendi."
+          }
+        ]
+      },
+      "scope_of_application": "01.01.2026–31.12.2026 döneminde 4691 sayılı Kanun kapsamındaki Teknoloji Geliştirme Bölgeleri ile 5746 sayılı Kanun kapsamındaki Ar-Ge ve Tasarım Merkezlerinde çalışan bilişim personeli için %100, diğer personel için %75 oranında bölge/merkez dışı (uzaktan) çalışma sürelerinin gelir vergisi stopajı teşviki kapsamında değerlendirilmesini düzenler.",
+      "application_scenarios": [
+        {
+          "scenario_id": "CK_10766_2026_RATES_VS_EXPIRED_9368",
+          "condition": "2026 yılı bordro döneminde Teknokent veya Ar-Ge merkezinde uzaktan çalışan personelin teşvik oranı kontrolü",
+          "legal_rule": "2026 yılı için yürürlükteki dayanak 10766 Sayılı Cumhurbaşkanı Kararı'dır (bilişim %100, diğer %75); 2025 dönemine ait 9368 Sayılı Cumhurbaşkanı Kararı 31.12.2025 itibarıyla süresi dolduğu için 2026 bordrolarında dayanak gösterilemez.",
+          "statutory_basis": "10766 Sayılı Cumhurbaşkanı Kararı (RG 25.12.2025/33118)"
+        }
+      ],
+      "statutory_subordination": {
+        "concretizes_statutory_provisions": [
+          "5746 Sayılı Kanun m.3/2",
+          "4691 Sayılı Kanun Geçici m.2"
+        ],
+        "cannot_override_parent_law": true,
+        "hierarchy_note": "10766 Sayılı düzenleme Cumhurbaşkanlığı Kararnamesi (CBK / PRESIDENTIAL_DECREE) değil, 5746 ve 4691 sayılı Kanunların Cumhurbaşkanına tanıdığı %100'e kadar oran belirleme yetkisine dayalı bir Cumhurbaşkanı Kararıdır (PRESIDENTIAL_DECISION); 7555 sayılı Kanunun 40 kat tavanını veya 4857 m.14 iş hukuku hükümlerini bertaraf edemez."
+      },
+      "exceptions": [
+        "40 kat brüt asgari ücret stopaj teşviki tavanı (7555 sayılı Kanun / 331 Tebliğ) 10766 Sayılı Cumhurbaşkanı Kararı kapsamındaki uzaktan çalışma süreleri için de geçerlidir.",
+        "Bilişim personeli niteliğinin ilgili Bakanlık/TGB yönetici şirketi kayıtlarında belgelenmesi zorunludur; diğer personel için %75 sınırı aşılamaz."
+      ],
+      "required_documents": [
+        "TGB yönetici şirketi veya Bakanlık onaylı personel görev/bilişim personeli bildirimi",
+        "Aylık bölge içi / bölge dışı (uzaktan) zaman takip kayıtları"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrudan 10766 Sayılı Cumhurbaşkanı Kararı (RG 25.12.2025/33118) resmî PDF metnine dayanır; 31.12.2026 sonrası yeni Cumhurbaşkanı Kararı yayımlanmazsa süre uzatımı varsayılamaz.",
+      "effective_validity": {
+        "effective_from": "2026-01-01",
+        "effective_to": "2026-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "10766 Sayılı Cumhurbaşkanı Kararı 01.01.2026–31.12.2026 tarihleri arasında yürürlüktedir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "31.12.2025'te süresi dolan 9368 Sayılı Cumhurbaşkanı Kararı'nın 2026 yılında dayanak gösterilmesi veya bilişim dışı personele %100 oran uygulanması teşvik iptaline yol açar."
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@UcretBordro"
+      ],
+      "disclaimer": "Bu bilgi kartı ikincil mevzuatın resmî metin ve değişiklik geçmişine dayalı yapılandırılmış teknik hukuki referansıdır; üst norm olan kanunu genişletemez veya bertaraf edemez. Bağlayıcı hukuki mütalaa yerine geçmez; somut uyuşmazlıklarda yetkili hukuk müşavirine danışılmalıdır.",
+      "verification_status": "VERIFIED",
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "RG-10766-20251225",
+        "source_audit_log_id": "AUD-20261120-RG1076620251225",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS"
+        ],
+        "review_notes": "10766 Sayılı Cumhurbaşkanı Kararı (PRESIDENTIAL_DECISION) 2026 yürürlük aralığı, bilişim %100 / diğer %75 ayrımı ve 9368 Sayılı Cumhurbaşkanı Kararı mülga statüsü doğrulandı."
+      },
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-CARDCK10766",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "keywords": [
+        "10766",
+        "cumhurbaşkanı kararı",
+        "ck",
+        "2026 uzaktan çalışma",
+        "bilişim %100",
+        "diğer %75",
+        "teknokent",
+        "5746",
+        "4691"
+      ]
+    }
+  ]
+}

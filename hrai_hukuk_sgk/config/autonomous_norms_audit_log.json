@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0.5.1",
+  "audit_registry_id": "HRAI-L5-L6-AUTONOMOUS-NORMS-AUDIT-LOG",
+  "product_brand": "hrAI",
+  "coordinator_agent": "@hrAI",
+  "specialist_agent": "@HukukSGK",
+  "product_website": "https://www.insenai.com.tr",
+  "description": "hrAI @HukukSGK v1.0.5.1 L5 (5 kurumsal İK prosedürü) ve L6 (4 ayrı özerk norm/sözleşme/TİS/işyeri uygulaması modülü) için bağımsız doğrulama ve kabul durumu kayıt defteri. L1-L4 resmî mevzuat denetim çekirdeğinden (config/verification_audit_log.json — 74/74) kesin olarak ayrıdır.",
+  "l1_l4_official_core_untouched": true,
+  "l1_l4_official_audit_log_ref": "config/verification_audit_log.json",
+  "l1_l4_official_total_records": 74,
+  "no_flat_priority_supremacy": true,
+  "production_use_authorized": false,
+  "summary": {
+    "l5_module_count": 5,
+    "l6_module_count": 4,
+    "total_autonomous_modules": 9,
+    "total_autonomous_rules": 19,
+    "reference_template_pending_adoption_count": 9,
+    "company_adopted_binding_count": 0
+  },
+  "entries": [
+    {
+      "audit_id": "HRAI-AUD-L5-01",
+      "layer_id": "L5_HR_PROCEDURES",
+      "module_id": "PROC-L5-ISE-ALIM-OZLUK",
+      "source_document_id": "HRAI-L5-PROC-01",
+      "file_path": "rag_kb/05_ik_prosedurleri/01_ise_alim_ve_ozluk_dosyasi_proseduru.json",
+      "rule_count": 2,
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "template_only_not_binding_company_policy": true,
+      "human_review_required": true,
+      "verified_statutory_anchors": [
+        "CARD-5510-M08-M09",
+        "CARD-SSIY-M11-M14",
+        "CARD-6698-M05-M06-M10",
+        "CARD-6331-M04-M06",
+        "MEVZUAT-4857"
+      ]
+    },
+    {
+      "audit_id": "HRAI-AUD-L5-02",
+      "layer_id": "L5_HR_PROCEDURES",
+      "module_id": "PROC-L5-DISIPLIN-SAVUNMA",
+      "source_document_id": "HRAI-L5-PROC-02",
+      "file_path": "rag_kb/05_ik_prosedurleri/02_disiplin_tutanak_ve_savunma_proseduru.json",
+      "rule_count": 2,
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "template_only_not_binding_company_policy": true,
+      "human_review_required": true,
+      "verified_statutory_anchors": [
+        "CARD-4857-M19",
+        "CARD-4857-M25",
+        "CARD-4857-M26",
+        "RG-7555-20250724",
+        "CARD-6356-M24"
+      ]
+    },
+    {
+      "audit_id": "HRAI-AUD-L5-03",
+      "layer_id": "L5_HR_PROCEDURES",
+      "module_id": "PROC-L5-PERFORMANS-SON-CARE",
+      "source_document_id": "HRAI-L5-PROC-03",
+      "file_path": "rag_kb/05_ik_prosedurleri/03_performans_ve_son_care_fesih_proseduru.json",
+      "rule_count": 2,
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "template_only_not_binding_company_policy": true,
+      "human_review_required": true,
+      "verified_statutory_anchors": [
+        "CARD-4857-M18",
+        "CARD-4857-M19",
+        "CARD-4857-M17",
+        "CARD-7036-M11-M12"
+      ]
+    },
+    {
+      "audit_id": "HRAI-AUD-L5-04",
+      "layer_id": "L5_HR_PROCEDURES",
+      "module_id": "PROC-L5-ISTIRAHAT-IS-KAZASI",
+      "source_document_id": "HRAI-L5-PROC-04",
+      "file_path": "rag_kb/05_ik_prosedurleri/04_istirahat_evizite_ve_is_kazasi_proseduru.json",
+      "rule_count": 2,
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "template_only_not_binding_company_policy": true,
+      "human_review_required": true,
+      "verified_statutory_anchors": [
+        "CARD-6331-M14",
+        "CARD-6331-M04-M06",
+        "CARD-SSIY-M102",
+        "CARD-5510-M102"
+      ]
+    },
+    {
+      "audit_id": "HRAI-AUD-L5-05",
+      "layer_id": "L5_HR_PROCEDURES",
+      "module_id": "PROC-L5-ARABULUCULUK-ILISKILER",
+      "source_document_id": "HRAI-L5-PROC-05",
+      "file_path": "rag_kb/05_ik_prosedurleri/05_zorunlu_arabuluculuk_ve_calisan_iliskileri_proseduru.json",
+      "rule_count": 2,
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "template_only_not_binding_company_policy": true,
+      "human_review_required": true,
+      "verified_statutory_anchors": [
+        "CARD-7036-M03",
+        "CARD-7036-M11-M12",
+        "CARD-6098-M420",
+        "CARD-4857-EKM3"
+      ]
+    },
+    {
+      "audit_id": "HRAI-AUD-L6-01",
+      "layer_id": "L6_CBA_CONTRACTS_AND_WORKPLACE_PRACTICES",
+      "autonomous_source_kind": "COLLECTIVE_BARGAINING_AGREEMENT",
+      "module_id": "MOD-L6-TIS-6356",
+      "source_document_id": "HRAI-L6-TIS-01",
+      "file_path": "rag_kb/06_tis_sozlesme_ve_isyeri_uygulamalari/01_toplu_is_sozlesmesi_hukumleri.json",
+      "rule_count": 2,
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "template_only_not_binding_company_policy": true,
+      "human_review_required": true,
+      "verified_statutory_anchors": [
+        "MEVZUAT-6356",
+        "CARD-6356-M24",
+        "CARD-6356-M25",
+        "CARD-4857-M17",
+        "CARD-4857-M53"
+      ]
+    },
+    {
+      "audit_id": "HRAI-AUD-L6-02",
+      "layer_id": "L6_CBA_CONTRACTS_AND_WORKPLACE_PRACTICES",
+      "autonomous_source_kind": "INDIVIDUAL_EMPLOYMENT_CONTRACT",
+      "module_id": "MOD-L6-BIREYSEL-SOZLESME",
+      "source_document_id": "HRAI-L6-SOZ-02",
+      "file_path": "rag_kb/06_tis_sozlesme_ve_isyeri_uygulamalari/02_bireysel_is_sozlesmesi_turleri_ve_sinirlari.json",
+      "rule_count": 3,
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "template_only_not_binding_company_policy": true,
+      "human_review_required": true,
+      "verified_statutory_anchors": [
+        "CARD-4857-M11",
+        "CARD-4857-M17",
+        "CARD-4857-M53",
+        "CARD-6098-M444-M447",
+        "CARD-YON-UZAKTAN-CALISMA",
+        "YIBBGK-2017-10-2019-1"
+      ]
+    },
+    {
+      "audit_id": "HRAI-AUD-L6-03",
+      "layer_id": "L6_CBA_CONTRACTS_AND_WORKPLACE_PRACTICES",
+      "autonomous_source_kind": "WORKPLACE_INTERNAL_REGULATION",
+      "module_id": "MOD-L6-IC-YONETMELIK",
+      "source_document_id": "HRAI-L6-YON-03",
+      "file_path": "rag_kb/06_tis_sozlesme_ve_isyeri_uygulamalari/03_isyeri_ic_yonetmelikleri.json",
+      "rule_count": 2,
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "template_only_not_binding_company_policy": true,
+      "human_review_required": true,
+      "verified_statutory_anchors": [
+        "MEVZUAT-4857",
+        "CARD-YON-CALISMA-SURELERI",
+        "CARD-YON-FAZLA-CALISMA",
+        "CARD-4857-M19"
+      ]
+    },
+    {
+      "audit_id": "HRAI-AUD-L6-04",
+      "layer_id": "L6_CBA_CONTRACTS_AND_WORKPLACE_PRACTICES",
+      "autonomous_source_kind": "ESTABLISHED_WORKPLACE_PRACTICE",
+      "module_id": "MOD-L6-ISYERI-UYGULAMASI",
+      "source_document_id": "HRAI-L6-UYG-04",
+      "file_path": "rag_kb/06_tis_sozlesme_ve_isyeri_uygulamalari/04_yerlesik_isyeri_uygulamalari.json",
+      "rule_count": 2,
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "template_only_not_binding_company_policy": true,
+      "human_review_required": true,
+      "verified_statutory_anchors": [
+        "MEVZUAT-4857",
+        "CARD-5510-M80-M82",
+        "CARD-4857-M53",
+        "CARD-YON-YILLIK-IZIN"
+      ]
+    }
+  ]
+}

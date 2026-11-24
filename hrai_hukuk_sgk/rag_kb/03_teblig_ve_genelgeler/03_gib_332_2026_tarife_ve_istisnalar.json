@@ -1,0 +1,119 @@
+{
+  "schema_version": "1.0.2b.1",
+  "law_no": "GIB-332",
+  "law_title": "332 Seri No.lu Gelir Vergisi Genel Tebliği (2026 Tarife ve Maktu İstisnalar)",
+  "source_id": "GIB-TEBLIG-332-20251231",
+  "cards": [
+    {
+      "card_id": "CARD-GIB-332-2026-TARIFE",
+      "source_id": "GIB-TEBLIG-332-20251231",
+      "law_no": "GIB-332",
+      "article_ref": "332 Seri No.lu GVK Genel Tebliği (2026 Yılı Had, Tarife ve İstisnalar)",
+      "topic": "2026 Ücret Gelir Vergisi Tarifesi, Günlük 300 TL Yemek, 158 TL Ulaşım ve Engellilik İndirimi Hadleri",
+      "legal_basis": {
+        "source_id": "GIB-TEBLIG-332-20251231",
+        "original_publication_ref": "RG 31.12.2025 / 33124 (5. Mükerrer)",
+        "consolidated_text_url": "https://cdn.gib.gov.tr/api/gibportal-file/file/getFile?objectKey=MEVZUAT_TEBLIGLER/UNIVERSAL/2025/193_Teblig332.pdf",
+        "secondary_statutory_anchors": [
+          "193 Sayılı GVK m.23/8",
+          "193 Sayılı GVK m.23/10",
+          "193 Sayılı GVK m.31",
+          "193 Sayılı GVK m.103"
+        ],
+        "amendment_history": [
+          {
+            "amending_law_no": "GVK 332 Seri No.lu Genel Tebliği",
+            "official_gazette_no": "33124 (5. Mükerrer)",
+            "publication_date": "2025-12-31",
+            "effective_from": "2026-01-01",
+            "summary": "2025 yeniden değerleme oranı (%25,49) uyarınca 2026 ücret vergi dilimleri (190.000 / 400.000 / 1.500.000 / 5.300.000 TL), günlük yemek istisnası 300 TL, günlük ulaşım istisnası 158 TL ve engellilik indirimleri (12.000 / 7.000 / 3.000 TL) belirlendi."
+          }
+        ]
+      },
+      "scope_of_application": "01.01.2026–31.12.2026 takvim yılında elde edilen ücret gelirlerine uygulanacak GVK m.103 tarifesini (%15: 190.000 TL'ye kadar; %20: 400.000 TL'ye kadar; %27: 1.500.000 TL'ye kadar; %35: 5.300.000 TL'ye kadar; %40: 5.300.000 TL üzeri), günlük yemek bedeli istisnasını (300 TL), toplu taşıma kart/bilet ulaşım bedeli istisnasını (158 TL) ve aylık engellilik indirimi tutarlarını (1. derece 12.000 TL, 2. derece 7.000 TL, 3. derece 3.000 TL) belirler.",
+      "application_scenarios": [
+        {
+          "scenario_id": "GIB_332_MEAL_AND_TRANSPORT_DISTINCTION",
+          "condition": "İşverenin çalışanlara yemek ve ulaşım yardımı sağlaması (2026 dönemi)",
+          "legal_rule": "Yemek bedeli istisnası çalışılan günler için günlük 300 TL'dir (yemek kartı veya nakit ödeme şartları GVK m.23/8 çerçevesinde uygulanır). Ulaşım bedeli istisnası (günlük 158 TL) ise yalnızca toplu taşıma kartı/bileti veya bu amaçla kullanılan ödeme araçları ile sağlanması şartına bağlıdır; nakdi yol yardımı gelir vergisi istisnasından yararlanamaz.",
+          "statutory_basis": "193 GVK m.23/8, m.23/10 ve 332 Seri No.lu Tebliğ"
+        }
+      ],
+      "statutory_subordination": {
+        "concretizes_statutory_provisions": [
+          "193 Sayılı GVK m.23/8",
+          "193 Sayılı GVK m.23/10",
+          "193 Sayılı GVK m.31",
+          "193 Sayılı GVK m.103",
+          "193 Sayılı GVK Mükerrer m.123"
+        ],
+        "cannot_override_parent_law": true,
+        "hierarchy_note": "332 Seri No.lu Tebliğ, 193 sayılı GVK Mükerrer m.123'teki kanuni yeniden değerleme yetkisi çerçevesinde 2026 maktu hadlerini ilan eder; Kanundaki istisna koşullarını (ör. ulaşım istisnasında nakit yasağını) değiştiremez."
+      },
+      "exceptions": [
+        "332 Seri No.lu Tebliğ 2025 yılına ait 329 Seri No.lu Tebliğin (240 TL yemek / 126 TL ulaşım) yerini alır; 2026 bordrolarında 2025 tutarları kullanılamaz.",
+        "SGK prim istisnası yönünden 5510 m.80/1-b ve SGK genelgeleri ayrı bir norm alanıdır; vergi istisnası ile SGK istisnası koşul ve tarih bakımından ayrıca teyit edilmelidir."
+      ],
+      "required_documents": [
+        "GİB 332 Seri No.lu Tebliğ 2026 parametre tablosu",
+        "Engellilik indirimi için Gelir İdaresi / Vergi Dairesi onay yazısı",
+        "Ulaşım kartı / yemek hizmeti fatura ve fiili çalışma günü puantaj kayıtları"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "GIB-TEBLIG-332-20251231 PDF'i görüntü/özel font kodlamalı olduğundan kaynak defterinde HTTP 200 ve SHA-256 doğrulandı, OCR metin teyidi şeffaf biçimde METADATA_VERIFIED_PENDING_LIVE_FETCH olarak kayıtlıdır; bordro hesabı @UcretBordro'ya devredilir.",
+      "effective_validity": {
+        "effective_from": "2026-01-01",
+        "effective_to": "2026-12-31",
+        "effective_date_verified": false,
+        "effective_date_basis": "332 Seri No.lu GVK Genel Tebliği (RG 31.12.2025 / 33124 5. Mükerrer) 2026 takvim yılını hedefler; ancak kaynak PDF özel CID/görüntü fontlu olup tam metin OCR eşleşmesi beklendiğinden (GIB-TEBLIG-332-20251231: PENDING_REVIEW / METADATA_VERIFIED_PENDING_LIVE_FETCH) effective_date_verified=false tutulmuştur."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "Nakdi yol yardımına 158 TL vergi istisnası uygulanması GVK m.23/10 ihlali olup vergi ziyaı doğurur.",
+        "2025 tarihli 329 Tebliğ hadlerinin 2026 bordrolarında kullanılması hatalı stopaj kesintisine yol açar."
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@UcretBordro"
+      ],
+      "disclaimer": "Bu bilgi kartı ikincil mevzuatın resmî metin ve değişiklik geçmişine dayalı yapılandırılmış teknik hukuki referansıdır; üst norm olan kanunu genişletemez veya bertaraf edemez. Bağlayıcı hukuki mütalaa yerine geçmez; somut uyuşmazlıklarda yetkili hukuk müşavirine danışılmalıdır.",
+      "verification_status": "PENDING_LEGAL_REVIEW",
+      "source_verification": {
+        "status": "PENDING",
+        "source_id": "GIB-TEBLIG-332-20251231",
+        "source_audit_log_id": "AUD-20261120-GIBTEBLIG33220251231",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "legal_interpretation_verification": {
+        "status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS"
+        ],
+        "review_notes": "GIB-TEBLIG-332-20251231 Resmî PDF'i görüntü/CID kodlamalı olduğundan HTTP 200 ve SHA-256 doğrulansa da otomatik tam metin doğrulaması henüz tamamlanmamıştır (METADATA_VERIFIED_PENDING_LIVE_FETCH). Tam metin doğrulaması tamamlanana kadar source_verification='PENDING', legal_interpretation_verification='PENDING_LEGAL_REVIEW' ve kart verification_status='PENDING_LEGAL_REVIEW' statüsünde tutulur."
+      },
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "OFFICIAL_GAZETTE_ARCHIVE_CHECK",
+        "audit_log_id": "AUD-20261120-CARDGIB332",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "keywords": [
+        "332 tebliğ",
+        "2026 gelir vergisi",
+        "300 tl yemek",
+        "158 tl ulaşım",
+        "engellilik indirimi",
+        "190.000",
+        "gvk m.103"
+      ]
+    }
+  ]
+}

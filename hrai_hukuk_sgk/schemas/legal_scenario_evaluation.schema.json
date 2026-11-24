@@ -1,0 +1,408 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://calisora.local/schemas/legal_scenario_evaluation.schema.json",
+  "title": "hrAI @HukukSGK Hukuki Muhakeme ve Senaryo Değerlendirme Çıktı Şeması (v1.0.5.1)",
+  "description": "Gerçek İK vakalarının değerlendirilmesinde olay tarihinde yürürlükte olan dayanakları (legal_bases, effective_on_date=true), tarihsel bağlamı (historical_context, effective_on_date=false), karşı görüşü (counter_arguments), riskleri (risks), eksik bilgiyi (missing_information) ve insan onayı gereksinimini (human_approval) ayrı ayrı zorunlu kılan Draft 2020-12 çıktı şeması.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "scenario_type",
+    "as_of_date",
+    "decision_badge",
+    "assessment_summary",
+    "legal_bases",
+    "historical_context",
+    "counter_arguments",
+    "risks",
+    "missing_information",
+    "human_approval",
+    "recommended_actions",
+    "structured_findings",
+    "norm_conflict_resolution",
+    "precedent_application_assessment",
+    "disclaimer"
+  ],
+  "properties": {
+    "scenario_type": {
+      "type": "string",
+      "enum": [
+        "TERMINATION_VALIDITY",
+        "REINSTATEMENT_CLAIM",
+        "SEVERANCE_AND_NOTICE",
+        "OVERTIME_COMPLIANCE",
+        "ANNUAL_LEAVE_COMPLIANCE",
+        "SGK_EXIT_CODE_AND_UNEMPLOYMENT",
+        "EMPLOYEE_FAVORABLE_NORM_COMPARISON"
+      ]
+    },
+    "as_of_date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "decision_badge": {
+      "type": "string",
+      "enum": [
+        "UYGUN_ON_DEGERLENDIRME",
+        "USUL_EKSIGI_DUZELTME_GEREKLI",
+        "EKSIK_BILGI_TAMAMLANMALI",
+        "YUKSEK_RISK_AVUKAT_ESKALASYONU"
+      ]
+    },
+    "assessment_summary": {
+      "type": "string",
+      "minLength": 15
+    },
+    "legal_bases": {
+      "type": "array",
+      "description": "Yalnızca VERIFIED ve olay tarihinde (as_of_date) fiilen yürürlükte olan hukuki dayanaklar (effective_on_date=true).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "card_id",
+          "precedent_id",
+          "legal_reference",
+          "verification_status",
+          "effective_on_date",
+          "note"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 3
+          },
+          "card_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "precedent_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "legal_reference": {
+            "type": "string",
+            "minLength": 3
+          },
+          "verification_status": {
+            "type": "string",
+            "const": "VERIFIED"
+          },
+          "effective_on_date": {
+            "type": "boolean",
+            "const": true
+          },
+          "note": {
+            "type": "string",
+            "minLength": 10
+          }
+        }
+      }
+    },
+    "historical_context": {
+      "type": "array",
+      "description": "Olay tarihinde yürürlükte olmayan (henüz yürürlüğe girmemiş veya yürürlüğü sona ermiş) tarihsel mevzuat/içtihat bağlamı (effective_on_date=false); asla güncel dayanak olarak sunulmaz.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "card_id",
+          "precedent_id",
+          "legal_reference",
+          "verification_status",
+          "effective_on_date",
+          "note"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 3
+          },
+          "card_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "precedent_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "legal_reference": {
+            "type": "string",
+            "minLength": 3
+          },
+          "verification_status": {
+            "type": "string",
+            "enum": [
+              "VERIFIED",
+              "SUPERSEDED"
+            ]
+          },
+          "effective_on_date": {
+            "type": "boolean",
+            "const": false
+          },
+          "note": {
+            "type": "string",
+            "minLength": 10
+          }
+        }
+      }
+    },
+    "counter_arguments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 15
+      }
+    },
+    "risks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "risk_level",
+          "category",
+          "description",
+          "legal_consequence"
+        ],
+        "properties": {
+          "risk_level": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "minLength": 3
+          },
+          "description": {
+            "type": "string",
+            "minLength": 10
+          },
+          "legal_consequence": {
+            "type": "string",
+            "minLength": 10
+          }
+        }
+      }
+    },
+    "missing_information": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "field",
+          "reason",
+          "required_document"
+        ],
+        "properties": {
+          "field": {
+            "type": "string",
+            "minLength": 2
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 10
+          },
+          "required_document": {
+            "type": "string",
+            "minLength": 5
+          }
+        }
+      }
+    },
+    "human_approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "approval_level",
+        "counsel_escalation_required",
+        "payroll_handoff_allowed",
+        "reasons",
+        "external_counsel_signoff_status"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean",
+          "const": true
+        },
+        "approval_level": {
+          "type": "string",
+          "enum": [
+            "HR_OPERATIONS_VERIFICATION",
+            "SENIOR_HR_AND_LEGAL_REVIEW",
+            "MANDATORY_LEGAL_COUNSEL_APPROVAL"
+          ]
+        },
+        "counsel_escalation_required": {
+          "type": "boolean"
+        },
+        "payroll_handoff_allowed": {
+          "type": "boolean"
+        },
+        "reasons": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 10
+          }
+        },
+        "external_counsel_signoff_status": {
+          "type": "string",
+          "const": "PENDING_SIGNED_EXTERNAL_ATTESTATION"
+        }
+      }
+    },
+    "recommended_actions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 10
+      }
+    },
+    "structured_findings": {
+      "type": "object"
+    },
+    "norm_conflict_resolution": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "precedent_application_assessment": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "disclaimer": {
+      "type": "string",
+      "minLength": 30
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "decision_badge": {
+            "const": "YUKSEK_RISK_AVUKAT_ESKALASYONU"
+          }
+        },
+        "required": [
+          "decision_badge"
+        ]
+      },
+      "then": {
+        "properties": {
+          "human_approval": {
+            "properties": {
+              "approval_level": {
+                "const": "MANDATORY_LEGAL_COUNSEL_APPROVAL"
+              },
+              "counsel_escalation_required": {
+                "const": true
+              },
+              "payroll_handoff_allowed": {
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "missing_information": {
+            "minItems": 1
+          }
+        },
+        "required": [
+          "missing_information"
+        ]
+      },
+      "then": {
+        "properties": {
+          "human_approval": {
+            "properties": {
+              "payroll_handoff_allowed": {
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "legal_bases": {
+            "maxItems": 0
+          }
+        },
+        "required": [
+          "legal_bases"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision_badge": {
+            "const": "YUKSEK_RISK_AVUKAT_ESKALASYONU"
+          },
+          "human_approval": {
+            "properties": {
+              "approval_level": {
+                "const": "MANDATORY_LEGAL_COUNSEL_APPROVAL"
+              },
+              "counsel_escalation_required": {
+                "const": true
+              },
+              "payroll_handoff_allowed": {
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "decision_badge": {
+            "const": "UYGUN_ON_DEGERLENDIRME"
+          }
+        },
+        "required": [
+          "decision_badge"
+        ]
+      },
+      "then": {
+        "properties": {
+          "legal_bases": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}

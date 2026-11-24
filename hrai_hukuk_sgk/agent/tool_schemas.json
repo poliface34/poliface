@@ -1,0 +1,715 @@
+{
+  "schema_version": "1.0.5.1",
+  "product_brand": "hrAI",
+  "coordinator_agent": "@hrAI",
+  "specialist_agent": "@HukukSGK",
+  "product_website": "https://www.insenai.com.tr",
+  "agent": "hrAI_@HukukSGK",
+  "security_note": "Ajan hiçbir Yargıtay Esas/Karar numarasını, kanun/Cumhurbaşkanlığı Kararnamesi/Cumhurbaşkanı Kararı/tebliğ sayısını, madde yürürlük tarihini, yasal süreyi veya İPC katını ezberden üretmez. Tüm L1–L4 kaynak, bilgi kartı ve içtihat atıfları denetim izli kayıt defterlerinden çekilir ve yanıt öncesi verify_legal_citations ile denetlenir. L5 kurumsal İK prosedürleri ve L6 özerk norm (TİS, bireysel sözleşme, iç yönetmelik, yerleşik işyeri uygulaması) referans şablonları kurum kabulü olmadan yürürlükteki şirket politikası gibi sunulmaz ve tekil priority:8 üstünlüğüyle değerlendirilmez. Gerçek İK senaryoları evaluate_hr_legal_scenario ile dayanak, karşı görüş, risk, eksik bilgi ve insan onayı gereksinimi blokları ayrılarak değerlendirilir.",
+  "tools": [
+    {
+      "name": "lookup_verified_source_and_precedent",
+      "description": "Resmî mevzuat kayıt defterinde, doğrulanmış Yargıtay içtihat kayıt defterinde ve uygulanabilir mevzuat bilgi kartlarında olay tarihine (as_of_date) göre arama yapar.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Aranacak hukuki veya SGK konusu."
+          },
+          "as_of_date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "Yürürlük kontrol tarihi (YYYY-MM-DD)."
+          },
+          "layers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "CONSTITUTION",
+                "INTERNATIONAL_TREATY_FUNDAMENTAL_RIGHTS",
+                "STATUTORY_LAW",
+                "INTERNATIONAL_TREATY_GENERAL",
+                "PRESIDENTIAL_DECREE",
+                "PRESIDENTIAL_DECISION",
+                "REGULATION",
+                "COMMUNIQUE_AND_SGK_CIRCULAR",
+                "YARGITAY_PRECEDENT",
+                "CBA_CONTRACT_AND_HR_PROCEDURE"
+              ]
+            }
+          },
+          "include_superseded": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "query",
+          "as_of_date"
+        ]
+      }
+    },
+    {
+      "name": "lookup_knowledge_card",
+      "description": "L1 temel kanunlar, L2 yönetmelikler ve L3 tebliğ/Cumhurbaşkanı Kararı/SGK genelgelerine ait uygulanabilir mevzuat bilgi kartlarında (uygulama alanı, istisnalar, gerekli belgeler, riskler, değişiklik geçmişi ve doğrulanmış madde yürürlük tarihi) arama yapar.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Konu, madde numarası veya anahtar kelime."
+          },
+          "as_of_date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "Olay tarihi (YYYY-MM-DD)."
+          },
+          "law_no": {
+            "type": "string",
+            "description": "Opsiyonel mevzuat/kart numarası filtresi (ör. '4857', '5510', '7036', '6698', 'CK-10766')."
+          }
+        },
+        "required": [
+          "query",
+          "as_of_date"
+        ]
+      }
+    },
+    {
+      "name": "lookup_autonomous_norm_guidance",
+      "description": "Resmî L1–L4 mevzuat çekirdeğinden kesin ayrıştırılmış L5 kurumsal İK prosedürleri (5 modül) ve L6 özerk norm (TİS, bireysel iş sözleşmesi, işyeri iç yönetmeliği, yerleşik işyeri uygulaması — 4 ayrı modül) şablonlarında arama yapar. Tüm yerleşik şablonlar REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION uyarısı ve zorunlu insan/hukuk incelemesi bayrağıyla döner.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Aranacak İK prosedürü, TİS, sözleşme, iç yönetmelik veya işyeri uygulaması konusu."
+          },
+          "layer": {
+            "type": "string",
+            "enum": [
+              "ALL",
+              "L5",
+              "L6",
+              "L5_HR_PROCEDURES",
+              "L6_CBA_CONTRACTS_AND_WORKPLACE_PRACTICES"
+            ],
+            "default": "ALL"
+          },
+          "norm_type": {
+            "type": "string",
+            "enum": [
+              "CORPORATE_HR_PROCEDURE",
+              "COLLECTIVE_BARGAINING_AGREEMENT",
+              "INDIVIDUAL_EMPLOYMENT_CONTRACT",
+              "WORKPLACE_INTERNAL_REGULATION",
+              "ESTABLISHED_WORKPLACE_PRACTICE"
+            ]
+          },
+          "top_k": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20,
+            "default": 5
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    },
+    {
+      "name": "evaluate_autonomous_norm_conflict",
+      "description": "L5/L6 özerk normlarını tekil 'priority: 8' kuralına indirgemeksizin mutlak emredici / nispi emredici taban / tamamlayıcı kanun ayrımına, 6356 m.36 TİS-sözleşme önceliğine, 4857 m.22 esaslı değişiklik yazılı rıza şartına ve kurum kabul durumuna (adoption_status) göre deterministik olarak değerlendirir.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "rule_id": {
+            "type": "string",
+            "description": "L5/L6 kayıtlı kural ID'si (ör. 'RULE-L5-02-SAVUNMA-VE-YAZILILIK', 'RULE-L6-01-TIS-DOGRUDAN-ETKI', 'RULE-L6-04-PRIM-IKRAMIYE-BAGLAYICILIK')."
+          },
+          "rule": {
+            "type": "object",
+            "description": "Kayıt dışı değerlendirilecek özerk norm kural nesnesi (rule_id verilmezse zorunludur)."
+          },
+          "proposed_change_direction": {
+            "type": "string",
+            "enum": [
+              "EMPLOYEE_FAVORABLE",
+              "BELOW_STATUTORY_FLOOR",
+              "EMPLOYER_UNILATERAL_DOWNGRADE",
+              "SUPPLEMENTARY_VARIATION"
+            ]
+          },
+          "competing_norm_type": {
+            "type": "string",
+            "enum": [
+              "COLLECTIVE_BARGAINING_AGREEMENT",
+              "INDIVIDUAL_EMPLOYMENT_CONTRACT",
+              "CORPORATE_HR_PROCEDURE",
+              "WORKPLACE_INTERNAL_REGULATION",
+              "ESTABLISHED_WORKPLACE_PRACTICE"
+            ]
+          },
+          "statutory_floor_nature": {
+            "type": "string",
+            "enum": [
+              "ABSOLUTE_MANDATORY",
+              "RELATIVE_MANDATORY_FLOOR",
+              "SUPPLEMENTARY_DEFAULT"
+            ]
+          },
+          "cba_expressly_forbids_individual_improvement": {
+            "type": "boolean",
+            "default": false
+          },
+          "written_employee_consent_4857_m22": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "proposed_change_direction"
+        ]
+      }
+    },
+    {
+      "name": "check_article_effective_date",
+      "description": "Belirli bir kanun veya yönetmelik maddesinin verilen olay tarihinde (as_of_date) yürürlükte olup olmadığını madde bazlı yürürlük kurallarına göre deterministik kontrol eder.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "description": "Resmî kaynak ID (ör. 'MEVZUAT-7036', 'MEVZUAT-5510', 'MEVZUAT-6698')."
+          },
+          "article_ref": {
+            "type": "string",
+            "description": "Madde referansı (ör. 'Madde 3', 'Madde 82', 'Ek Madde 3')."
+          },
+          "as_of_date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        },
+        "required": [
+          "source_id",
+          "article_ref",
+          "as_of_date"
+        ]
+      }
+    },
+    {
+      "name": "verify_document_integrity",
+      "description": "Kayıtlı bir mevzuat veya Yargıtay içtihat kaydının resmî URL'sine canlı HTTP erişimi yaparak HTTP 200, SHA-256 özeti ve beklenen hukuki metin işaretçilerinin belgede varlığını denetler.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "record_id": {
+            "type": "string",
+            "description": "source_id veya precedent_id (ör. 'MEVZUAT-4857', 'YIBBGK-2017-9-2018-10')."
+          },
+          "enforce_sha256": {
+            "type": "boolean",
+            "default": false,
+            "description": "Kayıtlı SHA-256 değeriyle birebir eşleşme zorunlu kılınsın mı?"
+          }
+        },
+        "required": [
+          "record_id"
+        ]
+      }
+    },
+    {
+      "name": "verify_legal_citations",
+      "description": "Taslak yanıttaki Yargıtay Esas/Karar numaralarını, kanun/madde/Cumhurbaşkanlığı Kararnamesi/Cumhurbaşkanı Kararı/tebliğ atıflarını (madde bazlı yürürlük, norm türü ve Anayasa m.90/içtihat kuralları dahil) ve resmî URL'leri deterministik olarak denetler.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "draft_text": {
+            "type": "string"
+          },
+          "as_of_date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "cited_source_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cited_precedent_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "draft_text",
+          "as_of_date"
+        ]
+      }
+    },
+    {
+      "name": "resolve_norm_conflict",
+      "description": "İki hukuki norm arasındaki çatışmayı Anayasa m.11 & m.90/5 ayrımlarına göre (Anayasa, m.90/son temel hak antlaşması + treaty_provision_nature niteliği, kanun ve m.90/5 genel uluslararası antlaşma, CBK, Cumhurbaşkanı Kararı, Yönetmelik, Tebliğ/Genelge, TİS/Sözleşme) veya iki Yargıtay içtihadını 2797 s. Kanun m.45 çerçevesinde çözer. İçtihat ile sözleşme/mevzuat çatışmalarında doğrudan sayısal katman üstünlüğü üretmez; evaluate_precedent_application aracına yönlendirir.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "norm_a": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "norm_layer": {
+                "type": "string",
+                "enum": [
+                  "CONSTITUTION",
+                  "INTERNATIONAL_TREATY_FUNDAMENTAL_RIGHTS",
+                  "STATUTORY_LAW",
+                  "INTERNATIONAL_TREATY_GENERAL",
+                  "PRESIDENTIAL_DECREE",
+                  "PRESIDENTIAL_DECISION",
+                  "REGULATION",
+                  "COMMUNIQUE_AND_SGK_CIRCULAR",
+                  "YARGITAY_PRECEDENT",
+                  "CBA_CONTRACT_AND_HR_PROCEDURE"
+                ]
+              },
+              "precedent_level": {
+                "type": "string",
+                "enum": [
+                  "NONE",
+                  "STATUTORY_BINDING_YIBBGK",
+                  "HGK_PERSUASIVE",
+                  "CHAMBER_SETTLED",
+                  "CHAMBER_ISOLATED"
+                ],
+                "default": "NONE"
+              },
+              "source_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "norm_layer"
+            ]
+          },
+          "norm_b": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "norm_layer": {
+                "type": "string",
+                "enum": [
+                  "CONSTITUTION",
+                  "INTERNATIONAL_TREATY_FUNDAMENTAL_RIGHTS",
+                  "STATUTORY_LAW",
+                  "INTERNATIONAL_TREATY_GENERAL",
+                  "PRESIDENTIAL_DECREE",
+                  "PRESIDENTIAL_DECISION",
+                  "REGULATION",
+                  "COMMUNIQUE_AND_SGK_CIRCULAR",
+                  "YARGITAY_PRECEDENT",
+                  "CBA_CONTRACT_AND_HR_PROCEDURE"
+                ]
+              },
+              "precedent_level": {
+                "type": "string",
+                "enum": [
+                  "NONE",
+                  "STATUTORY_BINDING_YIBBGK",
+                  "HGK_PERSUASIVE",
+                  "CHAMBER_SETTLED",
+                  "CHAMBER_ISOLATED"
+                ],
+                "default": "NONE"
+              },
+              "source_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "norm_layer"
+            ]
+          },
+          "mandatory_type": {
+            "type": "string",
+            "enum": [
+              "RELATIVE_EMPLOYEE_FAVORABLE",
+              "ABSOLUTE_MANDATORY",
+              "DISPOSITIVE"
+            ]
+          },
+          "favors_employee_side": {
+            "type": "string",
+            "enum": [
+              "NORM_A",
+              "NORM_B",
+              "NEUTRAL",
+              "UNKNOWN"
+            ],
+            "default": "UNKNOWN"
+          },
+          "treaty_provision_nature": {
+            "type": "string",
+            "enum": [
+              "UNSPECIFIED",
+              "MINIMUM_STANDARD_FLOOR",
+              "DIRECT_SUBSTANTIVE_RULE"
+            ],
+            "default": "UNSPECIFIED",
+            "description": "Anayasa m.90/5 son cümle çatışmalarında antlaşma hükmünün niteliği: MINIMUM_STANDARD_FLOOR (asgari koruma tabanı), DIRECT_SUBSTANTIVE_RULE (doğrudan esas kural) veya UNSPECIFIED (belirsiz — eskalasyon)."
+          }
+        },
+        "required": [
+          "norm_a",
+          "norm_b",
+          "mandatory_type"
+        ]
+      }
+    },
+    {
+      "name": "evaluate_precedent_application",
+      "description": "Bir Yargıtay içtihadını (YİBBGK 2797 s. Kanun m.45 dahil) mevzuat katmanı olarak değil; yorumladığı dayanak kanun, kapsam sınırları (applies_to/does_not_apply_to), karar sonrası kanun değişiklikleri, YİBBGK dışı kararlarda zorunlu uygulama gerekçesi (application_rationale) ve somut TİS/sözleşme/prosedürle nispi/mutlak emredicilik ilişkisi çerçevesinde deterministik değerlendirir.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "precedent_id": {
+            "type": "string",
+            "description": "İçtihat kayıt ID (ör. 'YIBBGK-2017-9-2018-10')."
+          },
+          "interpreted_source_id": {
+            "type": "string",
+            "description": "İçtihadın yorumladığı dayanak mevzuat kaynağı ID (ör. 'MEVZUAT-4857')."
+          },
+          "as_of_date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "scope_match_status": {
+            "type": "string",
+            "enum": [
+              "IN_SCOPE",
+              "OUT_OF_SCOPE",
+              "UNCERTAIN"
+            ],
+            "default": "UNCERTAIN"
+          },
+          "competing_norm": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "norm_layer": {
+                "type": "string",
+                "enum": [
+                  "CONSTITUTION",
+                  "INTERNATIONAL_TREATY_FUNDAMENTAL_RIGHTS",
+                  "STATUTORY_LAW",
+                  "INTERNATIONAL_TREATY_GENERAL",
+                  "PRESIDENTIAL_DECREE",
+                  "PRESIDENTIAL_DECISION",
+                  "REGULATION",
+                  "COMMUNIQUE_AND_SGK_CIRCULAR",
+                  "CBA_CONTRACT_AND_HR_PROCEDURE"
+                ]
+              },
+              "source_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "norm_layer"
+            ]
+          },
+          "mandatory_type": {
+            "type": "string",
+            "enum": [
+              "RELATIVE_EMPLOYEE_FAVORABLE",
+              "ABSOLUTE_MANDATORY",
+              "DISPOSITIVE"
+            ],
+            "default": "RELATIVE_EMPLOYEE_FAVORABLE"
+          },
+          "favors_employee_side": {
+            "type": "string",
+            "enum": [
+              "UNDERLYING_STATUTE",
+              "COMPETING_NORM",
+              "NEUTRAL",
+              "UNKNOWN"
+            ],
+            "default": "UNKNOWN"
+          },
+          "dispute_context": {
+            "type": "string"
+          },
+          "application_rationale": {
+            "type": "string",
+            "description": "YİBBGK dışı ikna edici kararlarda (HGK_PERSUASIVE, CHAMBER_SETTLED, CHAMBER_ISOLATED) kararın somut uyuşmazlığa neden uygulanacağını açıklayan en az 25 karakterlik hukuki gerekçe."
+          },
+          "treaty_provision_nature": {
+            "type": "string",
+            "enum": [
+              "UNSPECIFIED",
+              "MINIMUM_STANDARD_FLOOR",
+              "DIRECT_SUBSTANTIVE_RULE"
+            ],
+            "default": "UNSPECIFIED"
+          }
+        },
+        "required": [
+          "precedent_id",
+          "interpreted_source_id",
+          "as_of_date"
+        ]
+      }
+    },
+    {
+      "name": "evaluate_hr_legal_scenario",
+      "description": "7 gerçek İK hukuku ve SGK senaryosunu (Fesih, İşe İade, Kıdem ve İhbar, Fazla Çalışma, Yıllık İzin, SGK Çıkış Kodu & İşsizlik Ödeneği, Çalışan Lehine Hak Karşılaştırması) yalnızca doğrulanmış ve olay tarihinde yürürlükte olan L1–L4 kaynaklarıyla (legal_bases vs. historical_context ayrımı) değerlendirir; 4857 m.26 (hafta tatili vs. 5 günlük işyeri akdi Cumartesi ayrımı + arşivlenmiş gerçek Diyanet 2024–2027 HTML belgeleri + kapsam dışı her yıl için Aşama 1 kaynak SHA-256/9 slot içerik eşleşmesi ve Aşama 2 yetkili hukuk müşaviri Ed25519/RSA-PSS-SHA256 dijital imzası + değiştirilemez hash zinciri olmadan HOLIDAY_CALENDAR_COVERAGE_INCOMPLETE engeli + yarım gün arife tatillerinde varsayımsız hukuki inceleme eskalasyonu + 1 yıl + maddi menfaat + yetkili öğrenme makamı) ve 4857 m.19/1 vs. 7555 m.23 ile değişik 4857 m.109 (24.07.2025 sonrası m.25 dahil zorunlu yazılı fesih bildirimi, KEP yasağı) ayrımını uygular; dayanak, tarihsel bağlam, karşı görüş, risk, eksik bilgi ve insan onayı gereksinimi bloklarını ayrı ayrı üretir.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "scenario_type": {
+            "type": "string",
+            "enum": [
+              "TERMINATION_VALIDITY",
+              "REINSTATEMENT_CLAIM",
+              "SEVERANCE_AND_NOTICE",
+              "OVERTIME_COMPLIANCE",
+              "ANNUAL_LEAVE_COMPLIANCE",
+              "SGK_EXIT_CODE_AND_UNEMPLOYMENT",
+              "EMPLOYEE_FAVORABLE_NORM_COMPARISON"
+            ],
+            "description": "Değerlendirilecek İK hukuki senaryo türü."
+          },
+          "as_of_date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "Değerlendirme / olay tarihi (YYYY-MM-DD)."
+          },
+          "facts": {
+            "type": "object",
+            "description": "Senaryoya özgü somut olay olguları (ör. workplace_total_employees, tenure_months, termination_reason_type, written_notice_with_clear_reason, notification_channel [WRITTEN_HAND_OR_NOTARY|KEP_ONLY|ORAL_OR_DE_FACTO|EMAIL_OR_SMS|UNKNOWN], written_defense_status, discovery_date, act_date/incident_date, discovering_authority_status, employee_gained_material_benefit, saturday_is_working_day, weekly_rest_day, legally_verified_weekly_rest_days, additional_public_holidays, religious_calendar_externally_verified, external_verified_holiday_calendars [yıl bazında Ramazan/Kurban başlangıç-bitiş + arife tarihleri, official_source_url, arşivli kaynak belgesi + source_document_sha256 ve yetkili onaylayan legal_attestation kriptografik imza zarfı — güven kökleri olan authorized_approvers/ledger/runtime_environment facts üzerinden ezilemez], half_day_eve_legal_rule [UNVERIFIED_REQUIRE_LEGAL_REVIEW|COUNT_AS_WORKING_DAY|EXCLUDE_AS_NON_WORKING_DAY], projected_annual_overtime_hours, work_category, proposed_sgk_exit_code, norm_a/norm_b, treaty_provision_nature, precedent_id, application_rationale)."
+          }
+        },
+        "required": [
+          "scenario_type",
+          "as_of_date",
+          "facts"
+        ]
+      }
+    },
+    {
+      "name": "check_legal_deadline",
+      "description": "İş hukuku ve SGK hak düşürücü süreleri ve yasal bildirim son tarihlerini deterministik hesaplar. [v1.1 Modülü]",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "obligation_type": {
+            "type": "string"
+          },
+          "trigger_date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "action_date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "sector": {
+            "type": "string",
+            "enum": [
+              "GENERAL",
+              "CONSTRUCTION_FISHING_AGRI"
+            ],
+            "default": "GENERAL"
+          }
+        },
+        "required": [
+          "obligation_type",
+          "trigger_date",
+          "action_date"
+        ]
+      }
+    },
+    {
+      "name": "assess_termination_legality",
+      "description": "İş güvencesi, savunma, 6 iş günü ve SGK çıkış kodu uygunluğunu deterministik denetler. [v1.1 Modülü]",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "employee_id": {
+            "type": "string"
+          },
+          "workplace_total_employees": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "tenure_months": {
+            "type": "number",
+            "minimum": 0
+          },
+          "contract_term_type": {
+            "type": "string",
+            "enum": [
+              "INDEFINITE",
+              "FIXED_TERM"
+            ]
+          },
+          "proposed_legal_reason": {
+            "type": "string"
+          },
+          "proposed_sgk_exit_code": {
+            "type": "string"
+          },
+          "written_defense_status": {
+            "type": "string",
+            "enum": [
+              "VERIFIED",
+              "UNKNOWN",
+              "NOT_TAKEN"
+            ]
+          },
+          "planned_termination_date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        },
+        "required": [
+          "employee_id",
+          "workplace_total_employees",
+          "tenure_months",
+          "contract_term_type",
+          "proposed_legal_reason",
+          "proposed_sgk_exit_code",
+          "written_defense_status",
+          "planned_termination_date"
+        ]
+      }
+    },
+    {
+      "name": "assess_sgk_compliance_and_ipc",
+      "description": "5510 m.102 SGK İPC ve teşvik yasaklılığı riskini hesaplar. [v1.1 Modülü]",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}$"
+          },
+          "violation_type": {
+            "type": "string"
+          },
+          "affected_employee_count": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "period",
+          "violation_type",
+          "affected_employee_count"
+        ]
+      }
+    },
+    {
+      "name": "handoff_to_ucret_bordro",
+      "description": "Hukuki/SGK uygunluğu doğrulanmış kararı @ÜcretBordro ajanına standart JSON paketiyle devreder. [v1.1 Modülü]",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "employee_id": {
+            "type": "string"
+          },
+          "assessment_type": {
+            "type": "string",
+            "enum": [
+              "TERMINATION_LEGAL_CLEARANCE",
+              "PAYROLL_LEGAL_RULING"
+            ]
+          },
+          "verified_source_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "verified_precedent_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "employee_id",
+          "assessment_type",
+          "verified_source_ids"
+        ]
+      }
+    },
+    {
+      "name": "escalate_to_legal_counsel",
+      "description": "Yüksek dava/ceza riski veya çelişkili içtihat durumlarında şirket avukatına zorunlu eskalasyon bileti açar.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "severity": {
+            "type": "string",
+            "enum": [
+              "CRITICAL_LEGAL_BLOCK",
+              "HIGH_LITIGATION_RISK",
+              "COUNSEL_REVIEW_REQUIRED"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "affected_employees": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "legal_issues": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "blocking_flags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "required_approver": {
+            "type": "string",
+            "default": "Şirket Avukatı / İş Hukuku Müşaviri"
+          }
+        },
+        "required": [
+          "severity",
+          "reason",
+          "legal_issues"
+        ]
+      }
+    }
+  ]
+}
