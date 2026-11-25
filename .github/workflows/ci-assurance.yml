@@ -76,9 +76,6 @@ jobs:
             --extract-to /tmp/ci_clean_active > /tmp/ci_detzip.json
           cat /tmp/ci_detzip.json
 
-          python3 -m compileall -q /tmp/ci_clean_active/hrai_hukuk_sgk
-          echo "COMPILEALL=PASS"
-
           python3 - << 'PY'
           import json
           from pathlib import Path
@@ -106,6 +103,9 @@ jobs:
           assert len(configs) == 9, f"Expected 9 configs, got {len(configs)}"
           print(f"CONFIGS={len(configs)}/{len(configs)} PASS")
           PY
+
+          python3 -m compileall -q /tmp/ci_clean_active/hrai_hukuk_sgk
+          echo "COMPILEALL=PASS"
 
       - name: Run 4-ordering sequential regression suite on clean extract
         working-directory: /tmp/ci_clean_active/hrai_hukuk_sgk
