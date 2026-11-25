@@ -52,6 +52,123 @@ def _clone_record(rec: EvidenceRecord) -> EvidenceRecord:
     )
 
 
+def _require_str(raw: dict[str, Any], key: str, *, allow_none: bool = False) -> str | None:
+    val = raw.get(key)
+    if val is None and allow_none:
+        return None
+    if not isinstance(val, str):
+        raise ValueError(f"'{key}' alanı metin (str) olmalıdır: {val!r}")
+    return val
+
+
+def _require_int(raw: dict[str, Any], key: str, *, allow_none: bool = False) -> int | None:
+    val = raw.get(key)
+    if val is None and allow_none:
+        return None
+    if not isinstance(val, int) or isinstance(val, bool):
+        raise ValueError(f"'{key}' alanı tam sayı (int) olmalıdır: {val!r}")
+    return val
+
+
+def _require_bool(raw: dict[str, Any], key: str) -> bool:
+    val = raw.get(key)
+    if not isinstance(val, bool):
+        raise ValueError(f"'{key}' alanı mantıksal (bool) olmalıdır: {val!r}")
+    return val
+
+
+def _require_str_tuple(raw: dict[str, Any], key: str) -> tuple[str, ...]:
+    val = raw.get(key)
+    if not isinstance(val, (list, tuple)) or not all(isinstance(item, str) for item in val):
+        raise ValueError(f"'{key}' alanı metin listesi olmalıdır: {val!r}")
+    return tuple(val)
+
+
+def _require_dict(raw: dict[str, Any], key: str) -> dict[str, Any]:
+    val = raw.get(key)
+    if not isinstance(val, dict):
+        raise ValueError(f"'{key}' alanı sözlük (dict) olmalıdır: {val!r}")
+    return copy.deepcopy(val)
+
+
+def _evidence_record_from_dict(raw: Any, *, error_code: str) -> EvidenceRecord:
+    """Strictly reconstruct an `EvidenceRecord` from a snapshot dictionary; fail closed on missing or malformed fields."""
+    if not isinstance(raw, dict):
+        raise EvidenceRegistryError(error_code, f"Kayıt sözlük (dict) biçiminde olmalıdır: {type(raw).__name__}")
+    try:
+        evidence_id = _require_str(raw, "evidence_id")
+        source_key = _require_str(raw, "source_key")
+        adapter_type = _require_str(raw, "adapter_type")
+        title = _require_str(raw, "title")
+        source_url = _require_str(raw, "source_url")
+        final_url = _require_str(raw, "final_url")
+        redirect_chain = _require_str_tuple(raw, "redirect_chain")
+        acquired_at_utc = _require_str(raw, "acquired_at_utc")
+        publication_date = _require_str(raw, "publication_date")
+        effective_date = _require_str(raw, "effective_date")
+        expiry_or_repeal_date = _require_str(raw, "expiry_or_repeal_date", allow_none=True)
+        version_number = _require_int(raw, "version_number")
+        supersedes_evidence_id = _require_str(raw, "supersedes_evidence_id", allow_none=True)
+        content_sha256 = _require_str(raw, "content_sha256")
+        content_bytes_length = _require_int(raw, "content_bytes_length")
+        content_type = _require_str(raw, "content_type")
+        http_status = _require_int(raw, "http_status", allow_none=True)
+        transport_mode = _require_str(raw, "transport_mode")
+        live_verified = _require_bool(raw, "live_verified")
+        content_verified = _require_bool(raw, "content_verified")
+        content_verification = _require_dict(raw, "content_verification")
+        status = _require_str(raw, "status")
+        adapter_metadata = _require_dict(raw, "adapter_metadata")
+        metadata_sha256 = _require_str(raw, "metadata_sha256")
+        record_sha256 = _require_str(raw, "record_sha256")
+        previous_record_sha256 = _require_str(raw, "previous_record_sha256")
+        error_codes = _require_str_tuple(raw, "error_codes")
+        errors = _require_str_tuple(raw, "errors")
+        legal_boundary_notice = _require_str(raw, "legal_boundary_notice")
+    except (KeyError, TypeError, ValueError) as exc:
+        raise EvidenceRegistryError(error_code, f"Bozuk veya eksik kanıt/denetim kaydı: {exc}") from exc
+
+    assert evidence_id is not None and source_key is not None and adapter_type is not None
+    assert title is not None and source_url is not None and final_url is not None
+    assert acquired_at_utc is not None and publication_date is not None and effective_date is not None
+    assert version_number is not None and content_sha256 is not None and content_bytes_length is not None
+    assert content_type is not None and transport_mode is not None and status is not None
+    assert metadata_sha256 is not None and record_sha256 is not None and previous_record_sha256 is not None
+    assert legal_boundary_notice is not None
+
+    return EvidenceRecord(
+        evidence_id=evidence_id,
+        source_key=source_key,
+        adapter_type=adapter_type,
+        title=title,
+        source_url=source_url,
+        final_url=final_url,
+        redirect_chain=redirect_chain,
+        acquired_at_utc=acquired_at_utc,
+        publication_date=publication_date,
+        effective_date=effective_date,
+        expiry_or_repeal_date=expiry_or_repeal_date,
+        version_number=version_number,
+        supersedes_evidence_id=supersedes_evidence_id,
+        content_sha256=content_sha256,
+        content_bytes_length=content_bytes_length,
+        content_type=content_type,
+        http_status=http_status,
+        transport_mode=transport_mode,
+        live_verified=live_verified,
+        content_verified=content_verified,
+        content_verification=content_verification,
+        status=status,
+        adapter_metadata=adapter_metadata,
+        metadata_sha256=metadata_sha256,
+        record_sha256=record_sha256,
+        previous_record_sha256=previous_record_sha256,
+        error_codes=error_codes,
+        errors=errors,
+        legal_boundary_notice=legal_boundary_notice,
+    )
+
+
 class ContentStore(ABC):
     """Abstract integrity-preserving raw document byte archive contract."""
 
@@ -185,6 +302,16 @@ class EvidenceRegistry:
             return self._ledger[-1].record_sha256 if self._ledger else GENESIS_CHAIN_HASH
 
     @property
+    def failed_attempts_head_sha256(self) -> str:
+        with self._lock:
+            return self._failed_attempts[-1].record_sha256 if self._failed_attempts else GENESIS_CHAIN_HASH
+
+    @property
+    def failed_attempts_sha256(self) -> str:
+        with self._lock:
+            return canonical_sha256([fa.to_dict() for fa in self._failed_attempts])
+
+    @property
     def record_count(self) -> int:
         with self._lock:
             return len(self._ledger)
@@ -216,8 +343,39 @@ class EvidenceRegistry:
                     return idx
             return None
 
+    def _append_failed_attempt_locked(self, rec: EvidenceRecord) -> EvidenceRecord:
+        """Validate and append a non-verified failure record into the append-only `_failed_attempts` hash chain."""
+        if rec.is_verified_authority or rec.status in (STATUS_VERIFIED_LIVE, STATUS_VERIFIED_TEST_TRANSPORT):
+            raise EvidenceRegistryError(
+                "EXPECTED_FAILED_ATTEMPT",
+                "Doğrulanmış kayıt failed_attempts denetim listesine eklenemez.",
+            )
+        if rec.version_number != 0 or not rec.error_codes:
+            raise EvidenceRegistryError(
+                "INVALID_FAILED_ATTEMPT_RECORD",
+                f"Başarısız edinim kaydı version_number=0 ve en az bir error_code içermelidir: {rec.evidence_id!r}",
+            )
+        recomp_meta = canonical_sha256(rec.metadata_payload())
+        if recomp_meta != rec.metadata_sha256:
+            raise EvidenceRegistryError(
+                "FAILED_ATTEMPT_METADATA_SHA256_MISMATCH",
+                f"Başarısız edinim kaydı metadata_sha256 uyuşmuyor ({recomp_meta} != {rec.metadata_sha256}).",
+            )
+        recomp_rec = canonical_sha256(rec.chain_payload())
+        if recomp_rec != rec.record_sha256:
+            raise EvidenceRegistryError(
+                "FAILED_ATTEMPT_RECORD_SHA256_MISMATCH",
+                f"Başarısız edinim kaydı record_sha256 uyuşmuyor ({recomp_rec} != {rec.record_sha256}).",
+            )
+
+        prev_fa_hash = self._failed_attempts[-1].record_sha256 if self._failed_attempts else GENESIS_CHAIN_HASH
+        chained = replace(rec, previous_record_sha256=prev_fa_hash)
+        sealed = replace(chained, record_sha256=canonical_sha256(chained.chain_payload()))
+        self._failed_attempts.append(sealed)
+        return _clone_record(sealed)
+
     def record_failed_attempt(self, result: AcquisitionResult) -> EvidenceRecord:
-        """Record a failed or unreachable acquisition attempt strictly in the audit trail (never active evidence)."""
+        """Record a failed or unreachable acquisition attempt strictly in the hash-chained audit trail."""
         if not isinstance(result, AcquisitionResult):
             raise EvidenceRegistryError("INVALID_ACQUISITION_RESULT", "AcquisitionResult örneği beklenmektedir.")
         if result.ok or result.record.is_verified_authority:
@@ -226,9 +384,7 @@ class EvidenceRegistry:
                 "Başarılı doğrulanmış sonuç failed_attempts defterine değil register() ile kaydedilmelidir.",
             )
         with self._lock:
-            stored = _clone_record(result.record)
-            self._failed_attempts.append(stored)
-            return _clone_record(stored)
+            return self._append_failed_attempt_locked(_clone_record(result.record))
 
     def register(
         self,
@@ -243,7 +399,7 @@ class EvidenceRegistry:
         rec = _clone_record(result.record)
         if not result.ok or not rec.is_verified_authority:
             with self._lock:
-                self._failed_attempts.append(rec)
+                self._append_failed_attempt_locked(rec)
             raise EvidenceRegistryError(
                 "UNREACHABLE_OR_UNVERIFIED_EVIDENCE_REJECTED",
                 f"Doğrulanmamış, içerik-eşleşmesiz veya erişilemeyen kaynak ({rec.status}) aktif kanıt "
@@ -516,6 +672,44 @@ class EvidenceRegistry:
                 if idx_ids != [r.evidence_id for r in recs]:
                     errors.append(f"_by_source_key[{skey!r}] ile _ledger tutarsız.")
 
+            expected_fa_prev = GENESIS_CHAIN_HASH
+            for fidx, fa in enumerate(self._failed_attempts):
+                if fa.is_verified_authority or fa.status in (STATUS_VERIFIED_LIVE, STATUS_VERIFIED_TEST_TRANSPORT):
+                    errors.append(
+                        f"failed_attempts[{fidx}] ({fa.evidence_id}): doğrulanmış kayıt failed_attempts "
+                        "denetim listesinde bulunamaz."
+                    )
+                if fa.version_number != 0:
+                    errors.append(
+                        f"failed_attempts[{fidx}] ({fa.evidence_id}): failed_attempt version_number 0 olmalıdır "
+                        f"(bulunan: {fa.version_number})."
+                    )
+                if not fa.error_codes:
+                    errors.append(
+                        f"failed_attempts[{fidx}] ({fa.evidence_id}): failed_attempt en az bir error_code içermelidir."
+                    )
+                if fa.previous_record_sha256 != expected_fa_prev:
+                    errors.append(
+                        f"failed_attempts[{fidx}] ({fa.evidence_id}): kırık failed_attempts hash zinciri "
+                        f"({fa.previous_record_sha256} != {expected_fa_prev})."
+                    )
+                recomp_fa_meta = canonical_sha256(fa.metadata_payload())
+                if recomp_fa_meta != fa.metadata_sha256:
+                    errors.append(
+                        f"failed_attempts[{fidx}] ({fa.evidence_id}): failed_attempt metadata_sha256 uyuşmazlığı "
+                        f"({recomp_fa_meta} != {fa.metadata_sha256})."
+                    )
+                recomp_fa_rec = canonical_sha256(fa.chain_payload())
+                if recomp_fa_rec != fa.record_sha256:
+                    errors.append(
+                        f"failed_attempts[{fidx}] ({fa.evidence_id}): failed_attempt record_sha256 uyuşmazlığı "
+                        f"({recomp_fa_rec} != {fa.record_sha256})."
+                    )
+                expected_fa_prev = fa.record_sha256
+
+            fa_head = self._failed_attempts[-1].record_sha256 if self._failed_attempts else GENESIS_CHAIN_HASH
+            fa_digest = canonical_sha256([fa.to_dict() for fa in self._failed_attempts])
+
             valid = len(errors) == 0
             full_content_verified = len(raw_missing_ids) == 0 and raw_verified_count == len(self._ledger)
             return valid, {
@@ -527,12 +721,41 @@ class EvidenceRegistry:
                 "raw_content_missing_ids": raw_missing_ids,
                 "source_key_count": len(seen_versions),
                 "failed_attempt_count": len(self._failed_attempts),
+                "failed_attempts_head_sha256": fa_head,
+                "failed_attempts_sha256": fa_digest,
                 "head_sha256": self._ledger[-1].record_sha256 if self._ledger else GENESIS_CHAIN_HASH,
                 "errors": errors,
             }
 
+    @staticmethod
+    def _compute_snapshot_sha256(
+        *,
+        schema_version: str,
+        snapshot_mode: str,
+        head_sha256: str,
+        record_count: int,
+        records: list[dict[str, Any]],
+        raw_content_bundle_sha256: str | None,
+        failed_attempt_count: int,
+        failed_attempts_head_sha256: str,
+        failed_attempts_sha256: str,
+    ) -> str:
+        return canonical_sha256(
+            {
+                "schema_version": schema_version,
+                "snapshot_mode": snapshot_mode,
+                "head_sha256": head_sha256,
+                "record_count": record_count,
+                "records": records,
+                "raw_content_bundle_sha256": raw_content_bundle_sha256,
+                "failed_attempt_count": failed_attempt_count,
+                "failed_attempts_head_sha256": failed_attempts_head_sha256,
+                "failed_attempts_sha256": failed_attempts_sha256,
+            }
+        )
+
     def export_snapshot_dict(self, *, include_raw_content: bool = True) -> dict[str, Any]:
-        """Export an auditable JSON-serializable snapshot (with Base64 raw document archive by default)."""
+        """Export an auditable JSON-serializable snapshot (raw archive + failed_attempts audit trail sealed by SHA-256)."""
         ok, report = self.verify_integrity(require_raw_content=include_raw_content)
         if not ok:
             raise EvidenceRegistryError(
@@ -556,15 +779,35 @@ class EvidenceRegistry:
                     raw_content_b64[rec.evidence_id] = base64.b64encode(blob).decode("ascii")
                 raw_bundle_sha256 = canonical_sha256(raw_content_b64)
 
+            records_dicts = [rec.to_dict() for rec in self._ledger]
+            failed_dicts = [fa.to_dict() for fa in self._failed_attempts]
+            failed_attempts_head = report["failed_attempts_head_sha256"]
+            failed_attempts_sha = report["failed_attempts_sha256"]
+            snapshot_sha = self._compute_snapshot_sha256(
+                schema_version="1.0.6-wp2",
+                snapshot_mode=snapshot_mode,
+                head_sha256=report["head_sha256"],
+                record_count=len(records_dicts),
+                records=records_dicts,
+                raw_content_bundle_sha256=raw_bundle_sha256,
+                failed_attempt_count=len(failed_dicts),
+                failed_attempts_head_sha256=failed_attempts_head,
+                failed_attempts_sha256=failed_attempts_sha,
+            )
+
             return {
                 "schema_version": "1.0.6-wp2",
                 "snapshot_mode": snapshot_mode,
                 "head_sha256": report["head_sha256"],
-                "record_count": len(self._ledger),
-                "records": [rec.to_dict() for rec in self._ledger],
+                "record_count": len(records_dicts),
+                "records": records_dicts,
                 "raw_content_b64": raw_content_b64,
                 "raw_content_bundle_sha256": raw_bundle_sha256,
-                "failed_attempts": [fa.to_dict() for fa in self._failed_attempts],
+                "failed_attempt_count": len(failed_dicts),
+                "failed_attempts_head_sha256": failed_attempts_head,
+                "failed_attempts_sha256": failed_attempts_sha,
+                "failed_attempts": failed_dicts,
+                "snapshot_sha256": snapshot_sha,
             }
 
     @classmethod
@@ -575,7 +818,7 @@ class EvidenceRegistry:
         content_store: ContentStore | None = None,
         require_raw_content: bool = True,
     ) -> EvidenceRegistry:
-        """Rehydrate an EvidenceRegistry from an exported snapshot, verifying raw bytes fail-closed by default."""
+        """Rehydrate an EvidenceRegistry (records, raw archive & failed_attempts audit trail) fail-closed."""
         if not isinstance(snapshot, dict) or not isinstance(snapshot.get("records"), list):
             raise EvidenceRegistryError("INVALID_REGISTRY_SNAPSHOT", "Geçersiz EvidenceRegistry anlık görüntüsü.")
         if snapshot.get("schema_version") != "1.0.6-wp2":
@@ -598,8 +841,16 @@ class EvidenceRegistry:
                 "require_raw_content=True modunda tam doğrulanmış arşiv olarak yüklenemez.",
             )
 
+        raw_failed_list = snapshot.get("failed_attempts")
+        if not isinstance(raw_failed_list, list):
+            raise EvidenceRegistryError(
+                "FAILED_ATTEMPTS_MISSING_OR_CORRUPT_IN_SNAPSHOT",
+                "Anlık görüntüde 'failed_attempts' denetim listesi zorunludur ve liste biçiminde olmalıdır.",
+            )
+
         reg = cls(content_store=content_store)
         raw_map = snapshot.get("raw_content_b64")
+        raw_bundle_sha256: str | None = None
         if snap_mode == SNAPSHOT_MODE_FULL_WITH_RAW:
             if not isinstance(raw_map, dict):
                 raise EvidenceRegistryError(
@@ -607,70 +858,46 @@ class EvidenceRegistry:
                     "FULL_WITH_RAW_CONTENT anlık görüntüsünde 'raw_content_b64' sözlüğü zorunludur.",
                 )
             exp_bundle = snapshot.get("raw_content_bundle_sha256")
-            if exp_bundle != canonical_sha256(raw_map):
+            actual_bundle = canonical_sha256(raw_map)
+            if exp_bundle != actual_bundle:
                 raise EvidenceRegistryError(
                     "RAW_CONTENT_BUNDLE_SHA256_MISMATCH",
                     "Anlık görüntüdeki ham belge paket özeti (raw_content_bundle_sha256) uyuşmuyor.",
                 )
+            raw_bundle_sha256 = actual_bundle
+        elif snapshot.get("raw_content_bundle_sha256") is not None:
+            raise EvidenceRegistryError(
+                "RAW_CONTENT_MISSING_OR_CORRUPT_IN_SNAPSHOT",
+                "METADATA_ONLY_UNVERIFIED_CONTENT anlık görüntüsünde raw_content_bundle_sha256 null olmalıdır.",
+            )
 
-        try:
-            for raw in snapshot["records"]:
-                rec = EvidenceRecord(
-                    evidence_id=str(raw["evidence_id"]),
-                    source_key=str(raw["source_key"]),
-                    adapter_type=str(raw["adapter_type"]),
-                    title=str(raw["title"]),
-                    source_url=str(raw["source_url"]),
-                    final_url=str(raw["final_url"]),
-                    redirect_chain=tuple(raw.get("redirect_chain", ())),
-                    acquired_at_utc=str(raw["acquired_at_utc"]),
-                    publication_date=str(raw["publication_date"]),
-                    effective_date=str(raw["effective_date"]),
-                    expiry_or_repeal_date=raw.get("expiry_or_repeal_date"),
-                    version_number=int(raw["version_number"]),
-                    supersedes_evidence_id=raw.get("supersedes_evidence_id"),
-                    content_sha256=str(raw["content_sha256"]),
-                    content_bytes_length=int(raw["content_bytes_length"]),
-                    content_type=str(raw["content_type"]),
-                    http_status=raw.get("http_status"),
-                    transport_mode=str(raw["transport_mode"]),
-                    live_verified=bool(raw["live_verified"]),
-                    content_verified=bool(raw.get("content_verified", False)),
-                    content_verification=copy.deepcopy(dict(raw.get("content_verification", {}))),
-                    status=str(raw["status"]),
-                    adapter_metadata=copy.deepcopy(dict(raw.get("adapter_metadata", {}))),
-                    metadata_sha256=str(raw["metadata_sha256"]),
-                    record_sha256=str(raw["record_sha256"]),
-                    previous_record_sha256=str(raw["previous_record_sha256"]),
-                    error_codes=tuple(raw.get("error_codes", ())),
-                    errors=tuple(raw.get("errors", ())),
-                    legal_boundary_notice=str(raw.get("legal_boundary_notice", "")),
-                )
-                reg._ledger.append(rec)
-                reg._by_id[rec.evidence_id] = rec
-                reg._by_source_key.setdefault(rec.source_key, []).append(rec.evidence_id)
+        for raw in snapshot["records"]:
+            rec = _evidence_record_from_dict(raw, error_code="CORRUPT_REGISTRY_SNAPSHOT")
+            reg._ledger.append(rec)
+            reg._by_id[rec.evidence_id] = rec
+            reg._by_source_key.setdefault(rec.source_key, []).append(rec.evidence_id)
 
-                if isinstance(raw_map, dict) and rec.evidence_id in raw_map:
-                    try:
-                        decoded = base64.b64decode(raw_map[rec.evidence_id], validate=True)
-                    except Exception as b64_exc:
+            if isinstance(raw_map, dict) and rec.evidence_id in raw_map:
+                try:
+                    decoded = base64.b64decode(raw_map[rec.evidence_id], validate=True)
+                except Exception as b64_exc:
+                    raise EvidenceRegistryError(
+                        "RAW_CONTENT_MISSING_OR_CORRUPT_IN_SNAPSHOT",
+                        f"'{rec.evidence_id}' için Base64 ham belge içeriği bozuk: {b64_exc}",
+                    ) from b64_exc
+                if reg._content_store.has(rec.evidence_id):
+                    existing = reg._content_store.get(rec.evidence_id)
+                    if existing != decoded:
                         raise EvidenceRegistryError(
-                            "RAW_CONTENT_MISSING_OR_CORRUPT_IN_SNAPSHOT",
-                            f"'{rec.evidence_id}' için Base64 ham belge içeriği bozuk: {b64_exc}",
-                        ) from b64_exc
-                    if reg._content_store.has(rec.evidence_id):
-                        existing = reg._content_store.get(rec.evidence_id)
-                        if existing != decoded:
-                            raise EvidenceRegistryError(
-                                "RAW_CONTENT_STORE_SNAPSHOT_CONFLICT",
-                                f"'{rec.evidence_id}' için content_store baytları anlık görüntüdeki ham içerikle uyuşmuyor.",
-                            )
-                    else:
-                        reg._content_store.put(rec.evidence_id, decoded)
-        except EvidenceRegistryError:
-            raise
-        except (KeyError, TypeError, ValueError) as exc:
-            raise EvidenceRegistryError("CORRUPT_REGISTRY_SNAPSHOT", f"Bozuk anlık görüntü kaydı: {exc}") from exc
+                            "RAW_CONTENT_STORE_SNAPSHOT_CONFLICT",
+                            f"'{rec.evidence_id}' için content_store baytları anlık görüntüdeki ham içerikle uyuşmuyor.",
+                        )
+                else:
+                    reg._content_store.put(rec.evidence_id, decoded)
+
+        for raw_fa in raw_failed_list:
+            fa_rec = _evidence_record_from_dict(raw_fa, error_code="CORRUPT_FAILED_ATTEMPT_RECORD")
+            reg._failed_attempts.append(fa_rec)
 
         if snap_mode == SNAPSHOT_MODE_FULL_WITH_RAW and isinstance(raw_map, dict):
             if set(raw_map.keys()) != set(reg._by_id.keys()):
@@ -679,11 +906,43 @@ class EvidenceRegistry:
                     "FULL_WITH_RAW_CONTENT anlık görüntüsündeki raw_content_b64 anahtarları kayıt listesiyle birebir örtüşmüyor.",
                 )
 
+        declared_fa_count = snapshot.get("failed_attempt_count")
+        if (
+            not isinstance(declared_fa_count, int)
+            or isinstance(declared_fa_count, bool)
+            or declared_fa_count != len(reg._failed_attempts)
+        ):
+            raise EvidenceRegistryError(
+                "FAILED_ATTEMPTS_INTEGRITY_FAILED",
+                f"Anlık görüntüdeki failed_attempt_count ({declared_fa_count!r}) gerçek kayıt sayısıyla "
+                f"({len(reg._failed_attempts)}) uyuşmuyor.",
+            )
+
+        actual_fa_sha = canonical_sha256([fa.to_dict() for fa in reg._failed_attempts])
+        if snapshot.get("failed_attempts_sha256") != actual_fa_sha:
+            raise EvidenceRegistryError(
+                "FAILED_ATTEMPTS_INTEGRITY_FAILED",
+                "Anlık görüntüdeki failed_attempts_sha256 özeti uyuşmuyor.",
+            )
+
         ok, rep = reg.verify_integrity(require_raw_content=require_raw_content)
+        expected_snapshot_sha = cls._compute_snapshot_sha256(
+            schema_version="1.0.6-wp2",
+            snapshot_mode=snap_mode,
+            head_sha256=rep["head_sha256"],
+            record_count=len(reg._ledger),
+            records=[rec.to_dict() for rec in reg._ledger],
+            raw_content_bundle_sha256=raw_bundle_sha256,
+            failed_attempt_count=len(reg._failed_attempts),
+            failed_attempts_head_sha256=rep["failed_attempts_head_sha256"],
+            failed_attempts_sha256=rep["failed_attempts_sha256"],
+        )
         if (
             not ok
             or snapshot.get("head_sha256") != rep["head_sha256"]
             or snapshot.get("record_count") != len(reg._ledger)
+            or snapshot.get("failed_attempts_head_sha256") != rep["failed_attempts_head_sha256"]
+            or snapshot.get("snapshot_sha256") != expected_snapshot_sha
         ):
             raise EvidenceRegistryError(
                 "REGISTRY_SNAPSHOT_INTEGRITY_FAILED",

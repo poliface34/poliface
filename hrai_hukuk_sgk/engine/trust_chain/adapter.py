@@ -359,16 +359,22 @@ class SourceAdapter(ABC):
             "error_codes": error_codes,
         }
         ev_id = f"EVD-FAIL-{self.adapter_type}-{canonical_sha256(fail_seed)[:12].upper()}"
+        s_key = str(request.source_key or "")
+        s_title = str(request.title or "")
+        s_url = str(request.source_url or "")
+        s_final = final_url or s_url
+        s_pub = str(request.publication_date or "")
+        s_eff = str(request.effective_date or "")
         meta_payload = {
-            "source_key": request.source_key,
+            "source_key": s_key,
             "adapter_type": self.adapter_type,
-            "title": request.title,
-            "source_url": request.source_url,
-            "final_url": final_url or request.source_url,
+            "title": s_title,
+            "source_url": s_url,
+            "final_url": s_final,
             "redirect_chain": list(redirect_chain),
             "acquired_at_utc": acquired_at_utc,
-            "publication_date": request.publication_date,
-            "effective_date": request.effective_date,
+            "publication_date": s_pub,
+            "effective_date": s_eff,
             "expiry_or_repeal_date": request.expiry_or_repeal_date,
             "content_type": content_type,
             "http_status": http_status,
@@ -377,12 +383,14 @@ class SourceAdapter(ABC):
             "content_verified": False,
             "content_verification": cv_block,
             "adapter_metadata": copy.deepcopy(request.adapter_metadata),
+            "error_codes": list(error_codes),
+            "errors": list(errors),
         }
         meta_sha = canonical_sha256(meta_payload)
         rec_sha = canonical_sha256(
             {
                 "evidence_id": ev_id,
-                "source_key": request.source_key,
+                "source_key": s_key,
                 "adapter_type": self.adapter_type,
                 "version_number": 0,
                 "supersedes_evidence_id": request.supersedes_evidence_id,
@@ -395,15 +403,15 @@ class SourceAdapter(ABC):
         )
         rec = EvidenceRecord(
             evidence_id=ev_id,
-            source_key=str(request.source_key or ""),
+            source_key=s_key,
             adapter_type=self.adapter_type,
-            title=str(request.title or ""),
-            source_url=str(request.source_url or ""),
-            final_url=final_url or str(request.source_url or ""),
+            title=s_title,
+            source_url=s_url,
+            final_url=s_final,
             redirect_chain=redirect_chain,
             acquired_at_utc=acquired_at_utc,
-            publication_date=str(request.publication_date or ""),
-            effective_date=str(request.effective_date or ""),
+            publication_date=s_pub,
+            effective_date=s_eff,
             expiry_or_repeal_date=request.expiry_or_repeal_date,
             version_number=0,
             supersedes_evidence_id=request.supersedes_evidence_id,
@@ -770,6 +778,8 @@ class SourceAdapter(ABC):
             "content_verified": True,
             "content_verification": clean_cv,
             "adapter_metadata": copy.deepcopy(request.adapter_metadata),
+            "error_codes": [],
+            "errors": [],
         }
         meta_sha = canonical_sha256(meta_payload)
         ev_seed = {

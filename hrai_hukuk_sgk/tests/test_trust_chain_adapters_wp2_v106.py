@@ -1266,6 +1266,227 @@ class TestTrustChainAdaptersWp2V106(unittest.TestCase):
         self.assertFalse(ok_meta_tr)
         self.assertFalse(rep_meta_tr["full_content_archive_verified"])
 
+    def test_12_failed_attempts_audit_trail_snapshot_round_trip_and_tamper_fail_closed(self) -> None:
+        """PR #3 Review-2 Finding: failed_attempts audit trail persists, verifies, and fails closed across snapshots."""
+        reg = EvidenceRegistry()
+        raw_ok = b"<html><body>4857 Sayili Is Kanunu Madde 24 aktif kanit metni.</body></html>"
+        active_rec = reg.register(
+            MevzuatAdapter(transport=_make_ok_transport(raw_ok)).acquire_and_validate(
+                SourceDocumentRequest(
+                    source_key="KANUN-4857-AUDIT",
+                    source_url="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857&m=24",
+                    title="4857 Sayılı İş Kanunu Madde 24",
+                    publication_date="2025-01-01",
+                    effective_date="2025-01-01",
+                    adapter_metadata={"mevzuat_no": "4857", "mevzuat_turu": "KANUN"},
+                )
+            )
+        )
+
+        # Accumulate 3 distinct failed attempts across register() rejections and record_failed_attempt()
+        # 1) Unreachable timeout
+        def _timeout(_url: str) -> dict[str, object]:
+            raise TimeoutError("simulated audit timeout")
+
+        res_unreach = IskurAdapter(transport=_timeout).acquire_and_validate(
+            SourceDocumentRequest(
+                source_key="ISKUR-AUDIT-FAIL-1",
+                source_url="https://www.iskur.gov.tr/mevzuat/genelge-2026-88",
+                title="İŞKUR Erişilemeyen Genelge 2026/88",
+                publication_date="2026-01-10",
+                effective_date="2026-01-10",
+                adapter_metadata={"document_type": "GENELGE", "reference_no": "2026/88"},
+            )
+        )
+        with self.assertRaises(EvidenceRegistryError) as ctx_u:
+            reg.register(res_unreach)
+        self.assertEqual(ctx_u.exception.error_code, "UNREACHABLE_OR_UNVERIFIED_EVIDENCE_REJECTED")
+
+        # 2) Content mismatch
+        res_mismatch = MevzuatAdapter(
+            transport=_make_ok_transport(b"<html><body>5510 Sayili Kanun ilgisiz icerik metni.</body></html>")
+        ).acquire_and_validate(
+            SourceDocumentRequest(
+                source_key="KANUN-4857-AUDIT-FAIL-2",
+                source_url="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857&mismatch=1",
+                title="4857 Sayılı İş Kanunu",
+                publication_date="2025-01-01",
+                effective_date="2025-01-01",
+                adapter_metadata={"mevzuat_no": "4857", "mevzuat_turu": "KANUN"},
+            )
+        )
+        with self.assertRaises(EvidenceRegistryError) as ctx_m:
+            reg.register(res_mismatch)
+        self.assertEqual(ctx_m.exception.error_code, "UNREACHABLE_OR_UNVERIFIED_EVIDENCE_REJECTED")
+
+        # 3) Unparseable scanned PDF explicitly logged via record_failed_attempt()
+        scanned_pdf = (
+            b"%PDF-1.7\n1 0 obj\n<< /Type /Catalog >>\nendobj\n"
+            b"2 0 obj\n<< /Type /XObject /Subtype /Image /Width 600 /Height 900 /Length 12 >>\n"
+            b"stream\n\xff\xd8\xff\xe0\x00\x10\x01\x02\xaa\xbb\xfe\xff\nendstream\nendobj\n%%EOF"
+        )
+        res_scan = SgkAdapter(
+            transport=_make_ok_transport(scanned_pdf, content_type="application/pdf")
+        ).acquire_and_validate(
+            SourceDocumentRequest(
+                source_key="SGK-AUDIT-FAIL-3",
+                source_url="https://www.sgk.gov.tr/Duyuru/Detay/2026-77.pdf",
+                title="SGK 2026/77 Taranmış Genelge",
+                publication_date="2026-02-01",
+                effective_date="2026-02-01",
+                adapter_metadata={"document_type": "GENELGE", "reference_no": "2026/77"},
+            )
+        )
+        sealed_fa3 = reg.record_failed_attempt(res_scan)
+        self.assertEqual(sealed_fa3.status, STATUS_TRANSPORT_ONLY_UNVERIFIED_CONTENT)
+
+        # Verify source registry integrity & hash chain of failed_attempts
+        ok_orig, rep_orig = reg.verify_integrity()
+        self.assertTrue(ok_orig, rep_orig)
+        self.assertEqual(rep_orig["record_count"], 1)
+        self.assertEqual(rep_orig["failed_attempt_count"], 3)
+        self.assertEqual(rep_orig["failed_attempts_head_sha256"], reg.failed_attempts_head_sha256)
+        self.assertEqual(rep_orig["failed_attempts_sha256"], reg.failed_attempts_sha256)
+        orig_failed = reg.failed_attempts
+        self.assertEqual(len(orig_failed), 3)
+        self.assertEqual(orig_failed[1].previous_record_sha256, orig_failed[0].record_sha256)
+        self.assertEqual(orig_failed[2].previous_record_sha256, orig_failed[1].record_sha256)
+
+        # 1. Full snapshot round-trip preserves failed_attempt_count, exact records, hash chain, and snapshot_sha256
+        snap = reg.export_snapshot_dict(include_raw_content=True)
+        self.assertEqual(snap["failed_attempt_count"], 3)
+        self.assertEqual(len(snap["failed_attempts"]), 3)
+        self.assertEqual(snap["failed_attempts_head_sha256"], reg.failed_attempts_head_sha256)
+        self.assertEqual(snap["failed_attempts_sha256"], reg.failed_attempts_sha256)
+        self.assertEqual(len(snap["snapshot_sha256"]), 64)
+
+        restored = EvidenceRegistry.from_snapshot_dict(snap)
+        ok_rest, rep_rest = restored.verify_integrity()
+        self.assertTrue(ok_rest, rep_rest)
+        self.assertEqual(restored.record_count, 1)
+        self.assertEqual(rep_rest["failed_attempt_count"], 3)
+        self.assertEqual(restored.failed_attempts_head_sha256, reg.failed_attempts_head_sha256)
+        self.assertEqual(restored.failed_attempts_sha256, reg.failed_attempts_sha256)
+        self.assertEqual(
+            [fa.to_dict() for fa in restored.failed_attempts],
+            [fa.to_dict() for fa in orig_failed],
+        )
+        # None of the failed attempts ever enters the active verified ledger
+        for fa in restored.failed_attempts:
+            self.assertIsNone(restored.get(fa.evidence_id))
+            self.assertFalse(fa.is_verified_authority)
+        # Re-exporting from restored produces identical snapshot_sha256
+        self.assertEqual(restored.export_snapshot_dict()["snapshot_sha256"], snap["snapshot_sha256"])
+
+        # 2. Metadata-only snapshot + FileSystemContentStore round-trip ALSO preserves failed_attempts
+        with tempfile.TemporaryDirectory() as tmpdir:
+            fs_dir = Path(tmpdir) / "audit_fs"
+            fs_store = FileSystemContentStore(fs_dir)
+            fs_store.put(active_rec.evidence_id, raw_ok)
+            meta_snap = reg.export_snapshot_dict(include_raw_content=False)
+            restored_fs = EvidenceRegistry.from_snapshot_dict(
+                meta_snap,
+                content_store=FileSystemContentStore(fs_dir),
+                require_raw_content=True,
+            )
+            ok_rfs, rep_rfs = restored_fs.verify_integrity()
+            self.assertTrue(ok_rfs, rep_rfs)
+            self.assertEqual(rep_rfs["failed_attempt_count"], 3)
+            self.assertEqual(restored_fs.failed_attempts_sha256, reg.failed_attempts_sha256)
+
+        # 3. Fail-closed: missing or non-list failed_attempts rejected
+        snap_missing_fa = reg.export_snapshot_dict()
+        del snap_missing_fa["failed_attempts"]
+        with self.assertRaises(EvidenceRegistryError) as ctx_miss:
+            EvidenceRegistry.from_snapshot_dict(snap_missing_fa)
+        self.assertEqual(ctx_miss.exception.error_code, "FAILED_ATTEMPTS_MISSING_OR_CORRUPT_IN_SNAPSHOT")
+
+        snap_badtype_fa = reg.export_snapshot_dict()
+        snap_badtype_fa["failed_attempts"] = "not-a-list"
+        with self.assertRaises(EvidenceRegistryError) as ctx_btype:
+            EvidenceRegistry.from_snapshot_dict(snap_badtype_fa)
+        self.assertEqual(ctx_btype.exception.error_code, "FAILED_ATTEMPTS_MISSING_OR_CORRUPT_IN_SNAPSHOT")
+
+        # 4. Fail-closed: corrupt/incomplete failed-attempt entry rejected
+        snap_corrupt_fa = reg.export_snapshot_dict()
+        snap_corrupt_fa["failed_attempts"][0] = {"evidence_id": "EVD-FAIL-INCOMPLETE"}
+        with self.assertRaises(EvidenceRegistryError) as ctx_corrupt:
+            EvidenceRegistry.from_snapshot_dict(snap_corrupt_fa)
+        self.assertEqual(ctx_corrupt.exception.error_code, "CORRUPT_FAILED_ATTEMPT_RECORD")
+
+        # 5. Fail-closed: tampering error_codes in failed_attempts (without AND with recomputing envelope digests!)
+        snap_tamper_ec = reg.export_snapshot_dict()
+        snap_tamper_ec["failed_attempts"][0]["error_codes"] = ["TAMPERED_CODE"]
+        with self.assertRaises(EvidenceRegistryError) as ctx_ec1:
+            EvidenceRegistry.from_snapshot_dict(snap_tamper_ec)
+        self.assertEqual(ctx_ec1.exception.error_code, "FAILED_ATTEMPTS_INTEGRITY_FAILED")
+
+        snap_tamper_ec2 = reg.export_snapshot_dict()
+        snap_tamper_ec2["failed_attempts"][0]["error_codes"] = ["TAMPERED_CODE"]
+        snap_tamper_ec2["failed_attempts_sha256"] = canonical_sha256(snap_tamper_ec2["failed_attempts"])
+        snap_tamper_ec2["snapshot_sha256"] = EvidenceRegistry._compute_snapshot_sha256(
+            schema_version=snap_tamper_ec2["schema_version"],
+            snapshot_mode=snap_tamper_ec2["snapshot_mode"],
+            head_sha256=snap_tamper_ec2["head_sha256"],
+            record_count=snap_tamper_ec2["record_count"],
+            records=snap_tamper_ec2["records"],
+            raw_content_bundle_sha256=snap_tamper_ec2["raw_content_bundle_sha256"],
+            failed_attempt_count=snap_tamper_ec2["failed_attempt_count"],
+            failed_attempts_head_sha256=snap_tamper_ec2["failed_attempts_head_sha256"],
+            failed_attempts_sha256=snap_tamper_ec2["failed_attempts_sha256"],
+        )
+        with self.assertRaises(EvidenceRegistryError) as ctx_ec2:
+            EvidenceRegistry.from_snapshot_dict(snap_tamper_ec2)
+        self.assertEqual(ctx_ec2.exception.error_code, "REGISTRY_SNAPSHOT_INTEGRITY_FAILED")
+
+        # 6. Fail-closed: deleting an earlier failed_attempt breaks both snapshot_sha256 AND failed_attempts hash chain
+        snap_del_fa = reg.export_snapshot_dict()
+        snap_del_fa["failed_attempts"] = snap_del_fa["failed_attempts"][1:]
+        snap_del_fa["failed_attempt_count"] = 2
+        snap_del_fa["failed_attempts_sha256"] = canonical_sha256(snap_del_fa["failed_attempts"])
+        snap_del_fa["failed_attempts_head_sha256"] = snap_del_fa["failed_attempts"][-1]["record_sha256"]
+        snap_del_fa["snapshot_sha256"] = EvidenceRegistry._compute_snapshot_sha256(
+            schema_version=snap_del_fa["schema_version"],
+            snapshot_mode=snap_del_fa["snapshot_mode"],
+            head_sha256=snap_del_fa["head_sha256"],
+            record_count=snap_del_fa["record_count"],
+            records=snap_del_fa["records"],
+            raw_content_bundle_sha256=snap_del_fa["raw_content_bundle_sha256"],
+            failed_attempt_count=snap_del_fa["failed_attempt_count"],
+            failed_attempts_head_sha256=snap_del_fa["failed_attempts_head_sha256"],
+            failed_attempts_sha256=snap_del_fa["failed_attempts_sha256"],
+        )
+        with self.assertRaises(EvidenceRegistryError) as ctx_del:
+            EvidenceRegistry.from_snapshot_dict(snap_del_fa)
+        self.assertEqual(ctx_del.exception.error_code, "REGISTRY_SNAPSHOT_INTEGRITY_FAILED")
+
+        # 7. Fail-closed: injecting an active verified record into failed_attempts is rejected even with recomputed digests
+        snap_verified_in_fa = reg.export_snapshot_dict()
+        snap_verified_in_fa["failed_attempts"] = [active_rec.to_dict()]
+        snap_verified_in_fa["failed_attempt_count"] = 1
+        snap_verified_in_fa["failed_attempts_sha256"] = canonical_sha256(snap_verified_in_fa["failed_attempts"])
+        snap_verified_in_fa["failed_attempts_head_sha256"] = active_rec.record_sha256
+        snap_verified_in_fa["snapshot_sha256"] = EvidenceRegistry._compute_snapshot_sha256(
+            schema_version=snap_verified_in_fa["schema_version"],
+            snapshot_mode=snap_verified_in_fa["snapshot_mode"],
+            head_sha256=snap_verified_in_fa["head_sha256"],
+            record_count=snap_verified_in_fa["record_count"],
+            records=snap_verified_in_fa["records"],
+            raw_content_bundle_sha256=snap_verified_in_fa["raw_content_bundle_sha256"],
+            failed_attempt_count=snap_verified_in_fa["failed_attempt_count"],
+            failed_attempts_head_sha256=snap_verified_in_fa["failed_attempts_head_sha256"],
+            failed_attempts_sha256=snap_verified_in_fa["failed_attempts_sha256"],
+        )
+        with self.assertRaises(EvidenceRegistryError) as ctx_ver_fa:
+            EvidenceRegistry.from_snapshot_dict(snap_verified_in_fa)
+        self.assertEqual(ctx_ver_fa.exception.error_code, "REGISTRY_SNAPSHOT_INTEGRITY_FAILED")
+
+        # 8. In-memory tampering of _failed_attempts detected by verify_integrity()
+        reg._failed_attempts[0] = replace(reg._failed_attempts[0], title="Tahrif Edilmiş Başarısız Denetim Kaydı")
+        ok_mem_fa, rep_mem_fa = reg.verify_integrity()
+        self.assertFalse(ok_mem_fa)
+        self.assertTrue(any("failed_attempts[0]" in e for e in rep_mem_fa["errors"]))
+
 
 if __name__ == "__main__":
     unittest.main()

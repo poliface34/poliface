@@ -211,6 +211,8 @@ class EvidenceRecord:
             "content_verified": self.content_verified,
             "content_verification": self.content_verification,
             "adapter_metadata": self.adapter_metadata,
+            "error_codes": list(self.error_codes),
+            "errors": list(self.errors),
         }
 
     def chain_payload(self) -> dict[str, Any]:
