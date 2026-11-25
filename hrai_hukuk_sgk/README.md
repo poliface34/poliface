@@ -52,10 +52,13 @@ Ayrıntılı mimari dokümanlar:
 # 1. Tam tek süreçli regresyon paketi (mevcut 230 test + 14 yeni v1.0.5.1 DER/hrAI/çapraz-doğrulama testi = 244 test)
 python3 -m unittest discover -s tests -v
 
-# 2. Tek komutluk bağımsız X.509/ASN.1 çapraz doğrulama aracı (strict: 4 parser + eşik; offline: yalnızca hrAI)
+# 2. İsteğe bağlı sabit sürümlü çapraz-doğrulama bağımlılıkları (hrAI çalışma zamanı yalnızca stdlib kullanır)
+pip install -r tests/requirements-crossval.txt
+
+# 3. Tek komutluk bağımsız X.509/ASN.1 çapraz doğrulama aracı (strict: 4 parser + eşik; offline: yalnızca hrAI)
 python3 -m tests.cross_validate_x509 --mode strict
 python3 -m tests.cross_validate_x509 --mode offline
 
-# 3. Gerçek canlı dış servis yapılandırma probu (5 durumlu dürüst 5070 + GCP/TSA/WORM + KVKK probu)
+# 4. Gerçek canlı dış servis yapılandırma probu (5 durumlu dürüst 5070 + GCP/TSA/WORM + KVKK probu)
 python3 -W error -m engine.trust_root.integration_probe
 ```

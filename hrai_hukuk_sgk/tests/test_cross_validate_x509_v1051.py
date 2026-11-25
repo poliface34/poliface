@@ -142,24 +142,48 @@ class TestCrossValidateX509V1051(unittest.TestCase):
         )
         self.assertEqual(res_unsup_bad_asn1["status"], "ASN1_PARSE_FAILED")
 
-        # 6. Negative vector: BER-permissive OpenSSL parse -> BER_PERMISSIVE_ACCEPT (NEVER DER proof!)
-        ber_x509 = "X509v3 Subject Alternative Name:\n    othername: UPN::abc\n"
-        res_ber = cv._classify_openssl_result(
-            openssl_ver=ver,
-            expected_der_verdict="REJECT",
-            x509_rc=0,
-            x509_stdout=ber_x509,
-            x509_stderr="",
-            pem_asn1_rc=0,
-            pem_asn1_stdout=ok_asn1,
-            pem_asn1_stderr="",
-            der_asn1_rc=0,
-            der_asn1_stdout=ok_asn1,
-            der_asn1_stderr="",
-        )
-        self.assertEqual(res_ber["status"], "BER_PERMISSIVE_ACCEPT")
-        self.assertTrue(res_ber["ber_permissive_not_der_proof"])
-        self.assertEqual(res_ber["commands"]["x509_text"]["status"], "BER_PERMISSIVE_ACCEPT")
+        # 6. Negative vector: BER-permissive OpenSSL parse (both OpenSSL 3.0 `UPN::` and 3.2+ `UPN:` formats) -> BER_PERMISSIVE_ACCEPT
+        for ber_x509 in (
+            "X509v3 Subject Alternative Name:\n    othername: UPN::abc\n",
+            "X509v3 Subject Alternative Name:\n    othername: UPN:abc\n",
+        ):
+            res_ber = cv._classify_openssl_result(
+                openssl_ver=ver,
+                expected_der_verdict="REJECT",
+                x509_rc=0,
+                x509_stdout=ber_x509,
+                x509_stderr="",
+                pem_asn1_rc=0,
+                pem_asn1_stdout=ok_asn1,
+                pem_asn1_stderr="",
+                der_asn1_rc=0,
+                der_asn1_stdout=ok_asn1,
+                der_asn1_stderr="",
+            )
+            self.assertEqual(res_ber["status"], "BER_PERMISSIVE_ACCEPT", ber_x509)
+            self.assertTrue(res_ber["ber_permissive_not_der_proof"], ber_x509)
+            self.assertEqual(res_ber["commands"]["x509_text"]["status"], "BER_PERMISSIVE_ACCEPT", ber_x509)
+
+        # 6b. Positive vector: both OpenSSL 3.0 (`UPN::`) and OpenSSL 3.2+ (`UPN:`) othername formats -> ACCEPTED
+        for pos_upn_x509 in (
+            "X509v3 Subject Alternative Name:\n    othername: UPN::uzman@insenai.com.tr\n",
+            "X509v3 Subject Alternative Name:\n    othername: UPN:uzman@insenai.com.tr\n",
+        ):
+            res_upn = cv._classify_openssl_result(
+                openssl_ver=ver,
+                expected_der_verdict="ACCEPT",
+                x509_rc=0,
+                x509_stdout=pos_upn_x509,
+                x509_stderr="",
+                pem_asn1_rc=0,
+                pem_asn1_stdout=ok_asn1,
+                pem_asn1_stderr="",
+                der_asn1_rc=0,
+                der_asn1_stdout=ok_asn1,
+                der_asn1_stderr="",
+            )
+            self.assertEqual(res_upn["status"], "ACCEPTED", pos_upn_x509)
+            self.assertTrue(res_upn["pem_der_asn1_match"], pos_upn_x509)
 
         # 7. Negative vector: OpenSSL raw hex fallback ("0...raw") or non-zero rc -> real REJECTED
         raw_x509 = "X509v3 Subject Alternative Name:\n    0...raw\n"

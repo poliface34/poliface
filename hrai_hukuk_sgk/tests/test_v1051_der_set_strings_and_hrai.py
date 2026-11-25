@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import ipaddress
 import json
 from pathlib import Path
 import shutil
@@ -1028,34 +1029,102 @@ class TestHrAiV1051DerSetStringsAndBrand(unittest.TestCase):
             self.assertEqual(real_meta.signer_common_name, "GeneralName Real Cert")
             self.assertEqual(real_meta.san_dns_names, ("www.insenai.com.tr",))
 
-            # Independent OpenSSL 3 text + PEM/DER asn1parse verification on the same real certificate
+            # Independent OpenSSL version-agnostic verification:
+            # Avoid brittle human-readable `openssl x509 -text` formatting differences across OpenSSL releases
+            # (e.g., `othername: UPN::...` in OpenSSL 3.0 vs `othername: UPN:...` in OpenSSL 3.2+).
             der_p = tdp / "gn.der"
-            x509_txt = subprocess.check_output(
+            subprocess.run(
                 [openssl, "x509", "-in", str(crt_p), "-noout", "-text"],
-                stdin=subprocess.DEVNULL, text=True, timeout=30,
+                stdin=subprocess.DEVNULL, check=True, capture_output=True, text=True, timeout=30,
             )
-            self.assertIn("othername: UPN::uzman@insenai.com.tr", x509_txt)
-            self.assertIn("email:hukuk@insenai.com.tr", x509_txt)
-            self.assertIn("DNS:www.insenai.com.tr", x509_txt)
-            self.assertIn("URI:https://www.insenai.com.tr", x509_txt)
-            self.assertIn("IP Address:192.0.2.10", x509_txt)
-            self.assertIn("IP Address:2001:DB8:0:0:0:0:0:1", x509_txt)
-            self.assertIn("Registered ID:1.2.3.4.5", x509_txt)
             subprocess.run(
                 [openssl, "x509", "-in", str(crt_p), "-outform", "DER", "-out", str(der_p)],
                 stdin=subprocess.DEVNULL, check=True, capture_output=True, timeout=30,
             )
-            pem_asn1 = subprocess.check_output(
+            der_bytes = der_p.read_bytes()
+            der_meta = parse_x509_certificate_metadata_der(der_bytes)
+            self.assertEqual(der_meta, real_meta)
+
+            # Extract SAN (2.5.29.17) and IAN (2.5.29.18) directly from the OpenSSL-signed DER TBSCertificate
+            _, c_vs, c_ve, _ = x509_mod._read_tlv(der_bytes, 0, len(der_bytes))
+            cert_children = x509_mod._iter_children(der_bytes, c_vs, c_ve)
+            tbs_children = x509_mod._iter_children(der_bytes, cert_children[0][1], cert_children[0][2])
+            ext_container = next(ch for ch in tbs_children if ch[0] == 0xA3)
+            ext_seq_tag, es_vs, es_ve, _ = x509_mod._read_tlv(der_bytes, ext_container[1], ext_container[2])
+            self.assertEqual(ext_seq_tag, 0x30)
+            ext_values: dict[str, bytes] = {}
+            for _et, evs, eve, _ in x509_mod._iter_children(der_bytes, es_vs, es_ve):
+                eparts = x509_mod._iter_children(der_bytes, evs, eve)
+                eoid = x509_mod._decode_oid(der_bytes[eparts[0][1] : eparts[0][2]])
+                ext_values[eoid] = der_bytes[eparts[-1][1] : eparts[-1][2]]
+            self.assertEqual(ext_values["2.5.29.17"], combined_san)
+            self.assertEqual(ext_values["2.5.29.18"], combined_san)
+
+            # Verify every normalized ASN.1 GeneralName field directly from the extracted DER SAN payload
+            san_der = ext_values["2.5.29.17"]
+            san_tag, san_vs, san_ve, san_nxt = x509_mod._read_tlv(san_der, 0, len(san_der))
+            self.assertEqual(san_tag, 0x30)
+            self.assertEqual(san_nxt, len(san_der))
+            gn_spans = x509_mod._iter_children_with_spans(san_der, san_vs, san_ve)
+            self.assertEqual(len(gn_spans), 10)
+            self.assertEqual(
+                [sp[1] for sp in gn_spans],
+                [0xA0, 0x81, 0x82, 0xA3, 0xA5, 0xA5, 0x86, 0x87, 0x87, 0x88],
+            )
+            # [0] OtherName: UPN OID 1.3.6.1.4.1.311.20.2.3 + [0] EXPLICIT UTF8String
+            on_parts = x509_mod._iter_children(san_der, gn_spans[0][2], gn_spans[0][3])
+            self.assertEqual(x509_mod._decode_oid(san_der[on_parts[0][1] : on_parts[0][2]]), "1.3.6.1.4.1.311.20.2.3")
+            val_tag, val_vs, val_ve, _ = x509_mod._read_tlv(san_der, on_parts[1][1], on_parts[1][2])
+            self.assertEqual(val_tag, 0x0C)
+            self.assertEqual(san_der[val_vs:val_ve].decode("utf-8"), "uzman@insenai.com.tr")
+            # [1] rfc822Name, [2] dNSName, [3] x400Address, [5] ediPartyName x2, [6] URI, [7] IPv4/IPv6, [8] registeredID
+            self.assertEqual(san_der[gn_spans[1][2] : gn_spans[1][3]].decode("ascii"), "hukuk@insenai.com.tr")
+            self.assertEqual(san_der[gn_spans[2][2] : gn_spans[2][3]].decode("ascii"), "www.insenai.com.tr")
+            self.assertEqual(san_der[gn_spans[3][0] : gn_spans[3][4]], valid_x400_full)
+            self.assertEqual(san_der[gn_spans[4][0] : gn_spans[4][4]], valid_edi_both)
+            self.assertEqual(san_der[gn_spans[5][0] : gn_spans[5][4]], valid_edi_party_only)
+            self.assertEqual(san_der[gn_spans[6][2] : gn_spans[6][3]].decode("ascii"), "https://www.insenai.com.tr")
+            self.assertEqual(
+                ipaddress.ip_address(san_der[gn_spans[7][2] : gn_spans[7][3]]),
+                ipaddress.IPv4Address("192.0.2.10"),
+            )
+            self.assertEqual(
+                ipaddress.ip_address(san_der[gn_spans[8][2] : gn_spans[8][3]]),
+                ipaddress.IPv6Address("2001:db8::1"),
+            )
+            self.assertEqual(x509_mod._decode_oid(san_der[gn_spans[9][2] : gn_spans[9][3]]), "1.2.3.4.5")
+
+            # Independent OpenSSL PEM/DER ASN.1 structural parity + direct DER SAN asn1parse check
+            pem_asn1 = subprocess.run(
                 [openssl, "asn1parse", "-in", str(crt_p), "-inform", "PEM", "-i"],
-                stdin=subprocess.DEVNULL, text=True, timeout=30,
-            )
-            der_asn1 = subprocess.check_output(
+                stdin=subprocess.DEVNULL, check=True, capture_output=True, text=True, timeout=30,
+            ).stdout
+            der_asn1 = subprocess.run(
                 [openssl, "asn1parse", "-in", str(der_p), "-inform", "DER", "-i"],
-                stdin=subprocess.DEVNULL, text=True, timeout=30,
-            )
+                stdin=subprocess.DEVNULL, check=True, capture_output=True, text=True, timeout=30,
+            ).stdout
+            self.assertTrue(bool(der_asn1.strip()))
             self.assertEqual(pem_asn1, der_asn1)
-            self.assertIn("X509v3 Subject Alternative Name", der_asn1)
-            self.assertIn("X509v3 Issuer Alternative Name", der_asn1)
+            self.assertTrue("X509v3 Subject Alternative Name" in der_asn1 or "2.5.29.17" in der_asn1)
+            self.assertTrue("X509v3 Issuer Alternative Name" in der_asn1 or "2.5.29.18" in der_asn1)
+            san_asn1_proc = subprocess.run(
+                [openssl, "asn1parse", "-inform", "DER", "-i"],
+                input=san_der, check=True, capture_output=True, timeout=30,
+            )
+            san_asn1_txt = san_asn1_proc.stdout.decode("utf-8", errors="replace")
+            self.assertIn("uzman@insenai.com.tr", san_asn1_txt)
+            self.assertIn("HukukSGK-EDI", san_asn1_txt)
+            for tag_marker in (
+                "cont [ 0 ]",
+                "cont [ 1 ]",
+                "cont [ 2 ]",
+                "cont [ 3 ]",
+                "cont [ 5 ]",
+                "cont [ 6 ]",
+                "cont [ 7 ]",
+                "cont [ 8 ]",
+            ):
+                self.assertIn(tag_marker, san_asn1_txt)
 
         # 5. Negative real X.509 DER certificate mutations (BOTH SAN 2.5.29.17 AND IAN 2.5.29.18)
         with Ephemeral5070PkiFixture() as pki:
