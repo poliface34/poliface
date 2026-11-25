@@ -542,25 +542,102 @@ def _offline_placeholder(parser_name: str) -> dict[str, object]:
     }
 
 
+_HRAI_REQUIRED_NONEMPTY_FIELDS: tuple[str, ...] = (
+    "cert_sha256",
+    "serial_number",
+    "subject",
+    "issuer",
+    "not_before_utc",
+    "not_after_utc",
+    "signature_algorithm",
+    "public_key_algorithm",
+    "spki_pem",
+)
+_HRAI_COMPARABLE_METADATA_FIELDS: tuple[str, ...] = (
+    *_HRAI_REQUIRED_NONEMPTY_FIELDS,
+    "san_dns_names",
+    "basic_constraints_ca",
+    "key_usage",
+    "qc_statements_present",
+    "qc_compliance",
+    "qc_sscd",
+    "certificate_policy_oids",
+    "signer_common_name",
+    "signer_serial_identifier",
+    "issuer_country",
+)
+_SENTINEL_MISSING = object()
+
+
+def _compare_hrai_pem_der_metadata(
+    der_meta: object,
+    pem_meta: object,
+    expected_der_sha256: str,
+) -> dict[str, object]:
+    """Explicitly compare every comparable metadata field produced by DER and PEM parses.
+
+    Missing or uncomparable fields are NEVER silently treated as verified: they are recorded in
+    `missing_or_uncomparable_fields` and cause `all_fields_equal = False`.
+    """
+    compared_fields: list[str] = []
+    mismatched_fields: dict[str, dict[str, object]] = {}
+    missing_or_uncomparable: list[str] = []
+
+    for fname in _HRAI_COMPARABLE_METADATA_FIELDS:
+        d_val = getattr(der_meta, fname, _SENTINEL_MISSING)
+        p_val = getattr(pem_meta, fname, _SENTINEL_MISSING)
+        if d_val is _SENTINEL_MISSING or p_val is _SENTINEL_MISSING:
+            missing_or_uncomparable.append(fname)
+            continue
+        if fname in _HRAI_REQUIRED_NONEMPTY_FIELDS:
+            if not isinstance(d_val, str) or not d_val or not isinstance(p_val, str) or not p_val:
+                missing_or_uncomparable.append(fname)
+                continue
+        if fname == "san_dns_names":
+            if not isinstance(d_val, (tuple, list)) or not isinstance(p_val, (tuple, list)):
+                missing_or_uncomparable.append(fname)
+                continue
+            d_cmp: object = tuple(d_val)
+            p_cmp: object = tuple(p_val)
+        else:
+            d_cmp = d_val
+            p_cmp = p_val
+        compared_fields.append(fname)
+        if d_cmp != p_cmp:
+            mismatched_fields[fname] = {
+                "der": list(d_cmp) if isinstance(d_cmp, tuple) else d_cmp,
+                "pem": list(p_cmp) if isinstance(p_cmp, tuple) else p_cmp,
+            }
+
+    # Verify reported SHA-256 matches actual raw DER digest
+    if "cert_sha256" in compared_fields and getattr(der_meta, "cert_sha256") != expected_der_sha256:
+        mismatched_fields["cert_sha256_vs_raw_der"] = {
+            "der": getattr(der_meta, "cert_sha256"),
+            "expected_raw_der_sha256": expected_der_sha256,
+        }
+
+    all_equal = len(mismatched_fields) == 0 and len(missing_or_uncomparable) == 0
+    return {
+        "all_fields_equal": all_equal,
+        "compared_fields": compared_fields,
+        "mismatched_fields": mismatched_fields,
+        "missing_or_uncomparable_fields": missing_or_uncomparable,
+    }
+
+
 def _eval_hrai(spec: CrossValVectorSpec, pem_p: Path, der_bytes: bytes) -> dict[str, object]:
-    """Authoritative strict ITU-T X.690 / RFC 5280 DER parser evaluation (fail-closed, zero partial metadata)."""
-    cache_key = (hashlib.sha256(der_bytes).hexdigest(), len(der_bytes))
+    """Authoritative strict ITU-T X.690 / RFC 5280 DER parser evaluation (fail-closed, zero partial metadata).
+
+    Positive vectors require BOTH DER and PEM parsing to succeed AND all comparable metadata fields
+    (cert_sha256, serial_number, subject, issuer, validity window, algorithms, supported SAN DNS
+    names, keyUsage, QC flags, SPKI, etc.) to match identically with zero missing/uncomparable fields.
+    Negative vectors require DER rejection with verified zero partial metadata and unpolluted cache.
+    """
+    raw_sha256 = hashlib.sha256(der_bytes).hexdigest()
+    cache_key = (raw_sha256, len(der_bytes))
     pem_text = pem_p.read_text(encoding="utf-8")
     try:
         meta = parse_x509_certificate_metadata_der(der_bytes)
-        pem_meta = parse_x509_certificate_metadata(pem_text)
-        matched_expected = spec.expected_der_verdict == "ACCEPT" and pem_meta is not None
-        return {
-            "parser_name": "hrAI_x509_metadata",
-            "parser_version": ESIGN_5070_VERSION,
-            "status": "ACCEPTED",
-            "matches_expected_der": matched_expected,
-            "signer_common_name": meta.signer_common_name,
-            "san_dns_names": list(meta.san_dns_names),
-            "zero_partial_metadata": None,
-            "cache_unpolluted": None,
-            "error_detail": None,
-        }
     except DerParseError as exc:
         cache_unpolluted = cache_key not in x509_mod._METADATA_CACHE
         pem_meta = parse_x509_certificate_metadata(pem_text)
@@ -576,21 +653,113 @@ def _eval_hrai(spec: CrossValVectorSpec, pem_p: Path, der_bytes: bytes) -> dict[
             and insp.cert_sha256 == ""
             and insp.signature_algorithm == ""
             and insp.public_key_algorithm == ""
+            and not insp.basic_constraints_ca
+            and insp.key_usage == ()
+            and not insp.qc_statements_present
             and not insp.qc_compliance
             and not insp.qc_sscd
+            and insp.certificate_policy_oids == ()
             and insp.signer_common_name is None
+            and insp.signer_serial_identifier is None
+            and insp.issuer_country is None
+            and not insp.valid_at_validation_time
         )
         cache_unpolluted = cache_unpolluted and (cache_key not in x509_mod._METADATA_CACHE)
-        matched_expected = spec.expected_der_verdict == "REJECT" and zero_partial and cache_unpolluted
+
+        if spec.expected_der_verdict == "ACCEPT":
+            status = "DER_PARSE_FAILED"
+            matched_expected = False
+            err_detail = f"Expected ACCEPT vector failed DER parse: {exc}"
+        elif not zero_partial:
+            status = "PARTIAL_METADATA_LEAK"
+            matched_expected = False
+            err_detail = f"Negative vector rejected DER ({exc}) but leaked partial metadata."
+        elif not cache_unpolluted:
+            status = "CACHE_POLLUTED"
+            matched_expected = False
+            err_detail = f"Negative vector rejected DER ({exc}) but polluted _METADATA_CACHE."
+        else:
+            status = "REJECTED"
+            matched_expected = True
+            err_detail = str(exc)
+
         return {
             "parser_name": "hrAI_x509_metadata",
             "parser_version": ESIGN_5070_VERSION,
-            "status": "REJECTED",
+            "status": status,
             "matches_expected_der": matched_expected,
             "zero_partial_metadata": zero_partial,
             "cache_unpolluted": cache_unpolluted,
-            "error_detail": str(exc),
+            "pem_der_metadata_comparison": None,
+            "error_detail": err_detail,
         }
+
+    # DER parse succeeded -> independently parse PEM and verify full metadata equality
+    pem_meta = parse_x509_certificate_metadata(pem_text)
+    if pem_meta is None:
+        return {
+            "parser_name": "hrAI_x509_metadata",
+            "parser_version": ESIGN_5070_VERSION,
+            "status": "PEM_PARSE_FAILED",
+            "matches_expected_der": False,
+            "cert_sha256": getattr(meta, "cert_sha256", None),
+            "serial_number": getattr(meta, "serial_number", None),
+            "subject": getattr(meta, "subject", None),
+            "issuer": getattr(meta, "issuer", None),
+            "signer_common_name": getattr(meta, "signer_common_name", None),
+            "san_dns_names": list(getattr(meta, "san_dns_names", ()) or ()),
+            "zero_partial_metadata": None,
+            "cache_unpolluted": None,
+            "pem_der_metadata_comparison": {
+                "all_fields_equal": False,
+                "compared_fields": [],
+                "mismatched_fields": {},
+                "missing_or_uncomparable_fields": list(_HRAI_COMPARABLE_METADATA_FIELDS),
+            },
+            "error_detail": "DER parse succeeded but parse_x509_certificate_metadata(pem) returned None.",
+        }
+
+    comparison = _compare_hrai_pem_der_metadata(meta, pem_meta, raw_sha256)
+    if not comparison["all_fields_equal"]:
+        err_parts: list[str] = []
+        if comparison["mismatched_fields"]:
+            err_parts.append(f"mismatched={sorted(comparison['mismatched_fields'].keys())}")
+        if comparison["missing_or_uncomparable_fields"]:
+            err_parts.append(f"missing_or_uncomparable={comparison['missing_or_uncomparable_fields']}")
+        return {
+            "parser_name": "hrAI_x509_metadata",
+            "parser_version": ESIGN_5070_VERSION,
+            "status": "PEM_DER_METADATA_MISMATCH",
+            "matches_expected_der": False,
+            "cert_sha256": getattr(meta, "cert_sha256", None),
+            "serial_number": getattr(meta, "serial_number", None),
+            "subject": getattr(meta, "subject", None),
+            "issuer": getattr(meta, "issuer", None),
+            "signer_common_name": getattr(meta, "signer_common_name", None),
+            "san_dns_names": list(getattr(meta, "san_dns_names", ()) or ()),
+            "zero_partial_metadata": None,
+            "cache_unpolluted": None,
+            "pem_der_metadata_comparison": comparison,
+            "error_detail": "PEM and DER metadata verification failed: " + "; ".join(err_parts),
+        }
+
+    matched_expected = spec.expected_der_verdict == "ACCEPT"
+    return {
+        "parser_name": "hrAI_x509_metadata",
+        "parser_version": ESIGN_5070_VERSION,
+        "status": "ACCEPTED",
+        "matches_expected_der": matched_expected,
+        "cert_sha256": meta.cert_sha256,
+        "serial_number": meta.serial_number,
+        "subject": meta.subject,
+        "issuer": meta.issuer,
+        "signer_common_name": meta.signer_common_name,
+        "san_dns_names": list(meta.san_dns_names),
+        "zero_partial_metadata": None,
+        "cache_unpolluted": None,
+        "pem_der_metadata_comparison": comparison,
+        "error_detail": None if matched_expected else "Unexpected ACCEPT on expected REJECT vector.",
+    }
 
 
 def _summarize_parser(rows: list[dict[str, object]], key: str) -> dict[str, int]:
@@ -600,9 +769,14 @@ def _summarize_parser(rows: list[dict[str, object]], key: str) -> dict[str, int]
         "positive_rejected": 0,
         "positive_asn1_failed": 0,
         "positive_pem_der_mismatch": 0,
+        "positive_pem_der_metadata_mismatch": 0,
+        "positive_pem_parse_failed": 0,
+        "positive_der_parse_failed": 0,
         "positive_non_canonical_roundtrip": 0,
         "positive_unsupported": 0,
         "negative_rejected": 0,
+        "negative_partial_metadata_leak": 0,
+        "negative_cache_polluted": 0,
         "negative_ber_permissive_accepted": 0,
         "negative_unsupported": 0,
         "not_installed": 0,
@@ -624,6 +798,12 @@ def _summarize_parser(rows: list[dict[str, object]], key: str) -> dict[str, int]
                 counts["positive_asn1_failed"] += 1
             elif st == "PEM_DER_ASN1_MISMATCH":
                 counts["positive_pem_der_mismatch"] += 1
+            elif st == "PEM_DER_METADATA_MISMATCH":
+                counts["positive_pem_der_metadata_mismatch"] += 1
+            elif st == "PEM_PARSE_FAILED":
+                counts["positive_pem_parse_failed"] += 1
+            elif st == "DER_PARSE_FAILED":
+                counts["positive_der_parse_failed"] += 1
             elif st == "NON_CANONICAL_ROUNDTRIP":
                 counts["positive_non_canonical_roundtrip"] += 1
             else:
@@ -631,6 +811,10 @@ def _summarize_parser(rows: list[dict[str, object]], key: str) -> dict[str, int]
         else:
             if st == "REJECTED":
                 counts["negative_rejected"] += 1
+            elif st == "PARTIAL_METADATA_LEAK":
+                counts["negative_partial_metadata_leak"] += 1
+            elif st == "CACHE_POLLUTED":
+                counts["negative_cache_polluted"] += 1
             elif st == "BER_PERMISSIVE_ACCEPT":
                 counts["negative_ber_permissive_accepted"] += 1
             elif st == "UNSUPPORTED_BY_PARSER":
@@ -654,6 +838,23 @@ def _evaluate_run_policy(
     negative_count = sum(1 for r in rows if r["expected_der_verdict"] == "REJECT")
     hrai_counts = per_parser_counts["hrai"]
     hrai_all_matched = all(r["parsers"]["hrai"]["matches_expected_der"] for r in rows)
+    hrai_pos_meta_equal = sum(
+        1
+        for r in rows
+        if r["expected_der_verdict"] == "ACCEPT"
+        and r["parsers"]["hrai"]["status"] == "ACCEPTED"
+        and r["parsers"]["hrai"]["matches_expected_der"]
+        and bool((r["parsers"]["hrai"].get("pem_der_metadata_comparison") or {}).get("all_fields_equal"))
+    )
+    hrai_neg_clean = sum(
+        1
+        for r in rows
+        if r["expected_der_verdict"] == "REJECT"
+        and r["parsers"]["hrai"]["status"] == "REJECTED"
+        and r["parsers"]["hrai"]["matches_expected_der"]
+        and bool(r["parsers"]["hrai"].get("zero_partial_metadata"))
+        and bool(r["parsers"]["hrai"].get("cache_unpolluted"))
+    )
 
     ext_pos_confirmed = sum(
         1
@@ -670,11 +871,17 @@ def _evaluate_run_policy(
 
     if mode == "offline":
         failure_reasons: list[str] = []
-        if not hrai_all_matched:
+        if not hrai_all_matched or hrai_pos_meta_equal != positive_count or hrai_neg_clean != negative_count:
             failure_reasons.append(
-                f"Authoritative hrAI strict DER check failed "
-                f"(pos={hrai_counts['positive_accepted']}/{positive_count}, "
-                f"neg={hrai_counts['negative_rejected']}/{negative_count})."
+                f"Authoritative hrAI strict DER / PEM-DER metadata check failed "
+                f"(pos_accepted={hrai_counts['positive_accepted']}/{positive_count}, "
+                f"pem_der_meta_equal={hrai_pos_meta_equal}/{positive_count}, "
+                f"neg_rejected={hrai_neg_clean}/{negative_count}, "
+                f"meta_mismatch={hrai_counts['positive_pem_der_metadata_mismatch']}, "
+                f"pem_fail={hrai_counts['positive_pem_parse_failed']}, "
+                f"der_fail={hrai_counts['positive_der_parse_failed']}, "
+                f"partial_leak={hrai_counts['negative_partial_metadata_leak']}, "
+                f"cache_polluted={hrai_counts['negative_cache_polluted']})."
             )
         exit_code = 0 if not failure_reasons else 1
         return {
@@ -684,15 +891,19 @@ def _evaluate_run_policy(
             "parser_versions": parser_versions,
             "missing_parsers": [],
             "verification_thresholds": {
-                "hrai_positive_accepted": {
+                "hrai_positive_accepted_and_pem_der_metadata_equal": {
                     "required": positive_count,
-                    "observed": hrai_counts["positive_accepted"],
-                    "passed": hrai_counts["positive_accepted"] == positive_count,
+                    "observed": hrai_pos_meta_equal,
+                    "passed": hrai_pos_meta_equal == positive_count,
                 },
-                "hrai_negative_rejected_zero_partial_meta": {
+                "hrai_negative_rejected_zero_partial_meta_and_clean_cache": {
                     "required": negative_count,
-                    "observed": hrai_counts["negative_rejected"],
-                    "passed": hrai_all_matched and hrai_counts["negative_rejected"] == negative_count,
+                    "observed": hrai_neg_clean,
+                    "passed": (
+                        hrai_neg_clean == negative_count
+                        and hrai_counts["negative_partial_metadata_leak"] == 0
+                        and hrai_counts["negative_cache_polluted"] == 0
+                    ),
                 },
                 "external_independent_cross_validation": {
                     "required": "NOT_PERFORMED_IN_OFFLINE_MODE",
@@ -735,15 +946,19 @@ def _evaluate_run_policy(
             "missing": missing_parsers,
             "passed": len(missing_parsers) == 0,
         },
-        "hrai_positive_accepted": {
+        "hrai_positive_accepted_and_pem_der_metadata_equal": {
             "required": positive_count,
-            "observed": hrai_counts["positive_accepted"],
-            "passed": hrai_counts["positive_accepted"] == positive_count,
+            "observed": hrai_pos_meta_equal,
+            "passed": hrai_pos_meta_equal == positive_count,
         },
-        "hrai_negative_rejected_zero_partial_meta": {
+        "hrai_negative_rejected_zero_partial_meta_and_clean_cache": {
             "required": negative_count,
-            "observed": hrai_counts["negative_rejected"],
-            "passed": hrai_all_matched and hrai_counts["negative_rejected"] == negative_count,
+            "observed": hrai_neg_clean,
+            "passed": (
+                hrai_neg_clean == negative_count
+                and hrai_counts["negative_partial_metadata_leak"] == 0
+                and hrai_counts["negative_cache_polluted"] == 0
+            ),
         },
         "external_zero_positive_parse_errors": {
             "required": 0,
@@ -765,11 +980,17 @@ def _evaluate_run_policy(
     failure_reasons = []
     if missing_parsers:
         failure_reasons.append(f"Strict mode requires all parsers installed; missing: {missing_parsers}")
-    if not hrai_all_matched:
+    if not hrai_all_matched or hrai_pos_meta_equal != positive_count or hrai_neg_clean != negative_count:
         failure_reasons.append(
-            f"Authoritative hrAI strict DER check failed "
-            f"(pos={hrai_counts['positive_accepted']}/{positive_count}, "
-            f"neg={hrai_counts['negative_rejected']}/{negative_count})."
+            f"Authoritative hrAI strict DER / PEM-DER metadata check failed "
+            f"(pos_accepted={hrai_counts['positive_accepted']}/{positive_count}, "
+            f"pem_der_meta_equal={hrai_pos_meta_equal}/{positive_count}, "
+            f"neg_rejected={hrai_neg_clean}/{negative_count}, "
+            f"meta_mismatch={hrai_counts['positive_pem_der_metadata_mismatch']}, "
+            f"pem_fail={hrai_counts['positive_pem_parse_failed']}, "
+            f"der_fail={hrai_counts['positive_der_parse_failed']}, "
+            f"partial_leak={hrai_counts['negative_partial_metadata_leak']}, "
+            f"cache_polluted={hrai_counts['negative_cache_polluted']})."
         )
     if ext_positive_errors > 0:
         failure_reasons.append(
@@ -916,6 +1137,7 @@ def run_cross_validation(
             "ber_permissive_accept_never_der_proof": True,
             "unsupported_never_pass": True,
             "openssl_positive_requires_pem_and_der_asn1_match": True,
+            "hrai_positive_requires_pem_der_metadata_equality": True,
             "authoritative_der_canonicality_parser": "hrAI_x509_metadata",
             "read_only_metadata_not_5070_or_signature_proof": True,
         },

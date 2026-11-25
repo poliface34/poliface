@@ -49,7 +49,7 @@ Ayrıntılı mimari dokümanlar:
 ## Bağımsız Test, Canlı Prob ve Doğrulama Komutları
 
 ```bash
-# 1. Tam tek süreçli regresyon paketi (mevcut 230 test + 12 yeni v1.0.5.1 DER/hrAI/çapraz-doğrulama testi = 242 test)
+# 1. Tam tek süreçli regresyon paketi (mevcut 230 test + 14 yeni v1.0.5.1 DER/hrAI/çapraz-doğrulama testi = 244 test)
 python3 -m unittest discover -s tests -v
 
 # 2. Tek komutluk bağımsız X.509/ASN.1 çapraz doğrulama aracı (strict: 4 parser + eşik; offline: yalnızca hrAI)

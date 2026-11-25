@@ -210,7 +210,11 @@ class TestCrossValidateX509V1051(unittest.TestCase):
                     "openssl": {"status": "ACCEPTED"},
                     "pyasn1_rfc5280": {"status": "ACCEPTED"},
                     "cryptography": {"status": "ACCEPTED"},
-                    "hrai": {"status": "ACCEPTED", "matches_expected_der": True},
+                    "hrai": {
+                        "status": "ACCEPTED",
+                        "matches_expected_der": True,
+                        "pem_der_metadata_comparison": {"all_fields_equal": True},
+                    },
                 },
                 "authoritative_der_canonicality_decision": {"strict_external_confirmations": ["openssl", "pyasn1_rfc5280", "cryptography"]},
             },
@@ -221,7 +225,11 @@ class TestCrossValidateX509V1051(unittest.TestCase):
                     "openssl": {"status": "UNSUPPORTED_BY_PARSER"},
                     "pyasn1_rfc5280": {"status": "ACCEPTED"},
                     "cryptography": {"status": "UNSUPPORTED_BY_PARSER"},
-                    "hrai": {"status": "ACCEPTED", "matches_expected_der": True},
+                    "hrai": {
+                        "status": "ACCEPTED",
+                        "matches_expected_der": True,
+                        "pem_der_metadata_comparison": {"all_fields_equal": True},
+                    },
                 },
                 "authoritative_der_canonicality_decision": {"strict_external_confirmations": ["pyasn1_rfc5280"]},
             },
@@ -232,7 +240,12 @@ class TestCrossValidateX509V1051(unittest.TestCase):
                     "openssl": {"status": "REJECTED"},
                     "pyasn1_rfc5280": {"status": "REJECTED"},
                     "cryptography": {"status": "REJECTED"},
-                    "hrai": {"status": "REJECTED", "matches_expected_der": True},
+                    "hrai": {
+                        "status": "REJECTED",
+                        "matches_expected_der": True,
+                        "zero_partial_metadata": True,
+                        "cache_unpolluted": True,
+                    },
                 },
                 "authoritative_der_canonicality_decision": {"strict_external_confirmations": ["openssl", "pyasn1_rfc5280", "cryptography"]},
             },
@@ -243,7 +256,12 @@ class TestCrossValidateX509V1051(unittest.TestCase):
                     "openssl": {"status": "BER_PERMISSIVE_ACCEPT"},
                     "pyasn1_rfc5280": {"status": "BER_PERMISSIVE_ACCEPT"},
                     "cryptography": {"status": "REJECTED"},
-                    "hrai": {"status": "REJECTED", "matches_expected_der": True},
+                    "hrai": {
+                        "status": "REJECTED",
+                        "matches_expected_der": True,
+                        "zero_partial_metadata": True,
+                        "cache_unpolluted": True,
+                    },
                 },
                 "authoritative_der_canonicality_decision": {"strict_external_confirmations": ["cryptography"]},
             },
@@ -326,6 +344,20 @@ class TestCrossValidateX509V1051(unittest.TestCase):
         self.assertTrue(report["summary"]["authoritative_hrai_strict_der_all_matched"])
         self.assertTrue(report["fixture_integrity"]["manifest_verified"])
         self.assertFalse(report["fixture_integrity"]["private_keys_stored"])
+        self.assertTrue(report["policy"]["hrai_positive_requires_pem_der_metadata_equality"])
+
+        # Every positive vector must have verified PEM/DER metadata equality
+        for row in report["vectors"]:
+            hrai = row["parsers"]["hrai"]
+            if row["expected_der_verdict"] == "ACCEPT":
+                self.assertEqual(hrai["status"], "ACCEPTED", row["vector_id"])
+                self.assertTrue(hrai["matches_expected_der"], row["vector_id"])
+                cmp_res = hrai["pem_der_metadata_comparison"]
+                self.assertTrue(cmp_res["all_fields_equal"], row["vector_id"])
+                self.assertEqual(cmp_res["mismatched_fields"], {}, row["vector_id"])
+                self.assertEqual(cmp_res["missing_or_uncomparable_fields"], [], row["vector_id"])
+                for req_f in ("cert_sha256", "serial_number", "subject", "issuer", "san_dns_names"):
+                    self.assertIn(req_f, cmp_res["compared_fields"], row["vector_id"])
 
         ci = report["ci_audit"]
         self.assertIn("parser_versions", ci)
@@ -359,6 +391,194 @@ class TestCrossValidateX509V1051(unittest.TestCase):
             # Fail-closed contract if optional external parsers are absent in a minimal sandbox
             self.assertEqual(ci["exit_code"], 2)
             self.assertEqual(ci["independent_cross_validation"], "FAILED_MISSING_PARSERS")
+
+    def test_05_hrai_pem_der_metadata_equality_mismatch_and_parse_failures(self) -> None:
+        """Verify hrAI positive PEM/DER equality, mismatch detection, missing/uncomparable fields, PEM/DER parse failures, and strict non-zero exit code."""
+        from dataclasses import replace
+        import hashlib
+        from types import SimpleNamespace
+        from unittest import mock
+
+        from engine.esign5070 import DerParseError, parse_x509_certificate_metadata_der
+        from tests.x509_crossval_vectors import load_and_verify_fixtures
+
+        _, vectors = load_and_verify_fixtures()
+        dns_spec, _der_p, dns_pem_p, dns_der = next(v for v in vectors if v[0].vector_id == "05_valid_dNSName")
+        real_meta = parse_x509_certificate_metadata_der(dns_der)
+
+        # 1. Positive vector with matching PEM & DER metadata -> ACCEPTED, matches_expected_der=True
+        res_match = cv._eval_hrai(dns_spec, dns_pem_p, dns_der)
+        self.assertEqual(res_match["status"], "ACCEPTED")
+        self.assertTrue(res_match["matches_expected_der"])
+        self.assertTrue(res_match["pem_der_metadata_comparison"]["all_fields_equal"])
+        self.assertEqual(res_match["cert_sha256"], hashlib.sha256(dns_der).hexdigest())
+        self.assertEqual(res_match["san_dns_names"], ["www.insenai.com.tr"])
+
+        # 2. Positive vector with PEM/DER metadata mismatch on SHA-256, serial, subject, issuer, SAN -> PEM_DER_METADATA_MISMATCH
+        mismatch_variants = [
+            ("cert_sha256", replace(real_meta, cert_sha256="0" * 64)),
+            ("serial_number", replace(real_meta, serial_number="DEADBEEF")),
+            ("subject", replace(real_meta, subject="CN=Tampered")),
+            ("issuer", replace(real_meta, issuer="CN=RogueCA")),
+            ("san_dns_names", replace(real_meta, san_dns_names=("evil.example.com",))),
+        ]
+        for field_name, altered_pem_meta in mismatch_variants:
+            with mock.patch.object(cv, "parse_x509_certificate_metadata", return_value=altered_pem_meta):
+                res_mm = cv._eval_hrai(dns_spec, dns_pem_p, dns_der)
+            self.assertEqual(res_mm["status"], "PEM_DER_METADATA_MISMATCH", field_name)
+            self.assertFalse(res_mm["matches_expected_der"], field_name)
+            self.assertFalse(res_mm["pem_der_metadata_comparison"]["all_fields_equal"], field_name)
+            self.assertIn(field_name, res_mm["pem_der_metadata_comparison"]["mismatched_fields"], field_name)
+
+        # 3. Uncomparable / missing field on PEM metadata -> NEVER silently accepted!
+        incomplete_pem = SimpleNamespace(
+            cert_sha256=real_meta.cert_sha256,
+            serial_number="",  # empty required field -> uncomparable!
+            subject=real_meta.subject,
+            issuer=real_meta.issuer,
+            not_before_utc=real_meta.not_before_utc,
+            not_after_utc=real_meta.not_after_utc,
+            signature_algorithm=real_meta.signature_algorithm,
+            public_key_algorithm=real_meta.public_key_algorithm,
+            spki_pem=real_meta.spki_pem,
+            # san_dns_names intentionally omitted -> missing_or_uncomparable!
+        )
+        with mock.patch.object(cv, "parse_x509_certificate_metadata", return_value=incomplete_pem):
+            res_inc = cv._eval_hrai(dns_spec, dns_pem_p, dns_der)
+        self.assertEqual(res_inc["status"], "PEM_DER_METADATA_MISMATCH")
+        self.assertFalse(res_inc["matches_expected_der"])
+        self.assertIn("serial_number", res_inc["pem_der_metadata_comparison"]["missing_or_uncomparable_fields"])
+        self.assertIn("san_dns_names", res_inc["pem_der_metadata_comparison"]["missing_or_uncomparable_fields"])
+
+        # 4. Positive vector where PEM parse fails (returns None) -> PEM_PARSE_FAILED, matches_expected_der=False
+        with mock.patch.object(cv, "parse_x509_certificate_metadata", return_value=None):
+            res_pem_fail = cv._eval_hrai(dns_spec, dns_pem_p, dns_der)
+        self.assertEqual(res_pem_fail["status"], "PEM_PARSE_FAILED")
+        self.assertFalse(res_pem_fail["matches_expected_der"])
+
+        # 5. Positive vector where DER parse fails (raises DerParseError) -> DER_PARSE_FAILED, matches_expected_der=False
+        with mock.patch.object(cv, "parse_x509_certificate_metadata_der", side_effect=DerParseError("injected DER failure")):
+            res_der_fail = cv._eval_hrai(dns_spec, dns_pem_p, dns_der)
+        self.assertEqual(res_der_fail["status"], "DER_PARSE_FAILED")
+        self.assertFalse(res_der_fail["matches_expected_der"])
+
+        # 6. End-to-end strict mode MUST fail with non-zero exit code (1) on PEM_DER_METADATA_MISMATCH!
+        orig_pem_parser = cv.parse_x509_certificate_metadata
+
+        def _tamper_dns_pem(pem_text: str):
+            parsed = orig_pem_parser(pem_text)
+            if parsed is not None and parsed.san_dns_names == ("www.insenai.com.tr",):
+                return replace(parsed, san_dns_names=("tampered.insenai.com.tr",))
+            return parsed
+
+        with mock.patch.object(cv, "parse_x509_certificate_metadata", side_effect=_tamper_dns_pem):
+            rep_strict = cv.run_cross_validation(mode="strict")
+            rep_offline = cv.run_cross_validation(mode="offline")
+        self.assertNotEqual(rep_strict["ci_audit"]["exit_code"], 0)
+        self.assertEqual(rep_strict["summary"]["per_parser_counts"]["hrai"]["positive_pem_der_metadata_mismatch"], 1)
+        self.assertFalse(rep_strict["summary"]["authoritative_hrai_strict_der_all_matched"])
+        self.assertFalse(
+            rep_strict["ci_audit"]["verification_thresholds"]["hrai_positive_accepted_and_pem_der_metadata_equal"]["passed"]
+        )
+        self.assertTrue(
+            rep_strict["ci_audit"]["verification_thresholds"]["hrai_negative_rejected_zero_partial_meta_and_clean_cache"]["passed"]
+        )
+        self.assertEqual(rep_offline["ci_audit"]["exit_code"], 1)
+        self.assertEqual(rep_offline["summary"]["per_parser_counts"]["hrai"]["positive_pem_der_metadata_mismatch"], 1)
+        self.assertFalse(
+            rep_offline["ci_audit"]["verification_thresholds"]["hrai_positive_accepted_and_pem_der_metadata_equal"]["passed"]
+        )
+        self.assertTrue(
+            rep_offline["ci_audit"]["verification_thresholds"]["hrai_negative_rejected_zero_partial_meta_and_clean_cache"]["passed"]
+        )
+
+    def test_06_hrai_negative_vector_partial_metadata_leak_and_cache_pollution(self) -> None:
+        """Verify negative vector partial metadata leakage and _METADATA_CACHE pollution are detected and fail strict/offline modes."""
+        from dataclasses import replace
+        import hashlib
+        from unittest import mock
+
+        from engine.esign5070 import x509_metadata as x509_mod
+        from tests.x509_crossval_vectors import load_and_verify_fixtures
+
+        _, vectors = load_and_verify_fixtures()
+        neg_spec, _der_p, neg_pem_p, neg_der = next(v for v in vectors if v[0].vector_id == "10_bad_pc_prim_otherName_0x80")
+        pos_spec, _pder_p, _ppem_p, pos_der = next(v for v in vectors if v[0].vector_id == "05_valid_dNSName")
+        sample_valid_meta = x509_mod.parse_x509_certificate_metadata_der(pos_der)
+
+        # 1. Real negative vector -> REJECTED, zero_partial_metadata=True, cache_unpolluted=True
+        res_clean = cv._eval_hrai(neg_spec, neg_pem_p, neg_der)
+        self.assertEqual(res_clean["status"], "REJECTED")
+        self.assertTrue(res_clean["matches_expected_der"])
+        self.assertTrue(res_clean["zero_partial_metadata"])
+        self.assertTrue(res_clean["cache_unpolluted"])
+
+        # 2. Negative vector leaking partial metadata -> PARTIAL_METADATA_LEAK, matches_expected_der=False
+        orig_insp = cv.inspect_signer_certificate_x509
+
+        def _leaky_inspect(cert_pem: str, *, validation_time_utc: str):
+            base = orig_insp(cert_pem, validation_time_utc=validation_time_utc)
+            return replace(base, subject="CN=LeakedPartialSubject")
+
+        with mock.patch.object(cv, "inspect_signer_certificate_x509", side_effect=_leaky_inspect):
+            res_leak = cv._eval_hrai(neg_spec, neg_pem_p, neg_der)
+        self.assertEqual(res_leak["status"], "PARTIAL_METADATA_LEAK")
+        self.assertFalse(res_leak["matches_expected_der"])
+        self.assertFalse(res_leak["zero_partial_metadata"])
+
+        # 3. Negative vector polluting _METADATA_CACHE during DER error -> CACHE_POLLUTED, matches_expected_der=False
+        neg_cache_key = (hashlib.sha256(neg_der).hexdigest(), len(neg_der))
+        orig_der_parser = cv.parse_x509_certificate_metadata_der
+
+        def _polluting_der_parser(der_b: bytes):
+            if der_b == neg_der:
+                with x509_mod._CACHE_LOCK:
+                    x509_mod._METADATA_CACHE[neg_cache_key] = (b"polluted_entry", sample_valid_meta)
+                raise x509_mod.DerParseError("injected DER failure after polluting cache")
+            return orig_der_parser(der_b)
+
+        try:
+            with mock.patch.object(cv, "parse_x509_certificate_metadata_der", side_effect=_polluting_der_parser):
+                res_polluted = cv._eval_hrai(neg_spec, neg_pem_p, neg_der)
+                self.assertEqual(res_polluted["status"], "CACHE_POLLUTED")
+                self.assertFalse(res_polluted["matches_expected_der"])
+                self.assertTrue(res_polluted["zero_partial_metadata"])
+                self.assertFalse(res_polluted["cache_unpolluted"])
+
+                # Verify BOTH strict and offline modes fail with non-zero exit code on cache pollution
+                rep_offline_polluted = cv.run_cross_validation(mode="offline")
+                self.assertEqual(rep_offline_polluted["ci_audit"]["exit_code"], 1)
+                self.assertEqual(
+                    rep_offline_polluted["summary"]["per_parser_counts"]["hrai"]["negative_cache_polluted"], 1
+                )
+                self.assertTrue(
+                    rep_offline_polluted["ci_audit"]["verification_thresholds"][
+                        "hrai_positive_accepted_and_pem_der_metadata_equal"
+                    ]["passed"]
+                )
+                self.assertFalse(
+                    rep_offline_polluted["ci_audit"]["verification_thresholds"][
+                        "hrai_negative_rejected_zero_partial_meta_and_clean_cache"
+                    ]["passed"]
+                )
+                rep_strict_polluted = cv.run_cross_validation(mode="strict")
+                self.assertNotEqual(rep_strict_polluted["ci_audit"]["exit_code"], 0)
+                self.assertEqual(
+                    rep_strict_polluted["summary"]["per_parser_counts"]["hrai"]["negative_cache_polluted"], 1
+                )
+                self.assertTrue(
+                    rep_strict_polluted["ci_audit"]["verification_thresholds"][
+                        "hrai_positive_accepted_and_pem_der_metadata_equal"
+                    ]["passed"]
+                )
+                self.assertFalse(
+                    rep_strict_polluted["ci_audit"]["verification_thresholds"][
+                        "hrai_negative_rejected_zero_partial_meta_and_clean_cache"
+                    ]["passed"]
+                )
+        finally:
+            with x509_mod._CACHE_LOCK:
+                x509_mod._METADATA_CACHE.pop(neg_cache_key, None)
 
 
 if __name__ == "__main__":
