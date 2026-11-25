@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0.5.1",
+  "layer_id": "L6_CBA_CONTRACTS_AND_WORKPLACE_PRACTICES",
+  "product_brand": "hrAI",
+  "coordinator_agent": "@hrAI",
+  "specialist_agent": "@HukukSGK",
+  "module_id": "MOD-L6-ISYERI-UYGULAMASI",
+  "source_document_id": "HRAI-L6-UYG-04",
+  "autonomous_source_kind": "ESTABLISHED_WORKPLACE_PRACTICE",
+  "title": "Yerleşik İşyeri Uygulamaları (Prim, İkramiye, Yan Haklar ve 4857 m.22 Sınırı) Referans Modülü",
+  "scope_summary": "İşyerinde genel, sürekli ve çekincesiz biçimde tekrarlanarak iş sözleşmesinin zımni hükmüne dönüşen prim, ikramiye, yemek/yol yardımı ve ek izin gibi yerleşik işyeri uygulamalarının oluşumu, SGK PEK/vergi etkisi ve tek taraflı kaldırılamama sınırları için referans şablondur.",
+  "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+  "template_only_not_binding_company_policy": true,
+  "no_flat_priority_supremacy": true,
+  "non_reducible_source_distinction": "Yerleşik işyeri uygulaması fiili ve sürekli tekrarlanan menfaatlerden doğan zımni sözleşme hükmüdür; yazılı TİS'e, başlangıçtaki bireysel sözleşme metnine veya tek taraflı İK prosedürüne indirgenemez.",
+  "primary_statutory_basis_ids": [
+    "MEVZUAT-4857",
+    "CARD-5510-M80-M82",
+    "CARD-4857-M53",
+    "CARD-YON-YILLIK-IZIN"
+  ],
+  "rules": [
+    {
+      "rule_id": "RULE-L6-04-PRIM-IKRAMIYE-BAGLAYICILIK",
+      "title": "Düzenli Prim / İkramiye ve Yan Hakların Yerleşik İşyeri Uygulamasına Dönüşmesi",
+      "rule_summary": "İşyerinde belirli bir dönem boyunca genel nitelikte ve çekincesiz tekrarlanan prim, ikramiye veya ek yan haklar iş sözleşmesinin parçası hâline gelir; işveren tek taraflı İK duyurusu veya iç yönetmelik değişikliğiyle bu menfaati kaldıramaz (4857 m.22 yazılı rıza zorunludur).",
+      "norm_type": "ESTABLISHED_WORKPLACE_PRACTICE",
+      "legal_basis_ids": [
+        "MEVZUAT-4857",
+        "CARD-5510-M80-M82"
+      ],
+      "source_document_id": "HRAI-L6-UYG-04",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": true,
+        "statutory_floor_nature": "SUPPLEMENTARY_DEFAULT",
+        "can_improve_for_employee": true,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "Yerleşik işyeri uygulaması kanuni tabanın üzerinde ek menfaat yaratır; tek taraflı geri alınması işçi aleyhine esaslı değişiklik (4857 m.22) oluşturur."
+      },
+      "conflict_resolution": {
+        "strategy": "ESSENTIAL_CHANGE_WRITTEN_CONSENT_4857_M22",
+        "higher_authority_ref": "4857 s. İş Kanunu m.22 ve 5510 s. Kanun m.80 (PEK)",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "Yerleşik işyeri uygulaması, tek taraflı İK prosedürü veya sonradan yayımlanan iç yönetmelik ile iptal edilemez; TİS kapsamında yeni kolektif düzenleme varsa 6356 m.36 ayrıca hukuk müşavirince incelenir.",
+        "rationale": "Zımni sözleşme hükmüne dönüşen işyeri uygulaması, yazılı işyeri prosedürü tarafından tek taraflı ortadan kaldırılamaz."
+      },
+      "human_review_required": true
+    },
+    {
+      "rule_id": "RULE-L6-04-EK-IZIN-NISPI-EMREDICI",
+      "title": "Kanuni Taban Üzerinde Ek Yıllık İzin veya Sosyal İzin İşyeri Uygulaması",
+      "rule_summary": "4857 m.53 asgari yıllık izin sürelerinin üzerinde sürekli uygulanan ek izin günleri işçi lehine geçerlidir; ancak işyerindeki uygulama kanuni asgari izin günlerini veya 10 günlük bölünmez blok kuralını (m.56) işçi aleyhine düşüremez.",
+      "norm_type": "ESTABLISHED_WORKPLACE_PRACTICE",
+      "legal_basis_ids": [
+        "CARD-4857-M53",
+        "CARD-YON-YILLIK-IZIN"
+      ],
+      "source_document_id": "HRAI-L6-UYG-04",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": true,
+        "statutory_floor_nature": "RELATIVE_MANDATORY_FLOOR",
+        "can_improve_for_employee": true,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "4857 m.53 nispi emredici tabandır; işyeri uygulamasıyla artırılabilir ancak azaltılamaz veya m.56 en az 10 gün tek parça kuralı ihlal edilemez."
+      },
+      "conflict_resolution": {
+        "strategy": "EMPLOYEE_FAVORABLE_COMPARISON_WITH_MANDATORY_FLOOR",
+        "higher_authority_ref": "4857 s. İş Kanunu m.53-56 ve Yıllık Ücretli İzin Yönetmeliği",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "Fiili ek izin uygulaması yazılı bireysel sözleşmede geçmese dahi süreklilik kazanmışsa işyeri uygulaması olarak korunur ve İK prosedürüyle tek taraflı daraltılamaz.",
+        "rationale": "Nispi emredici taban üzerindeki yerleşik işyeri uygulaması hem kanuni tabana hem de 4857 m.22 rıza korumasına tabidir."
+      },
+      "human_review_required": true
+    }
+  ],
+  "disclaimer": "Bu kayıt hrAI @HukukSGK L6 yerleşik işyeri uygulaması referans şablonudur (REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION). Somut işyerindeki fiili tekrarlama, çekince kayıtları ve bordro geçmişi hukuk müşavirince incelenmeden kesin şirket uygulaması olarak sunulamaz."
+}

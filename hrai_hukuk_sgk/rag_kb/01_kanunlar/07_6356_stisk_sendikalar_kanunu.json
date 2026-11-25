@@ -1,0 +1,162 @@
+{
+  "schema_version": "1.0.2a.3",
+  "law_no": "6356",
+  "law_title": "6356 Sayılı Sendikalar ve Toplu İş Sözleşmesi Kanunu",
+  "source_id": "MEVZUAT-6356",
+  "cards": [
+    {
+      "card_id": "CARD-6356-M24",
+      "source_id": "MEVZUAT-6356",
+      "law_no": "6356",
+      "article_ref": "Madde 24",
+      "topic": "İşyeri sendika temsilcisinin güvencesi (yalnızca haklı nedenle ve açık-yazılı bildirimle fesih)",
+      "legal_basis": {
+        "source_id": "MEVZUAT-6356",
+        "original_publication_ref": "RG 07.11.2012 / Sayı 28460 (İlk yayımlanan metin)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6356&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": []
+      },
+      "scope_of_application": "İşveren, işyeri sendika temsilcilerinin iş sözleşmelerini haklı bir neden olmadıkça ve nedenini yazılı olarak açık ve kesin şekilde belirtmedikçe feshedemez. Ayrıca temsilcinin yazılı rızası olmadıkça işyerini değiştiremez veya işinde esaslı tarzda değişiklik yapamaz; aksi halde değişiklik geçersiz sayılır. Bu işlemler yüksek dava riski nedeniyle zorunlu şirket avukatı eskalasyonu gerektirir.",
+      "exceptions": [
+        "4857 m.25 kapsamında somut olarak ispatlanabilen ve yazılı-açık-kesin gerekçeli haklı fesih hali",
+        "Temsilcinin açık yazılı rızası ile yapılan işyeri veya görev değişikliği"
+      ],
+      "required_documents": [
+        "Sendika tarafından işverene bildirilmiş güncel işyeri sendika temsilcisi atama yazısı",
+        "Haklı fesih delil dosyası ve yazılı şirket avukatı onayı (zorunlu eskalasyon)",
+        "Görev/işyeri değişikliğinde temsilcinin ıslak imzalı yazılı rızası"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde 6356 m.24'e özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2012-11-07",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "6356 Sayılı Kanun m.82 — Yayımı tarihinde (07.11.2012) yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "Haklı neden olmadan feshedilen sendika temsilcisinin işe iade edilmesi ve temsilcilik süresini aşmamak kaydıyla fesih ile kararın kesinleşmesi arasındaki tüm ücret ve haklarının ödenmesi (işe başlatılmazsa temsilcilik süresi boyunca ücret ödemeye devam yükümlülüğü!)",
+        "Avukat onayı olmadan bordro/SGK çıkış işlemi yapılması (Kritik BLOCKER)"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD6356M24",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "6356",
+        "madde 24",
+        "sendika temsilcisi",
+        "temsilci güvencesi",
+        "zorunlu eskalasyon",
+        "yazılı rıza"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-6356",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT6356",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 6356 Madde 24 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    },
+    {
+      "card_id": "CARD-6356-M25",
+      "source_id": "MEVZUAT-6356",
+      "law_no": "6356",
+      "article_ref": "Madde 25",
+      "topic": "Sendika özgürlüğünün güvencesi ve sendikal tazminat (en az 1 yıllık ücret)",
+      "legal_basis": {
+        "source_id": "MEVZUAT-6356",
+        "original_publication_ref": "RG 07.11.2012 / Sayı 28460 (İlk yayımlanan metin)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6356&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": []
+      },
+      "scope_of_application": "İşçilerin işe alınmaları, çalışma koşulları veya iş sözleşmelerinin sona erdirilmesi sendika üyeliği veya sendikal faaliyetlere katılma koşuluna bağlanamaz; sendikal nedenle ayrım yapılamaz. Sendikal nedenle fesih veya ayrımcılık halinde işçi, 30 işçi/6 ay kıdem şartı aranmaksızın en az 1 yıllık ücreti tutarında sendikal tazminat talep edebilir (4857 m.18-21 işe iade rejimiyle birlikte uygulanır).",
+      "exceptions": [
+        "Toplu iş sözleşmesi (TİS) ile sendika üyelerine özgülenen ücret ve sosyal yardımlar (dayanışma aidatı mekanizması dahil) ayrımcılık sayılmaz (m.25/2)"
+      ],
+      "required_documents": [
+        "Feshin sendikal nedene dayanmadığını objektif verilerle ispatlayan performans/işletmesel karar belgeleri",
+        "Sendikal örgütlenme sürecinde yapılacak tüm fesihlerde şirket avukatı ön inceleme onayı"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde 6356 m.25'e özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2012-11-07",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "6356 Sayılı Kanun m.82 — Yayımı tarihinde (07.11.2012) yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "En az 1 yıllık çıplak brüt ücret tutarında sendikal tazminat + boşta geçen süre ücreti yükümlülüğü",
+        "TCK m.118 kapsamında sendikal hakların kullanılmasının engellenmesi suçu riski"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD6356M25",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "6356",
+        "madde 25",
+        "sendikal tazminat",
+        "sendika özgürlüğü",
+        "ayrımcılık",
+        "1 yıllık ücret"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-6356",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT6356",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 6356 Madde 25 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    }
+  ]
+}

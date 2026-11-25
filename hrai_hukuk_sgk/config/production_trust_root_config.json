@@ -1,0 +1,117 @@
+{
+  "schema_version": "1.0.5.1",
+  "description": "hrAI @HukukSGK v1.0.5.1 üretim güven kökü yapılandırması. GCP öncelikli (Frankfurt / europe-west3) ve PKCS#11 HSM alternatifli, sağlayıcıdan bağımsız hibrit mimariyi tanımlar. Gerçek GCP kimlik bilgileri, Cloud KMS HSM anahtarları, GCS WORM Bucket Lock, ayrı güvenlik projesindeki harici güven çapası, bağımsız RFC 3161 TSA, KVKK m.9 değerlendirmesi ve harici hukuk müşaviri imzalı onayı tamamlanana kadar deployment_status=NOT_CONFIGURED ve production_use_authorized=false olarak kalır.",
+  "deployment_status": "NOT_CONFIGURED",
+  "architecture_mode": "GCP_PRIMARY_PROVIDER_AGNOSTIC_HYBRID",
+  "provider_agnostic_interfaces": [
+    "KeySignerProvider",
+    "TimestampAuthorityProvider",
+    "ImmutableEvidenceStorageProvider",
+    "ExternalTrustAnchorProvider",
+    "SourceAcquisitionProvider",
+    "ProductionAuthorizationProvider"
+  ],
+  "gcp_primary": {
+    "provider": "GOOGLE_CLOUD_PLATFORM",
+    "region": "europe-west3",
+    "security_project_id": null,
+    "app_project_id": null,
+    "separate_security_project_required": true,
+    "cloud_kms": {
+      "enabled": false,
+      "protection_level": "HSM",
+      "require_hsm_in_production": true,
+      "supported_algorithms": [
+        "ED25519",
+        "RSA-PSS-SHA256"
+      ],
+      "key_ring": null,
+      "counsel_signing_key_ref": null,
+      "checkpoint_sealer_key_ref": null,
+      "source_acquisition_key_ref": null,
+      "no_private_keys_in_repo": true
+    },
+    "cloud_storage_worm": {
+      "enabled": false,
+      "region": "europe-west3",
+      "bucket_name": null,
+      "retention_policy_seconds": 315360000,
+      "bucket_lock_applied": false,
+      "legal_retention_policy_approved": false,
+      "legal_retention_approval_reference": null,
+      "require_explicit_irreversible_confirmation": true,
+      "bucket_lock_irreversible_warning": "UYARI: Google Cloud Storage Bucket Lock geri alınamaz bir işlemdir. Yasal saklama süresi (ör. 10 yıl / 315.360.000 saniye) ve hukuk/uyum onayı (legal_retention_policy_approved=true, legal_retention_approval_reference) ile açık geri alınamazlık onayı (confirm_irreversible_bucket_lock=true) olmadan kilit uygulanamaz."
+    },
+    "cloud_run": {
+      "enabled": false,
+      "region": "europe-west3",
+      "service_name": null,
+      "service_account_email": null,
+      "ingress_policy": "INTERNAL_ONLY"
+    },
+    "cloud_sql_postgresql": {
+      "enabled": false,
+      "region": "europe-west3",
+      "instance_connection_name": null,
+      "database_name": null,
+      "ssl_mode": "VERIFY_CA",
+      "role_description": "Operasyonel denetim kayıtları, kaynak edinim metaverisi ve onay süreçleri için ana ilişkisel veri tabanı (WORM kanıt deposunun yerine geçmez)."
+    }
+  },
+  "pkcs11_alternative": {
+    "enabled": false,
+    "purpose": "Kurum içi HSM veya Türkiye içi regülasyon/veri yerleşimi gereksinimi doğduğunda Cloud KMS yerine takılabilen sağlayıcıdan bağımsız alternatif HSM imza adaptörü.",
+    "library_path": null,
+    "token_label": null,
+    "slot_id": null,
+    "supported_algorithms": [
+      "ED25519",
+      "RSA-PSS-SHA256"
+    ]
+  },
+  "rfc3161_tsa": {
+    "enabled": false,
+    "independent_provider_required": true,
+    "tsa_url": null,
+    "trusted_ca_pem_path": null,
+    "hash_algorithm": "SHA-256",
+    "nonce_required": true
+  },
+  "external_trust_anchor": {
+    "manifest_uri": null,
+    "read_only": true,
+    "separate_security_project_required": true,
+    "in_app_json_forbidden": true,
+    "kms_hsm_signature_required": true,
+    "worm_storage_required": true,
+    "independent_audit_log_required": true,
+    "fail_closed_on_unavailable": true
+  },
+  "kvkk_and_data_residency": {
+    "primary_region": "europe-west3",
+    "kvkk_m9_assessment_status": "PENDING_KVKK_M9_DATA_RESIDENCY_ASSESSMENT",
+    "kvkk_m9_assessment_approved": false,
+    "kvkk_data_residency_notice": "GCP Frankfurt (europe-west3) bölgesinde tutulacak kanıt zarfları, denetim kayıtları ve operasyonel veriler için 6698 sayılı KVKK m.9 yurt dışına veri aktarımı ve veri yerleşimi hukuki değerlendirmesi ayrıca tamamlanmalıdır."
+  },
+  "law_5070_scope_boundary": {
+    "v1_0_3_scope": "TECHNICAL_KMS_HSM_AND_RFC3161_TSA_ONLY",
+    "qualified_e_signature_5070_equivalent": false,
+    "nes_cades_xades_target_release": "1.0.4",
+    "boundary_notice": "KMS/HSM teknik imzası ve bağımsız RFC 3161 zaman damgası altyapısı hiçbir koşulda 5070 sayılı Elektronik İmza Kanunu kapsamında Güvenli Elektronik İmza / Nitelikli Elektronik Sertifika (NES) eşdeğeri değildir (qualified_e_signature_5070_equivalent: false). 5070 sayılı Kanun kapsamındaki NES ve CAdES/XAdES doğrulaması v1.0.4 engine/esign5070 modülü ve bağımsız 5070 güvenlik/hukuki kabul kapısı üzerinden ayrı yürütülür."
+  },
+  "production_authorization_policy": {
+    "three_way_status_separation": [
+      "technical_verification_status",
+      "legal_counsel_attestation_status",
+      "production_authorization_status"
+    ],
+    "production_use_authorized": false,
+    "external_legal_counsel_signoff_status": "PENDING_SIGNED_EXTERNAL_ATTESTATION",
+    "mock_providers_can_authorize_production": false,
+    "tls_alone_proves_historical_content": false
+  },
+  "deferred_to_v1_0_5": [
+    "L5_HR_PROCEDURES_AND_L6_AUTONOMOUS_NORMS_DELIVERED_IN_V1_0_5_AS_UNADOPTED_TEMPLATES",
+    "V1_1_DETERMINISTIC_CALCULATION_TOOLS_REMAIN_SEPARATE"
+  ]
+}

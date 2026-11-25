@@ -1,0 +1,134 @@
+{
+  "schema_version": "1.0.2b",
+  "law_no": "YON-25425-FC",
+  "law_title": "İş Kanununa İlişkin Fazla Çalışma ve Fazla Sürelerle Çalışma Yönetmeliği",
+  "source_id": "YONETMELIK-FAZLA-CALISMA-20040406",
+  "cards": [
+    {
+      "card_id": "CARD-YON-FAZLA-CALISMA",
+      "source_id": "YONETMELIK-FAZLA-CALISMA-20040406",
+      "law_no": "YON-25425-FC",
+      "article_ref": "Madde 4/son, 6, 7, 8 ve 9",
+      "topic": "Fazla Çalışma Yasakları (m.7), Yaptırılamayacak İşçiler (m.8), Yazılı Onay & 30 Gün Geri Alma (m.9) ve Yer Altı Maden (m.4/son)",
+      "legal_basis": {
+        "source_id": "YONETMELIK-FAZLA-CALISMA-20040406",
+        "original_publication_ref": "RG 06.04.2004 / 25425",
+        "consolidated_text_url": "https://www.resmigazete.gov.tr/eskiler/2017/08/20170825-3.htm",
+        "secondary_statutory_anchors": [
+          "4857 m.41",
+          "4857 m.42",
+          "4857 m.43",
+          "4857 m.69/3",
+          "6552 m.4",
+          "6645 m.34"
+        ],
+        "amendment_history": [
+          {
+            "amending_law_no": "Fazla Çalışma Yönetmeliğinde Değişiklik (2017)",
+            "official_gazette_no": "30165",
+            "publication_date": "2017-08-25",
+            "effective_from": "2017-08-25",
+            "summary": "m.9/2 değiştirilerek her yıl yeniden onay alma zorunluluğu kaldırıldı (sözleşmede/ihtiyaçta yazılı onay + özlük dosyasında saklama + 30 gün önceden yazılı bildirimle geri alma); m.4/son ve m.8/e ile 4857 m.41/9-10 yer altı maden işçileri 37,5 saat üzeri %100 zamlı ücret uyumu sağlandı."
+          }
+        ]
+      },
+      "scope_of_application": "4857 m.41 uygulama yönetmeliği olarak; (i) m.7'de fazla çalışma yaptırılamayacak işleri (sağlık kuralları bakımından günde en çok 7,5 saat veya daha az çalışılması gereken işler, gece döneminde yürütülen işler, maden ocakları/kablo döşemesi/kanalizasyon/tünel inşaatı gibi yer ve su altında yapılan işler), (ii) m.8'de fazla çalışma yaptırılamayacak işçileri (18 yaşını doldurmamışlar, sağlık raporuyla elverişsizler, gebe/yeni doğum yapmış/emziren kadınlar, kısmi süreli çalışanlar, yer altı maden işçileri [4857 m.42-43 hariç]), (iii) m.9'da işçinin yazılı onayını ve 30 gün önceden geri alma hakkını, (iv) m.6'da serbest zaman (1 saat 30 dk / 1 saat 15 dk, 6 ay içinde) esaslarını düzenler.",
+      "application_scenarios": [
+        {
+          "scenario_id": "OVERTIME_REG_M9_WRITTEN_CONSENT_30_DAYS",
+          "condition": "Normal işlerde fazla çalışma onayı alınması veya işçinin onayı geri çekmesi",
+          "legal_rule": "Yazılı onay iş sözleşmesinin yapılması sırasında ya da bu ihtiyaç ortaya çıktığında alınır ve işçi özlük dosyasında saklanır (25.08.2017 sonrası her yıl yenileme zorunluluğu kalkmıştır). İşçi verdiği onayı 30 gün önceden işverene yazılı bildirimde bulunmak kaydıyla geri alabilir.",
+          "statutory_basis": "Fazla Çalışma Yönetmeliği m.9/2 (RG 25.08.2017/30165)"
+        },
+        {
+          "scenario_id": "OVERTIME_REG_M7_PROHIBITED_WORKS_VS_M69",
+          "condition": "Gece çalışması, sağlık kuralları gereği 7,5 saat/altı işler veya maden dışı yer/su altı işlerinde fazla çalışma talebi",
+          "legal_rule": "Yönetmelik m.7'deki fazla çalışma yasakları geçerlidir; 4857 m.69/3 kapsamındaki gece 7,5 saat sınırına ilişkin yazılı onay istisnası (turizm/özel güvenlik/sağlık) m.7 fazla çalışma yasağını kendiliğinden kaldırmaz ve m.42-43 maden dışı tüm m.7 işlerine otomatik istisna olarak genellenemez; somut durum hukuk müşavirine eskale edilir.",
+          "statutory_basis": "Fazla Çalışma Yönetmeliği m.7, 4857 m.69/3"
+        },
+        {
+          "scenario_id": "OVERTIME_REG_UNDERGROUND_MINING_M4_SON_M8E",
+          "condition": "Yer altı maden işçilerinde 4857 m.42 (zorunlu) veya m.43 (olağanüstü) nedenlerle 37,5 saati aşan çalışma",
+          "legal_rule": "Yalnızca yer altı maden işçileri için kanunda öngörülen özel düzenleme (4857 m.41/9-10; 6552 m.4 ve 6645 m.34) ile Yönetmelik m.4/son ve m.8/e uyarınca m.42-43 halleri dışında fazla çalışma yaptırılamaz; m.42-43 hallerinde haftalık 37,5 saati aşan her bir saat için normal ücretin en az %100 artırılmışı ödenir.",
+          "statutory_basis": "4857 m.41/9-10 (6552 m.4, 6645 m.34), Yönetmelik m.4/son ve m.8/e"
+        }
+      ],
+      "statutory_subordination": {
+        "concretizes_statutory_provisions": [
+          "4857 Sayılı İş Kanunu m.41",
+          "4857 Sayılı İş Kanunu m.42",
+          "4857 Sayılı İş Kanunu m.43"
+        ],
+        "cannot_override_parent_law": true,
+        "hierarchy_note": "Fazla Çalışma Yönetmeliği 4857 m.41'in uygulama esaslarını belirler; Kanundaki yıllık 270 saat sınırını, %50/%25/%100 zamlı ücret tabanlarını ve yer altı maden işçisi korumasını daraltamaz."
+      },
+      "exceptions": [
+        "4857 m.42 (zorunlu nedenler) ve m.43 (olağanüstü haller) kapsamında yapılacak fazla çalışmalarda işçinin yazılı onayı aranmaz (m.9/1); ancak yer altı maden işçileri dışındaki m.7 yasaklı işlere ilişkin çatışma ve sınırlar otomatik istisna kabul edilmeyip hukuk müşavirince değerlendirilir.",
+        "Serbest zaman işçinin talebiyle 6 ay içinde, çalışma süreleri zarfında ve ücretinde kesinti olmadan kullandırılır (m.6)."
+      ],
+      "required_documents": [
+        "İş sözleşmesinde veya ayrı yazılı fazla çalışma onay belgesi (özlük dosyasında)",
+        "Varsa işçinin 30 gün önceden yazılı onay geri alma bildirimi",
+        "Serbest zaman talep dilekçesi ve kullanım çizelgesi"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "CARD-4857-M41 ile tam hizalıdır; m.7 yasaklı işler, m.69/3 gece sınırı ve yer altı maden m.41/9-10 ayrımları kanun ve yönetmelik metnine dayanır.",
+      "effective_validity": {
+        "effective_from": "2017-08-25",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "RG 06.04.2004 / 25425 tarihli Yönetmeliğin güncel m.4/son, m.8/e ve m.9/2 hükümleri RG 25.08.2017 / 30165 ile yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "m.7 ve m.8 yasaklarına aykırı fazla çalışma yaptırılması iş sağlığı ve güvenliği sorumluluğu, idari para cezası ve işçi açısından haklı fesih sebebi doğurur.",
+        "Yıllık 270 saati aşan veya onaysız fazla çalışmalarda işçinin fazla çalışma ücreti hakkı saklıdır; işveren yıllık tavanı aşarak ödeme yapmaktan kaçınamaz."
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@UcretBordro",
+        "@ISGUzmani"
+      ],
+      "disclaimer": "Bu bilgi kartı ikincil mevzuatın resmî metin ve değişiklik geçmişine dayalı yapılandırılmış teknik hukuki referansıdır; üst norm olan kanunu genişletemez veya bertaraf edemez. Bağlayıcı hukuki mütalaa yerine geçmez; somut uyuşmazlıklarda yetkili hukuk müşavirine danışılmalıdır.",
+      "verification_status": "VERIFIED",
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "YONETMELIK-FAZLA-CALISMA-20040406",
+        "source_audit_log_id": "AUD-20261120-YONFAZLACAL",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "CARD-4857-M41 v1.0.2a.3 ile birebir tutarlı olarak m.4/son, m.7, m.8/e, m.9/2 ve 4857 m.69/3 ayrımları doğrulandı."
+      },
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-CARDYONFAZLACAL",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "keywords": [
+        "fazla çalışma yönetmeliği",
+        "m.7",
+        "m.8",
+        "m.9",
+        "m.4/son",
+        "30 gün geri alma",
+        "serbest zaman",
+        "yer altı maden"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0.2b",
+  "law_no": "SGK-2026-PEK",
+  "law_title": "SGK 2026 Prime Esas Kazanç Alt ve Üst Sınırları ile İstisna Tutarları (2026/2 Uygulaması)",
+  "source_id": "SGK-PEK-2026-UYGULAMA",
+  "cards": [
+    {
+      "card_id": "CARD-SGK-2026-PEK-SINIR",
+      "source_id": "SGK-PEK-2026-UYGULAMA",
+      "law_no": "SGK-2026-PEK",
+      "article_ref": "SGK 2026 PEK Duyurusu (5510 m.80 & m.82 Uygulaması)",
+      "topic": "2026 Yılı SGK Prime Esas Kazanç Alt/Üst Sınırları (9 Kat Tavan) ve Aile/Çocuk/Ölüm-Doğum-Evlenme İstisnaları",
+      "legal_basis": {
+        "source_id": "SGK-PEK-2026-UYGULAMA",
+        "original_publication_ref": "SGK Resmî Portal Duyurusu (14.01.2026 — 2026/2 Genelge Tutarları)",
+        "consolidated_text_url": "https://www.sgk.gov.tr/Content/Post/2e0c9e1a-2cfe-4456-af10-49d3de0c58ba/Prime-Esas-Kazanc-Miktarlari-2026-01-14-10-35-39",
+        "secondary_statutory_anchors": [
+          "5510 m.80",
+          "5510 m.82",
+          "7566 Sayılı Kanun"
+        ],
+        "amendment_history": [
+          {
+            "amending_law_no": "7566",
+            "official_gazette_no": "33112",
+            "publication_date": "2025-12-19",
+            "effective_from": "2026-01-01",
+            "summary": "5510 m.82 günlük kazanç üst sınırı 7,5 kattan 9 kata çıkarıldı; SGK'nın 14.01.2026 resmî duyurusuyla 01.01.2026–31.12.2026 alt sınır 33.030,00 TL, üst sınır 297.270,00 TL ve aile yardımı istisnası 3.303,00 TL olarak yayımlandı."
+          }
+        ]
+      },
+      "scope_of_application": "01.01.2026–31.12.2026 dönemi için 5510 m.82 kapsamındaki prime esas kazanç sınırlarını (günlük alt sınır 1.101,00 TL, aylık alt sınır 33.030,00 TL; 9 kat günlük üst sınır 9.909,00 TL, aylık üst sınır 297.270,00 TL) ve 5510 m.80 istisnalarını (aylık aile yardımı %10 = 3.303,00 TL; ölüm, doğum ve evlenme yardımlarının tamamının istisnası; çırak/stajyer %50 tabanı) düzenler.",
+      "application_scenarios": [
+        {
+          "scenario_id": "SGK_2026_PEK_9X_CAP_AND_2_MONTH_CARRYOVER",
+          "condition": "Aylık brüt ücret + prim/ikramiye toplamının 2026 SGK tavanı olan 297.270,00 TL'yi aşması",
+          "legal_rule": "Ücret dışındaki prim, ikramiye vb. ödemeler nedeniyle 297.270,00 TL tavanını aşan kısım, 5510 m.80/1-d uyarınca takip eden 2 ayın prime esas kazancına (tavanı aşmamak üzere) devredilir.",
+          "statutory_basis": "5510 m.80/1-d, m.82 (7566 değişikliği) ve SGK 2026 PEK Duyurusu"
+        },
+        {
+          "scenario_id": "SGK_2026_MEAL_EXEMPTION_TEMPORAL_CAUTION",
+          "condition": "2026 yılında yemek parası SGK prim istisnası tutarının tarih bazında kontrolü",
+          "legal_rule": "Yıl başında yayımlanan 2026 SGK istisna duyurusu ile 2026 yılı içinde sonradan yürürlüğe giren kanuni yemek istisnası eşitlemesi arasındaki dönem farkı nedeniyle yemek parası SGK istisnası ilgili bordro ayı tarihine göre ayrıca teyit edilmelidir; üst norm olan Kanun değişikliği idari duyurudan önceliklidir.",
+          "statutory_basis": "5510 m.80/1-b ve Normlar Hiyerarşisi"
+        }
+      ],
+      "statutory_subordination": {
+        "concretizes_statutory_provisions": [
+          "5510 Sayılı Kanun m.80",
+          "5510 Sayılı Kanun m.82",
+          "7566 Sayılı Kanun"
+        ],
+        "cannot_override_parent_law": true,
+        "hierarchy_note": "SGK PEK duyurusu ve 2026/2 uygulaması, 5510 m.80-82'nin sayısal tablosunu ilan eder; Kanunun 9 kat tavan kuralını veya yıl içinde Kanunla değiştirilen bir istisna tutarını geriye çekemez veya geçersiz kılamaz."
+      },
+      "exceptions": [
+        "Ölüm, doğum ve evlenme hallerinde yapılan nakdi yardımlar tutarına bakılmaksızın prime esas kazanca dahil edilmez (5510 m.80/1-b).",
+        "2025 yılına ait 7,5 kat tavan kuralı 01.01.2026 itibarıyla yürürlükten kalkmıştır; 2026 bordrolarında 9 kat (297.270,00 TL) esas alınır."
+      ],
+      "required_documents": [
+        "2026 SGK PEK taban/tavan parametre tablosu",
+        "Prim/ikramiye 2 aylık tavan devir takip bordrosu"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "SGK'nın resmî sgk.gov.tr 14.01.2026 Prime Esas Kazanç Miktarları sayfasına dayanır; bordro hesaplamaları @UcretBordro'ya devredilir.",
+      "effective_validity": {
+        "effective_from": "2026-01-01",
+        "effective_to": "2026-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "5510 m.82 (7566 değişikliği) ve SGK 14.01.2026 resmî duyurusu 01.01.2026–31.12.2026 tarihleri arasında geçerlidir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "2026 bordrolarında eski 7,5 kat tavanın kullanılması eksik SGK primi bildirimi ve 5510 m.102 İPC riski doğurur.",
+        "Yıl içinde Kanunla güncellenen istisna tutarları yerine eski idari duyuru tutarının uygulanması normlar hiyerarşisine aykırılık oluşturur."
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@UcretBordro"
+      ],
+      "disclaimer": "Bu bilgi kartı ikincil mevzuatın resmî metin ve değişiklik geçmişine dayalı yapılandırılmış teknik hukuki referansıdır; üst norm olan kanunu genişletemez veya bertaraf edemez. Bağlayıcı hukuki mütalaa yerine geçmez; somut uyuşmazlıklarda yetkili hukuk müşavirine danışılmalıdır.",
+      "verification_status": "VERIFIED",
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "SGK-PEK-2026-UYGULAMA",
+        "source_audit_log_id": "AUD-20261120-SGKPEK2026",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-SGK-REV-02",
+        "reviewer_role": "SGK_COMPLIANCE_SPECIALIST",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "2026 PEK taban (33.030 TL), 9 kat tavan (297.270 TL), aile yardımı (3.303 TL) ve yıl içi kanun değişikliği önceliği doğrulandı."
+      },
+      "verification_audit": {
+        "verifier_id": "CALISORA-SGK-01",
+        "verifier_role": "SGK_COMPLIANCE_SPECIALIST",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-CARDSGK2026PEK",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "keywords": [
+        "sgk pek 2026",
+        "33.030",
+        "297.270",
+        "9 kat tavan",
+        "aile yardımı 3.303",
+        "5510 m.82",
+        "sgk 2026/2"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "schema_version": "1.0.2b",
+  "law_no": "GIB-319",
+  "law_title": "319 Seri No.lu Gelir Vergisi Genel Tebliği (Asgari Ücret Vergi İstisnası)",
+  "source_id": "GIB-TEBLIG-319-20220127",
+  "cards": [
+    {
+      "card_id": "CARD-GIB-319-ASGARI-UCRET",
+      "source_id": "GIB-TEBLIG-319-20220127",
+      "law_no": "GIB-319",
+      "article_ref": "319 Seri No.lu GVK Genel Tebliği (GVK m.23/18 Uygulaması)",
+      "topic": "Asgari Ücret Gelir ve Damga Vergisi İstisnası, Kısmi Dönem ve Birden Fazla İşveren Uygulaması",
+      "legal_basis": {
+        "source_id": "GIB-TEBLIG-319-20220127",
+        "original_publication_ref": "RG 27.01.2022 / 31732",
+        "consolidated_text_url": "https://cdn.gib.gov.tr/api/gibportal-file/file/getFileResources?objectKey=arsiv/fileadmin/mevzuatek/mevzuatbilginotu/319_serno_gelverteb_abn.pdf",
+        "secondary_statutory_anchors": [
+          "193 Sayılı GVK m.23/18",
+          "488 Sayılı DVK Ek Tablo (2)",
+          "7349 Sayılı Kanun"
+        ],
+        "amendment_history": [
+          {
+            "amending_law_no": "7349",
+            "official_gazette_no": "31700",
+            "publication_date": "2021-12-25",
+            "effective_from": "2022-01-01",
+            "summary": "7349 sayılı Kanun ile AGİ kaldırılarak tüm ücretlilerin asgari ücrete isabet eden gelir vergisi ve damga vergisi istisnası getirildi; uygulama usulü 319 Seri No.lu Tebliğle belirlendi."
+          }
+        ]
+      },
+      "scope_of_application": "01.01.2022 tarihinden itibaren tüm hizmet erbabının aylık ücretinin ilgili aydaki asgari ücretin aylık brüt tutarından işçi SGK ve işsizlik primi düşüldükten sonra kalan matrahına isabet eden gelir vergisi ile brüt asgari ücrete isabet eden damga vergisinin istisna edilmesine ilişkin kümülatif matrah, kısmi çalışma ve birden fazla işverenden ücret alma usulünü düzenler.",
+      "application_scenarios": [
+        {
+          "scenario_id": "GIB_319_PARTIAL_MONTH_FULL_CAP",
+          "condition": "Ay içinde kısmi çalışma, işe giriş veya işten çıkış nedeniyle tam aydan az çalışan ücretli",
+          "legal_rule": "İstisna tutarı kıstelyevm (gün oranlaması) ile düşürülmez; ancak istisna hiçbir şekilde o ay ödenen gerçek ücret üzerinden hesaplanan vergiyi aşamaz.",
+          "statutory_basis": "193 GVK m.23/18 ve 319 Seri No.lu Tebliğ"
+        },
+        {
+          "scenario_id": "GIB_319_MULTIPLE_EMPLOYERS_SINGLE_EXEMPTION",
+          "condition": "Aynı ay içinde birden fazla işverenden ücret alınması",
+          "legal_rule": "Asgari ücret vergi istisnası yalnızca en yüksek ücretin elde edildiği tek işveren nezdinde uygulanır; aynı ayda iki işverende birden mükerrer istisna uygulanamaz.",
+          "statutory_basis": "319 Seri No.lu GVK Genel Tebliği"
+        }
+      ],
+      "statutory_subordination": {
+        "concretizes_statutory_provisions": [
+          "193 Sayılı GVK m.23/18",
+          "7349 Sayılı Kanun m.2-4"
+        ],
+        "cannot_override_parent_law": true,
+        "hierarchy_note": "319 Seri No.lu Genel Tebliğ idari düzenleme niteliğindedir; 193 sayılı GVK m.23/18'de kanunla tanınan istisna sınırını aşamaz veya kanuni istisnayı daraltamaz."
+      },
+      "exceptions": [
+        "Yönetim kurulu huzur hakkı ve benzeri GVK m.61 kapsamındaki ücret ödemelerinde de tek istisna sınırı geçerlidir; mükerrer uygulama yapılamaz.",
+        "AGİ (Asgari Geçim İndirimi) 01.01.2022 itibarıyla yürürlükten kalkmıştır; güncel bordrolarda uygulanmaz."
+      ],
+      "required_documents": [
+        "Kümülatif gelir vergisi matrahı ve asgari ücret istisna takip tablosu",
+        "Birden fazla işveren durumunda çalışan yazılı beyanı"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Bordro stopaj istisnası doğrudan 193 GVK m.23/18 ve 319 Seri No.lu Tebliğe dayanır; sayısal hesaplama @UcretBordro uzmanlığına devredilir.",
+      "effective_validity": {
+        "effective_from": "2022-01-01",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "7349 sayılı Kanun ve 319 Seri No.lu Tebliğ 01.01.2022'den itibaren yapılan ücret ödemelerine uygulanmak üzere yürürlüktedir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "Aynı ay içinde iki farklı işverende birden asgari ücret istisnası uygulanması vergi ziyaı cezası ve gecikme faizi doğurur.",
+        "Kısmi çalışanlarda istisnanın yanlışlıkla gün sayısına bölünmesi çalışandan fazla gelir vergisi kesilmesine neden olur."
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@UcretBordro"
+      ],
+      "disclaimer": "Bu bilgi kartı ikincil mevzuatın resmî metin ve değişiklik geçmişine dayalı yapılandırılmış teknik hukuki referansıdır; üst norm olan kanunu genişletemez veya bertaraf edemez. Bağlayıcı hukuki mütalaa yerine geçmez; somut uyuşmazlıklarda yetkili hukuk müşavirine danışılmalıdır.",
+      "verification_status": "VERIFIED",
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "GIB-TEBLIG-319-20220127",
+        "source_audit_log_id": "AUD-20261120-GIBTEBLIG31920220127",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS"
+        ],
+        "review_notes": "319 Seri No.lu Tebliğ kısmi dönem tam tavan kuralı, tek işveren kuralı ve 193 GVK m.23/18 üst norm bağlılığı doğrulandı."
+      },
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-CARDGIB319",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "keywords": [
+        "319 tebliğ",
+        "asgari ücret istisnası",
+        "kısmi dönem",
+        "birden fazla işveren",
+        "gvk m.23/18",
+        "agi mülga"
+      ]
+    }
+  ]
+}

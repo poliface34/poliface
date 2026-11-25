@@ -1,0 +1,922 @@
+{
+  "schema_version": "1.0.2a.3",
+  "law_no": "4857",
+  "law_title": "4857 Sayılı İş Kanunu",
+  "source_id": "MEVZUAT-4857",
+  "cards": [
+    {
+      "card_id": "CARD-4857-M11",
+      "source_id": "MEVZUAT-4857",
+      "law_no": "4857",
+      "article_ref": "Madde 11",
+      "topic": "Belirli ve belirsiz süreli iş sözleşmesi ayrımı ve objektif koşullar",
+      "legal_basis": {
+        "source_id": "MEVZUAT-4857",
+        "original_publication_ref": "RG 10.06.2003 / Sayı 25134 (İlk yayımlanan metin)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": []
+      },
+      "scope_of_application": "Belirli süreli işlerde veya belli bir işin tamamlanması ya da belirli bir olgunun ortaya çıkması gibi objektif koşullara bağlı olarak yazılı şekilde yapılan iş sözleşmeleri; objektif koşul yoksa veya esaslı neden olmaksızın zincirleme yenilenirse baştan itibaren belirsiz süreli sayılır.",
+      "exceptions": [
+        "Belirli süreli iş, belli bir işin tamamlanması veya belirli bir olgunun ortaya çıkması gibi objektif koşulların somut olarak varlığı",
+        "Esaslı bir neden bulunması halinde belirli süreli sözleşmenin birden fazla kez yenilenebilmesi",
+        "Özel kanunlarla belirli süreli yapılması zorunlu tutulan istihdam türleri (ör. 5580 sayılı Özel Öğretim Kurumları Kanunu kapsamı)"
+      ],
+      "required_documents": [
+        "Yazılı iş sözleşmesi (objektif nedenin somut gerekçesi açıkça yazılı)",
+        "Proje/iş teslim kapsam belgesi veya belirli olguyu ispatlayan işveren kaydı",
+        "Yenileme yapılmışsa her yenileme için ayrı esaslı neden tutanağı"
+      ],
+      "related_precedent_ids": [
+        "YIBBGK-2017-10-2019-1"
+      ],
+      "precedent_note": "YİBBGK E. 2017/10, K. 2019/1 uyarınca objektif şartı taşımadığı için belirsiz süreliye dönüşen sözleşmede kararlaştırılan süreden önce haksız feshe bağlı cezai şart, belirlenen süre ile sınırlı olarak geçerlidir.",
+      "effective_validity": {
+        "effective_from": "2003-06-10",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "4857 Sayılı Kanun m.121 — Yayımı tarihinde (10.06.2003) yürürlüğe girmiştir."
+      },
+      "norm_character": "RELATIVE_EMPLOYEE_FAVORABLE",
+      "risks": [
+        "Objektif neden olmadan yapılan belirli süreli sözleşmenin belirsiz süreli sayılması ve işe iade/ihbar/kıdem sorumluluğu doğması",
+        "Süre bitiminde kendiliğinden sona erme (SGK çıkış kodu 05) bildiriminin geçersiz fesihe dönüşmesi",
+        "Erken fesihte karşılıklı kararlaştırılmış cezai şart yükümlülüğü"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD4857M11",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "4857",
+        "madde 11",
+        "belirli süreli",
+        "belirsiz süreli",
+        "objektif koşul",
+        "zincirleme sözleşme",
+        "cezai şart"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-4857",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT4857",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 4857 Madde 11 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    },
+    {
+      "card_id": "CARD-4857-M17",
+      "source_id": "MEVZUAT-4857",
+      "law_no": "4857",
+      "article_ref": "Madde 17",
+      "topic": "Süreli fesih ve asgari ihbar bildirim süreleri",
+      "legal_basis": {
+        "source_id": "MEVZUAT-4857",
+        "original_publication_ref": "RG 10.06.2003 / Sayı 25134 (İlk yayımlanan metin)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": []
+      },
+      "scope_of_application": "Belirsiz süreli iş sözleşmelerinin feshinden önce diğer tarafa bildirilmesi gereken asgari süreler (6 aydan az: 2 hafta; 6 ay–1,5 yıl: 4 hafta; 1,5–3 yıl: 6 hafta; 3 yıldan fazla: 8 hafta); bildirim şartına uymayan taraf ihbar tazminatı öder.",
+      "exceptions": [
+        "Deneme süresi içinde (4857 m.15) bildirimsiz ve tazminatsız fesih",
+        "4857 m.24 (işçi) ve m.25 (işveren) kapsamında haklı nedenle derhal fesih halleri",
+        "Belirli süreli iş sözleşmesinin kendiliğinden süre bitimiyle sona ermesi"
+      ],
+      "required_documents": [
+        "Yazılı fesih bildirimi ve tebliğ/imza veya KEP/noter teslim belgesi",
+        "İhbar süresi kullandırılıyorsa günlük en az 2 saat yeni iş arama izni kayıtları (4857 m.27)",
+        "Peşin ödeme ile fesih yapılıyorsa ihbar tazminatı ödeme dekontu (@ÜcretBordro hesaplaması)"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde m.17'ye özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2003-06-10",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "4857 Sayılı Kanun m.121 — Yayımı tarihinde (10.06.2003) yürürlüğe girmiştir."
+      },
+      "norm_character": "RELATIVE_EMPLOYEE_FAVORABLE",
+      "risks": [
+        "Sözleşme veya İK prosedürü ile kanuni ihbar sürelerinin kısaltılması kesin hükümsüzdür",
+        "İş güvencesi kapsamı dışındaki işçide kötüniyetli fesih halinde ihbar tazminatının 3 katı kötüniyet tazminatı riski",
+        "İhbar öneli içinde iş arama izninin kullandırılmaması halinde %100 zamlı ücret ödeme riski"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD4857M17",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "4857",
+        "madde 17",
+        "ihbar süresi",
+        "ihbar tazminatı",
+        "süreli fesih",
+        "kötüniyet tazminatı",
+        "iş arama izni"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-4857",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT4857",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 4857 Madde 17 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    },
+    {
+      "card_id": "CARD-4857-M18",
+      "source_id": "MEVZUAT-4857",
+      "law_no": "4857",
+      "article_ref": "Madde 18",
+      "topic": "İş güvencesi kapsamı ve feshin geçerli sebebe dayandırılması",
+      "legal_basis": {
+        "source_id": "MEVZUAT-4857",
+        "original_publication_ref": "RG 10.06.2003 / Sayı 25134 (İlk yayımlanan metin)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": []
+      },
+      "scope_of_application": "Fesih bildiriminin yapıldığı tarih itibarıyla işverenin aynı işkolundaki tüm işyerlerinde toplam 30 veya daha fazla işçi çalıştırılması ve işçinin en az 6 aylık kıdemi bulunması halinde belirsiz süreli iş sözleşmesinin işveren tarafından feshi, işçinin yeterliliği/davranışları veya işletmenin/işyerinin/işin gereklerinden kaynaklanan geçerli bir sebebe dayanmak zorundadır.",
+      "exceptions": [
+        "30'dan az işçi çalıştıran işverenler (aynı işkolundaki toplam işçi sayısı)",
+        "6 aydan az kıdemi olan işçiler (yer altı işlerinde çalışanlarda 6 ay kıdem şartı aranmaz)",
+        "İşletmenin bütününü sevk ve idare eden işveren vekili ve yardımcıları ile işyerinin bütününü sevk ve idare edip işe alma-çıkarma yetkisi bulunan işveren vekilleri",
+        "Belirli süreli iş sözleşmesi ile çalışanlar (objektif şart mevcutsa)"
+      ],
+      "required_documents": [
+        "SGK aynı işkolu toplam çalışan sayısı teyit belgesi (30 işçi eşiği)",
+        "İşçinin toplam kıdem süresi kaydı (aynı işverenin farklı işyerlerindeki süreler dahil)",
+        "Geçerli fesih sebebini belgeleyen performans/uyarı/işletmesel karar evrakları ve feshin son çare olduğuna dair kayıtlar"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde m.18'e özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2003-06-10",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "4857 Sayılı Kanun m.121 — Yayımı tarihinde (10.06.2003) yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "Geçerli sebep olmadan yapılan fesihte işe iade davası, 4 aya kadar boşta geçen süre ücreti ve 4–8 aylık işe başlatmama tazminatı riski",
+        "Sendika üyeliği, şikâyet, gebelik/doğum gibi m.18/3 yasak sebeplerine dayalı fesihlerin kesin geçersizliği ve sendikal/ayrımcılık tazminatı",
+        "30 işçi eşiğinin yalnızca tek şubeden hesaplanması nedeniyle iş güvencesinin hatalı olarak yok sayılması"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD4857M18",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "4857",
+        "madde 18",
+        "iş güvencesi",
+        "30 işçi",
+        "6 ay kıdem",
+        "geçerli sebep",
+        "işe iade",
+        "son çare"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-4857",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT4857",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 4857 Madde 18 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    },
+    {
+      "card_id": "CARD-4857-M19",
+      "source_id": "MEVZUAT-4857",
+      "law_no": "4857",
+      "article_ref": "Madde 19",
+      "topic": "Fesih bildiriminde yazılılık, açık-kesin sebep ve fesihten önce savunma alınması",
+      "legal_basis": {
+        "source_id": "MEVZUAT-4857",
+        "original_publication_ref": "RG 10.06.2003 / Sayı 25134 (İlk yayımlanan metin)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": []
+      },
+      "scope_of_application": "İş güvencesi kapsamındaki işçilerin sözleşmesi feshedilirken fesih bildiriminin yazılı yapılması ve fesih sebebinin açık ve kesin şekilde belirtilmesi zorunludur. İşçinin davranışı veya verimi (performansı) ile ilgili nedenlerle fesih yapılmadan önce yazılı savunmasının alınması zorunludur.",
+      "exceptions": [
+        "4857 m.25/II (ahlak ve iyi niyet kurallarına uymayan haller) kapsamındaki haklı nedenle derhal fesihlerde m.19/2 savunma şartı aranmaz (ancak ispat güvenliği için disiplin tutanağı önerilir)",
+        "4857 m.25/I-b sağlık raporlarına dayalı derhal fesihlerde savunma alınması gerekmez (YİBBGK E. 2017/9, K. 2018/10)",
+        "İşletme/işyeri/işin gereklerinden kaynaklanan fesihlerde m.19/2 savunma zorunluluğu aranmaz (yazılı ve açık gerekçe zorunluluğu devam eder)"
+      ],
+      "required_documents": [
+        "İsnat edilen olay/performans eksikliğini açıkça içeren yazılı savunma talep yazısı ve tebliğ tutanağı",
+        "İşçinin yazılı savunma metni (veya makul süre sonunda savunma vermekten imtina tutanağı)",
+        "Açık ve kesin fesih sebebini içeren yazılı fesih bildirimi ve tebliğ belgesi"
+      ],
+      "related_precedent_ids": [
+        "YIBBGK-2017-9-2018-10"
+      ],
+      "precedent_note": "YİBBGK E. 2017/9, K. 2018/10 kararı m.25/I-b sağlık feshinde savunma şartının aranmayacağını hükme bağlarken, m.19/2 kapsamındaki davranış ve verim fesihlerinde fesihten önce savunma alınmasının geçerlilik şartı olduğunu teyit eder.",
+      "effective_validity": {
+        "effective_from": "2003-06-10",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "4857 Sayılı Kanun m.121 — Yayımı tarihinde (10.06.2003) yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "Davranış veya performans feshinde yazılı savunma alınmaması halinde feshin usulden doğrudan geçersiz sayılması (işe iade riski)",
+        "Fesih bildiriminde 'görülen lüzum üzerine' gibi soyut ifadeler kullanılması nedeniyle geçersizlik",
+        "Savunma tutanağı doğrulanmadan (UNKNOWN) bordro/SGK çıkış işlemi yapılması"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD4857M19",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "4857",
+        "madde 19",
+        "savunma",
+        "yazılı fesih bildirimi",
+        "davranış",
+        "verim",
+        "performans",
+        "usul eksikliği"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-4857",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT4857",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 4857 Madde 19 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    },
+    {
+      "card_id": "CARD-4857-M25",
+      "source_id": "MEVZUAT-4857",
+      "law_no": "4857",
+      "article_ref": "Madde 25",
+      "topic": "İşverenin haklı nedenle derhal fesih hakkı (Sağlık, Ahlak-İyiniyet, Zorlayıcı Sebep, Gözaltı/Tutukluluk)",
+      "legal_basis": {
+        "source_id": "MEVZUAT-4857",
+        "original_publication_ref": "RG 10.06.2003 / Sayı 25134 (İlk yayımlanan metin)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": []
+      },
+      "scope_of_application": "İşverenin belirli veya belirsiz süreli iş sözleşmesini sürenin bitiminden önce veya bildirim süresini beklemeksizin derhal feshedebileceği haklı nedenler: (I-a) işçinin kendi kastı/derli toplu olmayan yaşayışı/içkiye düşkünlüğü nedeniyle ardı ardına 3 iş günü veya ayda 5 iş gününden fazla devamsızlık; (I-b) kasıt dışı hastalık/kaza/doğum/gebelik hallerinde ihbar süresini 6 hafta aşan devamsızlık (25/I hallerinde 1 yıl kıdemi aşan işçiye 1475 m.14 gereği kıdem ödenir, ihbar ödenmez); (II) ahlak ve iyi niyet kurallarına uymayan haller (kıdem ve ihbar ödenmez; 42–50 arası spesifik SGK çıkış kodu seçilir); (III) zorlayıcı sebepler; (IV) işçinin gözaltına alınması veya tutuklanması halinde devamsızlığın m.17 bildirim süresini aşması.",
+      "exceptions": [
+        "25/II dışındaki sağlık (25/I), zorlayıcı sebep (25/III) ve tutukluluk (25/IV) fesihlerinde 1 yıl kıdemi aşan işçiye kıdem tazminatı ödenir (1475 m.14)",
+        "25/II kapsamındaki ahlak-iyiniyet fesihlerinde 4857 m.26 (6 iş günü / 1 yıl) hak düşürücü süre sınırına uyulması zorunludur",
+        "Doğum ve gebelik hallerinde 25/I-b bekleme süresi ancak 4857 m.74 analık izni süresinin bitiminden sonra başlar"
+      ],
+      "required_documents": [
+        "Olay/devamsızlık/disiplin tespit tutanakları ve tanık imzaları (25/II için)",
+        "Kesintisiz istirahat raporları ve bekleme süresi (ihbar + 6 hafta) hesap cetveli (25/I-b için)",
+        "SGK 42–50 arası doğru çıkış kodu eşleştirme ve tebliğ belgesi (noter/KEP/elden imza)"
+      ],
+      "related_precedent_ids": [
+        "YIBBGK-2017-9-2018-10"
+      ],
+      "precedent_note": "YİBBGK E. 2017/9, K. 2018/10 kararı uyarınca 4857 m.25/I-b sağlık raporlarına dayalı derhal fesihlerde işçiden savunma alınması zorunlu değildir.",
+      "effective_validity": {
+        "effective_from": "2003-06-10",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "4857 Sayılı Kanun m.121 — Yayımı tarihinde (10.06.2003) yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "Haksız yere 25/II (42–50 SGK kodu) ile fesih yapılması halinde kıdem+ihbar+işe iade+işsizlik ödeneği zararı tazmini",
+        "25/I-b sağlık feshinde kıdem tazminatının ödenmemesi nedeniyle doğrudan alacak davası kaybı",
+        "25/II-g devamsızlık feshinde mazeret araştırması ve ihtar yapılmaması"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD4857M25",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "4857",
+        "madde 25",
+        "haklı fesih",
+        "derhal fesih",
+        "25/I-b",
+        "25/II",
+        "sağlık raporu",
+        "devamsızlık",
+        "sgk çıkış kodu"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-4857",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT4857",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 4857 Madde 25 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    },
+    {
+      "card_id": "CARD-4857-M26",
+      "source_id": "MEVZUAT-4857",
+      "law_no": "4857",
+      "article_ref": "Madde 26",
+      "topic": "Derhal fesih hakkını kullanma süresi (6 iş günü ve 1 yıl hak düşürücü süre)",
+      "legal_basis": {
+        "source_id": "MEVZUAT-4857",
+        "original_publication_ref": "RG 10.06.2003 / Sayı 25134 (İlk yayımlanan metin)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": []
+      },
+      "scope_of_application": "4857 m.24 ve m.25'te gösterilen ahlak ve iyi niyet kurallarına uymayan hallere dayanarak tanınan fesih yetkisi, iki taraftan birinin bu çeşit davranışlarda bulunduğunu diğer tarafın (feshe yetkili makamın) öğrendiği günden başlayarak 6 iş günü geçtikten ve her halde fiilin gerçekleşmesinden itibaren 1 yıl sonra kullanılamaz.",
+      "exceptions": [
+        "İşçinin olayda maddi çıkar sağlaması halinde 1 yıllık üst süre uygulanmaz (6 iş günü öğrenme süresi devam eder)",
+        "Temadi eden (süregelen) ihlallerde süre, ihlalin sona erdiği tarihten itibaren işler",
+        "25/I (sağlık), 25/III (zorlayıcı sebep) ve 25/IV (tutukluluk) bentleri m.26 kapsamındaki 6 iş günü kuralına tabi değildir"
+      ],
+      "required_documents": [
+        "Feshe yetkili makamın (veya disiplin kurulunun) olayı öğrenme tarihini belgeleyen tutanak/teftiş raporu",
+        "6 iş günü dolmadan tebliğ edilmiş veya notere/KEP'e tevdi edilmiş yazılı fesih bildirimi"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde m.26'ya özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2003-06-10",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "4857 Sayılı Kanun m.121 — Yayımı tarihinde (10.06.2003) yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "6 iş günü hak düşürücü süresi geçtikten sonra yapılan 25/II feshinin doğrudan haksız fesih sayılması (Zorunlu avukat eskalasyonu)",
+        "Disiplin kurulu veya iç denetim süreçlerinin 6 iş gününü aşması halinde hak kaybı"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD4857M26",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "4857",
+        "madde 26",
+        "6 iş günü",
+        "1 yıl",
+        "hak düşürücü süre",
+        "disiplin kurulu",
+        "25/II"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-4857",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT4857",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 4857 Madde 26 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    },
+    {
+      "card_id": "CARD-4857-M29",
+      "source_id": "MEVZUAT-4857",
+      "law_no": "4857",
+      "article_ref": "Madde 29",
+      "topic": "Toplu işçi çıkarma eşikleri ve 30 gün önceden resmî bildirim zorunluluğu",
+      "legal_basis": {
+        "source_id": "MEVZUAT-4857",
+        "original_publication_ref": "RG 10.06.2003 / Sayı 25134 (İlk yayımlanan metin)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": []
+      },
+      "scope_of_application": "Ekonomik, teknolojik, yapısal ve benzeri işletme/işyeri/işin gerekleri sonucu 1 aylık süre içinde aynı tarihte veya farklı tarihlerde: 20–100 işçi çalıştıran işyerinde en az 10 işçi; 101–300 işçi arasında en az %10 oranında; 301 ve daha fazla işçi çalıştıran işyerinde en az 30 işçinin m.17 uyarınca işten çıkarılması toplu işçi çıkarma sayılır. En az 30 gün önceden Çalışma ve İş Kurumu İl Müdürlüğüne (İŞKUR) ve varsa işyeri sendika temsilcilerine yazılı bildirim zorunludur.",
+      "exceptions": [
+        "Mevsim ve kampanya işlerinde işin niteliğine bağlı olarak yapılan işten çıkarmalar",
+        "İşçinin istifası veya 4857 m.25 kapsamındaki haklı fesihler toplu çıkarma sayısına dahil edilmez"
+      ],
+      "required_documents": [
+        "İşletmesel karar ve yönetim kurulu/üst yönetim onay tutanağı",
+        "En az 30 gün önceden İŞKUR ve sendika temsilcisine yapılan yazılı bildirim evrakı",
+        "Sendika temsilcileriyle yapılan danışma toplantısı tutanağı"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde m.29'a özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2003-06-10",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "4857 Sayılı Kanun m.121 — Yayımı tarihinde (10.06.2003) yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "30 gün önceden bildirim yapılmaksızın toplu çıkarma halinde 4857 m.100 gereği işçi başına idari para cezası",
+        "Fesih bildirimlerinin İŞKUR bildiriminden 30 gün sonra hüküm doğurması kuralının ihlali",
+        "Zorunlu avukat eskalasyonu gerektiren yüksek toplu dava riski"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD4857M29",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "4857",
+        "madde 29",
+        "toplu işçi çıkarma",
+        "işkur bildirimi",
+        "30 gün",
+        "ekonomik fesih"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-4857",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT4857",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 4857 Madde 29 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    },
+    {
+      "card_id": "CARD-4857-M41",
+      "source_id": "MEVZUAT-4857",
+      "law_no": "4857",
+      "article_ref": "Madde 41",
+      "topic": "Fazla çalışma ücreti (%50 zam), yazılı onay (Yön. m.9), fazla çalışma yasakları (Yön. m.7), 4857 m.69 gece 7,5 saat sınırı ayrımı ve yıllık 270 saat tavanı",
+      "legal_basis": {
+        "source_id": "MEVZUAT-4857",
+        "original_publication_ref": "RG 10.06.2003 / Sayı 25134 (İlk yayımlanan metin)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": [
+          {
+            "amending_law_no": "6552",
+            "official_gazette_no": "29116 (Mükerrer)",
+            "publication_date": "2014-09-11",
+            "effective_from": "2014-09-11",
+            "summary": "6552 m.4 ile 4857 m.41'e 9. ve 10. fıkralar eklenerek yer altında maden işlerinde m.42-43 halleri dışında fazla çalışma yasağı ve ilk metinde haftalık 36 saati aşan kısım için en az %100 zamlı ücret kuralı getirildi."
+          },
+          {
+            "amending_law_no": "6645",
+            "official_gazette_no": "29335",
+            "publication_date": "2015-04-23",
+            "effective_from": "2015-04-23",
+            "summary": "04.04.2015 kabul tarihli 6645 m.34 (RG 23.04.2015 / 29335) ile 4857 m.41/10 fıkrasındaki 'haftalık otuz altı saati aşan' ibaresi 'haftalık otuz yedi buçuk saati aşan' şeklinde değiştirildi (37,5 saat eşiği yürürlük: 23.04.2015)."
+          }
+        ],
+        "secondary_statutory_anchors": [
+          "4857 m.41/7 (Fazla saatlerle çalışmak için işçinin onayının alınması)",
+          "İş Kanununa İlişkin Fazla Çalışma ve Fazla Sürelerle Çalışma Yönetmeliği m.7 (Fazla çalışma yaptırılmayacak işler: sağlık kuralları bakımından günde en çok 7,5 saat ve daha az çalışılması gereken işler, gece döneminde yürütülen işler, yer/su altı işleri)",
+          "İş Kanununa İlişkin Fazla Çalışma ve Fazla Sürelerle Çalışma Yönetmeliği m.8 (Fazla çalışma yaptırılmayacak işçiler)",
+          "İş Kanununa İlişkin Fazla Çalışma ve Fazla Sürelerle Çalışma Yönetmeliği m.9 (RG 25.08.2017 / 30165 değişikliği: yazılı onay, özlük dosyasında saklama ve 30 gün önceden yazılı bildirimle geri alma)",
+          "4857 m.42 (Zorunlu nedenlerle fazla çalışma — işçi onayı aranmaz) ve m.43 (Olağanüstü hallerde fazla çalışma)",
+          "4857 m.69/3 (Gece çalışmasında 7,5 saat sınırı ve yalnızca turizm, özel güvenlik, sağlık hizmeti yürütülen işler ile Türk Petrol Kanunu kapsamındaki petrol araştırma/arama/sondaj işlerindeki yazılı onay istisnası — RG 23.04.2015 ve RG 28.12.2022/32057)"
+        ]
+      },
+      "scope_of_application": "Haftalık 45 saati aşan çalışmalar fazla çalışmadır ve saatlik ücret %50 zamlı ödenir (veya işçi talebiyle 1 saat 30 dk serbest zaman verilir). 4857 m.41 kapsamındaki olağan fazla çalışma ve fazla sürelerle çalışma için işçinin yazılı onayının (iş sözleşmesi yapılırken veya ihtiyaç ortaya çıktığında) alınması ve bu yazılı onayın işçinin özlük dosyasında saklanması zorunludur (Fazla Çalışma Yönetmeliği m.9). İşçi, verdiği yazılı onayı 30 gün önceden işverene yazılı bildirimde bulunmak kaydıyla geri alabilir; bu durumda 30 günlük süre sonunda olağan fazla çalışma yaptırılamaz. Ancak yazılı onayın bulunmaması veya geri alınması işçinin normal haftalık çalışmasını (45 saate kadar) engellemez ve 4857 m.42 (zorunlu nedenler) ile m.43 (olağanüstü haller) kapsamındaki onaysız fazla çalışma kuralları saklıdır. Yıllık olağan fazla çalışma toplamı 270 saati, günlük çalışma 11 saati geçemez. Fazla Çalışma Yönetmeliği m.7 kapsamındaki fazla çalışma yasakları ile 4857 m.69/3 kapsamındaki gece çalışması 7,5 saat sınırı istisnası iki ayrı düzenlemedir: m.69/3'teki yazılı onay istisnası yalnızca ilgili sektörlerde gece çalışmasının 7,5 saatlik sınırının aşılmasına ilişkindir ve Yönetmelik m.7'deki fazla çalışma yasaklarını otomatik olarak kaldırmaz. Ayrıca Yönetmelik m.7 metninde 4857 m.42-43 için genel bir istisna cümlesi bulunmadığından, m.42-43 ilişkisi yalnızca kanunda açıkça düzenlenen yer altında maden işleri (4857 m.41/9-10) ile diğer m.7 işleri ayrıştırılarak ayrı senaryo ve hukuki inceleme notunda değerlendirilir.",
+      "exceptions": [
+        "4857 m.42 (zorunlu nedenler) ve m.43 (olağanüstü haller) kapsamındaki fazla çalışmalar (olağan fazla çalışmada aranan işçi yazılı onayı şartından muaftır; ancak Yönetmelik m.7 yasaklarıyla ilişkisi ayrıca değerlendirilir)",
+        "Denkleştirme esası (m.63) usulüne uygun yazılı anlaşma ile uygulanmışsa haftalık ortalama 45 saati aşmayan yoğunlaştırılmış haftalar",
+        "Fazla Çalışma Yönetmeliği m.7 uyarınca fazla çalışma yaptırılmayacak işler: (a) 4857 m.63/son kapsamında sağlık kuralları bakımından günde en çok 7,5 saat ve daha az çalışılması gereken işler, (b) 4857 m.69/1 gece döneminde yürütülen işler (gündüz işi sayılan çalışmalara ek olarak yapılan fazla çalışmalar hariç) ve (c) maden ocakları, kablo döşemesi, kanalizasyon, tünel inşaatı gibi işlerin yer ve su altında yapılanları",
+        "Fazla Çalışma Yönetmeliği m.8 uyarınca fazla çalışma yaptırılmayacak işçiler (18 yaşını doldurmamış işçiler, sağlık raporu elvermeyenler, gebe/yeni doğum yapmış/çocuk emziren işçiler, kısmi süreli iş sözleşmesiyle çalışanlar)"
+      ],
+      "required_documents": [
+        "İşçinin ıslak/elektronik imzalı yazılı fazla çalışma onayı (işçinin özlük dosyasında saklanır — Yönetmelik m.9)",
+        "İşçi onayını geri aldıysa 30 gün önceden yapılan yazılı geri alma bildirimi ve tebliğ kaydı",
+        "4857 m.69/3 kapsamındaki istisna sektörlerde 7,5 saati aşan gece çalışması yaptırılıyorsa ayrı yazılı gece çalışması onayı ve günlük 11 saat / haftalık 45 saat puantaj denetimi",
+        "PDKS / puantaj kayıtları ve onaylı fazla çalışma formu (m.42/43 kapsamında ise zorunlu/olağanüstü neden tutanağı; Yönetmelik m.7 kapsamındaki maden dışı işlerde hukuk müşaviri ön değerlendirmesi)",
+        "Serbest zaman tercih edilmişse işçinin yazılı talebi ve 6 ay içinde kullanım kayıtları"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde m.41'e özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2003-06-10",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "4857 Sayılı Kanun m.121 (10.06.2003); yer altı maden m.41/9-10 ilk düzenlemesi (haftalık 36 saat) 6552 m.4 ile 11.09.2014; 37,5 saat eşiği 6645 m.34 ile 23.04.2015 (RG 29335); 4857 m.69/3 gece istisnası 6645 m.37 (23.04.2015) ve RG 28.12.2022/32057 ile yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "Yıllık 270 saat veya günlük 11 saat / gece 7,5 saat tavanlarının aşılması nedeniyle İPC ve işçiye haklı fesih hakkı (m.24/II-f)",
+        "Bordroda fazla çalışma tahakkuku olmadan 'ücrete dahil' kaydının 270 saati aşan kısımda geçersiz sayılması",
+        "Puantaj ile bordro uyumsuzluğu",
+        "Yazılı fazla çalışma onayının özlük dosyasında saklanmaması veya 30 gün önceden yazılı geri alma bildirimine rağmen olağan fazla çalışmaya zorlanması",
+        "4857 m.69/3 gece 7,5 saat sınır istisnasının Fazla Çalışma Yönetmeliği m.7 kapsamındaki fazla çalışma yasaklarını otomatik kaldırdığı yanılgısıyla yasaklı işlerde fazla çalışma yaptırılması",
+        "4857 m.41/9-10'daki yer altı maden işlerine özgü m.42-43 kanuni hükmünün, Yönetmelik m.7 metninde açık istisna bulunmayan diğer yasaklı işlere (sağlık sınırlı işler, tünel, kanalizasyon, su altı işleri vb.) otomatik istisna olarak genellenmesi"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD4857M41",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "4857",
+        "madde 41",
+        "fazla çalışma",
+        "270 saat",
+        "45 saat",
+        "serbest zaman",
+        "gece çalışması",
+        "7,5 saat",
+        "m.69",
+        "yönetmelik m.7",
+        "yönetmelik m.9",
+        "yer altı maden",
+        "37,5 saat",
+        "puantaj",
+        "yazılı onay",
+        "özlük dosyası",
+        "30 gün",
+        "geri alma",
+        "m.42",
+        "m.43"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-4857",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT4857",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a.3 hukuki inceleme: Fazla Çalışma Yönetmeliği m.7 metninde genel bir '(4857 m.42-43 hariç)' ibaresi yer almadığından bu genelleme kaldırıldı. 4857 m.41/9-10 (6552 m.4 ile 11.09.2014'te 36 saat olarak eklenen ve 6645 m.34 ile 23.04.2015'te 37,5 saat olarak güncellenen) ve Yönetmelik m.4/son'daki açık m.42-43 kanuni hükmünün yalnızca yer altında maden işlerine özgü olduğu, diğer m.7 yasaklı işlerde otomatik istisna uygulanamayacağı ayrı hukuki inceleme notu (special_calculation_rules) ve UNDERGROUND_MINING_STATUTORY_M42_M43_AND_M7_RELATION senaryosu ile modellendi."
+      },
+      "special_calculation_rules": {
+        "m42_m43_vs_reg_m7_legal_review_note": "Fazla Çalışma ve Fazla Sürelerle Çalışma Yönetmeliği m.7 metninde 4857 m.42 (zorunlu nedenler) ve m.43 (olağanüstü haller) için genel bir istisna cümlesi bulunmamaktadır. Buna karşılık 4857 Sayılı Kanun m.41/9-10 (6552 m.4 ile 11.09.2014'te 36 saat eşiğiyle eklenip 6645 m.34 ile 23.04.2015'ten itibaren 37,5 saat eşiğine güncellenen fıkralar) ile Yönetmelik m.4/son (RG 25.08.2017/30165), yalnızca 'yer altında maden işlerinde çalışan işçiler' bakımından m.42 ve m.43 hallerinde (haftalık 37,5 saati aşan her saat için en az %100 zamlı ücretle) fazla çalışma yapılmasını açıkça düzenlemiştir. Dolayısıyla Yönetmelik m.7 kapsamındaki maden dışı diğer yasaklı işler (sağlık kuralları bakımından günde en çok 7,5 saat ve daha az çalışılması gereken işler, gece döneminde yürütülen işler, kablo döşemesi, kanalizasyon, tünel inşaatı ve su altı işleri) bakımından m.42-43 otomatik bir istisna olarak kodlanamaz; somut bir zorunlu/olağanüstü hal doğarsa normlar hiyerarşisi ve İSG sınırları çerçevesinde hukuk müşaviri incelemesi (escalate_to_legal_counsel) gerekir.",
+        "statutory_underground_mining_scope": "4857 m.41/9-10 (6552 m.4 — ilk metin 11.09.2014: 36 saat; 6645 m.34 — güncel eşik 23.04.2015 / RG 29335: 37,5 saat) açık kanuni hükmü yalnızca yer altında maden işlerinde çalışan işçiler için geçerlidir: m.42 ve m.43 halleri dışında fazla çalışma kesinlikle yasaktır; m.42-43 hallerinde haftalık 37,5 saati aşan her bir saat fazla çalışma en az %100 zamlı ödenir.",
+        "non_mining_reg_m7_escalation_rule": "Yönetmelik m.7 kapsamındaki yer altı maden dışı işlerde (sağlık sınırlı ≤7,5 saat işler, gece dönemi işleri, kablo, kanalizasyon, tünel, su altı işleri) 4857 m.42-43 gerekçesiyle fazla çalışma talebi doğarsa sistem otomatik onay vermez; hukuk müşaviri eskalasyonu (escalate_to_legal_counsel) ve İSG uzman onayı zorunludur."
+      },
+      "application_scenarios": [
+        {
+          "scenario_id": "OVERTIME_ORDINARY_CONSENT_AND_STORAGE",
+          "condition": "4857 m.41 kapsamındaki olağan fazla çalışma / fazla sürelerle çalışma",
+          "legal_rule": "İşçinin yazılı onayı iş sözleşmesi yapılırken veya ihtiyaç ortaya çıktığında alınır ve işçinin özlük dosyasında saklanır; yıllık 270 saat tavanı aşılamaz.",
+          "statutory_basis": "4857 m.41 ve Fazla Çalışma Yönetmeliği m.9"
+        },
+        {
+          "scenario_id": "OVERTIME_CONSENT_WITHDRAWAL_30_DAYS",
+          "condition": "İşçinin daha önce verdiği fazla çalışma onayını geri almak istemesi",
+          "legal_rule": "İşçi 30 gün önceden işverene yazılı bildirimde bulunarak fazla çalışma onayını geri alabilir; 30 günlük süre sonunda olağan fazla çalışma yaptırılamaz, ancak normal haftalık çalışma devam eder.",
+          "statutory_basis": "Fazla Çalışma Yönetmeliği m.9/2 (RG 25.08.2017 / 30165)"
+        },
+        {
+          "scenario_id": "OVERTIME_MANDATORY_OR_EMERGENCY_NO_CONSENT_REQUIRED",
+          "condition": "Yönetmelik m.7 yasak kapsamı dışındaki işlerde 4857 m.42 (arıza, makine/araç güvenliği, zorlayıcı sebep) veya m.43 (seferberlik/olağanüstü haller)",
+          "legal_rule": "Zorunlu ve olağanüstü hallerde işçinin yazılı onayı aranmaksızın kanuni sınırlar dahilinde fazla çalışma yaptırılabilir; dolayısıyla 'onay yoksa hiçbir durumda çalışma veya fazla çalışma yapılamaz' şeklinde bağlamsız sonuç üretilemez. Yönetmelik m.7 kapsamındaki yasaklı işlerdeki uygulama ise ayrı değerlendirilir.",
+          "statutory_basis": "4857 m.42 ve m.43"
+        },
+        {
+          "scenario_id": "OVERTIME_PROHIBITED_WORKS_REG_M7",
+          "condition": "Fazla Çalışma Yönetmeliği m.7 kapsamındaki fazla çalışma yaptırılmayacak işler",
+          "legal_rule": "Fazla Çalışma Yönetmeliği m.7 uyarınca; (a) 4857 m.63/son kapsamında sağlık kuralları bakımından günde en çok 7,5 saat ve daha az çalışılması gereken işlerde, (b) 4857 m.69/1 gece döneminde yürütülen işlerde (gündüz işine ek olarak yapılan fazla çalışmalar hariç) ve (c) maden ocakları, kablo döşemesi, kanalizasyon, tünel inşaatı gibi işlerin yer ve su altında yapılanlarında fazla çalışma yaptırılamaz. Yönetmelik m.7 metninde genel bir 4857 m.42-43 istisna cümlesi yer almaz; m.7 yasakları hem 4857 m.69/3 gece sınırı istisnasından hem de 4857 m.41/9-10 yer altı maden özel hükmünden ayrı değerlendirilir.",
+          "statutory_basis": "Fazla Çalışma Yönetmeliği m.7 ve 4857 m.63/son"
+        },
+        {
+          "scenario_id": "UNDERGROUND_MINING_STATUTORY_M42_M43_AND_M7_RELATION",
+          "condition": "4857 m.42-43 (zorunlu neden / olağanüstü hal) hükümlerinin yer altında maden işleri ile Yönetmelik m.7 kapsamındaki diğer yasaklı işlere etkisi",
+          "legal_rule": "4857 m.41/9-10 (6552 m.4: 11.09.2014'te 36 saat; 6645 m.34: 23.04.2015'ten itibaren 37,5 saat) ve Yönetmelik m.4/son yalnızca yer altında maden işleri bakımından m.42 ve m.43 hallerinde (haftalık 37,5 saati aşan kısım için en az %100 zamlı ücretle) açık kanuni istisna öngörür. Buna karşılık Yönetmelik m.7 metninde diğer yasaklı işler (sağlık kuralları gereği ≤7,5 saat işler, kablo döşemesi, kanalizasyon, tünel inşaatı, su altı işleri ve gece dönemi işleri) için genel bir m.42-43 istisnası yazılmadığından, bu işlerde m.42-43 otomatik istisna olarak uygulanamaz; somut olayda hukuk müşaviri incelemesi (escalate_to_legal_counsel) gerekir.",
+          "statutory_basis": "4857 m.41/9-10 (6552 m.4 & 6645 m.34), 4857 m.42-43, Fazla Çalışma Yönetmeliği m.4/son ve m.7"
+        },
+        {
+          "scenario_id": "NIGHT_WORK_7_5_HOUR_LIMIT",
+          "condition": "4857 m.69 kapsamındaki gece çalışmasında (20:00–06:00) günlük 7,5 saat üst sınırı ve istisna sektörlerde yazılı onay",
+          "legal_rule": "İşçilerin gece çalışmaları kural olarak 7,5 saati geçemez. Yalnızca turizm, özel güvenlik, sağlık hizmeti yürütülen işlerde ve Türk Petrol Kanunu kapsamındaki petrol araştırma, arama ve sondaj faaliyetlerinde işçinin yazılı onayı alınmak şartıyla 7,5 saatin üzerinde gece çalışması yaptırılabilir. Bu istisna yalnızca gece çalışmasının 7,5 saatlik sınırına ilişkindir; günlük 11 saat / haftalık 45 saat sınırları ile Fazla Çalışma Yönetmeliği m.7'deki fazla çalışma yasaklarını otomatik olarak kaldırmaz.",
+          "statutory_basis": "4857 m.69/3 (RG 23.04.2015 ve RG 28.12.2022/32057)"
+        }
+      ]
+    },
+    {
+      "card_id": "CARD-4857-M53",
+      "source_id": "MEVZUAT-4857",
+      "law_no": "4857",
+      "article_ref": "Madde 53",
+      "topic": "Yıllık ücretli izin hakkı ve kıdeme göre asgari izin süreleri",
+      "legal_basis": {
+        "source_id": "MEVZUAT-4857",
+        "original_publication_ref": "RG 10.06.2003 / Sayı 25134 (İlk yayımlanan metin)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": [
+          {
+            "amending_law_no": "6552",
+            "official_gazette_no": "29116 (Mükerrer)",
+            "publication_date": "2014-09-11",
+            "effective_from": "2014-09-11",
+            "summary": "Yer altı işlerinde çalışan işçilerin yıllık ücretli izin süreleri dörder gün artırıldı."
+          }
+        ]
+      },
+      "scope_of_application": "Deneme süresi dahil en az 1 yıl çalışmış işçilere asgari yıllık izin süreleri: 1–5 yıl (5 yıl dahil) 14 gün; 5 yıldan fazla 15 yıldan az 20 gün; 15 yıl (dahil) ve daha fazla 26 gün. 18 ve daha küçük yaştaki işçiler ile 50 ve daha yukarı yaştaki işçilere verilecek yıllık izin süresi 20 günden az olamaz. Yıllık izin hakkından vazgeçilemez; sözleşme/TİS ile işçi lehine artırılabilir.",
+      "exceptions": [
+        "Niteliklerinden ötürü bir yıldan az süren mevsimlik veya kampanya işlerinde çalışanlara yıllık izin hükümleri uygulanmaz",
+        "Yer altı işlerinde çalışanlarda asgari izin sürelerine +4 gün eklenir"
+      ],
+      "required_documents": [
+        "İşçinin imzasını taşıyan yıllık ücretli izin kayıt defteri veya onaylı izin formu",
+        "Fesih halinde kullanılmamış yıllık izin gün sayısını doğrulayan İK izin bakiye mutabakatı (@ÜcretBordro)"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde m.53'e özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2003-06-10",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "4857 Sayılı Kanun m.121 (10.06.2003); yer altı +4 gün ilavesi 6552 ile 11.09.2014 tarihinde yürürlüğe girmiştir."
+      },
+      "norm_character": "RELATIVE_EMPLOYEE_FAVORABLE",
+      "risks": [
+        "İş ilişkisi devam ederken izin yerine para ödenmesi hukuken geçersizdir (izin hakkı düşmez)",
+        "İmzalı izin kayıt belgesi olmadan kullandırılan izinlerin davada ispat edilememesi",
+        "50 yaş üstü veya 18 yaş altı çalışanlara 14 gün izin verilmesi (asgari 20 gün ihlali)"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD4857M53",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "4857",
+        "madde 53",
+        "yıllık izin",
+        "14 gün",
+        "20 gün",
+        "26 gün",
+        "50 yaş",
+        "nispi emredici"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-4857",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT4857",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 4857 Madde 53 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    },
+    {
+      "card_id": "CARD-4857-EKM3",
+      "source_id": "MEVZUAT-4857",
+      "law_no": "4857",
+      "article_ref": "Ek Madde 3",
+      "topic": "Yıllık izin ücreti ve kıdem/ihbar/kötüniyet/ayrımcılık tazminatlarında 5 yıllık zamanaşımı",
+      "legal_basis": {
+        "source_id": "MEVZUAT-4857",
+        "original_publication_ref": "RG 25.10.2017 / Sayı 30221 (7036 Sayılı Kanun m.15 ile 4857'ye eklenmiştir)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": [
+          {
+            "amending_law_no": "7036",
+            "official_gazette_no": "30221",
+            "publication_date": "2017-10-25",
+            "effective_from": "2017-10-25",
+            "summary": "7036 m.15 ile 4857'ye Ek Madde 3 eklenerek kıdem, ihbar, kötüniyet, eşit davranmama tazminatları ile yıllık izin ücretinde zamanaşımı 10 yıldan 5 yıla indirildi (Geçici m.8 geçiş hükmüyle)."
+          }
+        ]
+      },
+      "scope_of_application": "Ücret alacakları 4857 m.32/8 gereği zaten 5 yıllık zamanaşımına tabi olup; 7036 m.15 ile eklenen Ek Madde 3 uyarınca 25.10.2017 tarihinden sonra sona eren iş sözleşmelerinden kaynaklanan yıllık ücretli izin ücreti ile kıdem, ihbar, kötüniyet ve eşit davranma ilkesine aykırılık tazminatlarında da zamanaşımı süresi 5 yıldır.",
+      "exceptions": [
+        "25.10.2017 tarihinden önce sona ermiş iş sözleşmeleri için 4857 Geçici m.8 geçiş hükmü uygulanır (kalan süre 5 yıldan uzunsa 25.10.2017'den itibaren 5 yılın dolmasıyla zamanaşımı tamamlanır)",
+        "Arabuluculuk başvurusu süresince zamanaşımı durur (7036 m.3/17)"
+      ],
+      "required_documents": [
+        "SGK işten ayrılış bildirgesi (fesih tarihinin kesin tespiti için)",
+        "Arabuluculuk başvuru ve son tutanak tarihleri (durma süresinin hesabı için)"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde Ek Madde 3'e özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2017-10-25",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "7036 Sayılı Kanun m.15 ve m.38/1-b — Yayımı tarihinde (25.10.2017) yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "25.10.2017 öncesi olaylarda 5 yıllık kuralın geriye dönük hatalı uygulanması",
+        "Özlük ve bordro belgelerinin 5 yıldan kısa süre saklanması nedeniyle ispat kaybı (SGK/TTK saklama süreleri 10 yıl)"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD4857EKM3",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "4857",
+        "ek madde 3",
+        "zamanaşımı",
+        "5 yıl",
+        "7036",
+        "kıdem zamanaşımı",
+        "izin zamanaşımı"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-4857",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT4857",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 4857 Ek Madde 3 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    }
+  ]
+}

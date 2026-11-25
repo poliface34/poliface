@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0.5.1",
+  "layer_id": "L5_HR_PROCEDURES",
+  "product_brand": "hrAI",
+  "coordinator_agent": "@hrAI",
+  "specialist_agent": "@HukukSGK",
+  "procedure_id": "PROC-L5-DISIPLIN-SAVUNMA",
+  "source_document_id": "HRAI-L5-PROC-02",
+  "title": "Disiplin Kurulu, Olay Tutanağı ve Savunma Alma (4857 m.19, m.25, m.26 & m.109) Referans Prosedürü",
+  "scope_summary": "İşyeri disiplin ihlallerinin belgelenmesi, olay tutanağı düzenlenmesi, 4857 m.19/2 uyarınca yazılı savunma alınması, 4857 m.26 6 iş günü/1 yıl hak düşürücü sürelerin izlenmesi ve 7555 m.23 ile değişik 4857 m.109 yazılı fesih bildirimi kuralının uygulanmasına yönelik kurumsal referans şablonudur.",
+  "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+  "template_only_not_binding_company_policy": true,
+  "no_flat_priority_supremacy": true,
+  "primary_statutory_basis_ids": [
+    "CARD-4857-M19",
+    "CARD-4857-M25",
+    "CARD-4857-M26",
+    "RG-7555-20250724",
+    "CARD-6356-M24"
+  ],
+  "mandatory_steps": [
+    {
+      "step_no": 1,
+      "action": "İhlali tarih, saat, yer ve tanık beyanlarıyla somut olay tutanağına bağla; feshe yetkili makamın öğrenme tarihini (4857 m.26) ayrı kayıt altına al.",
+      "responsible_role": "Birim Yöneticisi ve İK",
+      "required_record": "Tarihli ve İmzalı Olay Tespit Tutanağı",
+      "statutory_anchor_id": "CARD-4857-M26"
+    },
+    {
+      "step_no": 2,
+      "action": "Davranış veya verime dayalı geçerli fesih değerlendirmesinde (4857 m.19/2) çalışana makul süre tanıyarak yazılı savunma talep et; imtina hâlinde tanıklı tutanak düzenle.",
+      "responsible_role": "İK Disiplin Sekreteryası",
+      "required_record": "Yazılı Savunma Talep Formu ve Çalışan Savunması",
+      "statutory_anchor_id": "CARD-4857-M19"
+    },
+    {
+      "step_no": 3,
+      "action": "24.07.2025 sonrası tüm fesih kararlarında (m.19 ve m.25 dahil) fesih bildirimini 7555 m.23 ile değişik 4857 m.109 uyarınca yazılı yap; sendika temsilcisi ise 6356 m.24 güvencesini ayrıca doğrula.",
+      "responsible_role": "Yetkili Makam ve Hukuk Müşaviri",
+      "required_record": "Yazılı ve Açık Gerekçeli Fesih Bildirimi",
+      "statutory_anchor_id": "CARD-4857-M19"
+    }
+  ],
+  "escalation_triggers": [
+    "4857 m.26 6 iş günü veya 1 yıl hak düşürücü süresinin dolma riski / yetkili makam belirsizliği",
+    "Çalışanın işyeri sendika temsilcisi (6356 m.24), gebe/analık izninde veya iş kazası istirahatinde olması",
+    "Fesih bildiriminin yalnızca e-posta/KEP veya sözlü kanalla yapılmak istenmesi (m.109 ihlali)"
+  ],
+  "rules": [
+    {
+      "rule_id": "RULE-L5-02-M26-SURE",
+      "title": "4857 m.26 Hak Düşürücü Süre ve Yetkili Makam Takibi",
+      "rule_summary": "Disiplin kurulu toplanma takvimi, feshe yetkili makamın öğrenme tarihinden itibaren işleyen 6 iş günlük hak düşürücü süreyi aşamaz; kurum içi prosedür bu yasal süreyi uzatamaz.",
+      "norm_type": "STATUTORY_ABSOLUTE_MANDATORY",
+      "legal_basis_ids": [
+        "CARD-4857-M26",
+        "CARD-4857-M25"
+      ],
+      "source_document_id": "HRAI-L5-PROC-02",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": false,
+        "statutory_floor_nature": "ABSOLUTE_MANDATORY",
+        "can_improve_for_employee": false,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "4857 m.26 hak düşürücü süresi emredicidir; işveren prosedürü ile 6 iş günü ve 1 yıllık üst sınır genişletilemez."
+      },
+      "conflict_resolution": {
+        "strategy": "STATUTORY_ABSOLUTE_PREVAILS",
+        "higher_authority_ref": "4857 s. İş Kanunu m.26",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "Disiplin prosedüründeki inceleme süreleri TİS'te işçi lehine getirilen ek disiplin kurulu güvencelerinden ayrıdır; her iki süreç 4857 m.26 sınırını gözetmelidir.",
+        "rationale": "Hak düşürücü süre kanundan doğar; prosedür içi gecikme haklı fesih yetkisini düşürür."
+      },
+      "human_review_required": true
+    },
+    {
+      "rule_id": "RULE-L5-02-SAVUNMA-VE-YAZILILIK",
+      "title": "Yazılı Savunma ve Fesih Bildiriminde Yazılılık Şartı",
+      "rule_summary": "Geçerli nedenle fesihte (m.19/2) savunma alınması zorunludur; 24.07.2025 sonrası tüm fesih bildirimleri 7555 m.23 ile değişik 4857 m.109 gereği her hâlde yazılı yapılır. Kurum içi disiplin prosedürü çalışan lehine ek savunma süresi tanıyabilir.",
+      "norm_type": "CORPORATE_HR_PROCEDURE",
+      "legal_basis_ids": [
+        "CARD-4857-M19",
+        "RG-7555-20250724",
+        "CARD-6356-M24"
+      ],
+      "source_document_id": "HRAI-L5-PROC-02",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": true,
+        "statutory_floor_nature": "RELATIVE_MANDATORY_FLOOR",
+        "can_improve_for_employee": true,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "Kurum prosedürü m.19 savunma güvencesini haklı fesihlerde de uygulayarak veya ek savunma süresi tanıyarak işçi lehine güçlendirebilir, ancak yazılılık ve savunma hakkını ortadan kaldıramaz."
+      },
+      "conflict_resolution": {
+        "strategy": "EMPLOYEE_FAVORABLE_COMPARISON_WITH_MANDATORY_FLOOR",
+        "higher_authority_ref": "4857 s. İş Kanunu m.19 ve 7555 m.23 ile değişik m.109",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "TİS kapsamında bağlayıcı disiplin kurulu şartı varsa, tek taraflı İK prosedürü TİS disiplin güvencesini bertaraf edemez.",
+        "rationale": "Savunma alma ve yazılı fesih bildirimi asgari yasal güvencedir; kurum prosedürü yalnızca usuli güvenceyi artırabilir."
+      },
+      "human_review_required": true
+    }
+  ],
+  "disclaimer": "Bu kayıt hrAI @HukukSGK L5 kurumsal İK prosedürü referans şablonudur (REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION). Şirket tarafından benimsenip hukuk müşavirince onaylanmadan yürürlükteki disiplin yönetmeliği olarak kullanılamaz."
+}

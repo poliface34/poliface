@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0.5.1",
+  "description": "hrAI @HukukSGK yetkili hukuk müşaviri ve denetim zinciri mühürleyici kimlik defteri (v1.0.5.1). Özel anahtarlar kesinlikle paket veya kaynak kod içinde saklanmaz; üretim anahtarları harici KMS/HSM ortamında yönetilir. Ed25519 / RSA-PSS-SHA256 doğrulaması 5070 sayılı Elektronik İmza Kanunu kapsamındaki güvenli elektronik imza / NES ile eşdeğer değildir.",
+  "signature_legal_notice": "Ed25519 / RSA-PSS-SHA256 kriptografik doğrulama, dahili bütünlük ve kimlik doğrulama mekanizmasıdır; 5070 sayılı Elektronik İmza Kanunu kapsamındaki Güvenli Elektronik İmza veya Nitelikli Elektronik Sertifika (NES) ile eşdeğer değildir.",
+  "key_management_policy": "EXTERNAL_KMS_HSM_REQUIRED_NO_PRIVATE_KEYS_IN_REPO",
+  "test_sandbox_keys_allowed_in_production": false,
+  "approvers": {
+    "CALISORA-HUKUK-01": {
+      "approver_id": "CALISORA-HUKUK-01",
+      "display_name": "ÇALIŞORA Yetkili İş Hukuku Müşaviri (Üretim Anahtar Kaydı Bekliyor)",
+      "role": "EXTERNAL_LEGAL_COUNSEL",
+      "status": "ACTIVE",
+      "enrollment_status": "PENDING_PRODUCTION_KEY_ENROLLMENT",
+      "key_trust_tier": "PRODUCTION_QUALIFIED_COUNSEL",
+      "key_management_mode": "EXTERNAL_KMS_HSM_REQUIRED",
+      "key_id": "KEY-CALISORA-HUKUK-01-PENDING",
+      "key_version": "v1",
+      "key_algorithm": "ED25519",
+      "public_key_pem": null,
+      "public_key_fingerprint_sha256": null,
+      "valid_from_utc": "2026-01-01T00:00:00Z",
+      "valid_until_utc": "2028-12-31T23:59:59Z",
+      "revoked_at_utc": null,
+      "revocation_reason": "NONE",
+      "authorized_scopes": [
+        "HOLIDAY_CALENDAR_LEGAL_APPROVAL:2024-2030"
+      ],
+      "environment_restrictions": [
+        "PRODUCTION",
+        "STAGING"
+      ],
+      "qualified_e_signature_5070_equivalent": false
+    },
+    "CALISORA-LEDGER-SEALER-01": {
+      "approver_id": "CALISORA-LEDGER-SEALER-01",
+      "display_name": "ÇALIŞORA Denetim Zinciri Mühürleme Servisi (Üretim HSM Kaydı Bekliyor)",
+      "role": "AUDIT_LEDGER_CHECKPOINT_SIGNER",
+      "status": "ACTIVE",
+      "enrollment_status": "PENDING_PRODUCTION_KEY_ENROLLMENT",
+      "key_trust_tier": "PRODUCTION_AUDIT_SEALER",
+      "key_management_mode": "EXTERNAL_KMS_HSM_REQUIRED",
+      "key_id": "KEY-CALISORA-SEALER-01-PENDING",
+      "key_version": "v1",
+      "key_algorithm": "RSA-PSS-SHA256",
+      "public_key_pem": null,
+      "public_key_fingerprint_sha256": null,
+      "valid_from_utc": "2026-01-01T00:00:00Z",
+      "valid_until_utc": "2028-12-31T23:59:59Z",
+      "revoked_at_utc": null,
+      "revocation_reason": "NONE",
+      "authorized_scopes": [
+        "AUDIT_CHECKPOINT_SEAL"
+      ],
+      "environment_restrictions": [
+        "PRODUCTION",
+        "STAGING"
+      ],
+      "qualified_e_signature_5070_equivalent": false
+    }
+  }
+}

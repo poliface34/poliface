@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0.5.1",
+  "layer_id": "L6_CBA_CONTRACTS_AND_WORKPLACE_PRACTICES",
+  "product_brand": "hrAI",
+  "coordinator_agent": "@hrAI",
+  "specialist_agent": "@HukukSGK",
+  "module_id": "MOD-L6-IC-YONETMELIK",
+  "source_document_id": "HRAI-L6-YON-03",
+  "autonomous_source_kind": "WORKPLACE_INTERNAL_REGULATION",
+  "title": "İşyeri İç Yönetmelikleri, Sözleşme Eki Niteliği ve 4857 m.22 Esaslı Değişiklik Sınırı Referans Modülü",
+  "scope_summary": "İşveren tarafından hazırlanan personel/işyeri iç yönetmeliklerinin hangi şartlarda iş sözleşmesinin eki sayıldığı, yönetim hakkı kapsamındaki tamamlayıcı düzenlemeler ile 4857 m.22 yazılı rıza gerektiren çalışma koşullarında esaslı değişiklik ayrımı için referans şablondur.",
+  "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+  "template_only_not_binding_company_policy": true,
+  "no_flat_priority_supremacy": true,
+  "non_reducible_source_distinction": "İşyeri iç yönetmeliği işverenin tek taraflı düzenlemesidir; kolektif TİS'ten, karşılıklı müzakere edilen bireysel sözleşmeden ve kendiliğinden oluşan yerleşik işyeri uygulamasından ayrı bir norm türüdür.",
+  "primary_statutory_basis_ids": [
+    "MEVZUAT-4857",
+    "CARD-YON-CALISMA-SURELERI",
+    "CARD-YON-FAZLA-CALISMA",
+    "CARD-4857-M19"
+  ],
+  "rules": [
+    {
+      "rule_id": "RULE-L6-03-IC-YONETMELIK-M22-SINIRI",
+      "title": "İç Yönetmelik Değişikliğinde 4857 m.22 Esaslı Değişiklik ve 6 İş Günü Yazılı Rıza Şartı",
+      "rule_summary": "İş sözleşmesinin eki niteliğindeki işyeri iç yönetmeliğinde işçi aleyhine esaslı değişiklik (ücret, yan hak, çalışma düzeni daraltması) ancak işçiye yazılı bildirim ve 6 iş günü içinde işçinin yazılı kabulüyle bağlayıcı olur.",
+      "norm_type": "WORKPLACE_INTERNAL_REGULATION",
+      "legal_basis_ids": [
+        "MEVZUAT-4857",
+        "CARD-4857-M19"
+      ],
+      "source_document_id": "HRAI-L6-YON-03",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": true,
+        "statutory_floor_nature": "RELATIVE_MANDATORY_FLOOR",
+        "can_improve_for_employee": true,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "İşyeri iç yönetmeliği işçinin çalışma koşullarını iyileştirebilir; ancak işçinin yazılı rızası olmadan kazanılmış hakları veya bireysel sözleşme/TİS şartlarını daraltamaz."
+      },
+      "conflict_resolution": {
+        "strategy": "ESSENTIAL_CHANGE_WRITTEN_CONSENT_4857_M22",
+        "higher_authority_ref": "4857 s. İş Kanunu m.22",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "Tek taraflı iç yönetmelik değişikliği, TİS hükmünü veya bireysel iş sözleşmesindeki daha elverişli hakkı ortadan kaldıramaz.",
+        "rationale": "4857 m.22 çalışma koşullarında esaslı değişiklik için yazılı bildirim ve 6 iş günü yazılı kabul arar; tek taraflı yönetmelik güncellemesi işçiyi bağlamaz."
+      },
+      "human_review_required": true
+    },
+    {
+      "rule_id": "RULE-L6-03-YONETIM-HAKKI-TAMAMLAYICI",
+      "title": "İşverenin Yönetim Hakkı Kapsamındaki Çalışma Düzeni Kuralları (Tamamlayıcı Alan)",
+      "rule_summary": "Kanun, TİS ve bireysel iş sözleşmesine aykırı olmamak kaydıyla vardiya planlama prosedürü, ara dinlenmesi zamanlaması ve işyeri düzen kuralları tamamlayıcı alanda iç yönetmelikle belirlenebilir; ancak günlük 11 saat ve gece 7,5 saat sınırları aşılamaz.",
+      "norm_type": "STATUTORY_SUPPLEMENTARY",
+      "legal_basis_ids": [
+        "CARD-YON-CALISMA-SURELERI",
+        "CARD-YON-FAZLA-CALISMA"
+      ],
+      "source_document_id": "HRAI-L6-YON-03",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": true,
+        "statutory_floor_nature": "SUPPLEMENTARY_DEFAULT",
+        "can_improve_for_employee": true,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "Tamamlayıcı iş düzeni kuralları yönetim hakkı içinde belirlenebilir; ancak Çalışma Süreleri ve Fazla Çalışma Yönetmeliği'ndeki emredici üst sınırlar (11 saat/gün, 7,5 saat gece, m.7 yasakları) aşılamaz."
+      },
+      "conflict_resolution": {
+        "strategy": "SUPPLEMENTARY_CONTRACT_OR_PRACTICE_APPLIES",
+        "higher_authority_ref": "Çalışma Süreleri Yönetmeliği ve Fazla Çalışma Yönetmeliği",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "Yönetim hakkına dayalı iç yönetmelik hükmü, bireysel sözleşme veya TİS'te açıkça kararlaştırılmış vardiya/saat güvencesiyle çatışırsa sözleşme/TİS üstün kalır.",
+        "rationale": "Tamamlayıcı kurallar ile emredici çalışma süresi sınırları ayrı değerlendirilir."
+      },
+      "human_review_required": true
+    }
+  ],
+  "disclaimer": "Bu kayıt hrAI @HukukSGK L6 işyeri iç yönetmeliği referans şablonudur (REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION). Şirket tarafından benimsenip hukuk müşavirince onaylanmadan yürürlükteki yönetmelik gibi uygulanamaz."
+}

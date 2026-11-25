@@ -1,0 +1,9 @@
+# Optional pinned test/audit dependencies for independent X.509 `--mode strict`
+# cross-validation (`tests/cross_validate_x509.py`) and JSON Schema Draft 2020-12
+# validation (hrAI @HukukSGK v1.0.5.1).
+#
+# NOTE: The hrAI runtime (`engine/`) has ZERO third-party dependencies (Python stdlib only).
+cryptography==50.0.2
+pyasn1==0.4.8
+pyasn1-modules==0.2.8
+jsonschema==4.10.3

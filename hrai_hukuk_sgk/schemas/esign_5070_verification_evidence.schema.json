@@ -1,0 +1,1019 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://calisora.internal/schemas/esign_5070_verification_evidence.schema.json",
+  "title": "hrAI @HukukSGK 5070 Sayılı Kanun NES & CAdES/XAdES Doğrulama ve Kanıt Paketi Şeması (v1.0.5.1)",
+  "description": "CAdES (ETSI EN 319 122-1/-2) ve XAdES (ETSI EN 319 132-1/-2) doğrulama sonuçlarını, ayrı kriptografik ve 5070 hukuki sonuç alanlarını, doğrulanmış SscdControlEvidenceVerificationResult çıktısını, XMLDSig ayrıntılarını, m.4/m.6/m.9 matrisini ve VerificationEvidenceBundle yapısını doğrular.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "signature_format",
+    "standard",
+    "cryptographic_signature_valid",
+    "qualified_e_signature_5070_verified",
+    "qualified_e_signature_5070_conclusion",
+    "profile_compliance",
+    "signer_certificate",
+    "eshs_trust",
+    "revocation",
+    "signature_timestamp",
+    "archive_timestamp",
+    "law_5070_assessment",
+    "evidence_bundle",
+    "validation_time_utc",
+    "historical_archive_mode",
+    "provider_backend",
+    "integration_mode",
+    "verifier_service_id",
+    "sscd_control_evidence",
+    "xmldsig_details",
+    "legal_separation_notice",
+    "error_codes",
+    "errors"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.5.1"
+    },
+    "signature_format": {
+      "type": "string",
+      "enum": [
+        "CADES",
+        "XADES"
+      ]
+    },
+    "standard": {
+      "type": "string",
+      "enum": [
+        "ETSI EN 319 122-1/-2",
+        "ETSI EN 319 132-1/-2"
+      ]
+    },
+    "cryptographic_signature_valid": {
+      "type": "boolean"
+    },
+    "qualified_e_signature_5070_verified": {
+      "type": "boolean"
+    },
+    "qualified_e_signature_5070_conclusion": {
+      "type": "string",
+      "enum": [
+        "VERIFIED",
+        "FAILED",
+        "INDETERMINATE"
+      ]
+    },
+    "profile_compliance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "signature_format",
+        "standard",
+        "claimed_profile_raw",
+        "canonical_claimed_profile",
+        "legacy_alias_used",
+        "achieved_profile",
+        "profile_compliant",
+        "has_signing_certificate_ref",
+        "has_signature_timestamp",
+        "has_validation_data_embedded",
+        "has_archive_timestamp",
+        "error_codes",
+        "errors"
+      ],
+      "properties": {
+        "signature_format": {
+          "type": "string",
+          "enum": [
+            "CADES",
+            "XADES"
+          ]
+        },
+        "standard": {
+          "type": "string"
+        },
+        "claimed_profile_raw": {
+          "type": "string"
+        },
+        "canonical_claimed_profile": {
+          "type": "string",
+          "enum": [
+            "B-B",
+            "B-T",
+            "B-LT",
+            "B-LTA"
+          ]
+        },
+        "legacy_alias_used": {
+          "type": "boolean"
+        },
+        "achieved_profile": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "B-B",
+            "B-T",
+            "B-LT",
+            "B-LTA"
+          ]
+        },
+        "profile_compliant": {
+          "type": "boolean"
+        },
+        "has_signing_certificate_ref": {
+          "type": "boolean"
+        },
+        "has_signature_timestamp": {
+          "type": "boolean"
+        },
+        "has_validation_data_embedded": {
+          "type": "boolean"
+        },
+        "has_archive_timestamp": {
+          "type": "boolean"
+        },
+        "error_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "signer_certificate": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "valid_x509",
+        "subject",
+        "issuer",
+        "serial_number",
+        "not_before_utc",
+        "not_after_utc",
+        "cert_sha256",
+        "signature_algorithm",
+        "public_key_algorithm",
+        "basic_constraints_ca",
+        "key_usage",
+        "qc_statements_present",
+        "qc_compliance",
+        "qc_sscd",
+        "certificate_policy_oids",
+        "signer_common_name",
+        "signer_serial_identifier",
+        "issuer_country",
+        "valid_at_validation_time",
+        "error_codes",
+        "errors"
+      ],
+      "properties": {
+        "valid_x509": {
+          "type": "boolean"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "issuer": {
+          "type": "string"
+        },
+        "serial_number": {
+          "type": "string"
+        },
+        "not_before_utc": {
+          "type": "string"
+        },
+        "not_after_utc": {
+          "type": "string"
+        },
+        "cert_sha256": {
+          "type": "string"
+        },
+        "signature_algorithm": {
+          "type": "string"
+        },
+        "public_key_algorithm": {
+          "type": "string"
+        },
+        "basic_constraints_ca": {
+          "type": "boolean"
+        },
+        "key_usage": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "qc_statements_present": {
+          "type": "boolean"
+        },
+        "qc_compliance": {
+          "type": "boolean"
+        },
+        "qc_sscd": {
+          "type": "boolean"
+        },
+        "certificate_policy_oids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "signer_common_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "signer_serial_identifier": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "issuer_country": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "valid_at_validation_time": {
+          "type": "boolean"
+        },
+        "error_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "eshs_trust": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "valid",
+        "conclusion",
+        "eshs_id",
+        "btk_provider_authorized",
+        "btk_authorization_status",
+        "btk_list_version",
+        "ca_chain_verified",
+        "policy_evaluated",
+        "policy_matched",
+        "matched_policy_oids",
+        "is_sandbox_ca",
+        "bundle_sha256",
+        "issuer_ca_pem",
+        "provider_backend",
+        "integration_mode",
+        "error_codes",
+        "errors"
+      ],
+      "properties": {
+        "valid": {
+          "type": "boolean"
+        },
+        "conclusion": {
+          "type": "string",
+          "enum": [
+            "PASSED",
+            "FAILED",
+            "INDETERMINATE"
+          ]
+        },
+        "eshs_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "btk_provider_authorized": {
+          "type": "boolean"
+        },
+        "btk_authorization_status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "btk_list_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ca_chain_verified": {
+          "type": "boolean"
+        },
+        "policy_evaluated": {
+          "type": "boolean"
+        },
+        "policy_matched": {
+          "type": "boolean"
+        },
+        "matched_policy_oids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "is_sandbox_ca": {
+          "type": "boolean"
+        },
+        "bundle_sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "issuer_ca_pem": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "provider_backend": {
+          "type": "string"
+        },
+        "integration_mode": {
+          "type": "string",
+          "enum": [
+            "LIVE_PRODUCTION",
+            "MOCK_SANDBOX",
+            "NOT_CONFIGURED"
+          ]
+        },
+        "error_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "revocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "conclusion",
+        "method",
+        "checked_at_utc",
+        "validation_time_utc",
+        "certificate_serial_number",
+        "revoked_at_utc",
+        "revocation_reason",
+        "this_update_utc",
+        "next_update_utc",
+        "responder_or_issuer",
+        "evidence_sha256",
+        "historical_archive_evidence",
+        "provider_backend",
+        "integration_mode",
+        "error_codes",
+        "errors"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "GOOD",
+            "REVOKED",
+            "UNKNOWN",
+            "UNAVAILABLE"
+          ]
+        },
+        "conclusion": {
+          "type": "string",
+          "enum": [
+            "PASSED",
+            "FAILED",
+            "INDETERMINATE"
+          ]
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "OCSP",
+            "CRL",
+            "ARCHIVED_OCSP",
+            "ARCHIVED_CRL",
+            "NONE"
+          ]
+        },
+        "checked_at_utc": {
+          "type": "string"
+        },
+        "validation_time_utc": {
+          "type": "string"
+        },
+        "certificate_serial_number": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revoked_at_utc": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revocation_reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "this_update_utc": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "next_update_utc": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "responder_or_issuer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence_sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "historical_archive_evidence": {
+          "type": "boolean"
+        },
+        "provider_backend": {
+          "type": "string"
+        },
+        "integration_mode": {
+          "type": "string",
+          "enum": [
+            "LIVE_PRODUCTION",
+            "MOCK_SANDBOX",
+            "NOT_CONFIGURED"
+          ]
+        },
+        "error_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "signature_timestamp": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "archive_timestamp": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "law_5070_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "article_4_elements",
+        "article_4_conclusion",
+        "article_6_sscd_conclusion",
+        "article_6_details",
+        "article_9_nes_conclusion",
+        "article_9_details",
+        "kms_hsm_misclassification_blocked",
+        "overall_5070_conclusion",
+        "missing_external_evidences",
+        "legal_notes",
+        "error_codes",
+        "errors"
+      ],
+      "properties": {
+        "article_4_elements": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "a_uniquely_linked_to_signer",
+            "b_identifies_signer",
+            "c_sole_control_of_signer",
+            "d_detects_subsequent_data_alteration"
+          ],
+          "properties": {
+            "a_uniquely_linked_to_signer": {
+              "type": "string",
+              "enum": [
+                "PASSED",
+                "FAILED",
+                "INDETERMINATE"
+              ]
+            },
+            "b_identifies_signer": {
+              "type": "string",
+              "enum": [
+                "PASSED",
+                "FAILED",
+                "INDETERMINATE"
+              ]
+            },
+            "c_sole_control_of_signer": {
+              "type": "string",
+              "enum": [
+                "PASSED",
+                "FAILED",
+                "INDETERMINATE"
+              ]
+            },
+            "d_detects_subsequent_data_alteration": {
+              "type": "string",
+              "enum": [
+                "PASSED",
+                "FAILED",
+                "INDETERMINATE"
+              ]
+            }
+          }
+        },
+        "article_4_conclusion": {
+          "type": "string",
+          "enum": [
+            "PASSED",
+            "FAILED",
+            "INDETERMINATE"
+          ]
+        },
+        "article_6_sscd_conclusion": {
+          "type": "string",
+          "enum": [
+            "PASSED",
+            "FAILED",
+            "INDETERMINATE"
+          ]
+        },
+        "article_6_details": {
+          "type": "object"
+        },
+        "article_9_nes_conclusion": {
+          "type": "string",
+          "enum": [
+            "PASSED",
+            "FAILED",
+            "INDETERMINATE"
+          ]
+        },
+        "article_9_details": {
+          "type": "object"
+        },
+        "kms_hsm_misclassification_blocked": {
+          "type": "boolean"
+        },
+        "overall_5070_conclusion": {
+          "type": "string",
+          "enum": [
+            "VERIFIED",
+            "FAILED",
+            "INDETERMINATE"
+          ]
+        },
+        "missing_external_evidences": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "legal_notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "error_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "evidence_bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "bundle_id",
+        "created_at_utc",
+        "trust_list_version",
+        "items",
+        "ocsp_crl_evidences",
+        "timestamp_evidences",
+        "bundle_sha256"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "1.0.5.1"
+        },
+        "bundle_id": {
+          "type": "string",
+          "minLength": 5
+        },
+        "created_at_utc": {
+          "type": "string"
+        },
+        "trust_list_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "evidence_id",
+              "evidence_type",
+              "source",
+              "provider",
+              "acquired_at_utc",
+              "valid_from_utc",
+              "valid_until_utc",
+              "sha256",
+              "certificate_serial_number",
+              "algorithm",
+              "profile",
+              "verification_result",
+              "trust_list_version",
+              "details"
+            ],
+            "properties": {
+              "evidence_id": {
+                "type": "string"
+              },
+              "evidence_type": {
+                "type": "string"
+              },
+              "source": {
+                "type": "string"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "acquired_at_utc": {
+                "type": "string"
+              },
+              "valid_from_utc": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "valid_until_utc": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "certificate_serial_number": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "algorithm": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "profile": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "verification_result": {
+                "type": "string"
+              },
+              "trust_list_version": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "details": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "ocsp_crl_evidences": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "timestamp_evidences": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "bundle_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "validation_time_utc": {
+      "type": "string"
+    },
+    "historical_archive_mode": {
+      "type": "boolean"
+    },
+    "provider_backend": {
+      "type": "string"
+    },
+    "integration_mode": {
+      "type": "string",
+      "enum": [
+        "LIVE_PRODUCTION",
+        "MOCK_SANDBOX",
+        "NOT_CONFIGURED"
+      ]
+    },
+    "verifier_service_id": {
+      "type": "string"
+    },
+    "legal_separation_notice": {
+      "type": "string",
+      "minLength": 20
+    },
+    "error_codes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sscd_control_evidence": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "valid",
+        "conclusion",
+        "evidence_id",
+        "issuer_id",
+        "issuer_name",
+        "issuer_role",
+        "issuer_authorized",
+        "issuer_cert_chain_verified",
+        "issuer_cert_serial_number",
+        "issuer_cert_sha256",
+        "issuer_revocation_status",
+        "signature_verified",
+        "signature_algorithm",
+        "scope_verified",
+        "authorized_scopes",
+        "valid_from_utc",
+        "valid_until_utc",
+        "within_validity_window",
+        "bound_signer_cert_sha256",
+        "signature_origin",
+        "signing_device_type",
+        "sole_control_attested",
+        "pin_or_biometric_activation_verified",
+        "sscd_device_certified",
+        "sscd_certification_ref",
+        "is_sandbox_issuer",
+        "envelope_sha256",
+        "verifier_service_id",
+        "integration_mode",
+        "error_codes",
+        "errors"
+      ],
+      "properties": {
+        "valid": {
+          "type": "boolean"
+        },
+        "conclusion": {
+          "type": "string",
+          "enum": [
+            "VERIFIED",
+            "FAILED",
+            "INDETERMINATE"
+          ]
+        },
+        "evidence_id": {
+          "type": "string"
+        },
+        "issuer_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "issuer_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "issuer_role": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "issuer_authorized": {
+          "type": "boolean"
+        },
+        "issuer_cert_chain_verified": {
+          "type": "boolean"
+        },
+        "issuer_cert_serial_number": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "issuer_cert_sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "issuer_revocation_status": {
+          "type": "string",
+          "enum": [
+            "GOOD",
+            "REVOKED",
+            "UNKNOWN",
+            "UNAVAILABLE"
+          ]
+        },
+        "signature_verified": {
+          "type": "boolean"
+        },
+        "signature_algorithm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scope_verified": {
+          "type": "boolean"
+        },
+        "authorized_scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "valid_from_utc": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "valid_until_utc": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "within_validity_window": {
+          "type": "boolean"
+        },
+        "bound_signer_cert_sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "signature_origin": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "signing_device_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sole_control_attested": {
+          "type": "boolean"
+        },
+        "pin_or_biometric_activation_verified": {
+          "type": "boolean"
+        },
+        "sscd_device_certified": {
+          "type": "boolean"
+        },
+        "sscd_certification_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_sandbox_issuer": {
+          "type": "boolean"
+        },
+        "envelope_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "verifier_service_id": {
+          "type": "string"
+        },
+        "integration_mode": {
+          "type": "string",
+          "enum": [
+            "LIVE_PRODUCTION",
+            "MOCK_SANDBOX",
+            "NOT_CONFIGURED"
+          ]
+        },
+        "error_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "xmldsig_details": {
+      "type": [
+        "object",
+        "null"
+      ]
+    }
+  }
+}

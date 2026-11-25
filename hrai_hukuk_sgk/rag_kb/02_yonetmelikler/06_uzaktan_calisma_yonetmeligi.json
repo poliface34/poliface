@@ -1,0 +1,125 @@
+{
+  "schema_version": "1.0.2b.1",
+  "law_no": "YON-31419",
+  "law_title": "Uzaktan Çalışma Yönetmeliği (2026 Hibrit Çalışma Değişikliği Dahil)",
+  "source_id": "YONETMELIK-UZAKTAN-CALISMA-20210310",
+  "cards": [
+    {
+      "card_id": "CARD-YON-UZAKTAN-CALISMA",
+      "source_id": "YONETMELIK-UZAKTAN-CALISMA-20210310",
+      "law_no": "YON-31419",
+      "article_ref": "Madde 5, 9, 9/2 (2026 Hibrit), 11, 12, 13 ve 14",
+      "topic": "Uzaktan Çalışma ve Hibrit Çalışma (m.9/2) Sözleşmesi, Veri Güvenliği, İSG ve Uzaktan Çalışmaya Geçiş Usulü",
+      "legal_basis": {
+        "source_id": "YONETMELIK-UZAKTAN-CALISMA-20210310",
+        "original_publication_ref": "RG 10.03.2021 / 31419",
+        "consolidated_text_url": "https://www.resmigazete.gov.tr/eskiler/2026/09/20260925-2.htm",
+        "secondary_statutory_anchors": [
+          "4857 m.14",
+          "6331 m.4",
+          "6698 m.12"
+        ],
+        "amendment_history": [
+          {
+            "amending_law_no": "Uzaktan Çalışma Yönetmeliğinde Değişiklik (2026 Hibrit Çalışma)",
+            "official_gazette_no": "33381",
+            "publication_date": "2026-09-25",
+            "effective_from": "2026-09-25",
+            "summary": "m.9/2 eklendi: İş görme ediminin bir kısmının işyerinde, bir kısmının uzaktan çalışma usulüyle (hibrit) yerine getirilmesi kararlaştırılabilir; bu durumda işçinin işyerinde ve uzaktan çalışacağı günler ile çalışma saatleri iş sözleşmesinde belirlenir."
+          }
+        ]
+      },
+      "scope_of_application": "4857 m.14 uyarınca uzaktan çalışma ilişkisinin yazılı sözleşmeyle kurulmasını (m.5), iş araçları/giderlerin belirlenmesini, çalışma zamanı ve 25.09.2026'dan itibaren hibrit çalışma gün/saatlerinin sözleşmede yazılmasını (m.9/2), veri koruma kurallarının bildirilmesini (m.11), işverenin uzaktan çalışan için İSG bilgilendirme/eğitim/sağlık gözetimi yükümlülüğünü (m.12), uzaktan çalışmanın yapılamayacağı işleri (m.13) ve işçinin uzaktan çalışmaya geçiş talebine işverenin 30 gün içinde yazılı yanıt vermesini (m.14) düzenler.",
+      "application_scenarios": [
+        {
+          "scenario_id": "REMOTE_HYBRID_WORK_CONTRACT_2026_M9_2",
+          "condition": "25.09.2026 ve sonrasında iş görme ediminin kısmen işyerinde kısmen uzaktan (hibrit) yürütülmesi",
+          "legal_rule": "Uzaktan Çalışma Yönetmeliği m.9/2 (RG 25.09.2026/33381) uyarınca işçinin işyerinde ve uzaktan çalışacağı günler ile çalışma saatleri yazılı iş sözleşmesinde (veya ek protokolde) açıkça belirlenmelidir.",
+          "statutory_basis": "4857 m.14 ve Uzaktan Çalışma Yönetmeliği m.9/2 (RG 25.09.2026/33381)"
+        },
+        {
+          "scenario_id": "REMOTE_TRANSITION_30_DAY_RESPONSE",
+          "condition": "Mevcut işyerinde çalışan işçinin yazılı olarak uzaktan çalışmaya geçmeyi talep etmesi",
+          "legal_rule": "İşveren talebi işin ve işçinin niteliğine göre değerlendirir ve 30 gün içinde işçiye talebin yapıldığı usulle yazılı bildirimde bulunur; zorlayıcı nedenlerle işyerinin tamamında/bir bölümünde uzaktan çalışmaya geçilecekse işçinin onayı aranmaz (m.14/6).",
+          "statutory_basis": "Uzaktan Çalışma Yönetmeliği m.14"
+        }
+      ],
+      "statutory_subordination": {
+        "concretizes_statutory_provisions": [
+          "4857 Sayılı İş Kanunu m.14",
+          "6331 Sayılı İSG Kanunu m.4",
+          "6698 Sayılı KVKK m.12"
+        ],
+        "cannot_override_parent_law": true,
+        "hierarchy_note": "Uzaktan Çalışma Yönetmeliği 4857 m.14/son'a dayanır; uzaktan veya hibrit çalışan işçinin eşit işlem görme (4857 m.14/6), çalışma süresi/fazla mesai ve İSG haklarını Kanun sınırının altına indiremez."
+      },
+      "exceptions": [
+        "Tehlikeli kimyasal madde ve radyoaktif maddelerle çalışma, bu maddelerin işlenmesi veya atıkları ile çalışma ve biyolojik etkenlere maruz kalma riski bulunan işlerde uzaktan çalışma yapılamaz (m.13).",
+        "5746/4691 kapsamındaki Ar-Ge/Teknokent personelinin gelir vergisi stopaj teşvikine esas uzaktan çalışma yüzdeleri (2026 için bilişim %100, diğer %75) bu Yönetmelikten değil 10766 Sayılı Cumhurbaşkanı Kararı'ndan doğar."
+      ],
+      "required_documents": [
+        "Yazılı Uzaktan / Hibrit Çalışma Sözleşmesi veya Ek Protokol (işyeri/uzaktan gün ve saatleri yazılı)",
+        "Veri güvenliği ve bilgi sistemleri kullanım taahhütnamesi (m.11)",
+        "Uzaktan çalışma İSG bilgilendirme, eğitim ve ekipman teslim tutanağı (m.12)"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Uzaktan ve hibrit çalışma sözleşmesinin yazılı olması ve 25.09.2026 sonrası m.9/2 gün/saat kaydı 4857 m.14 ve Yönetmelik metnine dayanır; bağlı YİBBGK yoktur.",
+      "effective_validity": {
+        "effective_from": "2021-03-10",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "Yönetmelik RG 10.03.2021 / 31419 tarihinde yürürlüğe girmiş olup m.9/2 Hibrit Çalışma hükmü RG 25.09.2026 / 33381 tarihinde yürürlüğe girmiştir."
+      },
+      "norm_character": "RELATIVE_EMPLOYEE_FAVORABLE",
+      "risks": [
+        "25.09.2026 sonrası hibrit çalışma gün ve saatlerinin sözleşmede belirlenmemesi çalışma koşullarında esaslı değişiklik (4857 m.22) ve fazla mesai ispat uyuşmazlıklarına yol açar.",
+        "Uzaktan çalışan için İSG bilgilendirmesi ve veri güvenliği tedbirlerinin belgelenmemesi 6331 ve 6698 kapsamında yaptırım riski doğurur."
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@OzlukUyum",
+        "@ISGUzmani",
+        "@UcretBordro"
+      ],
+      "disclaimer": "Bu bilgi kartı ikincil mevzuatın resmî metin ve değişiklik geçmişine dayalı yapılandırılmış teknik hukuki referansıdır; üst norm olan kanunu genişletemez veya bertaraf edemez. Bağlayıcı hukuki mütalaa yerine geçmez; somut uyuşmazlıklarda yetkili hukuk müşavirine danışılmalıdır.",
+      "verification_status": "VERIFIED",
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "YONETMELIK-UZAKTAN-CALISMA-20210310",
+        "source_audit_log_id": "AUD-20261120-YONUZAKTANCAL",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "RG 10.03.2021/31419 ana metni ile RG 25.09.2026/33381 m.9/2 Hibrit Çalışma hükmü ve 10766 Sayılı Cumhurbaşkanı Kararı vergi teşviki ayrımı doğrulandı."
+      },
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-CARDYONUZAKTAN",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "keywords": [
+        "uzaktan çalışma yönetmeliği",
+        "hibrit çalışma",
+        "m.9/2",
+        "33381",
+        "31419",
+        "4857 m.14",
+        "30 gün yanıt"
+      ]
+    }
+  ]
+}

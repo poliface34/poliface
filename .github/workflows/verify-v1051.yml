@@ -1,0 +1,218 @@
+name: Verify hrAI @HukukSGK v1.0.5.1 Release
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - release/v1.0.5.1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-clean-release:
+    name: Clean ZIP Extract, 4-Order 244 Tests, Strict Cross-Validation & Closed Gates
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pinned optional cross-validation & schema audit dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r hrai_hukuk_sgk/tests/requirements-crossval.txt
+          openssl version
+          python3 -c '
+          import importlib.metadata as m
+          for pkg in ("cryptography", "pyasn1", "pyasn1-modules", "jsonschema"):
+              print(f"{pkg}=={m.version(pkg)}")
+          '
+
+      - name: Verify ZIP integrity, SHA-256, branch parity, xmldsig invariance, compileall & schemas
+        run: |
+          set -euo pipefail
+          ZIP_PATH="hrai_hukuk_sgk_v1.0.5.1.zip"
+          ZIP_SHA=$(sha256sum "$ZIP_PATH" | awk '{print $1}')
+          ZIP_BYTES=$(stat -c%s "$ZIP_PATH")
+          echo "ZIP_SHA256=$ZIP_SHA"
+          echo "ZIP_BYTES=$ZIP_BYTES"
+          unzip -t "$ZIP_PATH" > /dev/null
+          echo "UNZIP_T=PASS"
+
+          rm -rf /tmp/ci_clean_v1051
+          mkdir -p /tmp/ci_clean_v1051
+          unzip -q "$ZIP_PATH" -d /tmp/ci_clean_v1051
+
+          python3 - << 'PY'
+          import hashlib, json, zipfile
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          zip_path = Path("hrai_hukuk_sgk_v1.0.5.1.zip")
+          branch_root = Path("hrai_hukuk_sgk")
+          ext_root = Path("/tmp/ci_clean_v1051/hrai_hukuk_sgk")
+
+          with zipfile.ZipFile(zip_path, "r") as zf:
+              infos = zf.infolist()
+              roots = {i.filename.split("/", 1)[0] for i in infos}
+              assert roots == {"hrai_hukuk_sgk"}, f"Unexpected roots: {roots}"
+              z_files = [i for i in infos if not i.is_dir()]
+              z_dirs = [i for i in infos if i.is_dir()]
+              print(f"ZIP_FILES={len(z_files)} ZIP_DIRS={len(z_dirs)} ZIP_TOTAL={len(infos)}")
+
+          b_files = sorted(
+              p.relative_to(branch_root).as_posix()
+              for p in branch_root.rglob("*")
+              if p.is_file() and "__pycache__" not in p.parts and p.suffix != ".pyc"
+          )
+          e_files = sorted(p.relative_to(ext_root).as_posix() for p in ext_root.rglob("*") if p.is_file())
+          assert b_files == e_files, f"Branch vs ZIP file list diff: {set(b_files) ^ set(e_files)}"
+          mismatches = [f for f in b_files if (branch_root / f).read_bytes() != (ext_root / f).read_bytes()]
+          assert not mismatches, f"Branch vs ZIP byte mismatch: {mismatches}"
+          print(f"BRANCH_VS_ZIP={len(b_files)}/{len(e_files)} EXACT_MATCH")
+
+          xmldsig_sha = hashlib.sha256((ext_root / "engine/esign5070/xmldsig.py").read_bytes()).hexdigest()
+          expected_xmldsig = "b16207b5fb71d7c0d0372838411c7795459ac460c2ff232766ae230b9cbacf85"
+          print(f"XMLDSIG_SHA256={xmldsig_sha}")
+          assert xmldsig_sha == expected_xmldsig, f"xmldsig.py SHA-256 changed: {xmldsig_sha}"
+
+          pk_hits = [
+              f for f in e_files
+              if b"PRIVATE KEY" in (ext_root / f).read_bytes()
+              and not f.endswith(".py") and not f.endswith(".md")
+          ]
+          assert not pk_hits, f"Private key material found in non-code files: {pk_hits}"
+          print(f"PRIVATE_KEY_SCAN=files:{len(e_files)} hits:0 PASS")
+
+          schemas = sorted((ext_root / "schemas").glob("*.json"))
+          for sp in schemas:
+              Draft202012Validator.check_schema(json.loads(sp.read_text(encoding="utf-8")))
+          assert len(schemas) == 13, f"Expected 13 schemas, got {len(schemas)}"
+          print(f"JSON_SCHEMAS_DRAFT202012={len(schemas)}/{len(schemas)} PASS")
+
+          configs = sorted((ext_root / "config").glob("*.json"))
+          for cp in configs:
+              json.loads(cp.read_text(encoding="utf-8"))
+          assert len(configs) == 9, f"Expected 9 configs, got {len(configs)}"
+          print(f"CONFIGS={len(configs)}/{len(configs)} PASS")
+          PY
+
+          python3 -m compileall -q /tmp/ci_clean_v1051/hrai_hukuk_sgk
+          echo "COMPILEALL=PASS"
+
+      - name: Run 4-ordering sequential 244-test regression on clean extract
+        working-directory: /tmp/ci_clean_v1051/hrai_hukuk_sgk
+        run: |
+          python3 - << 'PY'
+          import random, sys, time, unittest
+
+          def collect_tests(suite):
+              out = []
+              for item in suite:
+                  if isinstance(item, unittest.TestSuite):
+                      out.extend(collect_tests(item))
+                  else:
+                      out.append(item)
+              return out
+
+          loader = unittest.TestLoader()
+          base_tests = collect_tests(loader.discover("tests", pattern="test_*.py"))
+          print(f"DISCOVERED_TOTAL={len(base_tests)}", flush=True)
+          assert len(base_tests) == 244, f"Expected 244 tests, discovered {len(base_tests)}"
+
+          orderings = [
+              ("default", list(base_tests)),
+              ("reverse", list(reversed(base_tests))),
+          ]
+          for seed in (20261124, 105142):
+              shuffled = list(base_tests)
+              random.Random(seed).shuffle(shuffled)
+              orderings.append((f"shuffle_seed_{seed}", shuffled))
+
+          for name, tests in orderings:
+              suite = unittest.TestSuite(tests)
+              t0 = time.monotonic()
+              runner = unittest.TextTestRunner(verbosity=0, stream=open("/dev/null", "w"))
+              res = runner.run(suite)
+              dt = time.monotonic() - t0
+              ok = res.wasSuccessful() and len(res.skipped) == 0 and len(res.unexpectedSuccesses) == 0
+              print(
+                  f"ORDER={name} run={res.testsRun} fail={len(res.failures)} err={len(res.errors)} "
+                  f"skip={len(res.skipped)} unexp={len(res.unexpectedSuccesses)} elapsed={dt:.3f}s PASS={ok}",
+                  flush=True,
+              )
+              if not ok:
+                  for t, tb in res.failures + res.errors:
+                      print(f"FAILED {name}: {t}\n{tb}", flush=True)
+                  sys.exit(1)
+          PY
+
+      - name: Run strict & offline X.509 cross-validation and live integration_probe on clean extract
+        working-directory: /tmp/ci_clean_v1051/hrai_hukuk_sgk
+        run: |
+          set -euo pipefail
+          python3 -m tests.cross_validate_x509 --mode strict --summary-only > /tmp/ci_strict.json
+          python3 -m tests.cross_validate_x509 --mode offline --summary-only > /tmp/ci_offline.json
+          python3 -W error -m engine.trust_root.integration_probe > /tmp/ci_probe.json
+
+          python3 - << 'PY'
+          import json, os, subprocess
+          from pathlib import Path
+
+          strict = json.load(open("/tmp/ci_strict.json"))
+          offline = json.load(open("/tmp/ci_offline.json"))
+          probe = json.load(open("/tmp/ci_probe.json"))
+
+          assert strict["ci_audit"]["exit_code"] == 0
+          assert strict["independent_cross_validation_tag"] == "INDEPENDENT_CROSS_VALIDATION=PASSED"
+          assert strict["ci_audit"]["missing_parsers"] == []
+          for tname, tval in strict["ci_audit"]["verification_thresholds"].items():
+              assert tval["passed"] is True, f"Strict threshold failed: {tname} -> {tval}"
+
+          assert offline["ci_audit"]["exit_code"] == 0
+          assert offline["independent_cross_validation_tag"] == "INDEPENDENT_CROSS_VALIDATION=NOT_PERFORMED"
+          assert offline["ci_audit"]["verification_thresholds"]["hrai_positive_accepted_and_pem_der_metadata_equal"]["passed"] is True
+          assert offline["ci_audit"]["verification_thresholds"]["hrai_negative_rejected_zero_partial_meta_and_clean_cache"]["passed"] is True
+
+          pad = probe["production_authorization_decision"]
+          assert probe["production_use_authorized"] is False
+          assert probe["qualified_e_signature_5070_production_ready"] is False
+          assert probe["qualified_e_signature_5070_equivalent"] is False
+          assert pad["checks"]["kvkk_data_residency_approved"] is False
+          assert all(v == "NOT_CONFIGURED" for v in pad["integration_modes"].values())
+          assert pad["technical_verification"]["audit_log_valid"] is True
+          assert pad["technical_verification"]["snapshots_verified"] is True
+
+          print("STRICT_CI_AUDIT=", json.dumps(strict["ci_audit"], ensure_ascii=False))
+          print("OFFLINE_CI_AUDIT=", json.dumps(offline["ci_audit"], ensure_ascii=False))
+          print("PROBE_GATES=ALL_CLOSED_VERIFIED")
+
+          summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary_path:
+              ossl_ver = subprocess.check_output(["openssl", "version"], text=True).strip()
+              zip_sha = subprocess.check_output(
+                  ["sha256sum", str(Path(os.environ["GITHUB_WORKSPACE"]) / "hrai_hukuk_sgk_v1.0.5.1.zip")],
+                  text=True,
+              ).split()[0]
+              with open(summary_path, "a", encoding="utf-8") as fh:
+                  fh.write("## hrAI `@HukukSGK` v1.0.5.1 — Independent GitHub Actions Clean Verification\n\n")
+                  fh.write("| Check | Observed Result |\n|---|---|\n")
+                  fh.write(f"| Commit | `{os.environ.get('GITHUB_SHA', '')}` |\n")
+                  fh.write(f"| OpenSSL | `{ossl_ver}` |\n")
+                  fh.write(f"| Parsers | `{json.dumps(strict['parser_versions'])}` |\n")
+                  fh.write(f"| ZIP SHA-256 | `{zip_sha}` (`unzip -t` PASS, branch parity EXACT) |\n")
+                  fh.write("| `xmldsig.py` SHA-256 | `b16207b5fb71d7c0d0372838411c7795459ac460c2ff232766ae230b9cbacf85` (UNCHANGED) |\n")
+                  fh.write("| Clean 4-Order Full Suite | **244/244 PASS** (`default`, `reverse`, `seed=20261124`, `seed=105142`) |\n")
+                  fh.write(f"| Cross-Validation (`strict`) | **`exit_code=0`**, `{strict['independent_cross_validation_tag']}`, `missing_parsers=[]` |\n")
+                  fh.write(f"| Cross-Validation (`offline`) | **`exit_code=0`**, `{offline['independent_cross_validation_tag']}` |\n")
+                  fh.write("| Production / 5070 / KVKK Gates | **ALL CLOSED** (`production_use_authorized=false`, `5070=false`, `kvkk=false`, `NOT_CONFIGURED`) |\n")
+          PY

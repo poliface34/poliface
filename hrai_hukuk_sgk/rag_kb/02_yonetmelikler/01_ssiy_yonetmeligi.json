@@ -1,0 +1,256 @@
+{
+  "schema_version": "1.0.2b",
+  "law_no": "SSIY-27579",
+  "law_title": "Sosyal Sigorta İşlemleri Yönetmeliği (SSİY)",
+  "source_id": "YONETMELIK-SSIY-20100512",
+  "cards": [
+    {
+      "card_id": "CARD-SSIY-M11-M14",
+      "source_id": "YONETMELIK-SSIY-20100512",
+      "law_no": "SSIY-27579",
+      "article_ref": "Madde 11 ve Madde 14",
+      "topic": "4/a Sigortalı İşe Giriş ve İşten Ayrılış Bildirgesi Süreleri ve Usulü",
+      "legal_basis": {
+        "source_id": "YONETMELIK-SSIY-20100512",
+        "original_publication_ref": "RG 12.05.2010 / 27579",
+        "consolidated_text_url": "https://www.resmigazete.gov.tr/eskiler/2010/05/20100512-3.htm",
+        "secondary_statutory_anchors": [
+          "5510 m.8",
+          "5510 m.9",
+          "5510 m.102",
+          "5510 m.107",
+          "6735 m.12"
+        ],
+        "amendment_history": [
+          {
+            "amending_law_no": "SSİY Değişiklik Yönetmeliği (2017)",
+            "official_gazette_no": "30261",
+            "publication_date": "2017-12-05",
+            "effective_from": "2017-12-05",
+            "summary": "m.11 ve m.14 kapsamında e-sigorta işe giriş/işten ayrılış bildirim usulleri ve re'sen işten ayrılış bildirgesi düzenlemeleri güncellendi."
+          },
+          {
+            "amending_law_no": "SSİY Değişiklik Yönetmeliği (2021)",
+            "official_gazette_no": "31572",
+            "publication_date": "2021-08-18",
+            "effective_from": "2021-08-18",
+            "summary": "Elektronik bildirim süreçleri ve MUHSGK entegrasyonu çerçevesinde güncel tescil/bildirim uyarlaması yapıldı."
+          }
+        ]
+      },
+      "scope_of_application": "5510 sayılı Kanun m.4/1-a kapsamında çalıştırılan sigortalılar için işe giriş bildirgesinin kural olarak çalışmaya başlamadan en az 1 gün önce (inşaat, balıkçılık ve tarım işyerlerinde en geç çalışmaya başlanan gün; ilk defa işyeri bildirgesi verilen işyerlerinde 1 ay içinde; yabancı uyruklularda 6735 sayılı Uluslararası İşgücü Kanunu ve uygulama mevzuatı çerçevesinde izin başlangıç/tebliğ tarihinden itibaren 30 gün / 1 ay içinde — eski SSİY m.11/1-e 45 günlük metnine karşı üst kanuni süre gözetilerek) ve işten ayrılış bildirgesinin sigortalılığın sona ermesini takip eden 10 gün içinde e-sigorta üzerinden Kuruma verilmesini düzenler.",
+      "application_scenarios": [
+        {
+          "scenario_id": "SSIY_ENTRY_GENERAL_BEFORE_START",
+          "condition": "Genel nitelikli (inşaat/balıkçılık/tarım dışı) mevcut işyerinde 4/a sigortalı işe alımı",
+          "legal_rule": "Sigortalı işe giriş bildirgesi çalışmaya başlanmadan en geç 1 gün önce (Pazartesi işe başlama veya resmî tatili izleyen ilk iş günü istisnası saklı kalmak üzere) e-sigorta ile verilir.",
+          "statutory_basis": "5510 m.8/1 ve SSİY m.11"
+        },
+        {
+          "scenario_id": "SSIY_EXIT_10_DAYS_AND_CORRECTION",
+          "condition": "4/a sigortalının iş sözleşmesinin sona ermesi ve işten ayrılış bildirgesinde kod/tarih düzeltmesi ihtiyacı",
+          "legal_rule": "İşten ayrılış bildirgesi feshi izleyen 10 gün içinde verilir; 10 günlük süre içinde e-sigorta üzerinden düzeltme/silme yapılabilir, 10 gün geçtikten sonra yalnızca belgeye dayalı Kurum başvurusu ile inceleme yapılır.",
+          "statutory_basis": "5510 m.9 ve SSİY m.14"
+        }
+      ],
+      "statutory_subordination": {
+        "concretizes_statutory_provisions": [
+          "5510 Sayılı Kanun m.8",
+          "5510 Sayılı Kanun m.9",
+          "5510 Sayılı Kanun m.102"
+        ],
+        "cannot_override_parent_law": true,
+        "hierarchy_note": "SSİY, 5510 m.107 uyarınca Kanunun uygulama usulünü düzenler; 5510 m.8-9 bildirim sürelerini ve m.102 idari para cezası sınırlarını işveren veya sigortalı aleyhine kanuna aykırı biçimde genişletemez; yabancı çalışan bildiriminde de üst kanuni süre esas alınır."
+      },
+      "exceptions": [
+        "İnşaat, balıkçılık ve tarım işyerlerinde işe giriş bildirgesi en geç çalışmaya başlanan gün verilebilir (5510 m.8/1-a).",
+        "İlk defa işyeri bildirgesi verilen işyerlerinde, işyerinin tescil tarihinden itibaren 1 ay içinde işe alınanların bildirgeleri bu 1 aylık sürenin sonuna kadar verilebilir.",
+        "Pazartesi günü veya resmî tatili takip eden ilk iş günü işe başlayanların bildirgesi aynı gün verilebilir."
+      ],
+      "required_documents": [
+        "e-Sigorta İşe Giriş Bildirgesi barkodlu çıktısı",
+        "e-Sigorta İşten Ayrılış Bildirgesi (SGK çıkış kodu işlenmiş)",
+        "İş sözleşmesi / fesih bildirimi ve yabancı çalışanlar için çalışma izni belgesi"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Bu idari bildirim kartına bağlı doğrulanmış YİBBGK kararı bulunmamaktadır; süreler doğrudan 5510 m.8-9 ve SSİY m.11-14 metnine dayanır.",
+      "effective_validity": {
+        "effective_from": "2010-05-12",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "SSİY (RG 12.05.2010 / 27579) yürürlükte olup RG 05.12.2017/30261 ve RG 18.08.2021/31572 değişiklikleriyle güncellenmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "Süresinde verilmeyen her bir işe giriş veya işten ayrılış bildirgesi için 5510 m.102 uyarınca idari para cezası uygulanır.",
+        "İşten ayrılış kodunun 10 günlük süre geçtikten sonra düzeltilmesi Kurum denetimine ve işsizlik ödeneği/dava uyuşmazlıklarına yol açar."
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@UcretBordro",
+        "@OzlukUyum"
+      ],
+      "disclaimer": "Bu bilgi kartı ikincil mevzuatın resmî metin ve değişiklik geçmişine dayalı yapılandırılmış teknik hukuki referansıdır; üst norm olan kanunu genişletemez veya bertaraf edemez. Bağlayıcı hukuki mütalaa yerine geçmez; somut uyuşmazlıklarda yetkili hukuk müşavirine danışılmalıdır.",
+      "verification_status": "VERIFIED",
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "YONETMELIK-SSIY-20100512",
+        "source_audit_log_id": "AUD-20261120-YONETMELIKSSIY20100512",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-SGK-REV-02",
+        "reviewer_role": "SGK_COMPLIANCE_SPECIALIST",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS"
+        ],
+        "review_notes": "SSİY m.11 ve m.14 süreleri, inşaat/ilk tescil/Pazartesi/yabancı çalışan istisnaları ve 5510 m.8-9 üst norm bağlılığı doğrulandı."
+      },
+      "verification_audit": {
+        "verifier_id": "CALISORA-SGK-01",
+        "verifier_role": "SGK_COMPLIANCE_SPECIALIST",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-CARDSSIYM11",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "keywords": [
+        "ssiy",
+        "m.11",
+        "m.14",
+        "işe giriş bildirgesi",
+        "işten ayrılış",
+        "10 gün",
+        "5510 m.8",
+        "5510 m.9"
+      ]
+    },
+    {
+      "card_id": "CARD-SSIY-M102",
+      "source_id": "YONETMELIK-SSIY-20100512",
+      "law_no": "SSIY-27579",
+      "article_ref": "Madde 102",
+      "topic": "Eksik Gün Bildirimi, Dayanak Belgelerin Muhafazası ve SGK İbraz Yükümlülüğü",
+      "legal_basis": {
+        "source_id": "YONETMELIK-SSIY-20100512",
+        "original_publication_ref": "RG 12.05.2010 / 27579",
+        "consolidated_text_url": "https://www.resmigazete.gov.tr/eskiler/2010/05/20100512-3.htm",
+        "secondary_statutory_anchors": [
+          "5510 m.86",
+          "5510 m.102",
+          "SGK 2020/20 Genelgesi"
+        ],
+        "amendment_history": [
+          {
+            "amending_law_no": "SSİY Değişiklik Yönetmeliği (2013)",
+            "official_gazette_no": "28742",
+            "publication_date": "2013-08-21",
+            "effective_from": "2013-08-21",
+            "summary": "Eksik gün bildirim formu ve belge sunma sınırları yeniden düzenlendi."
+          },
+          {
+            "amending_law_no": "SSİY Değişiklik Yönetmeliği (2017)",
+            "official_gazette_no": "30261",
+            "publication_date": "2017-12-05",
+            "effective_from": "2017-12-05",
+            "summary": "m.102/13 kapsamında eksik gün belgelerinin her ay Kuruma verilmesi zorunluluğu kaldırılarak işyerinde muhafaza ve Kurumca istendiğinde ibraz esasına geçildi."
+          }
+        ]
+      },
+      "scope_of_application": "Ay içinde 30 günden az çalışan veya eksik ücret ödenen 4/a sigortalılar için MUHSGK beyannamesinde doğru eksik gün kodunun bildirilmesi, ücretsiz izin/puantaj/kısmi süreli iş sözleşmesi gibi dayanak belgelerin işyerinde 10 yıl süreyle muhafazası ve Kurumca istenildiğinde ibraz edilmesini düzenler.",
+      "application_scenarios": [
+        {
+          "scenario_id": "SSIY_MISSING_DAYS_ARCHIVE_AND_PRESENTATION",
+          "condition": "Ay içinde 30 günden az bildirilen sigortalı (ücretsiz izin, istirahat, kısmi süreli çalışma, puantaj)",
+          "legal_rule": "Eksik gün belgesi her ay Kuruma fiziksel olarak verilmez; ancak belge sonradan düzenlenebilir nitelikte ise usulüne uygun şekilde zamanında hazırlanıp işyerinde saklanır ve SGK denetiminde ibraz edilir.",
+          "statutory_basis": "5510 m.86/4 ve SSİY m.102"
+        },
+        {
+          "scenario_id": "SSIY_UNSUBSTANTIATED_MISSING_DAYS_REASSESSMENT",
+          "condition": "Eksik gün dayanak belgesinin Kurum talebine rağmen ibraz edilememesi veya geçersiz bulunması",
+          "legal_rule": "Eksik bildirilen günler için işverenden ek prim belgesi/MUHSGK düzeltmesi istenir; verilmezse Kurumca re'sen tahakkuk yapılır ve 5510 m.102 idari para cezası ile gecikme zammı uygulanır.",
+          "statutory_basis": "5510 m.86/5 ve SSİY m.102/14"
+        }
+      ],
+      "statutory_subordination": {
+        "concretizes_statutory_provisions": [
+          "5510 Sayılı Kanun m.86/4-5",
+          "5510 Sayılı Kanun m.102"
+        ],
+        "cannot_override_parent_law": true,
+        "hierarchy_note": "SSİY m.102, 5510 m.86/4-5 hükmünün ispat ve belge saklama usulünü somutlaştırır; Kanunun 30 günden az çalışma ve re'sen tahakkuk esaslarını değiştiremez."
+      },
+      "exceptions": [
+        "İstirahat raporları (e-Vizite üzerinden Kurum kayıtlarında yer alanlar) ve resmî kurum kayıtlarıyla doğrulanan hallerde ayrıca kâğıt belge aranmaz; ancak işyeri puantajı ve ücretsiz izin dilekçeleri mutlaka işçi imzalı olarak saklanmalıdır.",
+        "0 gün ve 0 kazanç bildirilen dönemlerde '07-Puantaj Kayıtları' kodu seçilemez (SGK 2020/20 ve 20.11.2023 duyurusu)."
+      ],
+      "required_documents": [
+        "İşçi ve işveren imzalı ücretsiz izin belgesi veya puantaj cetveli",
+        "Yazılı kısmi süreli iş sözleşmesi",
+        "e-Vizite istirahat raporu kaydı ve MUHSGK eksik gün kod dökümü"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Eksik gün ispat ve re'sen tahakkuk kuralları 5510 m.86, SSİY m.102 ve SGK 2020/20 Genelgesine dayanır; bağlı YİBBGK bulunmamaktadır.",
+      "effective_validity": {
+        "effective_from": "2017-12-05",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "SSİY m.102 muhafaza ve ibraz rejimi RG 05.12.2017 / 30261 değişikliğiyle yürürlüğe girmiş olup yürürlüktedir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "İmzasız puantaj veya sonradan düzenlenebilir geçersiz eksik gün belgeleri Kurumca reddedilerek re'sen 30 güne tamamlama ve İPC doğurur.",
+        "Eksik gün belgelerinin 5510 m.86/2 kapsamındaki 10 yıllık saklama süresi dolmadan imha edilmesi ciddi prim/ceza riski yaratır."
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@UcretBordro",
+        "@OzlukUyum"
+      ],
+      "disclaimer": "Bu bilgi kartı ikincil mevzuatın resmî metin ve değişiklik geçmişine dayalı yapılandırılmış teknik hukuki referansıdır; üst norm olan kanunu genişletemez veya bertaraf edemez. Bağlayıcı hukuki mütalaa yerine geçmez; somut uyuşmazlıklarda yetkili hukuk müşavirine danışılmalıdır.",
+      "verification_status": "VERIFIED",
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "YONETMELIK-SSIY-20100512",
+        "source_audit_log_id": "AUD-20261120-YONETMELIKSSIY20100512",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-SGK-REV-02",
+        "reviewer_role": "SGK_COMPLIANCE_SPECIALIST",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS"
+        ],
+        "review_notes": "SSİY m.102 eksik gün belge muhafaza/ibraz kuralı, 10 yıl saklama yükümlülüğü ve 5510 m.86 üst norm bağlılığı doğrulandı."
+      },
+      "verification_audit": {
+        "verifier_id": "CALISORA-SGK-01",
+        "verifier_role": "SGK_COMPLIANCE_SPECIALIST",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-CARDSSIYM102",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "keywords": [
+        "ssiy",
+        "m.102",
+        "eksik gün",
+        "puantaj",
+        "ücretsiz izin",
+        "ibraz",
+        "10 yıl saklama",
+        "5510 m.86"
+      ]
+    }
+  ]
+}

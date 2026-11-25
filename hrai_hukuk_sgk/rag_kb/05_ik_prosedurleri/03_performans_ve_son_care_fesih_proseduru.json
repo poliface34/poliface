@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0.5.1",
+  "layer_id": "L5_HR_PROCEDURES",
+  "product_brand": "hrAI",
+  "coordinator_agent": "@hrAI",
+  "specialist_agent": "@HukukSGK",
+  "procedure_id": "PROC-L5-PERFORMANS-SON-CARE",
+  "source_document_id": "HRAI-L5-PROC-03",
+  "title": "Performans Yönetimi ve Geçerli Fesih / Son Çare İlkesi (4857 m.18-19) Referans Prosedürü",
+  "scope_summary": "İş güvencesi kapsamındaki çalışanlarda objektif performans ölçümü, geliştirme planı (PIP), eğitim/görev değişikliği gibi feshin son çare olması ilkesi (ultima ratio) adımlarının belgelenmesi ve 4857 m.18-19 geçerli fesih denetimi için kurumsal referans şablonudur.",
+  "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+  "template_only_not_binding_company_policy": true,
+  "no_flat_priority_supremacy": true,
+  "primary_statutory_basis_ids": [
+    "CARD-4857-M18",
+    "CARD-4857-M19",
+    "CARD-4857-M17",
+    "CARD-7036-M11-M12"
+  ],
+  "mandatory_steps": [
+    {
+      "step_no": 1,
+      "action": "Önceden yazılı tebliğ edilmiş, ölçülebilir ve aynı pozisyondaki emsal çalışanlarla karşılaştırılabilir objektif performans hedeflerini belirle.",
+      "responsible_role": "Birim Yöneticisi ve İK",
+      "required_record": "Tebliğ Edilmiş Objektif Performans Hedef Formu",
+      "statutory_anchor_id": "CARD-4857-M18"
+    },
+    {
+      "step_no": 2,
+      "action": "Yetersizlik tespitinde makul süreli performans geliştirme planı (PIP), eğitim ve başka uygun pozisyonda değerlendirme (son çare ilkesi) alternatiflerini yazılı belgele.",
+      "responsible_role": "İK İş Ortağı ve Yönetici",
+      "required_record": "PIP Takip Kaydı ve Alternatif Pozisyon Değerlendirme Tutanağı",
+      "statutory_anchor_id": "CARD-4857-M18"
+    },
+    {
+      "step_no": 3,
+      "action": "Fesih aşamasına geçilmeden önce çalışanın yazılı savunmasını al (4857 m.19/2) ve ihbar süresi / kıdem haklarını 4857 m.17 ve 1475 m.14 kapsamında hukuk müşaviri onayına sun.",
+      "responsible_role": "İK ve Hukuk Müşaviri",
+      "required_record": "Savunma Kaydı ve Geçerli Fesih Hukuki Ön Değerlendirme Formu",
+      "statutory_anchor_id": "CARD-4857-M19"
+    }
+  ],
+  "escalation_triggers": [
+    "Performans hedeflerinin çalışana önceden yazılı bildirilmemiş veya ölçülemez olması",
+    "İşyerinde 30+ çalışan ve 6 ay kıdem (iş güvencesi) varken savunma alınmadan fesih planlanması",
+    "Aynı dönemde toplu işçi çıkarma eşiğine (4857 m.29) yaklaşılması"
+  ],
+  "rules": [
+    {
+      "rule_id": "RULE-L5-03-IS-GUVENCESI-GECERLI-SEBEP",
+      "title": "4857 m.18 İş Güvencesi ve Objektif Performans Koşulu",
+      "rule_summary": "İş güvencesi kapsamındaki çalışanlarda tek taraflı veya belirsiz performans puanı geçerli fesih sebebi oluşturmaz; kurum içi değerlendirme prosedürü m.18-19 emredici güvencesini aşamaz.",
+      "norm_type": "STATUTORY_ABSOLUTE_MANDATORY",
+      "legal_basis_ids": [
+        "CARD-4857-M18",
+        "CARD-4857-M19",
+        "CARD-7036-M11-M12"
+      ],
+      "source_document_id": "HRAI-L5-PROC-03",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": false,
+        "statutory_floor_nature": "ABSOLUTE_MANDATORY",
+        "can_improve_for_employee": false,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "4857 m.18-19 iş güvencesi rejimi ve işe iade dava hakkı prosedür veya sözleşme ile işçi aleyhine kaldırılamaz."
+      },
+      "conflict_resolution": {
+        "strategy": "STATUTORY_ABSOLUTE_PREVAILS",
+        "higher_authority_ref": "4857 s. İş Kanunu m.18 ve m.19",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "İK performans prosedürü yalnızca ispat ve son çare adımlarını standardize eder; bireysel sözleşmeye eklenen otomatik fesih klozları m.18'i geçersiz kılamaz.",
+        "rationale": "İş güvencesi hükümleri emredicidir; prosedür içi eksik adımlar işe iade davasında yüksek geçersizlik riski doğurur."
+      },
+      "human_review_required": true
+    },
+    {
+      "rule_id": "RULE-L5-03-IHBAR-VE-PIP-SURESI",
+      "title": "Performans İyileştirme Süresi ve İhbar Bildirim Tabanı",
+      "rule_summary": "Kurumsal prosedürde öngörülen geliştirme süresi ve ek ihbar bildirim süreleri, 4857 m.17 kanuni asgari ihbar sürelerinin üzerinde işçi lehine artırılabilir ancak asla kısaltılamaz.",
+      "norm_type": "CORPORATE_HR_PROCEDURE",
+      "legal_basis_ids": [
+        "CARD-4857-M17",
+        "CARD-4857-M18"
+      ],
+      "source_document_id": "HRAI-L5-PROC-03",
+      "adoption_status": "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION",
+      "employee_favorable_check": {
+        "applicable": true,
+        "statutory_floor_nature": "RELATIVE_MANDATORY_FLOOR",
+        "can_improve_for_employee": true,
+        "can_derogate_against_employee": false,
+        "evaluation_criteria": "4857 m.17 ihbar süreleri nispi emredici asgari tabandır; TİS veya iş sözleşmesiyle işçi lehine artırılabilir."
+      },
+      "conflict_resolution": {
+        "strategy": "EMPLOYEE_FAVORABLE_COMPARISON_WITH_MANDATORY_FLOOR",
+        "higher_authority_ref": "4857 s. İş Kanunu m.17",
+        "cannot_override_statutory_floor": true,
+        "distinct_from_other_autonomous_sources": "TİS veya bireysel sözleşmede daha uzun ihbar/geliştirme süresi varsa, tek taraflı İK prosedürü bunu kısaltamaz.",
+        "rationale": "Nispi emredici ihbar tabanı ve işçi lehine sözleşme/TİS hükümleri tek taraflı prosedürden üstündür."
+      },
+      "human_review_required": true
+    }
+  ],
+  "disclaimer": "Bu kayıt hrAI @HukukSGK L5 kurumsal İK prosedürü referans şablonudur (REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION). Şirket tarafından benimsenip hukuk müşavirince onaylanmadan yürürlükteki performans politikası gibi uygulanamaz."
+}

@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0.5.1",
+  "description": "hrAI @HukukSGK v1.0.5.1 5070 Sayılı Elektronik İmza Kanunu NES & CAdES/XAdES Doğrulama Modülü yapılandırması. BTK yetkili ESHS listesi ile ESHS kök/ara CA sertifika zinciri ayrı girdiler olarak yönetilir; canlı BTK/ESHS, OCSP/CRL ve bağımsız RFC 3161 TSA kaynakları doğrulanana kadar deployment_status=NOT_CONFIGURED ve qualified_e_signature_5070_production_ready=false olarak kalır.",
+  "deployment_status": "NOT_CONFIGURED",
+  "qualified_e_signature_5070_production_ready": false,
+  "etsi_standards": {
+    "cades_standard": "ETSI EN 319 122-1/-2",
+    "xades_standard": "ETSI EN 319 132-1/-2",
+    "canonical_baseline_profiles": [
+      "B-B",
+      "B-T",
+      "B-LT",
+      "B-LTA"
+    ],
+    "legacy_profile_aliases": {
+      "BES": "B-B",
+      "T": "B-T",
+      "LT": "B-LT",
+      "LTA": "B-LTA"
+    },
+    "profile_compliance_separate_from_crypto_validity": true
+  },
+  "probe_statuses_supported": [
+    "NOT_CONFIGURED",
+    "CONFIGURED_UNVERIFIED",
+    "LIVE_VERIFIED",
+    "FAILED",
+    "INDETERMINATE"
+  ],
+  "btk_eshs_registry": {
+    "separated_from_ca_bundles": true,
+    "registry_source_url": null,
+    "env_var_registry_url": "CALISORA_BTK_ESHS_REGISTRY_URL",
+    "require_active_status_at_validation_time": true,
+    "reject_sandbox_registry_in_production": true
+  },
+  "eshs_ca_certificate_bundles": {
+    "separated_from_btk_registry": true,
+    "bundle_source_ref": null,
+    "env_var_bundle_path": "CALISORA_ESHS_CA_BUNDLE_PATH",
+    "enforce_x509_strict_chain": true,
+    "require_policy_oid_evaluation": true,
+    "reject_sandbox_ca_in_production": true
+  },
+  "revocation_services": {
+    "ocsp_responder_url": null,
+    "crl_distribution_url": null,
+    "env_var_ocsp_url": "CALISORA_OCSP_URL",
+    "env_var_crl_url": "CALISORA_CRL_URL",
+    "supported_statuses": [
+      "GOOD",
+      "REVOKED",
+      "UNKNOWN",
+      "UNAVAILABLE"
+    ],
+    "fail_closed_on_unavailable": true,
+    "indeterminate_blocks_production_gate": true,
+    "historical_archive_revocation_supported": true
+  },
+  "law_5070_governance": {
+    "separate_crypto_and_5070_legal_outcomes": true,
+    "article_4_sub_elements_evaluated_separately": true,
+    "article_6_sscd_requires_external_evidence": true,
+    "article_9_qc_statements_evaluated_in_policy_context": true,
+    "kms_hsm_non_equivalence_enforced": true,
+    "timestamp_alone_never_proves_5070": true,
+    "caller_self_asserted_booleans_forbidden": true,
+    "separation_notice": "5070 sayılı Elektronik İmza Kanunu m.4, m.6 ve m.9 uyarınca bir imzanın kriptografik olarak doğrulanması (cryptographic_signature_valid) tek başına güvenli elektronik imza niteliğini (qualified_e_signature_5070_verified) kanıtlamaz. KMS/HSM teknik imzaları hiçbir koşulda 5070 güvenli elektronik imza eşdeğeri kabul edilmez."
+  },
+  "scope_boundary": {
+    "v1_0_4_scope": [
+      "NES ve nitelikli elektronik sertifika doğrulaması (5070 m.9)",
+      "CAdES (ETSI EN 319 122-1/-2) ve XAdES (ETSI EN 319 132-1/-2) B-B/B-T/B-LT/B-LTA doğrulaması",
+      "BTK yetkili ESHS listesi ile ayrı ESHS CA zinciri/politika doğrulaması ve canlı/arşiv OCSP/CRL iptal kontrolü",
+      "RFC 3161 zaman damgası ve tarihsel arşiv doğrulaması",
+      "5070 m.4/m.6/m.9 hukuki uygunluk matrisi ve bağımsız 5070 güvenlik/hukuki kabul kapısı"
+    ],
+    "l5_l6_hr_cba_cards_deferred_to": "v1.0.5"
+  }
+}

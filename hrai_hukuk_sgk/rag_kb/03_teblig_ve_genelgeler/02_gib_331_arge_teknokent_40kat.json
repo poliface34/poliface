@@ -1,0 +1,115 @@
+{
+  "schema_version": "1.0.2b.1",
+  "law_no": "GIB-331",
+  "law_title": "331 Seri No.lu Gelir Vergisi Genel Tebliği (5746/4691 40 Kat Sınırı)",
+  "source_id": "GIB-TEBLIG-331-20250904",
+  "cards": [
+    {
+      "card_id": "CARD-GIB-331-ARGE-40KAT",
+      "source_id": "GIB-TEBLIG-331-20250904",
+      "law_no": "GIB-331",
+      "article_ref": "331 Seri No.lu GVK Genel Tebliği (7555 Sayılı Kanun Uygulaması)",
+      "topic": "Ar-Ge, Tasarım Merkezi ve Teknokent Ücretlerinde 40 Kat Brüt Asgari Ücret Stopaj ve Damga Vergisi Sınırı",
+      "legal_basis": {
+        "source_id": "GIB-TEBLIG-331-20250904",
+        "original_publication_ref": "RG 04.09.2025 / 33007",
+        "consolidated_text_url": "https://www.resmigazete.gov.tr/eskiler/2025/09/20250904-6.htm",
+        "secondary_statutory_anchors": [
+          "5746 Sayılı Kanun m.3",
+          "4691 Sayılı Kanun Geçici m.2",
+          "7555 Sayılı Kanun"
+        ],
+        "amendment_history": [
+          {
+            "amending_law_no": "7555",
+            "official_gazette_no": "32965",
+            "publication_date": "2025-07-24",
+            "effective_from": "2025-08-01",
+            "summary": "5746 ve 4691 kapsamındaki sınırsız gelir vergisi stopaj teşviki ile damga vergisi istisnasına aylık brüt asgari ücretin 40 katı tavanı getirildi; uygulama usulü 331 Seri No.lu Tebliğ ile belirlendi."
+          }
+        ]
+      },
+      "scope_of_application": "01.08.2025 tarihinden itibaren 5746 (Ar-Ge/Tasarım Merkezi) ve 4691 (Teknoloji Geliştirme Bölgesi) kapsamındaki personelin teşvike konu aylık brüt ücretinin brüt asgari ücretin 40 katını aşmayan kısmı üzerinden hesaplanan gelir vergisi stopajı terkinine ve damga vergisi istisnasına ilişkin sınır ve hesaplama usulünü düzenler.",
+      "application_scenarios": [
+        {
+          "scenario_id": "GIB_331_ABOVE_40X_GROSS_MIN_WAGE",
+          "condition": "5746 veya 4691 kapsamındaki personelin aylık brüt ücretinin brüt asgari ücretin 40 katını aşması",
+          "legal_rule": "Brüt asgari ücretin 40 katına kadar olan tutar üzerinden (önce asgari ücret istisnası düşüldükten sonra) gelir vergisi stopaj teşviki ve damga vergisi istisnası uygulanır; 40 katı aşan ücret tutarı genel hükümlere göre vergilendirilir.",
+          "statutory_basis": "7555 Sayılı Kanun, 5746 m.3, 4691 Geçici m.2 ve 331 Seri No.lu Tebliğ"
+        }
+      ],
+      "statutory_subordination": {
+        "concretizes_statutory_provisions": [
+          "7555 Sayılı Kanun",
+          "5746 Sayılı Kanun m.3",
+          "4691 Sayılı Kanun Geçici m.2"
+        ],
+        "cannot_override_parent_law": true,
+        "hierarchy_note": "331 Seri No.lu Tebliğ, 7555 sayılı Kanunla getirilen 40 kat brüt asgari ücret sınırının uygulama usulünü açıklar; kanunla belirlenen 40 kat tavanını veya 31.12.2028 yürürlük süresini değiştiremez."
+      },
+      "exceptions": [
+        "01.08.2025 öncesi dönemlere ilişkin ücret ödemelerinde 40 kat tavanı uygulanmaz (yürürlük tarihi 01.08.2025'tir).",
+        "Teşvik kapsamı dışındaki destek personeli üst sınırları (%10) ve uzaktan çalışma oranları (10766 Sayılı Cumhurbaşkanı Kararı) ayrıca denetlenmelidir."
+      ],
+      "required_documents": [
+        "Ar-Ge/Tasarım veya TGB personel onay listesi ve aylık zaman çizelgesi",
+        "40 kat brüt asgari ücret sınırı kontrolünü gösteren MUHSGK eki teşvik tablosu"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "331 Seri No.lu Tebliğ doğrudan 7555 sayılı Kanuna dayanır; sayısal bordro simülasyonları @UcretBordro uzmanlığına devredilir.",
+      "effective_validity": {
+        "effective_from": "2025-08-01",
+        "effective_to": "2028-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "7555 sayılı Kanun (RG 24.07.2025/32965) ve 331 Seri No.lu Tebliğ (RG 04.09.2025/33007) 01.08.2025 tarihinden itibaren geçerlidir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "01.08.2025 sonrası üst düzey Ar-Ge/Teknokent personelinde 40 kat tavanı uygulanmadan tam terkin yapılması vergi incelemesinde re'sen tarhiyat ve ceza doğurur."
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@UcretBordro"
+      ],
+      "disclaimer": "Bu bilgi kartı ikincil mevzuatın resmî metin ve değişiklik geçmişine dayalı yapılandırılmış teknik hukuki referansıdır; üst norm olan kanunu genişletemez veya bertaraf edemez. Bağlayıcı hukuki mütalaa yerine geçmez; somut uyuşmazlıklarda yetkili hukuk müşavirine danışılmalıdır.",
+      "verification_status": "VERIFIED",
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "GIB-TEBLIG-331-20250904",
+        "source_audit_log_id": "AUD-20261120-GIBTEBLIG33120250904",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS"
+        ],
+        "review_notes": "7555 sayılı Kanun ve 331 Seri No.lu Tebliğ 40 kat tavanının 01.08.2025 yürürlüğü ve üst kanuna bağlılığı doğrulandı."
+      },
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-CARDGIB331",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "keywords": [
+        "331 tebliğ",
+        "40 kat",
+        "7555",
+        "5746",
+        "4691",
+        "ar-ge",
+        "teknokent",
+        "stopaj sınırı"
+      ]
+    }
+  ]
+}

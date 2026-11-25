@@ -1,0 +1,415 @@
+{
+  "schema_version": "1.0.5.1",
+  "description": "hrAI @HukukSGK doğrulanmış Yargıtay içtihat kayıt defteri (v1.0.2b — L4). 5 adet kanunen bağlayıcı YİBBGK kararının tam metin doğrulaması, sonuç/hüküm bölümü, hukuki gerekçesi, kapsam sınırlamaları ve denetim izi ayrı ayrı doğrulanmıştır.",
+  "precedents": {
+    "YIBBGK-2017-9-2018-10": {
+      "precedent_id": "YIBBGK-2017-9-2018-10",
+      "chamber": "YIBBGK",
+      "binding_level": "STATUTORY_BINDING_YIBBGK",
+      "esas_no": "2017/9",
+      "karar_no": "2018/10",
+      "decision_date": "2018-10-19",
+      "official_gazette_no": "30769",
+      "official_gazette_date": "2019-05-09",
+      "official_source_url": "https://www.resmigazete.gov.tr/eskiler/2019/05/20190509-6.pdf",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "related_source_ids": [
+        "MEVZUAT-4857"
+      ],
+      "legal_principle": "4857 sayılı İş Kanunu m.25/I-b uyarınca işçinin bildirim süresini 6 hafta aşan kesintisiz sağlık raporlarına dayalı haklı nedenle derhal fesihlerinde işçiden fesihten önce savunma alınması zorunlu değildir; zira m.19/2 yalnızca işçinin davranışı veya verimi ile ilgili geçerli fesihler için uygulanır.",
+      "scope_limitations": "Yalnızca 4857 m.25/I-b kapsamındaki sağlık sebebiyle derhal fesihler için geçerlidir. 4857 m.18-19 kapsamındaki davranış veya performans (verim) kaynaklı fesihlerde fesihten önce yazılı savunma alınmaması feshi geçersiz kılar.",
+      "full_text_verification": {
+        "status": "FETCHED_AND_MATCHED",
+        "official_source_url": "https://www.resmigazete.gov.tr/eskiler/2019/05/20190509-6.pdf",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "96f6e751a31005d9037ddfcde3efa1336aad9b7d04d1e691e3de49a17dab2336",
+        "verified_at": "2026-11-20T08:33:52Z",
+        "verifier_id": "CALISORA-HUKUK-01"
+      },
+      "operative_holding": {
+        "text": "4857 sayılı İş Kanununun 25 inci maddesinin birinci fıkrasının (b) bendi gereğince almış olduğu sağlık raporları nedeniyle derhal fesihlerde, işçiden savunma alınmasının gerekmediğine 19/10/2018 günlü ilk oturumda esas hakkında üçte ikiyi aşan oy çokluğu ile karar verilmiştir.",
+        "vote_majority": "Üçte ikiyi aşan oy çokluğu (19.10.2018 ilk oturum)",
+        "verified_against_gazette": true
+      },
+      "scope_limitations_detail": {
+        "applies_to": [
+          "4857 m.25/I-b kapsamında ihbar süresini 6 hafta aşan kesintisiz sağlık raporlarına dayalı işveren derhal fesihleri",
+          "Sağlık raporu kaynaklı bekleme süresi aşımı (m.19/2 kapsamı dışı)"
+        ],
+        "does_not_apply_to": [
+          "4857 m.18-19 kapsamındaki işçinin davranışı veya verimi (performansı) kaynaklı geçerli fesihler (yazılı savunma şartı zorunludur)",
+          "4857 m.25/I-b feshinde kıdem tazminatı ödenmemesi (1475 m.14 uyarınca kıdem tazminatı ödenir, ihbar ödenmez)"
+        ],
+        "statutory_anchors": [
+          "4857 m.19/2",
+          "4857 m.25/I-b",
+          "4857 m.25/son",
+          "1475 m.14"
+        ],
+        "verified_by_legal_review": true
+      },
+      "verification_status": "VERIFIED",
+      "verified_by": "CALISORA-HUKUK-01",
+      "last_verified_at": "2026-11-20",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-YIBBGK201810",
+        "verified_at": "2026-11-20T08:33:52Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "96f6e751a31005d9037ddfcde3efa1336aad9b7d04d1e691e3de49a17dab2336",
+        "expected_text_markers": [
+          "30769",
+          "9 Mayıs 2019",
+          "YARGITAY"
+        ],
+        "matched_text_markers": [
+          "30769",
+          "9 Mayıs 2019",
+          "YARGITAY"
+        ]
+      },
+      "superseded_by": null,
+      "conflicting_precedent_ids": [],
+      "keywords": [
+        "yibbgk",
+        "savunma",
+        "sağlık raporu",
+        "4857",
+        "m.25/I-b",
+        "m.19",
+        "derhal fesih",
+        "2017/9",
+        "2018/10"
+      ]
+    },
+    "YIBBGK-2017-10-2019-1": {
+      "precedent_id": "YIBBGK-2017-10-2019-1",
+      "chamber": "YIBBGK",
+      "binding_level": "STATUTORY_BINDING_YIBBGK",
+      "esas_no": "2017/10",
+      "karar_no": "2019/1",
+      "decision_date": "2019-03-08",
+      "official_gazette_no": "30835",
+      "official_gazette_date": "2019-07-18",
+      "official_source_url": "https://www.resmigazete.gov.tr/eskiler/2019/07/20190718-11.pdf",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "related_source_ids": [
+        "MEVZUAT-4857",
+        "MEVZUAT-6098"
+      ],
+      "legal_principle": "Belirli süreli olarak yapılmış ancak 4857 sayılı İş Kanunu m.11'deki objektif koşulları taşımadığı için belirsiz süreli kabul edilen iş sözleşmesinde kararlaştırılan 'süreden önce haksız feshe bağlı cezai şart' hükmü, sözleşmede belirlenen süre ile sınırlı olmak üzere geçerlidir.",
+      "scope_limitations": "6098 sayılı TBK m.420/1 uyarınca yalnızca işçi aleyhine konulan tek taraflı cezai şart hükümleri geçersizdir; karşılıklılık ilkesi ve sözleşmede öngörülen süre sınırı ayrıca denetlenmelidir.",
+      "full_text_verification": {
+        "status": "FETCHED_AND_MATCHED",
+        "official_source_url": "https://www.resmigazete.gov.tr/eskiler/2019/07/20190718-11.pdf",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "599e130ddb705145aad54b3fe938c7b3d7bf5825db603a763814f78fa22f7ba7",
+        "verified_at": "2026-11-20T08:33:52Z",
+        "verifier_id": "CALISORA-HUKUK-01"
+      },
+      "operative_holding": {
+        "text": "Belirli süreli olarak yapılmış ancak objektif şartları taşımadığı için belirsiz süreli olarak kabul edilen iş sözleşmesinde kararlaştırılan süreden önce haksız feshe bağlı cezai şart hükmünün, belirlenen süre ile sınırlı olmak üzere geçerli olduğuna 08/03/2019 tarihinde oy çokluğu ile karar verilmiştir.",
+        "vote_majority": "Oy çokluğu (08.03.2019)",
+        "verified_against_gazette": true
+      },
+      "scope_limitations_detail": {
+        "applies_to": [
+          "Belirli süreli düzenlenip objektif koşul eksikliği nedeniyle belirsiz süreliye dönüşen iş sözleşmelerinde karşılıklı erken fesih cezai şartı",
+          "Sözleşmede belirlenen asgari/belirli süre ile sınırlı erken haksız fesih halleri"
+        ],
+        "does_not_apply_to": [
+          "6098 TBK m.420/1'e aykırı olarak yalnızca işçi aleyhine konulan tek taraflı cezai şart hükümleri",
+          "Sözleşmede belirlenen sürenin dolmasından sonraki fesihler"
+        ],
+        "statutory_anchors": [
+          "4857 m.11",
+          "6098 TBK m.420/1"
+        ],
+        "verified_by_legal_review": true
+      },
+      "verification_status": "VERIFIED",
+      "verified_by": "CALISORA-HUKUK-01",
+      "last_verified_at": "2026-11-20",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-YIBBGK20191",
+        "verified_at": "2026-11-20T08:33:52Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "599e130ddb705145aad54b3fe938c7b3d7bf5825db603a763814f78fa22f7ba7",
+        "expected_text_markers": [
+          "30835",
+          "18 Temmuz 2019",
+          "Resmî Gazete"
+        ],
+        "matched_text_markers": [
+          "30835",
+          "18 Temmuz 2019",
+          "Resmî Gazete"
+        ]
+      },
+      "superseded_by": null,
+      "conflicting_precedent_ids": [],
+      "keywords": [
+        "yibbgk",
+        "belirli süreli",
+        "belirsiz süreli",
+        "cezai şart",
+        "erken fesih",
+        "objektif şart",
+        "4857",
+        "m.11",
+        "tbk m.420",
+        "2017/10",
+        "2019/1"
+      ]
+    },
+    "YIBBGK-2017-8-2019-3": {
+      "precedent_id": "YIBBGK-2017-8-2019-3",
+      "chamber": "YIBBGK",
+      "binding_level": "STATUTORY_BINDING_YIBBGK",
+      "esas_no": "2017/8",
+      "karar_no": "2019/3",
+      "decision_date": "2019-05-24",
+      "official_gazette_no": "30901",
+      "official_gazette_date": "2019-09-27",
+      "official_source_url": "https://www.resmigazete.gov.tr/eskiler/2019/09/20190927-6.pdf",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "related_source_ids": [
+        "MEVZUAT-7036",
+        "MEVZUAT-4857"
+      ],
+      "legal_principle": "Bir miktar para alacağının faizi ile birlikte tahsiline karar verilmesinin talep edildiği kısmi davada, dava konusu miktarın kısmi ıslahla faiz talebi açıkça tekrarlanmaksızın artırılması hâlinde, artırılan miktar bakımından da dava dilekçesindeki faiz talebine bağlı olarak faize hükmedilmesi gerekir.",
+      "scope_limitations": "Yalnızca ilk dava dilekçesinde faiz talebinin zaten mevcut olduğu kısmi davalarda, aynı alacak kaleminin kısmi ıslahla artırılması hâlinde uygulanır. Dava dilekçesinde hiç faiz talep edilmemişse ıslah dilekçesinde ayrıca faiz istenmeden faize hükmedilemez; ayrıca ıslahla artırılan kısmın faiz başlangıç tarihi (temerrüt / ıslah tarihi ayrımı) somut olaya göre ayrıca değerlendirilir.",
+      "full_text_verification": {
+        "status": "FETCHED_AND_MATCHED",
+        "official_source_url": "https://www.resmigazete.gov.tr/eskiler/2019/09/20190927-6.pdf",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "974b790834201dd269a466931f4575d62e96ba6430ee297f56b921ca1958fdb1",
+        "verified_at": "2026-11-20T11:25:00Z",
+        "verifier_id": "CALISORA-HUKUK-01"
+      },
+      "operative_holding": {
+        "text": "Bir miktar para alacağının faizi ile birlikte tahsiline karar verilmesinin talep edildiği kısmi davada, dava konusu miktarın kısmi ıslahla faiz talebi belirtilmeksizin artırılması hâlinde, artırılan miktar bakımından dava dilekçesindeki faiz talebine bağlı olarak faize hükmedileceğine 24.05.2019 tarihinde üçte ikiyi aşan oy çokluğu ile karar verilmiştir.",
+        "vote_majority": "Üçte ikiyi aşan oy çokluğu (24.05.2019)",
+        "verified_against_gazette": true
+      },
+      "scope_limitations_detail": {
+        "applies_to": [
+          "Dava dilekçesinde açıkça faiz talep edilmiş kısmi işçilik alacağı davalarında kısmi ıslahla miktar artırımı",
+          "Islah dilekçesinde faiz ibaresinin sehven tekrarlanmadığı hallerde ilk dilekçedeki faiz iradesinin artırılan tutara teşmili"
+        ],
+        "does_not_apply_to": [
+          "İlk dava dilekçesinde hiç faiz talep edilmemiş davalar (taleple bağlılık kuralı gereği kendiliğinden faize hükmedilemez)",
+          "Kıdem tazminatı dışındaki alacaklarda temerrüt oluşmadan ıslah öncesi döneme geriye dönük faiz yürütülmesi (faiz başlangıç tarihi ayrıca denetlenir)"
+        ],
+        "statutory_anchors": [
+          "HMK m.26",
+          "HMK m.109",
+          "HMK m.176-181",
+          "4857 m.34"
+        ],
+        "verified_by_legal_review": true
+      },
+      "verification_status": "VERIFIED",
+      "verified_by": "CALISORA-HUKUK-01",
+      "last_verified_at": "2026-11-20",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-YIBBGK20193",
+        "verified_at": "2026-11-20T11:25:00Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "974b790834201dd269a466931f4575d62e96ba6430ee297f56b921ca1958fdb1",
+        "expected_text_markers": [
+          "30901",
+          "27 Eylül 2019",
+          "YARGITAY KARARI"
+        ],
+        "matched_text_markers": [
+          "30901",
+          "27 Eylül 2019",
+          "YARGITAY KARARI"
+        ]
+      },
+      "superseded_by": null,
+      "conflicting_precedent_ids": [],
+      "keywords": [
+        "yibbgk",
+        "kısmi dava",
+        "kısmi ıslah",
+        "faiz talebi",
+        "işçilik alacağı",
+        "2017/8",
+        "2019/3"
+      ]
+    },
+    "YIBBGK-2023-1-2025-3": {
+      "precedent_id": "YIBBGK-2023-1-2025-3",
+      "chamber": "YIBBGK",
+      "binding_level": "STATUTORY_BINDING_YIBBGK",
+      "esas_no": "2023/1",
+      "karar_no": "2025/3",
+      "decision_date": "2025-06-13",
+      "official_gazette_no": "33015",
+      "official_gazette_date": "2025-09-12",
+      "official_source_url": "https://www.resmigazete.gov.tr/eskiler/2025/09/20250912-5.pdf",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "related_source_ids": [
+        "MEVZUAT-6098",
+        "MEVZUAT-7036"
+      ],
+      "legal_principle": "İş sözleşmesinin sona ermesinden sonra işçinin 6098 sayılı TBK m.444–447 kapsamındaki rekabet yasağına aykırı davranmasından doğan uyuşmazlıklar, 6102 sayılı TTK m.4/1-c uyarınca mutlak ticari dava niteliğinde olup görevli mahkeme Asliye Ticaret Mahkemesidir; 7036 sayılı İş Mahkemeleri Kanunu m.5 bu özel görev kuralını ortadan kaldırmaz.",
+      "scope_limitations": "Yalnızca iş sözleşmesinin sona ermesinden sonraki döneme ilişkin TBK m.444–447 rekabet yasağı sözleşmesi ihlallerinde Asliye Ticaret Mahkemesi görevlidir (ticari davada zorunlu arabuluculuk rejimi TTK m.5/A kapsamında ayrıca değerlendirilir). İş sözleşmesi devam ederken işçinin TBK m.396 kapsamındaki sadakat ve rekabet etmeme borcuna aykırılık davaları İş Mahkemesinin görev alanındadır.",
+      "full_text_verification": {
+        "status": "FETCHED_AND_MATCHED",
+        "official_source_url": "https://www.resmigazete.gov.tr/eskiler/2025/09/20250912-5.pdf",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "fe485c62b1c18eda2498c69b5e44ca81d03be16d3917128265f356f5be4320d7",
+        "verified_at": "2026-11-20T11:25:00Z",
+        "verifier_id": "CALISORA-HUKUK-01"
+      },
+      "operative_holding": {
+        "text": "İş sözleşmesinin sona ermesinden sonra işçinin rekabet yasağına aykırı davranışları nedeniyle açılan davalarda görevli mahkemenin Asliye Ticaret Mahkemesi olduğuna 13.06.2025 tarihinde oy çokluğu ile karar verilmiştir (RG 12.09.2025/33015; düzeltme RG 16.09.2025/33019).",
+        "vote_majority": "Oy çokluğu (13.06.2025)",
+        "verified_against_gazette": true
+      },
+      "scope_limitations_detail": {
+        "applies_to": [
+          "İş sözleşmesinin sona ermesinden sonra TBK m.444-447 rekabet yasağı ihlali nedeniyle açılan tazminat ve cezai şart davaları",
+          "Görevli mahkeme tespitinde TTK m.4/1-c mutlak ticari dava niteliğinin 7036 m.5'e önceliği"
+        ],
+        "does_not_apply_to": [
+          "İş sözleşmesi devam ederken işçinin sadakat borcuna (TBK m.396) aykırı rekabet fiillerine ilişkin davalar (İş Mahkemesi görevlidir)",
+          "Rekabet yasağı sözleşmesinin yer, zaman ve konu yönünden geçerlilik denetimi (TBK m.444-445 esastan ayrıca incelenir)"
+        ],
+        "statutory_anchors": [
+          "6098 TBK m.444-447",
+          "6102 TTK m.4/1-c",
+          "7036 m.5"
+        ],
+        "verified_by_legal_review": true
+      },
+      "verification_status": "VERIFIED",
+      "verified_by": "CALISORA-HUKUK-01",
+      "last_verified_at": "2026-11-20",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-YIBBGK20253",
+        "verified_at": "2026-11-20T11:25:00Z",
+        "document_fetch_status": "FETCHED_AND_MATCHED",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "fe485c62b1c18eda2498c69b5e44ca81d03be16d3917128265f356f5be4320d7",
+        "expected_text_markers": [
+          "33015",
+          "12 Eylül 2025",
+          "Resmî Gazete"
+        ],
+        "matched_text_markers": [
+          "33015",
+          "12 Eylül 2025",
+          "Resmî Gazete"
+        ]
+      },
+      "superseded_by": null,
+      "conflicting_precedent_ids": [],
+      "keywords": [
+        "yibbgk",
+        "rekabet yasağı",
+        "asliye ticaret mahkemesi",
+        "görevli mahkeme",
+        "tbk m.444",
+        "7036 m.5",
+        "2023/1",
+        "2025/3"
+      ]
+    },
+    "YIBBGK-2021-8-2026-1": {
+      "precedent_id": "YIBBGK-2021-8-2026-1",
+      "chamber": "YIBBGK",
+      "binding_level": "STATUTORY_BINDING_YIBBGK",
+      "esas_no": "2021/8",
+      "karar_no": "2026/1",
+      "decision_date": "2026-05-08",
+      "official_gazette_no": "33296",
+      "official_gazette_date": "2026-06-30",
+      "official_source_url": "https://www.resmigazete.gov.tr/eskiler/2026/06/20260630-7.pdf",
+      "url_granularity": "DIRECT_DOCUMENT",
+      "related_source_ids": [
+        "MEVZUAT-7036",
+        "MEVZUAT-4857"
+      ],
+      "legal_principle": "Hukuk yargılamasında dava dilekçesinde yer almayan yeni ve bağımsız bir talep (örneğin iş davasında başlangıçta hiç istenmemiş ayrı bir işçilik alacağı kalemi), kısmen ıslah yoluyla davaya dahil edilemez (HMK m.26, m.140/3, m.176-181).",
+      "scope_limitations": "Yalnızca dava dilekçesinde hiç talep edilmemiş yeni ve bağımsız bir talep kaleminin kısmi ıslahla eklenmesini yasaklar. Dava dilekçesinde zaten yer alan bir alacağın miktarının kısmi ıslahla artırılması, tam ıslah veya ayrı/ek dava açılması yolları ile karar sonrası yürürlüğe giren kanuni usul değişikliklerinin kapsamı hukuk müşavirince ayrıca değerlendirilmelidir. Not: Resmî Gazete PDF'i özel CID yazı tipi kullandığından HTTP 200 ve SHA-256 doğrulanmış, otomatik metin katmanı OCR teyidi şeffaf biçimde METADATA_VERIFIED_PENDING_LIVE_FETCH olarak kaydedilmiştir.",
+      "full_text_verification": {
+        "status": "METADATA_VERIFIED_PENDING_LIVE_FETCH",
+        "official_source_url": "https://www.resmigazete.gov.tr/eskiler/2026/06/20260630-7.pdf",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "5cf359828595a40a5327adb8ba5d28e5142c6a7f57cda01ac43c728b39d2ba73",
+        "verified_at": "2026-11-20T11:25:00Z",
+        "verifier_id": "CALISORA-HUKUK-01"
+      },
+      "operative_holding": {
+        "text": "Hukuk yargılamasında dava dilekçesinde yer almayan yeni bir talebin kısmen ıslah yoluyla davaya dahil edilemeyeceğine 08.05.2026 tarihinde üçüncü görüşmede oy çokluğu ile karar verilmiştir (RG 30.06.2026/33296).",
+        "vote_majority": "Üçüncü görüşmede oy çokluğu (08.05.2026)",
+        "verified_against_gazette": false
+      },
+      "scope_limitations_detail": {
+        "applies_to": [
+          "Dava dilekçesinde hiç istenmemiş yeni ve bağımsız bir işçilik alacağı kaleminin (ör. dava dışı bırakılan fazla mesai veya UBGT kaleminin) kısmi ıslahla davaya eklenmesi girişimleri",
+          "HMK m.176-181 kısmen ıslah sınırının ve taleple bağlılık ilkesinin tespiti"
+        ],
+        "does_not_apply_to": [
+          "Dava dilekçesinde zaten istenmiş bir alacak kaleminin miktarının artırılması (kısmi ıslah / talep artırımı)",
+          "Ayrı ek dava açılması veya kanuni şartları dahilinde tam ıslah mekanizması"
+        ],
+        "statutory_anchors": [
+          "HMK m.26",
+          "HMK m.140/3",
+          "HMK m.176-181",
+          "7036 m.3"
+        ],
+        "verified_by_legal_review": false
+      },
+      "verification_status": "PENDING_REVIEW",
+      "verified_by": "CALISORA-HUKUK-01",
+      "last_verified_at": "2026-11-20",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "OFFICIAL_GAZETTE_ARCHIVE_CHECK",
+        "audit_log_id": "AUD-20261120-YIBBGK20261",
+        "verified_at": "2026-11-20T11:25:00Z",
+        "document_fetch_status": "METADATA_VERIFIED_PENDING_LIVE_FETCH",
+        "retrieved_http_status": 200,
+        "retrieved_content_sha256": "5cf359828595a40a5327adb8ba5d28e5142c6a7f57cda01ac43c728b39d2ba73",
+        "expected_text_markers": [
+          "33296",
+          "30 Haziran 2026",
+          "YARGITAY"
+        ],
+        "matched_text_markers": []
+      },
+      "superseded_by": null,
+      "conflicting_precedent_ids": [],
+      "keywords": [
+        "yibbgk",
+        "kısmi ıslah",
+        "yeni talep",
+        "dava dilekçesi",
+        "hmk m.176",
+        "2021/8",
+        "2026/1"
+      ]
+    }
+  }
+}

@@ -1,0 +1,184 @@
+{
+  "schema_version": "1.0.2a.3",
+  "law_no": "6331",
+  "law_title": "6331 Sayılı İş Sağlığı ve Güvenliği Kanunu",
+  "source_id": "MEVZUAT-6331",
+  "cards": [
+    {
+      "card_id": "CARD-6331-M04-M06",
+      "source_id": "MEVZUAT-6331",
+      "law_no": "6331",
+      "article_ref": "Madde 4, Madde 6 ve Madde 38",
+      "topic": "İşverenin İSG genel yükümlülüğü ve İSG profesyoneli görevlendirme (kademeli yürürlük dahil)",
+      "legal_basis": {
+        "source_id": "MEVZUAT-6331",
+        "original_publication_ref": "RG 30.06.2012 / Sayı 28339 (İlk yayımlanan metin; kademeli yürürlük m.38)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6331&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": [
+          {
+            "amending_law_no": "7491",
+            "official_gazette_no": "32413",
+            "publication_date": "2023-12-28",
+            "effective_from": "2025-01-01",
+            "summary": "7491 m.71 ile 6331 m.38/1-a-1 değiştirilerek 50'den az çalışanı olan az tehlikeli işyerleri ile kamu kurumları için m.6 iş güvenliği uzmanı ve işyeri hekimi görevlendirme yükümlülüğü 31.12.2024'e ertelenmiş, 01.01.2025 itibarıyla yürürlüğe girmiştir."
+          },
+          {
+            "amending_law_no": "7538",
+            "official_gazette_no": "32783",
+            "publication_date": "2025-01-15",
+            "effective_from": "2025-01-15",
+            "summary": "7538 m.19 ile işyerlerinin OSGB'lerin yanı sıra Çalışan Sağlığı Merkezlerinden (ÇASMER) de İSG hizmeti alabilmesi düzenlendi."
+          }
+        ]
+      },
+      "scope_of_application": "İşveren; mesleki risklerin önlenmesi, eğitim, risk değerlendirmesi, sağlık gözetimi ve İSG-KATİP üzerinden iş güvenliği uzmanı ile işyeri hekimi (veya OSGB/ÇASMER) görevlendirmesinden sorumludur. 01.01.2025 itibarıyla 50'den az çalışanı bulunan az tehlikeli işyerleri de dahil tüm işyerlerinde m.6 yükümlülüğü yürürlüktedir.",
+      "exceptions": [
+        "Çalışan istihdam etmeksizin kendi nam ve hesabına mal ve hizmet üretimi yapanlar (m.2/2-ç)",
+        "Ev hizmetleri ve afet-acil durum müdahale faaliyetleri (m.2/2)",
+        "50'den az çalışanı olan az tehlikeli işyerlerinde Bakanlıkça ilan edilen eğitimi tamamlayan işveren/işveren vekili belirli İSG hizmetlerini üstlenebilir (işe giriş/periyodik muayene ve tetkikler hariç)"
+      ],
+      "required_documents": [
+        "İSG-KATİP onaylı İş Güvenliği Uzmanı ve İşyeri Hekimi sözleşmesi",
+        "Güncel Risk Değerlendirmesi Raporu ve Acil Durum Eylem Planı",
+        "İşe giriş sağlık raporu ve periyodik İSG eğitim katılım belgeleri"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde 6331 m.4-6'ya özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2025-01-01",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "Genel yükümlülükler 30.12.2012; 50'den az az tehlikeli işyerlerinde m.6 yükümlülüğü 7491 m.71 sonrası 01.01.2025 itibarıyla yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "Görevlendirme yapılmayan her ay için 6331 m.26 kapsamında yüksek kademeli idari para cezası",
+        "İş kazası halinde işverenin yüksek kusur oranı ve SGK rücu davası riski"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD6331M06",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "6331",
+        "madde 4",
+        "madde 6",
+        "madde 38",
+        "isg uzmanı",
+        "işyeri hekimi",
+        "7491",
+        "01.01.2025",
+        "az tehlikeli"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-6331",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT6331",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 6331 Madde 4, Madde 6 ve Madde 38 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    },
+    {
+      "card_id": "CARD-6331-M14",
+      "source_id": "MEVZUAT-6331",
+      "law_no": "6331",
+      "article_ref": "Madde 14",
+      "topic": "İş kazası ve meslek hastalığının 3 iş günü içinde SGK'ya bildirim zorunluluğu",
+      "legal_basis": {
+        "source_id": "MEVZUAT-6331",
+        "original_publication_ref": "RG 30.06.2012 / Sayı 28339 (İlk yayımlanan metin; yürürlük: 30.12.2012)",
+        "consolidated_text_url": "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6331&MevzuatTur=1&MevzuatTertip=5",
+        "amendment_history": []
+      },
+      "scope_of_application": "İşveren, iş kazalarını kazadan sonraki 3 iş günü içinde, sağlık hizmeti sunucuları veya işyeri hekimi tarafından kendisine bildirilen meslek hastalıklarını ise öğrendiği tarihten itibaren 3 iş günü içinde SGK'ya (e-Vizite İş Kazası Bildirim Sistemi) bildirmek ve kayıt tutmak zorundadır.",
+      "exceptions": [
+        "İşverenin kontrolü dışında gerçekleşen iş kazalarında 3 iş günlük süre işverenin kazayı öğrendiği tarihten itibaren başlar",
+        "Sağlık hizmeti sunucularının iş kazası ve meslek hastalığı bildirim süresi 10 gündür; işveren için 3 iş günü süresi ayrı ve bağlayıcıdır"
+      ],
+      "required_documents": [
+        "Olay yeri iş kazası tespit tutanağı (tanık ve amir imzalı)",
+        "SGK e-Vizite İş Kazası / Meslek Hastalığı elektronik bildirim çıktısı (3 iş günü teyitli)",
+        "Acil sağlık/hastane raporu ve kök neden analiz formu",
+        "Ölümlü veya uzuv kayıplı kazalarda derhal kolluk ve şirket avukatı eskalasyon kaydı"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Doğrulanmış içtihat kayıt defterinde 6331 m.14'e özgü teyitli bir Yargıtay Esas/Karar kaydı henüz eklenmemiştir; karar numarası uydurulmamalıdır.",
+      "effective_validity": {
+        "effective_from": "2012-12-30",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "6331 Sayılı Kanun m.38/1-c — Yayımından (30.06.2012) 6 ay sonra (30.12.2012) yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "3 iş günlük sürenin aşılması halinde 6331 m.26/1-e uyarınca tehlike sınıfı ve çalışan sayısına göre artan İPC",
+        "Bildirimin yapılmaması halinde SGK tarafından ödenen geçici iş göremezlik ödeneklerinin işverene rücu edilmesi (5510 m.21)",
+        "Ölümlü/ağır iş kazasında ceza soruşturması riski (Zorunlu avukat eskalasyonu)"
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@ÜcretBordro"
+      ],
+      "disclaimer": "Bu kayıt uygulanabilir mevzuat bilgi kartıdır; Avukatlık Kanunu m.35 kapsamında hukuki mütalaa yerine geçmez.",
+      "verification_status": "VERIFIED",
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "MEVZUAT_GOV_TR_CONSOLIDATED_CHECK",
+        "audit_log_id": "AUD-20261120-CARD6331M14",
+        "verified_at": "2026-11-20"
+      },
+      "keywords": [
+        "6331",
+        "madde 14",
+        "iş kazası",
+        "3 iş günü",
+        "meslek hastalığı",
+        "sgk bildirimi",
+        "rücu"
+      ],
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "MEVZUAT-6331",
+        "source_audit_log_id": "AUD-20261120-MEVZUAT6331",
+        "verified_at": "2026-11-20"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS",
+          "STATUTORY_DISTINCTION"
+        ],
+        "review_notes": "v1.0.2a hukuki içerik incelemesi: 6331 Madde 14 madde metni, yürürlük tarihi, istisnalar, süreler ve uygulama kapsamı kontrol edilerek onaylandı."
+      }
+    }
+  ]
+}

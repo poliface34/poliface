@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0.2b",
+  "law_no": "YON-27010",
+  "law_title": "Alt İşverenlik Yönetmeliği",
+  "source_id": "YONETMELIK-ALT-ISVERENLIK-20080927",
+  "cards": [
+    {
+      "card_id": "CARD-YON-ALT-ISVERENLIK",
+      "source_id": "YONETMELIK-ALT-ISVERENLIK-20080927",
+      "law_no": "YON-27010",
+      "article_ref": "Madde 4, 10, 11, 12 ve 13",
+      "topic": "Alt İşverenlik Sözleşmesi Unsurları, Muvazaa Kriterleri ve m.13 30 İş Günü İtiraz Süresi",
+      "legal_basis": {
+        "source_id": "YONETMELIK-ALT-ISVERENLIK-20080927",
+        "original_publication_ref": "RG 27.09.2008 / 27010",
+        "consolidated_text_url": "https://www.resmigazete.gov.tr/eskiler/2017/08/20170825-1.htm",
+        "secondary_statutory_anchors": [
+          "4857 m.2/6-7",
+          "4857 m.3/2",
+          "5510 m.12/6",
+          "7036 m.7"
+        ],
+        "amendment_history": [
+          {
+            "amending_law_no": "Alt İşverenlik Yönetmeliğinde Değişiklik (2017)",
+            "official_gazette_no": "30165",
+            "publication_date": "2017-08-25",
+            "effective_from": "2017-08-25",
+            "summary": "6552 sayılı Kanunla 4857 m.3/2'ye yapılan değişiklik işlenerek muvazaa raporuna iş mahkemesinde itiraz süresi 6 iş gününden 30 iş gününe çıkarıldı; basit yargılama (4 ay) ve Yargıtay kesin karar (6 ay) süreleri düzenlendi."
+          }
+        ]
+      },
+      "scope_of_application": "4857 m.2/6-7 uyarınca asıl işveren-alt işveren ilişkisinin kurulma şartlarını (yardımcı işler veya işletmenin/işin gereği ile teknolojik nedenlerle uzmanlık gerektiren asıl iş bölümü), yazılı alt işverenlik sözleşmesinin zorunlu unsurlarını, muvazaa inceleme ölçütlerini (m.12) ve iş müfettişi muvazaa raporuna karşı 30 iş günü içinde yetkili iş mahkemesine itiraz usulünü (m.13) düzenler.",
+      "application_scenarios": [
+        {
+          "scenario_id": "SUBCONTRACTOR_VALIDITY_AND_COLLUSION_CHECK",
+          "condition": "Asıl işin bir bölümünün alt işverene verilmesi",
+          "legal_rule": "Asıl işin bir bölümü ancak hem işletmenin ve işin gereği hem de teknolojik nedenlerle uzmanlık gerektirmesi (kümülatif şart) hâlinde alt işverene verilebilir; ayrıca daha önce asıl işyerinde çalıştırılan kimse ile alt işveren ilişkisi kurulamaz (aksi muvazaa karinesidir).",
+          "statutory_basis": "4857 m.2/6-7 ve Alt İşverenlik Yönetmeliği m.4, m.11-12"
+        },
+        {
+          "scenario_id": "SUBCONTRACTOR_M13_30_WORKDAY_OBJECTION",
+          "condition": "Çalışma ve İş Kurumu İl Müdürlüğünce tebliğ edilen iş müfettişi muvazaa raporuna itiraz",
+          "legal_rule": "Tebliğ tarihinden itibaren 30 iş günü içinde yetkili iş mahkemesine itiraz edilebilir (eski 6 iş günü süresi 6552 sayılı Kanun ve RG 25.08.2017/30165 değişikliğiyle yürürlükten kalkmıştır). İtiraz üzerine basit yargılama usulü uygulanır (4 ay); kanun yoluna başvuru (7036 m.7 ve 4857 m.3/2 çerçevesinde) ivedilikle ve Yargıtayca 6 ay içinde kesin olarak sonuçlandırılır.",
+          "statutory_basis": "4857 m.3/2, 7036 m.7 ve Alt İşverenlik Yönetmeliği m.13"
+        }
+      ],
+      "statutory_subordination": {
+        "concretizes_statutory_provisions": [
+          "4857 Sayılı İş Kanunu m.2/6-7",
+          "4857 Sayılı İş Kanunu m.3/2"
+        ],
+        "cannot_override_parent_law": true,
+        "hierarchy_note": "Alt İşverenlik Yönetmeliği, 4857 m.2 ve m.3'teki müteselsil sorumluluk ve muvazaa yaptırımlarını somutlaştırır; muvazaa halinde alt işveren işçilerinin başlangıçtan itibaren asıl işveren işçisi sayılması kanuni sonucunu daraltamaz."
+      },
+      "exceptions": [
+        "Yardımcı işlerde (temizlik, yemek, güvenlik, taşıma gibi) teknolojik nedenlerle uzmanlık şartı aranmaz; ancak alt işveren işçilerinin münhasıran bu işyerinde çalıştırılması ve emir-talimat bağımlılığının fiilen alt işverende olması gerekir.",
+        "İşin bütünüyle başka bir işverene devredilmesi (anahtar teslimi / istisna akdi) ve asıl işverenin o işte işçi çalıştırmaması hâlinde alt işverenlik değil ihale makamı ilişkisi söz konusu olur."
+      ],
+      "required_documents": [
+        "Yazılı Alt İşverenlik Sözleşmesi (m.10 zorunlu unsurlarını içeren)",
+        "SGK alt işveren aracı kodu / tescil bildirimi",
+        "Alt işveren bordro, SGK tahakkuk ve yıllık izin kontrol dosyaları"
+      ],
+      "related_precedent_ids": [],
+      "precedent_note": "Muvazaa tespitinde alt işveren işçileri başlangıçtan itibaren asıl işveren işçisi sayılır ve TİS/ücret farkı talepleri doğar; bu kart doğrudan 4857 m.2-3 ve Yönetmelik metnine dayanır.",
+      "effective_validity": {
+        "effective_from": "2017-08-25",
+        "effective_to": "2099-12-31",
+        "effective_date_verified": true,
+        "effective_date_basis": "Alt İşverenlik Yönetmeliği (RG 27.09.2008/27010) m.13 30 iş günü itiraz rejimi RG 25.08.2017 / 30165 değişikliğiyle yürürlüğe girmiştir."
+      },
+      "norm_character": "ABSOLUTE_MANDATORY",
+      "risks": [
+        "Muvazaa halinde alt işveren işçileri başlangıçtan itibaren asıl işverenin işçisi sayılır; geçmişe dönük ücret/TİS farkları, SGK ek primleri ve idari para cezaları doğar.",
+        "Muvazaa raporuna 30 iş günü içinde itiraz edilmemesi halinde rapor kesinleşir ve alt işveren işyeri tescili iptal edilir."
+      ],
+      "primary_specialist": "@HukukSGK",
+      "collaborating_specialists": [
+        "@UcretBordro",
+        "@ISGUzmani"
+      ],
+      "disclaimer": "Bu bilgi kartı ikincil mevzuatın resmî metin ve değişiklik geçmişine dayalı yapılandırılmış teknik hukuki referansıdır; üst norm olan kanunu genişletemez veya bertaraf edemez. Bağlayıcı hukuki mütalaa yerine geçmez; somut uyuşmazlıklarda yetkili hukuk müşavirine danışılmalıdır.",
+      "verification_status": "VERIFIED",
+      "source_verification": {
+        "status": "VERIFIED",
+        "source_id": "YONETMELIK-ALT-ISVERENLIK-20080927",
+        "source_audit_log_id": "AUD-20261120-YONALTISVEREN",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "legal_interpretation_verification": {
+        "status": "VERIFIED",
+        "reviewer_id": "CALISORA-HUKUK-REV-02",
+        "reviewer_role": "EXTERNAL_LEGAL_COUNSEL",
+        "reviewed_at": "2026-11-20",
+        "checked_aspects": [
+          "ARTICLE_TEXT",
+          "EFFECTIVE_DATES",
+          "EXCEPTIONS",
+          "PERIODS_AND_THRESHOLDS",
+          "APPLICATION_SCENARIOS"
+        ],
+        "review_notes": "Alt İşverenlik Yönetmeliği m.4, m.10-12 muvazaa ölçütleri ve RG 25.08.2017/30165 ile güncellenen m.13 30 iş günü itiraz süresi doğrulandı."
+      },
+      "verification_audit": {
+        "verifier_id": "CALISORA-HUKUK-01",
+        "verifier_role": "SENIOR_LABOR_LAW_REVIEWER",
+        "verification_method": "LIVE_HTTP_FETCH_AND_LEGAL_REVIEW",
+        "audit_log_id": "AUD-20261120-CARDYONALTISV",
+        "verified_at": "2026-11-20T11:30:00Z"
+      },
+      "keywords": [
+        "alt işverenlik yönetmeliği",
+        "taşeron",
+        "muvazaa",
+        "m.13",
+        "30 iş günü",
+        "asıl işveren",
+        "yardımcı iş",
+        "27010"
+      ]
+    }
+  ]
+}
