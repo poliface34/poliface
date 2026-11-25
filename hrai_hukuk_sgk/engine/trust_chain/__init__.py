@@ -1,8 +1,13 @@
 """hrAI @HukukSGK v1.0.6 WP-2 — Trust Chain Source Adapters, EvidenceRegistry & Answer Linkage."""
 
-from .adapter import SourceAdapter, TransportCallable
+from .adapter import SourceAdapter, TransportCallable, extract_document_text
 from .answer_linker import EvidenceBackedLegalAnswerBuilder, verify_answer_traceability
-from .evidence_registry import EvidenceRegistry
+from .evidence_registry import (
+    ContentStore,
+    EvidenceRegistry,
+    FileSystemContentStore,
+    InMemoryContentStore,
+)
 from .institutional_adapters import IskurAdapter, SgkAdapter
 from .jurisprudence_adapters import DanistayAdapter, YargitayAdapter
 from .models import (
@@ -12,9 +17,20 @@ from .models import (
     ADAPTER_RESMI_GAZETE,
     ADAPTER_SGK,
     ADAPTER_YARGITAY,
+    CONTENT_MATCH_MATCHED,
+    CONTENT_MATCH_MISMATCH,
+    CONTENT_MATCH_NOT_EVALUATED,
+    CONTENT_MATCH_UNPARSEABLE_BINARY,
     GENESIS_CHAIN_HASH,
+    HEAD_STATUS_EXACT_MATCH,
+    HEAD_STATUS_HISTORICAL_GREW,
+    HEAD_STATUS_UNKNOWN_OR_FORKED,
+    SNAPSHOT_MODE_FULL_WITH_RAW,
+    SNAPSHOT_MODE_METADATA_ONLY,
+    STATUS_REJECTED_CONTENT_MISMATCH,
     STATUS_REJECTED_INVALID_SOURCE,
     STATUS_SUPERSEDED,
+    STATUS_TRANSPORT_ONLY_UNVERIFIED_CONTENT,
     STATUS_UNREACHABLE_NOT_VERIFIED,
     STATUS_VERIFIED_LIVE,
     STATUS_VERIFIED_TEST_TRANSPORT,
@@ -48,11 +64,22 @@ __all__ = [
     "TRANSPORT_LIVE_HTTPS",
     "TRANSPORT_INJECTED_TEST",
     "TRANSPORT_UNREACHABLE",
+    "CONTENT_MATCH_MATCHED",
+    "CONTENT_MATCH_UNPARSEABLE_BINARY",
+    "CONTENT_MATCH_MISMATCH",
+    "CONTENT_MATCH_NOT_EVALUATED",
     "STATUS_VERIFIED_LIVE",
     "STATUS_VERIFIED_TEST_TRANSPORT",
+    "STATUS_TRANSPORT_ONLY_UNVERIFIED_CONTENT",
     "STATUS_UNREACHABLE_NOT_VERIFIED",
+    "STATUS_REJECTED_CONTENT_MISMATCH",
     "STATUS_REJECTED_INVALID_SOURCE",
     "STATUS_SUPERSEDED",
+    "SNAPSHOT_MODE_FULL_WITH_RAW",
+    "SNAPSHOT_MODE_METADATA_ONLY",
+    "HEAD_STATUS_EXACT_MATCH",
+    "HEAD_STATUS_HISTORICAL_GREW",
+    "HEAD_STATUS_UNKNOWN_OR_FORKED",
     "GENESIS_CHAIN_HASH",
     "TrustChainError",
     "EvidenceRegistryError",
@@ -64,12 +91,16 @@ __all__ = [
     "EvidenceLinkedAnswer",
     "TransportCallable",
     "SourceAdapter",
+    "extract_document_text",
     "ResmiGazeteAdapter",
     "MevzuatAdapter",
     "SgkAdapter",
     "IskurAdapter",
     "YargitayAdapter",
     "DanistayAdapter",
+    "ContentStore",
+    "InMemoryContentStore",
+    "FileSystemContentStore",
     "EvidenceRegistry",
     "EvidenceBackedLegalAnswerBuilder",
     "verify_answer_traceability",

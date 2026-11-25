@@ -7,10 +7,14 @@ Zero external network access is performed during unit testing.
 
 from __future__ import annotations
 
+import base64
 from dataclasses import replace
 import hashlib
+import os
 from pathlib import Path
+import tempfile
 import unittest
+import zlib
 
 from engine.tools_router import HukukSGKToolRouter
 from engine.trust_chain import (
@@ -20,7 +24,17 @@ from engine.trust_chain import (
     ADAPTER_RESMI_GAZETE,
     ADAPTER_SGK,
     ADAPTER_YARGITAY,
+    CONTENT_MATCH_MATCHED,
+    CONTENT_MATCH_MISMATCH,
+    CONTENT_MATCH_UNPARSEABLE_BINARY,
+    HEAD_STATUS_EXACT_MATCH,
+    HEAD_STATUS_HISTORICAL_GREW,
+    HEAD_STATUS_UNKNOWN_OR_FORKED,
+    SNAPSHOT_MODE_FULL_WITH_RAW,
+    SNAPSHOT_MODE_METADATA_ONLY,
+    STATUS_REJECTED_CONTENT_MISMATCH,
     STATUS_REJECTED_INVALID_SOURCE,
+    STATUS_TRANSPORT_ONLY_UNVERIFIED_CONTENT,
     STATUS_UNREACHABLE_NOT_VERIFIED,
     STATUS_VERIFIED_TEST_TRANSPORT,
     TRANSPORT_INJECTED_TEST,
@@ -29,6 +43,8 @@ from engine.trust_chain import (
     EvidenceBackedLegalAnswerBuilder,
     EvidenceRegistry,
     EvidenceRegistryError,
+    FileSystemContentStore,
+    InMemoryContentStore,
     IskurAdapter,
     MevzuatAdapter,
     ResmiGazeteAdapter,
@@ -37,6 +53,8 @@ from engine.trust_chain import (
     YargitayAdapter,
     verify_answer_traceability,
 )
+from engine.trust_chain.answer_linker import _compute_answer_sha256
+from engine.trust_chain.models import canonical_sha256
 from engine.trust_root import run_live_integration_probe
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -71,7 +89,7 @@ def _make_ok_transport(
 
 class TestTrustChainAdaptersWp2V106(unittest.TestCase):
     def test_01_all_six_adapters_positive_acquisition_and_distinct_metadata(self) -> None:
-        """Criteria 1, 2, 3, 4: all 6 adapters acquire, validate, hash, separate dates, and register unique IDs."""
+        """Criteria 1, 2, 3, 4: all 6 adapters acquire, validate, match content, hash, separate dates, and register unique IDs."""
         reg = EvidenceRegistry()
 
         specs = [
@@ -124,7 +142,7 @@ class TestTrustChainAdaptersWp2V106(unittest.TestCase):
                     effective_date="2026-02-01",
                     adapter_metadata={"document_type": "USUL_VE_ESASLAR", "reference_no": "ISKUR-2026/01"},
                 ),
-                b"<html><body>ISKUR Kisa Calisma Odenegi Usul ve Esaslari 2026 metni.</body></html>",
+                b"<html><body>ISKUR-2026/01 Kisa Calisma Odenegi Usul ve Esaslari 2026 metni.</body></html>",
                 ADAPTER_ISKUR,
             ),
             (
@@ -177,6 +195,8 @@ class TestTrustChainAdaptersWp2V106(unittest.TestCase):
             self.assertEqual(res.record.adapter_type, exp_type)
             self.assertEqual(res.record.transport_mode, TRANSPORT_INJECTED_TEST)
             self.assertFalse(res.record.live_verified, "Injected transport must NEVER produce live_verified=True")
+            self.assertTrue(res.record.content_verified)
+            self.assertEqual(res.record.content_verification.get("content_match_status"), CONTENT_MATCH_MATCHED)
             self.assertEqual(res.record.acquired_at_utc, "2026-11-25T10:30:00Z")
             self.assertEqual(res.record.source_url, req.source_url)
             self.assertEqual(res.record.publication_date, req.publication_date)
@@ -187,9 +207,12 @@ class TestTrustChainAdaptersWp2V106(unittest.TestCase):
             self.assertNotIn(sealed.evidence_id, seen_ids)
             seen_ids.add(sealed.evidence_id)
             self.assertEqual(sealed.version_number, 1)
+            self.assertEqual(reg.get_raw_bytes(sealed.evidence_id), raw_b)
 
         ok, rep = reg.verify_integrity()
         self.assertTrue(ok, rep)
+        self.assertTrue(rep["full_content_archive_verified"])
+        self.assertEqual(rep["raw_content_verified_count"], 6)
         self.assertEqual(rep["record_count"], 6)
         self.assertEqual(len(seen_ids), 6)
 
@@ -307,7 +330,12 @@ class TestTrustChainAdaptersWp2V106(unittest.TestCase):
         self.assertFalse(res_retro_bad.ok)
         self.assertIn("RETROACTIVE_EFFECTIVE_DATE_UNDECLARED", res_retro_bad.error_codes)
 
-        res_retro_ok = mev.acquire_and_validate(
+        mev_retro = MevzuatAdapter(
+            transport=_make_ok_transport(
+                b"<html><body>7500 Sayili Geriye Yururluklu Kanun 01.01.2026 tarihinden gecerlidir.</body></html>"
+            )
+        )
+        res_retro_ok = mev_retro.acquire_and_validate(
             SourceDocumentRequest(
                 source_key="KANUN-RETRO",
                 source_url="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=7500",
@@ -322,7 +350,7 @@ class TestTrustChainAdaptersWp2V106(unittest.TestCase):
                 },
             )
         )
-        self.assertTrue(res_retro_ok.ok)
+        self.assertTrue(res_retro_ok.ok, res_retro_ok.errors)
 
         # 5. Yargıtay invalid Esas/Karar & decision_date > publication_date
         yarg = YargitayAdapter(transport=_make_ok_transport(good_payload))
@@ -480,12 +508,16 @@ class TestTrustChainAdaptersWp2V106(unittest.TestCase):
         self.assertEqual(resolved_2026, rec_v2)
         self.assertTrue(meta_2026["is_current_latest"])
 
-        # Snapshot export + round-trip rehydration + tamper rejection
+        # Snapshot export + round-trip rehydration (including full raw bytes!) + tamper rejection
         snap = reg.export_snapshot_dict()
+        self.assertEqual(snap["snapshot_mode"], SNAPSHOT_MODE_FULL_WITH_RAW)
         restored = EvidenceRegistry.from_snapshot_dict(snap)
         ok_rest, rep_rest = restored.verify_integrity()
         self.assertTrue(ok_rest, rep_rest)
+        self.assertTrue(rep_rest["full_content_archive_verified"])
         self.assertEqual(restored.head_sha256, reg.head_sha256)
+        self.assertEqual(restored.get_raw_bytes(rec_v1.evidence_id), v1_bytes)
+        self.assertEqual(restored.get_raw_bytes(rec_v2.evidence_id), v2_bytes)
 
         tampered_snap = reg.export_snapshot_dict()
         tampered_snap["records"][0]["title"] = "Tahrif Edilmiş Kanun Başlığı"
@@ -493,10 +525,12 @@ class TestTrustChainAdaptersWp2V106(unittest.TestCase):
             EvidenceRegistry.from_snapshot_dict(tampered_snap)
         self.assertEqual(snap_ctx.exception.error_code, "REGISTRY_SNAPSHOT_INTEGRITY_FAILED")
 
-        # In-memory raw byte tampering detected by verify_integrity()
-        reg._raw_content_sha_index[rec_v1.evidence_id] = v1_bytes + b"TAMPER"
+        # In-memory raw byte tampering inside ContentStore detected by verify_integrity()
+        assert isinstance(reg.content_store, InMemoryContentStore)
+        reg.content_store._blobs[rec_v1.evidence_id] = v1_bytes + b"TAMPER"
         ok_tamper, rep_tamper = reg.verify_integrity()
         self.assertFalse(ok_tamper)
+        self.assertFalse(rep_tamper["full_content_archive_verified"])
         self.assertTrue(any("tahrifat" in e for e in rep_tamper["errors"]))
 
     def test_06_evidence_linked_answer_router_integration_and_end_to_end_traceability(self) -> None:
@@ -532,7 +566,9 @@ class TestTrustChainAdaptersWp2V106(unittest.TestCase):
         rec_cur = reg.register(v2_res)
 
         yarg_res = YargitayAdapter(
-            transport=_make_ok_transport(b"<html><body>Yargitay 9. HD ihbar suresi uygulamasi karar metni.</body></html>")
+            transport=_make_ok_transport(
+                b"<html><body>Yargitay 9. HD E. 2025/900 K. 2025/2100 ihbar suresi uygulamasi karar metni.</body></html>"
+            )
         ).acquire_and_validate(
             SourceDocumentRequest(
                 source_key="YARGITAY-9HD-2025-900-2025-2100",
@@ -578,6 +614,8 @@ class TestTrustChainAdaptersWp2V106(unittest.TestCase):
         ok_trace, trace_rep = verify_answer_traceability(ans, reg)
         self.assertTrue(ok_trace, trace_rep)
         self.assertEqual(trace_rep["traced_evidence_count"], 2)
+        self.assertEqual(trace_rep["registry_head_status"], HEAD_STATUS_EXACT_MATCH)
+        self.assertTrue(trace_rep["full_content_archive_verified"])
 
         # Tampered answer text detected by verify_answer_traceability
         tampered_ans = replace(ans, answer_text="Değiştirilmiş yetkisiz hukuki yorum.")
@@ -693,7 +731,7 @@ class TestTrustChainAdaptersWp2V106(unittest.TestCase):
         req_meta = {"mevzuat_no": "4857", "mevzuat_turu": "KANUN", "nested": {"tag": "orig"}}
         v1 = reg.register(
             MevzuatAdapter(
-                transport=_make_ok_transport(b"<html><body>4857 2024 versiyonu icerik metni.</body></html>")
+                transport=_make_ok_transport(b"<html><body>4857 Sayili Kanun Izolasyon 2024 versiyonu icerik metni.</body></html>")
             ).acquire_and_validate(
                 SourceDocumentRequest(
                     source_key="KANUN-4857-ISO",
@@ -719,7 +757,7 @@ class TestTrustChainAdaptersWp2V106(unittest.TestCase):
         # 4. Historical dispute date (2025-06-15) cleanly binds v1 while accurately marking is_superseded=True once v2 exists
         reg.register(
             MevzuatAdapter(
-                transport=_make_ok_transport(b"<html><body>4857 2026 guncel versiyon icerik metni.</body></html>")
+                transport=_make_ok_transport(b"<html><body>4857 Sayili Kanun Izolasyon 2026 guncel versiyon icerik metni.</body></html>")
             ).acquire_and_validate(
                 SourceDocumentRequest(
                     source_key="KANUN-4857-ISO",
@@ -747,6 +785,486 @@ class TestTrustChainAdaptersWp2V106(unittest.TestCase):
         with self.assertRaises(EvidenceRegistryError) as sv_ctx:
             EvidenceRegistry.from_snapshot_dict(bad_snap)
         self.assertEqual(sv_ctx.exception.error_code, "UNSUPPORTED_SNAPSHOT_SCHEMA_VERSION")
+
+    def test_09_snapshot_raw_content_archive_filesystem_store_and_missing_content_fail_closed(self) -> None:
+        """PR #3 Finding 1: raw bytes preserved/verified across snapshots & FileSystemContentStore; metadata-only fails closed."""
+        raw_1 = b"<html><body>4857 Sayili Is Kanunu Madde 18 tam belge arsivi 2025.</body></html>"
+        raw_2 = b"<html><body>Resmi Gazete Sayi 32766 - 2025 Asgari Ucret Karari tam arsiv.</body></html>"
+
+        reg = EvidenceRegistry()
+        rec1 = reg.register(
+            MevzuatAdapter(transport=_make_ok_transport(raw_1)).acquire_and_validate(
+                SourceDocumentRequest(
+                    source_key="KANUN-4857-ARCHIVE",
+                    source_url="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857&m=18",
+                    title="4857 Sayılı İş Kanunu Madde 18",
+                    publication_date="2025-01-01",
+                    effective_date="2025-01-01",
+                    adapter_metadata={"mevzuat_no": "4857", "mevzuat_turu": "KANUN"},
+                )
+            )
+        )
+        rec2 = reg.register(
+            ResmiGazeteAdapter(transport=_make_ok_transport(raw_2)).acquire_and_validate(
+                SourceDocumentRequest(
+                    source_key="RG-32766-ARCHIVE",
+                    source_url="https://www.resmigazete.gov.tr/eskiler/2024/12/20241228-1.htm",
+                    title="2025 Yılı Asgari Ücret Kararı",
+                    publication_date="2024-12-28",
+                    effective_date="2025-01-01",
+                    adapter_metadata={"gazette_number": "32766"},
+                )
+            )
+        )
+
+        # 1. Default full snapshot preserves raw bytes and bundle SHA-256 across round-trip rehydration
+        full_snap = reg.export_snapshot_dict(include_raw_content=True)
+        self.assertEqual(full_snap["snapshot_mode"], SNAPSHOT_MODE_FULL_WITH_RAW)
+        self.assertIsInstance(full_snap["raw_content_b64"], dict)
+        self.assertEqual(full_snap["raw_content_bundle_sha256"], canonical_sha256(full_snap["raw_content_b64"]))
+
+        restored_full = EvidenceRegistry.from_snapshot_dict(full_snap)
+        ok_full, rep_full = restored_full.verify_integrity(require_raw_content=True)
+        self.assertTrue(ok_full, rep_full)
+        self.assertTrue(rep_full["full_content_archive_verified"])
+        self.assertEqual(rep_full["raw_content_verified_count"], 2)
+        self.assertEqual(rep_full["raw_content_missing_ids"], [])
+        self.assertEqual(restored_full.get_raw_bytes(rec1.evidence_id), raw_1)
+        self.assertEqual(restored_full.get_raw_bytes(rec2.evidence_id), raw_2)
+
+        # 2. Tampering 1 byte of raw_content_b64 (both with and without bundle digest recomputation) fails closed
+        tampered_b64_only = reg.export_snapshot_dict(include_raw_content=True)
+        tampered_b64_only["raw_content_b64"][rec1.evidence_id] = base64.b64encode(raw_1 + b"!").decode("ascii")
+        with self.assertRaises(EvidenceRegistryError) as ctx_b1:
+            EvidenceRegistry.from_snapshot_dict(tampered_b64_only)
+        self.assertEqual(ctx_b1.exception.error_code, "RAW_CONTENT_BUNDLE_SHA256_MISMATCH")
+
+        tampered_with_recomputed_bundle = reg.export_snapshot_dict(include_raw_content=True)
+        tampered_with_recomputed_bundle["raw_content_b64"][rec1.evidence_id] = base64.b64encode(raw_1 + b"!").decode("ascii")
+        tampered_with_recomputed_bundle["raw_content_bundle_sha256"] = canonical_sha256(
+            tampered_with_recomputed_bundle["raw_content_b64"]
+        )
+        with self.assertRaises(EvidenceRegistryError) as ctx_b2:
+            EvidenceRegistry.from_snapshot_dict(tampered_with_recomputed_bundle)
+        self.assertEqual(ctx_b2.exception.error_code, "REGISTRY_SNAPSHOT_INTEGRITY_FAILED")
+
+        # Stray key in raw_content_b64 rejected even with recomputed bundle digest
+        stray_key_snap = reg.export_snapshot_dict(include_raw_content=True)
+        stray_key_snap["raw_content_b64"]["EVD-STRAY-999999"] = base64.b64encode(b"stray").decode("ascii")
+        stray_key_snap["raw_content_bundle_sha256"] = canonical_sha256(stray_key_snap["raw_content_b64"])
+        with self.assertRaises(EvidenceRegistryError) as ctx_stray:
+            EvidenceRegistry.from_snapshot_dict(stray_key_snap)
+        self.assertEqual(ctx_stray.exception.error_code, "RAW_CONTENT_MISSING_OR_CORRUPT_IN_SNAPSHOT")
+
+        # 3. Metadata-only snapshot fails closed on default from_snapshot_dict(), verify_integrity(), AND answer building
+        meta_snap = reg.export_snapshot_dict(include_raw_content=False)
+        self.assertEqual(meta_snap["snapshot_mode"], SNAPSHOT_MODE_METADATA_ONLY)
+        self.assertIsNone(meta_snap["raw_content_b64"])
+
+        with self.assertRaises(EvidenceRegistryError) as ctx_meta_default:
+            EvidenceRegistry.from_snapshot_dict(meta_snap)
+        self.assertEqual(ctx_meta_default.exception.error_code, "RAW_CONTENT_REQUIRED_FOR_METADATA_ONLY_SNAPSHOT")
+
+        meta_only_reg = EvidenceRegistry.from_snapshot_dict(meta_snap, require_raw_content=False)
+        ok_strict, rep_strict = meta_only_reg.verify_integrity(require_raw_content=True)
+        self.assertFalse(ok_strict)
+        self.assertFalse(rep_strict["full_content_archive_verified"])
+        self.assertEqual(rep_strict["raw_content_verified_count"], 0)
+        self.assertEqual(set(rep_strict["raw_content_missing_ids"]), {rec1.evidence_id, rec2.evidence_id})
+        self.assertTrue(any("RAW_CONTENT_UNAVAILABLE_FOR_VERIFICATION" in e for e in rep_strict["errors"]))
+
+        ok_relaxed, rep_relaxed = meta_only_reg.verify_integrity(require_raw_content=False)
+        self.assertTrue(ok_relaxed)
+        self.assertFalse(rep_relaxed["full_content_archive_verified"])
+
+        with self.assertRaises(AnswerLinkageError) as ctx_ans_meta:
+            EvidenceBackedLegalAnswerBuilder(meta_only_reg).build_answer(
+                query="Ham içeriksiz anlık görüntüden cevap bağlanabilir mi?",
+                answer_text="Bağlanamamalıdır.",
+                evidence_ids=[rec1.evidence_id],
+                as_of_date="2025-06-01",
+            )
+        self.assertEqual(ctx_ans_meta.exception.error_code, "EVIDENCE_REGISTRY_INTEGRITY_FAILED")
+
+        # 4. FileSystemContentStore: write-once persistence, symlink rejection, and metadata-only + store rehydration
+        with tempfile.TemporaryDirectory() as tmpdir:
+            store_dir = Path(tmpdir) / "raw_archive"
+            fs_store = FileSystemContentStore(store_dir)
+            fs_reg = EvidenceRegistry(content_store=fs_store)
+            fs_rec = fs_reg.register(
+                MevzuatAdapter(transport=_make_ok_transport(raw_1)).acquire_and_validate(
+                    SourceDocumentRequest(
+                        source_key="KANUN-4857-FS",
+                        source_url="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857&fs=1",
+                        title="4857 Sayılı İş Kanunu Madde 18",
+                        publication_date="2025-01-01",
+                        effective_date="2025-01-01",
+                        adapter_metadata={"mevzuat_no": "4857", "mevzuat_turu": "KANUN"},
+                    )
+                )
+            )
+            self.assertTrue((store_dir / f"{fs_rec.evidence_id}.bin").is_file())
+            self.assertEqual(fs_reg.get_raw_bytes(fs_rec.evidence_id), raw_1)
+
+            # Write-once rejects silent overwrite
+            with self.assertRaises(EvidenceRegistryError) as ctx_ow:
+                fs_store.put(fs_rec.evidence_id, b"overwrite attempt")
+            self.assertEqual(ctx_ow.exception.error_code, "CONTENT_STORE_OVERWRITE_FORBIDDEN")
+
+            # Rehydrating metadata-only snapshot WITH FileSystemContentStore succeeds with full verification
+            fs_meta_snap = fs_reg.export_snapshot_dict(include_raw_content=False)
+            rehydrated_fs = EvidenceRegistry.from_snapshot_dict(
+                fs_meta_snap,
+                content_store=FileSystemContentStore(store_dir),
+                require_raw_content=True,
+            )
+            ok_fs, rep_fs = rehydrated_fs.verify_integrity(require_raw_content=True)
+            self.assertTrue(ok_fs, rep_fs)
+            self.assertTrue(rep_fs["full_content_archive_verified"])
+            self.assertEqual(rehydrated_fs.get_raw_bytes(fs_rec.evidence_id), raw_1)
+
+            # Conflicting bytes between pre-populated FileSystemContentStore and full snapshot fail closed
+            conflict_full_snap = fs_reg.export_snapshot_dict(include_raw_content=True)
+            conflict_full_snap["raw_content_b64"][fs_rec.evidence_id] = base64.b64encode(raw_1 + b"X").decode("ascii")
+            conflict_full_snap["raw_content_bundle_sha256"] = canonical_sha256(conflict_full_snap["raw_content_b64"])
+            with self.assertRaises(EvidenceRegistryError) as ctx_conf:
+                EvidenceRegistry.from_snapshot_dict(
+                    conflict_full_snap,
+                    content_store=FileSystemContentStore(store_dir),
+                    require_raw_content=True,
+                )
+            self.assertEqual(ctx_conf.exception.error_code, "RAW_CONTENT_STORE_SNAPSHOT_CONFLICT")
+
+            # Symlinked store directory (existing & broken) and symlinked blob file rejected fail-closed
+            symlink_dir = Path(tmpdir) / "symlink_store"
+            os.symlink(store_dir, symlink_dir)
+            with self.assertRaises(EvidenceRegistryError) as ctx_sdir:
+                FileSystemContentStore(symlink_dir)
+            self.assertEqual(ctx_sdir.exception.error_code, "INVALID_CONTENT_STORE_DIR")
+
+            broken_symlink_dir = Path(tmpdir) / "broken_symlink_store"
+            os.symlink(Path(tmpdir) / "nonexistent_target", broken_symlink_dir)
+            with self.assertRaises(EvidenceRegistryError) as ctx_bsdir:
+                FileSystemContentStore(broken_symlink_dir)
+            self.assertEqual(ctx_bsdir.exception.error_code, "INVALID_CONTENT_STORE_DIR")
+
+            outside_file = Path(tmpdir) / "outside.bin"
+            outside_file.write_bytes(raw_1)
+            (store_dir / f"{fs_rec.evidence_id}.bin").unlink()
+            os.symlink(outside_file, store_dir / f"{fs_rec.evidence_id}.bin")
+            ok_sym_blob, rep_sym_blob = rehydrated_fs.verify_integrity(require_raw_content=True)
+            self.assertFalse(ok_sym_blob)
+            self.assertTrue(any("symlink" in e.lower() for e in rep_sym_blob["errors"]))
+
+    def test_10_document_content_mismatch_rejection_and_unparseable_binary_honest_status(self) -> None:
+        """PR #3 Finding 2: reject mismatched official-domain pages across all 6 adapters; classify scanned PDF honestly."""
+        reg = EvidenceRegistry()
+
+        # 1. Unrelated HTML from allowed official domains MUST fail with STATUS_REJECTED_CONTENT_MISMATCH
+        mismatch_cases = [
+            (
+                ResmiGazeteAdapter,
+                SourceDocumentRequest(
+                    source_key="RG-MISMATCH-ISSUE",
+                    source_url="https://www.resmigazete.gov.tr/eskiler/2024/12/20241228-1.htm",
+                    title="2025 Yılı Asgari Ücret Kararı",
+                    publication_date="2024-12-28",
+                    effective_date="2025-01-01",
+                    adapter_metadata={"gazette_number": "32766"},
+                ),
+                b"<html><body>Resmi Gazete Sayi 32999 - Tamamen farkli tarim tebligi metni.</body></html>",
+                "RESMI_GAZETE_CONTENT_MISMATCH",
+            ),
+            (
+                ResmiGazeteAdapter,
+                SourceDocumentRequest(
+                    source_key="RG-MISMATCH-ERROR-PAGE",
+                    source_url="https://www.resmigazete.gov.tr/eskiler/2024/12/20241228-1.htm",
+                    title="2025 Yılı Asgari Ücret Kararı",
+                    publication_date="2024-12-28",
+                    effective_date="2025-01-01",
+                    adapter_metadata={"gazette_number": "32766"},
+                ),
+                b"<html><body>Resmi Gazete 32766 sayfasi sistem bakimi nedeniyle goruntulenemedi.</body></html>",
+                "RESMI_GAZETE_CONTENT_MISMATCH",
+            ),
+            (
+                MevzuatAdapter,
+                SourceDocumentRequest(
+                    source_key="KANUN-4857-MISMATCH",
+                    source_url="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857",
+                    title="4857 Sayılı İş Kanunu",
+                    publication_date="2003-06-10",
+                    effective_date="2003-06-10",
+                    adapter_metadata={"mevzuat_no": "4857", "mevzuat_turu": "KANUN"},
+                ),
+                b"<html><body>5510 Sayili Sosyal Sigortalar ve Genel Saglik Sigortasi Kanunu metni.</body></html>",
+                "MEVZUAT_CONTENT_MISMATCH",
+            ),
+            (
+                SgkAdapter,
+                SourceDocumentRequest(
+                    source_key="SGK-MISMATCH-1",
+                    source_url="https://www.sgk.gov.tr/Duyuru/Detay/2026-15",
+                    title="SGK 2026/15 Sayılı İşveren İşlemleri Genelgesi",
+                    publication_date="2026-02-01",
+                    effective_date="2026-02-01",
+                    adapter_metadata={"document_type": "GENELGE", "reference_no": "2026/15"},
+                ),
+                b"<html><body>SGK 2024/02 duyurusu - ilgisiz emekli ikramiyesi haberi.</body></html>",
+                "SGK_CONTENT_MISMATCH",
+            ),
+            (
+                IskurAdapter,
+                SourceDocumentRequest(
+                    source_key="ISKUR-MISMATCH-1",
+                    source_url="https://www.iskur.gov.tr/mevzuat/kco-2026",
+                    title="İŞKUR Kısa Çalışma Ödeneği Usul ve Esasları",
+                    publication_date="2026-01-15",
+                    effective_date="2026-02-01",
+                    adapter_metadata={"document_type": "USUL_VE_ESASLAR", "reference_no": "ISKUR-2026/01"},
+                ),
+                b"<html><body>ISKUR genel duyuru sayfasi - mesleki egitim fuari takvimi.</body></html>",
+                "ISKUR_CONTENT_MISMATCH",
+            ),
+            (
+                YargitayAdapter,
+                SourceDocumentRequest(
+                    source_key="YARG-MISMATCH-1",
+                    source_url="https://karararama.yargitay.gov.tr/karar/2025-4500",
+                    title="Yargıtay 9. Hukuk Dairesi Fazla Mesai Kararı",
+                    publication_date="2025-05-20",
+                    effective_date="2025-05-20",
+                    adapter_metadata={
+                        "chamber": "9. Hukuk Dairesi",
+                        "esas_no": "2025/1200",
+                        "karar_no": "2025/4500",
+                        "decision_date": "2025-04-10",
+                    },
+                ),
+                b"<html><body>Yargitay 9. HD E. 2024/111 K. 2024/222 bambaska bir karar metni.</body></html>",
+                "YARGITAY_CONTENT_MISMATCH",
+            ),
+            (
+                DanistayAdapter,
+                SourceDocumentRequest(
+                    source_key="DAN-MISMATCH-1",
+                    source_url="https://karararama.danistay.gov.tr/karar/2025-110",
+                    title="Danıştay 10. Daire SGK İdari Para Cezası Kararı",
+                    publication_date="2025-06-05",
+                    effective_date="2025-06-05",
+                    adapter_metadata={
+                        "chamber": "10. Daire",
+                        "esas_no": "2024/880",
+                        "karar_no": "2025/110",
+                        "decision_date": "2025-03-18",
+                    },
+                ),
+                b"<html><body>Danistay 4. Daire E. 2023/10 K. 2024/50 vergi uyusmazligi karari.</body></html>",
+                "DANISTAY_CONTENT_MISMATCH",
+            ),
+        ]
+
+        for adapter_cls, req, wrong_html, exp_code in mismatch_cases:
+            res = adapter_cls(transport=_make_ok_transport(wrong_html)).acquire_and_validate(req)
+            self.assertFalse(res.ok, exp_code)
+            self.assertEqual(res.status, STATUS_REJECTED_CONTENT_MISMATCH, exp_code)
+            self.assertIn(exp_code, res.error_codes, exp_code)
+            self.assertFalse(res.record.content_verified, exp_code)
+            self.assertFalse(res.record.is_verified_authority, exp_code)
+            self.assertEqual(res.record.content_verification.get("content_match_status"), CONTENT_MATCH_MISMATCH)
+            with self.assertRaises(EvidenceRegistryError) as reg_exc:
+                reg.register(res)
+            self.assertEqual(reg_exc.exception.error_code, "UNREACHABLE_OR_UNVERIFIED_EVIDENCE_REJECTED")
+
+        # 2. Opaque image-only / scanned PDF MUST return STATUS_TRANSPORT_ONLY_UNVERIFIED_CONTENT (NEVER VERIFIED_LIVE)
+        scanned_pdf = (
+            b"%PDF-1.7\n"
+            b"1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n"
+            b"2 0 obj\n<< /Type /XObject /Subtype /Image /Width 800 /Height 1200 /Length 16 >>\n"
+            b"stream\n\xff\xd8\xff\xe0\x00\x10\x01\x02\x89\xab\xcd\xef\x00\xfe\xff\xd9\nendstream\nendobj\n"
+            b"%%EOF"
+        )
+        sgk_req = SourceDocumentRequest(
+            source_key="SGK-SCANNED-2026-15",
+            source_url="https://www.sgk.gov.tr/Duyuru/Detay/2026-15-genelge.pdf",
+            title="SGK 2026/15 Sayılı İşveren İşlemleri Genelgesi",
+            publication_date="2026-02-01",
+            effective_date="2026-02-01",
+            adapter_metadata={"document_type": "GENELGE", "reference_no": "2026/15"},
+        )
+        res_scan = SgkAdapter(
+            transport=_make_ok_transport(scanned_pdf, content_type="application/pdf")
+        ).acquire_and_validate(sgk_req)
+        self.assertFalse(res_scan.ok)
+        self.assertEqual(res_scan.status, STATUS_TRANSPORT_ONLY_UNVERIFIED_CONTENT)
+        self.assertEqual(res_scan.error_codes, ("DOCUMENT_CONTENT_UNPARSEABLE_BINARY",))
+        self.assertFalse(res_scan.record.content_verified)
+        self.assertFalse(res_scan.record.live_verified)
+        self.assertFalse(res_scan.record.is_verified_authority)
+        self.assertEqual(
+            res_scan.record.content_verification.get("content_match_status"),
+            CONTENT_MATCH_UNPARSEABLE_BINARY,
+        )
+        self.assertEqual(res_scan.record.content_sha256, hashlib.sha256(scanned_pdf).hexdigest())
+        self.assertEqual(res_scan.raw_bytes, scanned_pdf)
+        with self.assertRaises(EvidenceRegistryError) as scan_reg_exc:
+            reg.register(res_scan)
+        self.assertEqual(scan_reg_exc.exception.error_code, "UNREACHABLE_OR_UNVERIFIED_EVIDENCE_REJECTED")
+
+        # 3. FlateDecode compressed PDF stream with real Turkish text IS parsed via stdlib zlib and matched!
+        good_stream = zlib.compress(b"T.C. Sosyal Guvenlik Kurumu (SGK) 2026/15 Sayili Isveren Islemleri Genelgesi")
+        flate_pdf_ok = (
+            b"%PDF-1.7\n1 0 obj\n<< /Filter /FlateDecode /Length "
+            + str(len(good_stream)).encode("ascii")
+            + b" >>\nstream\n"
+            + good_stream
+            + b"\nendstream\nendobj\n%%EOF"
+        )
+        res_flate_ok = SgkAdapter(
+            transport=_make_ok_transport(flate_pdf_ok, content_type="application/pdf")
+        ).acquire_and_validate(sgk_req)
+        self.assertTrue(res_flate_ok.ok, res_flate_ok.errors)
+        self.assertTrue(res_flate_ok.record.content_verified)
+        self.assertEqual(res_flate_ok.record.content_verification.get("extracted_text_format"), "PDF_TEXT_STREAM")
+
+        bad_stream = zlib.compress(b"T.C. Sosyal Guvenlik Kurumu (SGK) 2019/01 eski duyuru metni")
+        flate_pdf_bad = (
+            b"%PDF-1.7\n1 0 obj\n<< /Filter /FlateDecode /Length "
+            + str(len(bad_stream)).encode("ascii")
+            + b" >>\nstream\n"
+            + bad_stream
+            + b"\nendstream\nendobj\n%%EOF"
+        )
+        res_flate_bad = SgkAdapter(
+            transport=_make_ok_transport(flate_pdf_bad, content_type="application/pdf")
+        ).acquire_and_validate(sgk_req)
+        self.assertFalse(res_flate_bad.ok)
+        self.assertEqual(res_flate_bad.status, STATUS_REJECTED_CONTENT_MISMATCH)
+        self.assertIn("SGK_CONTENT_MISMATCH", res_flate_bad.error_codes)
+
+    def test_11_answer_traceability_registry_head_match_growth_and_forked_rejection(self) -> None:
+        """PR #3 Finding 3: verify answer.registry_head_sha256 exact match, growth policy, post-dating, and fork rejection."""
+        reg = EvidenceRegistry()
+        rec1 = reg.register(
+            MevzuatAdapter(
+                transport=_make_ok_transport(b"<html><body>4857 Sayili Is Kanunu Madde 17 temel metni.</body></html>")
+            ).acquire_and_validate(
+                SourceDocumentRequest(
+                    source_key="KANUN-4857-HEAD",
+                    source_url="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4857&h=1",
+                    title="4857 Sayılı İş Kanunu Madde 17",
+                    publication_date="2025-01-01",
+                    effective_date="2025-01-01",
+                    adapter_metadata={"mevzuat_no": "4857", "mevzuat_turu": "KANUN"},
+                )
+            )
+        )
+        head_after_rec1 = reg.head_sha256
+
+        builder = EvidenceBackedLegalAnswerBuilder(reg)
+        ans1 = builder.build_answer(
+            query="4857 m.17 bildirim süreleri nedir?",
+            answer_text="4857 sayılı İş Kanunu m.17 uyarınca kıdeme göre bildirim süreleri uygulanır.",
+            evidence_ids=[rec1.evidence_id],
+            as_of_date="2026-06-01",
+        )
+        self.assertEqual(ans1.registry_head_sha256, head_after_rec1)
+
+        # 1. Exact head match -> valid=True, EXACT_HEAD_MATCH, answer_bound_to_older_snapshot=False
+        ok_exact, rep_exact = verify_answer_traceability(ans1, reg)
+        self.assertTrue(ok_exact, rep_exact)
+        self.assertEqual(rep_exact["registry_head_status"], HEAD_STATUS_EXACT_MATCH)
+        self.assertFalse(rep_exact["answer_bound_to_older_snapshot"])
+        self.assertTrue(rep_exact["full_content_archive_verified"])
+
+        # 2. Registry grows (append rec2): default verify_answer_traceability() FAILS CLOSED!
+        rec2 = reg.register(
+            ResmiGazeteAdapter(
+                transport=_make_ok_transport(
+                    b"<html><body>Resmi Gazete Sayi 32766 - 2025 Asgari Ucret Karari metni.</body></html>"
+                )
+            ).acquire_and_validate(
+                SourceDocumentRequest(
+                    source_key="RG-32766-HEAD",
+                    source_url="https://www.resmigazete.gov.tr/eskiler/2024/12/20241228-1.htm",
+                    title="2025 Yılı Asgari Ücret Kararı",
+                    publication_date="2024-12-28",
+                    effective_date="2025-01-01",
+                    adapter_metadata={"gazette_number": "32766"},
+                )
+            )
+        )
+        self.assertNotEqual(reg.head_sha256, head_after_rec1)
+
+        ok_grew_strict, rep_grew_strict = verify_answer_traceability(ans1, reg)
+        self.assertFalse(ok_grew_strict)
+        self.assertEqual(rep_grew_strict["registry_head_status"], HEAD_STATUS_HISTORICAL_GREW)
+        self.assertTrue(rep_grew_strict["answer_bound_to_older_snapshot"])
+        self.assertTrue(any("REGISTRY_HEAD_MISMATCH_HISTORICAL_SNAPSHOT" in e for e in rep_grew_strict["errors"]))
+
+        # 3. Explicit allow_registry_growth=True passes while transparently reporting older snapshot binding
+        ok_grew_allowed, rep_grew_allowed = verify_answer_traceability(ans1, reg, allow_registry_growth=True)
+        self.assertTrue(ok_grew_allowed, rep_grew_allowed)
+        self.assertEqual(rep_grew_allowed["registry_head_status"], HEAD_STATUS_HISTORICAL_GREW)
+        self.assertTrue(rep_grew_allowed["answer_bound_to_older_snapshot"])
+
+        # 4. Post-dating attack: answer claiming older head_after_rec1 while citing rec2 (appended AFTER rec1) fails closed!
+        ans2 = builder.build_answer(
+            query="Asgari ücret kararı nedir?",
+            answer_text="32766 sayılı Resmî Gazete kararı geçerlidir.",
+            evidence_ids=[rec2.evidence_id],
+            as_of_date="2026-06-01",
+        )
+        postdated_sha = _compute_answer_sha256(
+            query=ans2.query,
+            as_of_date=ans2.as_of_date,
+            generated_at_utc=ans2.generated_at_utc,
+            answer_text=ans2.answer_text,
+            evidence_links=ans2.evidence_links,
+            historical_disclosure_text=ans2.historical_disclosure_text,
+            registry_head_sha256=head_after_rec1,
+        )
+        postdated_ans = replace(
+            ans2,
+            registry_head_sha256=head_after_rec1,
+            answer_sha256=postdated_sha,
+            answer_id=f"ANS-HUKUKSGK-{postdated_sha[:14].upper()}",
+        )
+        ok_postdated, rep_postdated = verify_answer_traceability(postdated_ans, reg, allow_registry_growth=True)
+        self.assertFalse(ok_postdated)
+        self.assertTrue(any("EVIDENCE_POSTDATES_ANSWER_REGISTRY_HEAD" in e for e in rep_postdated["errors"]))
+
+        # 5. Unknown / forked registry_head_sha256 ALWAYS fails closed — even with allow_registry_growth=True!
+        forged_head = "f" * 64
+        forged_sha = _compute_answer_sha256(
+            query=ans1.query,
+            as_of_date=ans1.as_of_date,
+            generated_at_utc=ans1.generated_at_utc,
+            answer_text=ans1.answer_text,
+            evidence_links=ans1.evidence_links,
+            historical_disclosure_text=ans1.historical_disclosure_text,
+            registry_head_sha256=forged_head,
+        )
+        forged_ans = replace(
+            ans1,
+            registry_head_sha256=forged_head,
+            answer_sha256=forged_sha,
+            answer_id=f"ANS-HUKUKSGK-{forged_sha[:14].upper()}",
+        )
+        for allow_growth in (False, True):
+            ok_fork, rep_fork = verify_answer_traceability(forged_ans, reg, allow_registry_growth=allow_growth)
+            self.assertFalse(ok_fork)
+            self.assertEqual(rep_fork["registry_head_status"], HEAD_STATUS_UNKNOWN_OR_FORKED)
+            self.assertFalse(rep_fork["answer_bound_to_older_snapshot"])
+            self.assertTrue(any("REGISTRY_HEAD_UNKNOWN_OR_FORKED" in e for e in rep_fork["errors"]))
+
+        # 6. Metadata-only registry fails default verify_answer_traceability(require_raw_content=True)
+        meta_snap = reg.export_snapshot_dict(include_raw_content=False)
+        meta_reg = EvidenceRegistry.from_snapshot_dict(meta_snap, require_raw_content=False)
+        ok_meta_tr, rep_meta_tr = verify_answer_traceability(ans2, meta_reg)
+        self.assertFalse(ok_meta_tr)
+        self.assertFalse(rep_meta_tr["full_content_archive_verified"])
 
 
 if __name__ == "__main__":

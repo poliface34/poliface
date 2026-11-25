@@ -1,13 +1,18 @@
-"""Common fail-closed SourceAdapter contract (hrAI @HukukSGK v1.0.6 WP2.1).
+"""Common fail-closed SourceAdapter contract with Document Content-vs-Metadata Verification (hrAI @HukukSGK v1.0.6 WP2.1).
 
 Reuses `engine/trust_root/source_acquisition.py` HTTPS/domain/TLS verification primitives and enforces:
   - HTTPS-only allowlisted official domain URLs (rejects generic root homepages `/` and userinfo).
   - Strict separation of `publication_date` vs `effective_date` (and optional `expiry_or_repeal_date`).
-  - Strict separation of `LIVE_HTTPS` (only via real `LiveHttpsSourceFetcher`) vs `INJECTED_TEST_TRANSPORT`
-    (callback spoofing of `LIVE_HTTPS` is unconditionally blocked).
-  - Fail-closed handling of unreachable sources (timeout, network error, HTTP != 200 -> `UNREACHABLE_NOT_VERIFIED`,
-    NEVER marked verified).
-  - Real SHA-256 content digest computation + optional expected digest verification.
+  - Strict separation of `LIVE_HTTPS` (only via real `LiveHttpsSourceFetcher` with subset domain scope)
+    vs `INJECTED_TEST_TRANSPORT` (callback spoofing of `LIVE_HTTPS` is unconditionally blocked).
+  - Fail-closed handling of unreachable sources (timeout, network error, HTTP != 200 -> `UNREACHABLE_NOT_VERIFIED`).
+  - PR #3 Finding 2 remediation: parses downloaded document content (HTML/text/PDF text streams) and
+    matches declared document identifiers (gazette/mevzuat/reference/Esas-Karar numbers, title/date
+    markers) against actual downloaded bytes. Transport/TLS alone NEVER yields `VERIFIED_LIVE`:
+      * Extractable text mismatch -> `REJECTED_CONTENT_MISMATCH` (`ok=False`, fail-closed).
+      * Unparseable opaque binary (e.g. image-only PDF) -> `TRANSPORT_ONLY_UNVERIFIED_CONTENT`
+        (`ok=False`, `content_verified=False`, `live_verified=False`, NEVER `VERIFIED_LIVE`).
+      * Full content + metadata match -> `VERIFIED_LIVE` (real HTTPS) or `VERIFIED_TEST_TRANSPORT`.
 """
 
 from __future__ import annotations
@@ -16,8 +21,11 @@ from abc import ABC, abstractmethod
 import copy
 from datetime import datetime, timezone
 import hashlib
+import html
+import re
 from typing import Any, Callable
 from urllib.parse import urlparse
+import zlib
 
 from ..trust_root.source_acquisition import (
     LiveHttpsSourceFetcher,
@@ -25,8 +33,14 @@ from ..trust_root.source_acquisition import (
     validate_official_https_url,
 )
 from .models import (
+    CONTENT_MATCH_MATCHED,
+    CONTENT_MATCH_MISMATCH,
+    CONTENT_MATCH_NOT_EVALUATED,
+    CONTENT_MATCH_UNPARSEABLE_BINARY,
     GENESIS_CHAIN_HASH,
+    STATUS_REJECTED_CONTENT_MISMATCH,
     STATUS_REJECTED_INVALID_SOURCE,
+    STATUS_TRANSPORT_ONLY_UNVERIFIED_CONTENT,
     STATUS_UNREACHABLE_NOT_VERIFIED,
     STATUS_VERIFIED_LIVE,
     STATUS_VERIFIED_TEST_TRANSPORT,
@@ -47,6 +61,204 @@ from .models import (
 
 TransportCallable = Callable[[str], dict[str, Any]]
 MIN_DOCUMENT_BYTES = 20
+_MAX_PDF_INFLATE_BYTES = 2 * 1024 * 1024
+
+_TR_FOLD_TABLE = str.maketrans(
+    {
+        "İ": "i",
+        "I": "i",
+        "ı": "i",
+        "Ş": "s",
+        "ş": "s",
+        "Ğ": "g",
+        "ğ": "g",
+        "Ü": "u",
+        "ü": "u",
+        "Ö": "o",
+        "ö": "o",
+        "Ç": "c",
+        "ç": "c",
+    }
+)
+_SCRIPT_STYLE_RE = re.compile(r"<(?:script|style)\b[^>]*>.*?</(?:script|style)>", re.IGNORECASE | re.DOTALL)
+_HTML_TAG_RE = re.compile(r"<[^>]+>")
+_PDF_STREAM_RE = re.compile(rb"stream\r?\n(.*?)\r?\nendstream", re.DOTALL)
+_PDF_STRUCTURAL_TOKENS: frozenset[str] = frozenset(
+    {
+        "pdf",
+        "obj",
+        "endobj",
+        "xref",
+        "trailer",
+        "startxref",
+        "eof",
+        "stream",
+        "endstream",
+        "type",
+        "catalog",
+        "pages",
+        "page",
+        "length",
+        "filter",
+        "flatedecode",
+        "image",
+        "xobject",
+        "subtype",
+        "width",
+        "height",
+        "bitspercomponent",
+        "colorspace",
+        "devicergb",
+        "devicegray",
+    }
+)
+_STOPWORDS: frozenset[str] = frozenset(
+    {
+        "ve",
+        "veya",
+        "ile",
+        "bir",
+        "bu",
+        "da",
+        "de",
+        "icin",
+        "gore",
+        "hakkinda",
+        "iliskin",
+        "sayili",
+        "yili",
+        "karari",
+        "metni",
+        "eski",
+        "guncel",
+        "surumu",
+    }
+)
+
+
+def normalize_turkish_text(text: str) -> str:
+    """Fold Turkish characters and case to normalized ASCII-friendly lowercase with collapsed whitespace."""
+    folded = text.translate(_TR_FOLD_TABLE).lower()
+    return re.sub(r"\s+", " ", folded).strip()
+
+
+def has_exact_identifier(normalized_text: str, identifier: str) -> bool:
+    """Return True iff `identifier` appears in `normalized_text` with non-alphanumeric boundaries."""
+    needle = normalize_turkish_text(identifier)
+    if not needle:
+        return False
+    pattern = r"(?<![a-z0-9])" + re.escape(needle) + r"(?![a-z0-9])"
+    return bool(re.search(pattern, normalized_text))
+
+
+def extract_title_keywords(title: str) -> list[str]:
+    """Extract normalized significant keywords (`len >= 3`) from a declared document title."""
+    norm = normalize_turkish_text(title)
+    tokens = re.findall(r"[a-z0-9]+", norm)
+    out: list[str] = []
+    seen: set[str] = set()
+    for tok in tokens:
+        if len(tok) >= 3 and tok not in _STOPWORDS and tok not in seen:
+            seen.add(tok)
+            out.append(tok)
+    return out
+
+
+def format_turkish_date_variants(iso_date: str) -> tuple[str, ...]:
+    """Return normalized textual representations of an ISO date (`YYYY-MM-DD`, `DD.MM.YYYY`, `DD/MM/YYYY`)."""
+    parts = iso_date.strip().split("-")
+    if len(parts) != 3:
+        return (iso_date.strip(),)
+    yyyy, mm, dd = parts
+    return (
+        f"{yyyy}-{mm}-{dd}",
+        f"{dd}.{mm}.{yyyy}",
+        f"{int(dd)}.{int(mm)}.{yyyy}",
+        f"{dd}/{mm}/{yyyy}",
+    )
+
+
+_PDF_DICT_RE = re.compile(rb"<<.*?>>", re.DOTALL)
+_PDF_OBJ_HDR_RE = re.compile(rb"\b\d+\s+\d+\s+(?:obj|R)\b|\b(?:endobj|xref|trailer|startxref)\b|%PDF-\d+\.\d+|%%EOF")
+
+
+def _is_mostly_printable_text(data: bytes) -> bool:
+    if not data or b"\x00" in data:
+        return False
+    printable = sum(1 for b in data if b in (9, 10, 13) or 32 <= b <= 126 or b >= 128)
+    return (printable / len(data)) >= 0.85
+
+
+def extract_document_text(raw_bytes: bytes, content_type: str = "") -> tuple[str, str]:
+    """Extract human-readable text from downloaded HTML/text/PDF bytes using stdlib only.
+
+    Returns `(extracted_text, format_label)` where `format_label` is one of:
+      - `"TEXT_HTML"`
+      - `"PDF_TEXT_STREAM"`
+      - `"UNPARSEABLE_BINARY"`
+    """
+    is_pdf = raw_bytes.startswith(b"%PDF-") or "application/pdf" in content_type.lower()
+    if is_pdf:
+        chunks: list[str] = []
+        # 1. Decompress bounded FlateDecode streams (bomb-safe) or accept printable text streams; skip binary/image streams
+        total_inflated = 0
+        for m in _PDF_STREAM_RE.finditer(raw_bytes):
+            remaining = _MAX_PDF_INFLATE_BYTES - total_inflated
+            if remaining <= 0:
+                break
+            preceding_hdr = raw_bytes[max(0, m.start() - 256) : m.start()]
+            if re.search(rb"/Subtype\s*/Image|/DCTDecode|/JPXDecode|/CCITTFaxDecode|/JBIG2Decode", preceding_hdr):
+                continue
+            stream_data = m.group(1)
+            decompressed: bytes | None = None
+            try:
+                decompressor = zlib.decompressobj()
+                cand = decompressor.decompress(stream_data, remaining)
+                if cand and _is_mostly_printable_text(cand):
+                    decompressed = cand
+            except zlib.error:
+                if _is_mostly_printable_text(stream_data[:remaining]):
+                    decompressed = stream_data[:remaining]
+            if decompressed:
+                total_inflated += len(decompressed)
+                chunks.append(decompressed.decode("utf-8", errors="ignore"))
+
+        # 2. Extract readable printable text runs outside binary streams and PDF dictionaries/object headers
+        outside_streams = _PDF_STREAM_RE.sub(b" ", raw_bytes)
+        outside_dicts = _PDF_DICT_RE.sub(b" ", outside_streams)
+        outside_struct = _PDF_OBJ_HDR_RE.sub(b" ", outside_dicts)
+        printable_runs = re.findall(rb"[A-Za-z0-9\xC0-\xFF\s./,:;()_\-]{6,}", outside_struct)
+        for run in printable_runs:
+            chunks.append(run.decode("utf-8", errors="ignore"))
+
+        combined = " ".join(chunks)
+        norm = normalize_turkish_text(combined)
+        meaningful_words = [
+            tok for tok in re.findall(r"[a-z]{3,}", norm) if tok not in _PDF_STRUCTURAL_TOKENS
+        ]
+        if len(meaningful_words) < 3:
+            return "", "UNPARSEABLE_BINARY"
+        return combined, "PDF_TEXT_STREAM"
+
+    # Non-PDF payload: reject pure binary containing NUL bytes
+    if b"\x00" in raw_bytes:
+        return "", "UNPARSEABLE_BINARY"
+
+    try:
+        decoded = raw_bytes.decode("utf-8")
+    except UnicodeDecodeError:
+        try:
+            decoded = raw_bytes.decode("cp1254")
+        except UnicodeDecodeError:
+            return "", "UNPARSEABLE_BINARY"
+
+    stripped = _SCRIPT_STYLE_RE.sub(" ", decoded)
+    stripped = _HTML_TAG_RE.sub(" ", stripped)
+    stripped = html.unescape(stripped)
+    stripped = re.sub(r"\s+", " ", stripped).strip()
+    if len(stripped) < 10:
+        return "", "UNPARSEABLE_BINARY"
+    return stripped, "TEXT_HTML"
 
 
 def _validate_specific_official_url(url: str, allowed_domains: frozenset[str]) -> tuple[str | None, str | None]:
@@ -98,7 +310,16 @@ class SourceAdapter(ABC):
         raw_bytes: bytes,
         headers: dict[str, str],
     ) -> list[tuple[str, str]]:
-        """Validate source-specific metadata fields and document sanity; return list of `(error_code, message)`."""
+        """Validate source-specific metadata fields and payload sanity; return list of `(error_code, message)`."""
+
+    @abstractmethod
+    def _verify_document_content(
+        self,
+        request: SourceDocumentRequest,
+        extracted_text: str,
+        text_format: str,
+    ) -> dict[str, Any]:
+        """Match declared request identifiers/metadata against extracted document text."""
 
     def _build_failure_result(
         self,
@@ -113,13 +334,28 @@ class SourceAdapter(ABC):
         redirect_chain: tuple[str, ...] = (),
         http_status: int | None = None,
         content_type: str = "",
+        raw_bytes: bytes = b"",
+        content_sha256: str = "",
+        content_verification: dict[str, Any] | None = None,
     ) -> AcquisitionResult:
+        cv_block = copy.deepcopy(
+            content_verification
+            if content_verification is not None
+            else {
+                "content_match_status": CONTENT_MATCH_NOT_EVALUATED,
+                "extracted_text_format": "NONE",
+                "matched_fields": [],
+                "mismatched_or_missing_fields": [],
+                "extracted_evidence": {},
+            }
+        )
         fail_seed = {
             "source_key": request.source_key,
             "adapter_type": self.adapter_type,
             "source_url": request.source_url,
             "acquired_at_utc": acquired_at_utc,
             "status": status,
+            "content_sha256": content_sha256,
             "error_codes": error_codes,
         }
         ev_id = f"EVD-FAIL-{self.adapter_type}-{canonical_sha256(fail_seed)[:12].upper()}"
@@ -138,6 +374,8 @@ class SourceAdapter(ABC):
             "http_status": http_status,
             "transport_mode": transport_mode,
             "live_verified": False,
+            "content_verified": False,
+            "content_verification": cv_block,
             "adapter_metadata": copy.deepcopy(request.adapter_metadata),
         }
         meta_sha = canonical_sha256(meta_payload)
@@ -148,8 +386,8 @@ class SourceAdapter(ABC):
                 "adapter_type": self.adapter_type,
                 "version_number": 0,
                 "supersedes_evidence_id": request.supersedes_evidence_id,
-                "content_sha256": "",
-                "content_bytes_length": 0,
+                "content_sha256": content_sha256,
+                "content_bytes_length": len(raw_bytes),
                 "metadata_sha256": meta_sha,
                 "status": status,
                 "previous_record_sha256": GENESIS_CHAIN_HASH,
@@ -169,12 +407,14 @@ class SourceAdapter(ABC):
             expiry_or_repeal_date=request.expiry_or_repeal_date,
             version_number=0,
             supersedes_evidence_id=request.supersedes_evidence_id,
-            content_sha256="",
-            content_bytes_length=0,
+            content_sha256=content_sha256,
+            content_bytes_length=len(raw_bytes),
             content_type=content_type,
             http_status=http_status,
             transport_mode=transport_mode,
             live_verified=False,
+            content_verified=False,
+            content_verification=cv_block,
             status=status,
             adapter_metadata=copy.deepcopy(request.adapter_metadata),
             metadata_sha256=meta_sha,
@@ -188,21 +428,19 @@ class SourceAdapter(ABC):
             ok=False,
             status=status,
             record=rec,
-            raw_bytes=b"",
+            raw_bytes=raw_bytes,
             error_codes=tuple(error_codes),
             errors=tuple(errors),
         )
 
     def acquire_and_validate(self, request: SourceDocumentRequest) -> AcquisitionResult:
-        """Acquire document from official source, validate URL/dates/metadata/SHA-256, and return AcquisitionResult."""
+        """Acquire document from official source, validate URL/dates/metadata/SHA-256 AND match downloaded content."""
         now_utc = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
         req_errors: list[tuple[str, str]] = []
 
         # 1. Core request field validation
         if not is_valid_source_key(request.source_key):
-            req_errors.append(
-                ("INVALID_SOURCE_KEY", f"Geçersiz source_key biçimi: {request.source_key!r}")
-            )
+            req_errors.append(("INVALID_SOURCE_KEY", f"Geçersiz source_key biçimi: {request.source_key!r}"))
         if not isinstance(request.title, str) or len(request.title.strip()) < 3:
             req_errors.append(("MISSING_OR_SHORT_TITLE", "Kaynak başlığı ('title') en az 3 karakter olmalıdır."))
 
@@ -337,7 +575,9 @@ class SourceAdapter(ABC):
 
         # 3. Validate HTTP status, final URL, redirect chain, acquired_at_utc, and payload bytes
         http_status_raw = resp.get("http_status")
-        http_status = int(http_status_raw) if isinstance(http_status_raw, int) and not isinstance(http_status_raw, bool) else None
+        http_status = (
+            int(http_status_raw) if isinstance(http_status_raw, int) and not isinstance(http_status_raw, bool) else None
+        )
         final_url = str(resp.get("final_url") or request.source_url).strip()
         redirect_chain = tuple(str(u).strip() for u in (resp.get("redirect_chain") or [request.source_url]))
         raw_headers = resp.get("http_headers") or {}
@@ -375,7 +615,6 @@ class SourceAdapter(ABC):
                 content_type=content_type,
             )
 
-        # Validate final_url and every redirect hop against HTTPS + official domain allowlist
         hop_errors: list[tuple[str, str]] = []
         if not redirect_chain or redirect_chain[0] != request.source_url.strip() or redirect_chain[-1] != final_url:
             hop_errors.append(
@@ -409,7 +648,6 @@ class SourceAdapter(ABC):
         else:
             raw_bytes = bytes(raw_bytes_obj)
 
-        # Validate real live TLS result when running in LIVE_HTTPS mode
         if is_real_live:
             tls_res = resp.get("tls_verification_result")
             if not isinstance(tls_res, dict) or tls_res.get("verified") is not True or resp.get("fetcher_mode") != "LIVE_HTTPS":
@@ -420,11 +658,9 @@ class SourceAdapter(ABC):
                     )
                 )
 
-        # Adapter-specific metadata & document validation
         if raw_bytes:
             hop_errors.extend(self._validate_adapter_specific_metadata(request, raw_bytes, headers))
 
-        # SHA-256 computation & optional expected digest check
         content_sha256 = hashlib.sha256(raw_bytes).hexdigest() if raw_bytes else ""
         if request.expected_content_sha256 is not None and content_sha256 != request.expected_content_sha256:
             hop_errors.append(
@@ -434,11 +670,13 @@ class SourceAdapter(ABC):
                 )
             )
 
+        transport_mode = TRANSPORT_LIVE_HTTPS if is_real_live else TRANSPORT_INJECTED_TEST
+
         if hop_errors:
             return self._build_failure_result(
                 request=request,
                 status=STATUS_REJECTED_INVALID_SOURCE,
-                transport_mode=TRANSPORT_LIVE_HTTPS if is_real_live else TRANSPORT_INJECTED_TEST,
+                transport_mode=transport_mode,
                 error_codes=[c for c, _ in hop_errors],
                 errors=[m for _, m in hop_errors],
                 acquired_at_utc=acquired_at_utc,
@@ -448,8 +686,69 @@ class SourceAdapter(ABC):
                 content_type=content_type,
             )
 
-        # 4. Build verified EvidenceRecord (callback transport NEVER produces live_verified=True!)
-        transport_mode = TRANSPORT_LIVE_HTTPS if is_real_live else TRANSPORT_INJECTED_TEST
+        # 4. PR #3 Finding 2: Parse downloaded document bytes and match against declared metadata!
+        extracted_text, text_format = extract_document_text(raw_bytes, content_type=content_type)
+        if text_format == "UNPARSEABLE_BINARY":
+            cv_unparseable = {
+                "content_match_status": CONTENT_MATCH_UNPARSEABLE_BINARY,
+                "extracted_text_format": "UNPARSEABLE_BINARY",
+                "matched_fields": [],
+                "mismatched_or_missing_fields": ["extractable_document_text"],
+                "extracted_evidence": {},
+            }
+            return self._build_failure_result(
+                request=request,
+                status=STATUS_TRANSPORT_ONLY_UNVERIFIED_CONTENT,
+                transport_mode=transport_mode,
+                error_codes=["DOCUMENT_CONTENT_UNPARSEABLE_BINARY"],
+                errors=[
+                    "Taşıma/HTTPS/SHA-256 tamamlandı ancak indirilen ikili belgeden (örn. taranmış PDF) "
+                    "metin ayrıştırılamadığı için içerik-metadata eşleştirmesi doğrulanamadı; "
+                    "VERIFIED_LIVE / aktif kanıt statüsü verilmedi."
+                ],
+                acquired_at_utc=acquired_at_utc,
+                final_url=final_url,
+                redirect_chain=redirect_chain,
+                http_status=http_status,
+                content_type=content_type,
+                raw_bytes=raw_bytes,
+                content_sha256=content_sha256,
+                content_verification=cv_unparseable,
+            )
+
+        content_ver = self._verify_document_content(request, extracted_text, text_format)
+        match_status = content_ver.get("content_match_status")
+        clean_cv = {
+            "content_match_status": match_status,
+            "extracted_text_format": content_ver.get("extracted_text_format", text_format),
+            "matched_fields": list(content_ver.get("matched_fields", [])),
+            "mismatched_or_missing_fields": list(content_ver.get("mismatched_or_missing_fields", [])),
+            "extracted_evidence": copy.deepcopy(dict(content_ver.get("extracted_evidence", {}))),
+        }
+
+        if match_status != CONTENT_MATCH_MATCHED:
+            err_code = str(content_ver.get("error_code") or f"{self.adapter_type}_CONTENT_MISMATCH")
+            err_msg = str(
+                content_ver.get("error_message")
+                or f"İndirilen belge içeriği beyan edilen {self.adapter_type} metadatasıyla uyuşmuyor."
+            )
+            return self._build_failure_result(
+                request=request,
+                status=STATUS_REJECTED_CONTENT_MISMATCH,
+                transport_mode=transport_mode,
+                error_codes=[err_code],
+                errors=[err_msg],
+                acquired_at_utc=acquired_at_utc,
+                final_url=final_url,
+                redirect_chain=redirect_chain,
+                http_status=http_status,
+                content_type=content_type,
+                raw_bytes=raw_bytes,
+                content_sha256=content_sha256,
+                content_verification=clean_cv,
+            )
+
+        # 5. Build content-verified EvidenceRecord (callback transport NEVER produces live_verified=True!)
         live_verified = bool(is_real_live)
         status = STATUS_VERIFIED_LIVE if live_verified else STATUS_VERIFIED_TEST_TRANSPORT
 
@@ -468,6 +767,8 @@ class SourceAdapter(ABC):
             "http_status": http_status,
             "transport_mode": transport_mode,
             "live_verified": live_verified,
+            "content_verified": True,
+            "content_verification": clean_cv,
             "adapter_metadata": copy.deepcopy(request.adapter_metadata),
         }
         meta_sha = canonical_sha256(meta_payload)
@@ -514,6 +815,8 @@ class SourceAdapter(ABC):
             http_status=http_status,
             transport_mode=transport_mode,
             live_verified=live_verified,
+            content_verified=True,
+            content_verification=clean_cv,
             status=status,
             adapter_metadata=copy.deepcopy(request.adapter_metadata),
             metadata_sha256=meta_sha,

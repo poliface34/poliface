@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import re
+from typing import Any
 
-from .adapter import SourceAdapter
+from .adapter import SourceAdapter, has_exact_identifier, normalize_turkish_text
 from .models import (
     ADAPTER_DANISTAY,
     ADAPTER_YARGITAY,
+    CONTENT_MATCH_MATCHED,
+    CONTENT_MATCH_MISMATCH,
     SourceDocumentRequest,
     TrustChainError,
     parse_strict_iso_date,
@@ -55,6 +58,80 @@ def _validate_court_decision_metadata(
     return errors
 
 
+def _match_court_decision_content(
+    *,
+    prefix: str,
+    court_marker: str,
+    request: SourceDocumentRequest,
+    extracted_text: str,
+    text_format: str,
+) -> dict[str, Any]:
+    norm = normalize_turkish_text(extracted_text)
+    chamber = str(request.adapter_metadata.get("chamber", "")).strip()
+    esas_no = str(request.adapter_metadata.get("esas_no", "")).strip()
+    karar_no = str(request.adapter_metadata.get("karar_no", "")).strip()
+
+    matched: list[str] = []
+    missing: list[str] = []
+    extracted: dict[str, Any] = {}
+
+    if court_marker in norm:
+        matched.append("court_marker")
+        extracted["court_marker"] = court_marker
+    else:
+        missing.append("court_marker")
+
+    if has_exact_identifier(norm, esas_no):
+        matched.append("esas_no")
+        extracted["esas_no"] = esas_no
+    else:
+        missing.append("esas_no")
+
+    if has_exact_identifier(norm, karar_no):
+        matched.append("karar_no")
+        extracted["karar_no"] = karar_no
+    else:
+        missing.append("karar_no")
+
+    # Match chamber number (e.g. "9" from "9. Hukuk Dairesi") or chamber phrase ("hukuk genel kurulu" / "10. daire")
+    chamber_norm = normalize_turkish_text(chamber)
+    num_match = re.match(r"^(\d+)\.", chamber_norm)
+    chamber_ok = False
+    if num_match:
+        ch_num = num_match.group(1)
+        chamber_ok = bool(re.search(rf"(?<![0-9]){re.escape(ch_num)}\s*\.\s*(?:hukuk|ceza|hd|cd|daire)", norm))
+    if not chamber_ok:
+        chamber_tokens = [t for t in re.findall(r"[a-z0-9]+", chamber_norm) if len(t) >= 3]
+        chamber_ok = bool(chamber_tokens) and all(has_exact_identifier(norm, t) for t in chamber_tokens[:2])
+
+    if chamber_ok:
+        matched.append("chamber")
+        extracted["chamber"] = chamber
+    else:
+        missing.append("chamber")
+
+    if missing:
+        return {
+            "content_match_status": CONTENT_MATCH_MISMATCH,
+            "extracted_text_format": text_format,
+            "matched_fields": matched,
+            "mismatched_or_missing_fields": missing,
+            "extracted_evidence": extracted,
+            "error_code": f"{prefix}_CONTENT_MISMATCH",
+            "error_message": (
+                f"İndirilen {prefix} kararı beyan edilen daire ({chamber}), Esas ({esas_no}) veya "
+                f"Karar ({karar_no}) bilgileriyle uyuşmuyor (eksik: {missing})."
+            ),
+        }
+    return {
+        "content_match_status": CONTENT_MATCH_MATCHED,
+        "extracted_text_format": text_format,
+        "matched_fields": matched,
+        "mismatched_or_missing_fields": [],
+        "extracted_evidence": extracted,
+    }
+
+
 class YargitayAdapter(SourceAdapter):
     """Fail-closed adapter for Yargıtay karar arama portalı (`karararama.yargitay.gov.tr`, `www.yargitay.gov.tr`)."""
 
@@ -73,6 +150,20 @@ class YargitayAdapter(SourceAdapter):
         headers: dict[str, str],
     ) -> list[tuple[str, str]]:
         return _validate_court_decision_metadata("YARGITAY", request, raw_bytes)
+
+    def _verify_document_content(
+        self,
+        request: SourceDocumentRequest,
+        extracted_text: str,
+        text_format: str,
+    ) -> dict[str, Any]:
+        return _match_court_decision_content(
+            prefix="YARGITAY",
+            court_marker="yargitay",
+            request=request,
+            extracted_text=extracted_text,
+            text_format=text_format,
+        )
 
 
 class DanistayAdapter(SourceAdapter):
@@ -93,3 +184,17 @@ class DanistayAdapter(SourceAdapter):
         headers: dict[str, str],
     ) -> list[tuple[str, str]]:
         return _validate_court_decision_metadata("DANISTAY", request, raw_bytes)
+
+    def _verify_document_content(
+        self,
+        request: SourceDocumentRequest,
+        extracted_text: str,
+        text_format: str,
+    ) -> dict[str, Any]:
+        return _match_court_decision_content(
+            prefix="DANISTAY",
+            court_marker="danistay",
+            request=request,
+            extracted_text=extracted_text,
+            text_format=text_format,
+        )

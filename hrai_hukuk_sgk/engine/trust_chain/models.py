@@ -12,10 +12,10 @@ from typing import Any
 TRUST_CHAIN_VERSION = "1.0.6-wp2"
 
 TRUST_CHAIN_LEGAL_BOUNDARY_NOTICE = (
-    "hrAI @HukukSGK v1.0.6 WP-2 güven zinciri kaynak edinimi ve kanıt bağlama katmanı teknik izlenebilirlik "
-    "ve bütünlük doğrulaması sağlar; tek başına üretim kullanım yetkisi, 5070 sayılı Kanun kapsamında "
-    "Güvenli Elektronik İmza eşdeğerliği veya 6698 sayılı KVKK m.9 yurt dışına veri aktarımı onayı vermez. "
-    "TLS el sıkışması tek başına geçmiş içerik kanıtı değildir."
+    "hrAI @HukukSGK v1.0.6 WP-2 güven zinciri kaynak edinimi ve kanıt bağlama katmanı teknik izlenebilirlik, "
+    "içerik-metadata eşleştirmesi ve bütünlük doğrulaması sağlar; tek başına üretim kullanım yetkisi, "
+    "5070 sayılı Kanun kapsamında Güvenli Elektronik İmza eşdeğerliği veya 6698 sayılı KVKK m.9 yurt dışına "
+    "veri aktarımı onayı vermez. TLS el sıkışması tek başına belge doğrulaması veya geçmiş içerik kanıtı değildir."
 )
 
 # Canonical adapter types
@@ -37,16 +37,30 @@ VALID_ADAPTER_TYPES: frozenset[str] = frozenset(
     }
 )
 
-# Transport & verification statuses
+# Transport, content-verification & evidence statuses
 TRANSPORT_LIVE_HTTPS = "LIVE_HTTPS"
 TRANSPORT_INJECTED_TEST = "INJECTED_TEST_TRANSPORT"
 TRANSPORT_UNREACHABLE = "UNREACHABLE"
 
+CONTENT_MATCH_MATCHED = "CONTENT_MATCHED"
+CONTENT_MATCH_UNPARSEABLE_BINARY = "CONTENT_UNPARSEABLE_BINARY"
+CONTENT_MATCH_MISMATCH = "CONTENT_MISMATCH"
+CONTENT_MATCH_NOT_EVALUATED = "NOT_EVALUATED"
+
 STATUS_VERIFIED_LIVE = "VERIFIED_LIVE"
 STATUS_VERIFIED_TEST_TRANSPORT = "VERIFIED_TEST_TRANSPORT"
+STATUS_TRANSPORT_ONLY_UNVERIFIED_CONTENT = "TRANSPORT_ONLY_UNVERIFIED_CONTENT"
 STATUS_UNREACHABLE_NOT_VERIFIED = "UNREACHABLE_NOT_VERIFIED"
+STATUS_REJECTED_CONTENT_MISMATCH = "REJECTED_CONTENT_MISMATCH"
 STATUS_REJECTED_INVALID_SOURCE = "REJECTED_INVALID_SOURCE"
 STATUS_SUPERSEDED = "SUPERSEDED"
+
+SNAPSHOT_MODE_FULL_WITH_RAW = "FULL_WITH_RAW_CONTENT"
+SNAPSHOT_MODE_METADATA_ONLY = "METADATA_ONLY_UNVERIFIED_CONTENT"
+
+HEAD_STATUS_EXACT_MATCH = "EXACT_HEAD_MATCH"
+HEAD_STATUS_HISTORICAL_GREW = "HISTORICAL_SNAPSHOT_REGISTRY_GREW"
+HEAD_STATUS_UNKNOWN_OR_FORKED = "UNKNOWN_OR_FORKED_REGISTRY_HEAD"
 
 GENESIS_CHAIN_HASH = "GENESIS"
 
@@ -160,14 +174,19 @@ class EvidenceRecord:
     metadata_sha256: str
     record_sha256: str
     previous_record_sha256: str = GENESIS_CHAIN_HASH
+    content_verified: bool = False
+    content_verification: dict[str, Any] = field(default_factory=dict)
     error_codes: tuple[str, ...] = ()
     errors: tuple[str, ...] = ()
     legal_boundary_notice: str = TRUST_CHAIN_LEGAL_BOUNDARY_NOTICE
 
     @property
     def is_verified_authority(self) -> bool:
+        """True ONLY when both transport/metadata AND downloaded document content matched declared metadata."""
         return (
             self.status in (STATUS_VERIFIED_LIVE, STATUS_VERIFIED_TEST_TRANSPORT)
+            and self.content_verified is True
+            and self.content_verification.get("content_match_status") == CONTENT_MATCH_MATCHED
             and is_valid_sha256_hex(self.content_sha256)
             and self.content_bytes_length > 0
             and len(self.error_codes) == 0
@@ -189,6 +208,8 @@ class EvidenceRecord:
             "http_status": self.http_status,
             "transport_mode": self.transport_mode,
             "live_verified": self.live_verified,
+            "content_verified": self.content_verified,
+            "content_verification": self.content_verification,
             "adapter_metadata": self.adapter_metadata,
         }
 
@@ -227,6 +248,8 @@ class EvidenceRecord:
             "http_status": self.http_status,
             "transport_mode": self.transport_mode,
             "live_verified": self.live_verified,
+            "content_verified": self.content_verified,
+            "content_verification": dict(self.content_verification),
             "status": self.status,
             "adapter_metadata": dict(self.adapter_metadata),
             "metadata_sha256": self.metadata_sha256,
@@ -282,6 +305,7 @@ class AnswerEvidenceLink:
     record_sha256: str
     transport_mode: str
     live_verified: bool
+    content_verified: bool = True
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -303,6 +327,7 @@ class AnswerEvidenceLink:
             "record_sha256": self.record_sha256,
             "transport_mode": self.transport_mode,
             "live_verified": self.live_verified,
+            "content_verified": self.content_verified,
         }
 
 
