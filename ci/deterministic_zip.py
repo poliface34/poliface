@@ -5,19 +5,26 @@ Stdlib-only canonical packaging specification:
   - Deterministic UTF-8 lexicographical sorting (root dir, then subdirs, then regular files).
   - Explicit exclusion of build/cache artifacts (`__pycache__`, `*.pyc`, `*.pyo`, `.DS_Store`,
     `.pytest_cache`, `.git`).
-  - Fail-closed rejection of symbolic links (zero symlink leakage into archives).
-  - Fixed UTC-neutral DOS timestamp (`date_time`), normalized UNIX modes (`0o40755` for dirs,
-    `0o100644` for regular files), `create_system = 3` (UNIX), `extra = b""`, `comment = b""`,
-    `ZIP_STORED` for directory entries and `ZIP_DEFLATED` (`compresslevel = 9`) for files.
+  - Unconditional fail-closed rejection of symbolic links: both the raw `source_dir` itself
+    (checked BEFORE `resolve()`) and every entry anywhere beneath it — regardless of exclusion
+    patterns (even `.pyc`, `.pyo`, `.DS_Store`, or `__pycache__` symlinks are rejected).
+  - Strict ISO-8601 DOS timestamp normalization: accepts naive UTC-neutral `YYYY-MM-DDTHH:MM:SS`
+    or explicit UTC / offset (`Z`, `+HH:MM`, `-HH:MM`), normalizing all timezone-aware inputs
+    strictly to UTC (`timezone.utc`) before DOS range & 2-second granularity checks.
+  - Normalized UNIX modes (`0o40755` for dirs, `0o100644` for regular files), `create_system = 3`
+    (UNIX), `extra = b""`, `comment = b""`, `ZIP_STORED` for directory entries and `ZIP_DEFLATED`
+    (`compresslevel = 9`) for files.
 """
 
 from __future__ import annotations
 
 import argparse
-from datetime import datetime
+from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+import re
+import stat
 import sys
 import tempfile
 import zipfile
@@ -26,6 +33,7 @@ CANONICAL_V1051_TIMESTAMP = "2026-11-24T12:00:00"
 EXCLUDED_DIR_NAMES: frozenset[str] = frozenset({"__pycache__", ".pytest_cache", ".git"})
 EXCLUDED_FILE_NAMES: frozenset[str] = frozenset({".DS_Store"})
 EXCLUDED_FILE_SUFFIXES: frozenset[str] = frozenset({".pyc", ".pyo"})
+_STRICT_ISO_TS_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})?$")
 
 
 class DeterministicZipError(RuntimeError):
@@ -33,14 +41,30 @@ class DeterministicZipError(RuntimeError):
 
 
 def parse_dos_timestamp(ts_iso: str) -> tuple[int, int, int, int, int, int]:
-    """Parse an ISO-8601 timestamp (`YYYY-MM-DDTHH:MM:SS`) into a valid ZIP DOS tuple."""
+    """Parse a strict ISO-8601 timestamp into a UTC-normalized ZIP DOS tuple.
+
+    Accepted formats:
+      - Naive UTC-neutral: `YYYY-MM-DDTHH:MM:SS`
+      - Explicit UTC:      `YYYY-MM-DDTHH:MM:SSZ`
+      - Explicit offset:   `YYYY-MM-DDTHH:MM:SS±HH:MM` (converted strictly to UTC)
+
+    Rejected fail-closed: date-only strings, fractional seconds, malformed offsets,
+    out-of-range DOS years (outside `[1980, 2107]`), and odd seconds.
+    """
+    if not isinstance(ts_iso, str):
+        raise DeterministicZipError(f"ZIP timestamp must be a string, got {type(ts_iso).__name__}.")
     cleaned = ts_iso.strip()
-    if cleaned.endswith("Z"):
-        cleaned = cleaned[:-1]
+    if not _STRICT_ISO_TS_RE.fullmatch(cleaned):
+        raise DeterministicZipError(
+            f"Timestamp must match YYYY-MM-DDTHH:MM:SS[Z|±HH:MM] without fractional seconds: {ts_iso!r}"
+        )
+    iso_for_parse = f"{cleaned[:-1]}+00:00" if cleaned.endswith("Z") else cleaned
     try:
-        dt = datetime.fromisoformat(cleaned)
+        dt = datetime.fromisoformat(iso_for_parse)
     except ValueError as exc:
         raise DeterministicZipError(f"Invalid ISO timestamp for ZIP metadata: {ts_iso!r}") from exc
+    if dt.tzinfo is not None:
+        dt = dt.astimezone(timezone.utc)
     if dt.year < 1980 or dt.year > 2107:
         raise DeterministicZipError(f"ZIP DOS timestamp year must be in [1980, 2107], got {dt.year}.")
     if dt.second % 2 != 0:
@@ -56,6 +80,19 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: fh.read(65536), b""):
             h.update(chunk)
     return h.hexdigest()
+
+
+def _validate_source_dir_no_symlink(source_dir: Path) -> Path:
+    """Validate `source_dir` BEFORE calling `resolve()`, rejecting symlinked source dirs fail-closed."""
+    try:
+        st = source_dir.lstat()
+    except OSError as exc:
+        raise DeterministicZipError(f"Source directory does not exist or cannot be stat'd: {source_dir}") from exc
+    if stat.S_ISLNK(st.st_mode) or source_dir.is_symlink():
+        raise DeterministicZipError(f"Source directory must not be a symlink: {source_dir}")
+    if not stat.S_ISDIR(st.st_mode):
+        raise DeterministicZipError(f"Source path is not a regular directory: {source_dir}")
+    return source_dir.resolve()
 
 
 def _is_excluded(rel_parts: tuple[str, ...], is_dir: bool) -> bool:
@@ -75,11 +112,8 @@ def _collect_canonical_entries(
     source_dir: Path,
     root_name: str,
 ) -> tuple[list[str], list[tuple[str, Path]]]:
-    """Collect sorted `(dirs, files)` relative to `root_name`, rejecting symlinks fail-closed."""
-    if not source_dir.exists() or not source_dir.is_dir():
-        raise DeterministicZipError(f"Source directory does not exist or is not a directory: {source_dir}")
-    if source_dir.is_symlink():
-        raise DeterministicZipError(f"Source directory must not be a symlink: {source_dir}")
+    """Collect sorted `(dirs, files)` relative to `root_name`, rejecting ALL symlinks unconditionally."""
+    resolved_src = _validate_source_dir_no_symlink(source_dir)
     if not root_name or "/" in root_name or "\\" in root_name or root_name in (".", ".."):
         raise DeterministicZipError(f"Invalid archive root directory name: {root_name!r}")
 
@@ -88,11 +122,10 @@ def _collect_canonical_entries(
 
     def _walk(cur: Path) -> None:
         for entry in sorted(cur.iterdir(), key=lambda p: p.name.encode("utf-8")):
-            rel_parts = entry.relative_to(source_dir).parts
+            # Unconditional symlink rejection BEFORE any exclusion rule
             if entry.is_symlink():
-                if _is_excluded(rel_parts, is_dir=False):
-                    continue
                 raise DeterministicZipError(f"Symlink forbidden in deterministic archive: {entry}")
+            rel_parts = entry.relative_to(resolved_src).parts
             if entry.is_dir():
                 if _is_excluded(rel_parts, is_dir=True):
                     continue
@@ -107,7 +140,7 @@ def _collect_canonical_entries(
             else:
                 raise DeterministicZipError(f"Unsupported non-regular filesystem entry: {entry}")
 
-    _walk(source_dir)
+    _walk(resolved_src)
     dirs.sort(key=lambda s: s.encode("utf-8"))
     files.sort(key=lambda item: item[0].encode("utf-8"))
     return dirs, files
@@ -147,10 +180,10 @@ def build_deterministic_zip(
     timestamp: str = CANONICAL_V1051_TIMESTAMP,
 ) -> dict[str, object]:
     """Build a canonical bit-for-bit reproducible ZIP archive from `source_dir`."""
-    resolved_src = source_dir.resolve()
+    resolved_src = _validate_source_dir_no_symlink(source_dir)
     arc_root = root_name if root_name is not None else resolved_src.name
     dos_dt = parse_dos_timestamp(timestamp)
-    dirs, files = _collect_canonical_entries(resolved_src, arc_root)
+    dirs, files = _collect_canonical_entries(source_dir, arc_root)
 
     output_zip.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(output_zip, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
@@ -170,6 +203,7 @@ def build_deterministic_zip(
         "output_zip": str(output_zip),
         "root_name": arc_root,
         "timestamp": timestamp,
+        "normalized_utc_dos_tuple": list(dos_dt),
         "size_bytes": output_zip.stat().st_size,
         "sha256": sha256_file(output_zip),
         "file_count": len(files),
@@ -180,9 +214,9 @@ def build_deterministic_zip(
 
 def verify_extract_parity(source_dir: Path, zip_path: Path, *, root_name: str | None = None) -> dict[str, object]:
     """Extract `zip_path` cleanly and verify 100% file-list and byte-for-byte parity with `source_dir`."""
-    resolved_src = source_dir.resolve()
+    resolved_src = _validate_source_dir_no_symlink(source_dir)
     arc_root = root_name if root_name is not None else resolved_src.name
-    _dirs, expected_files = _collect_canonical_entries(resolved_src, arc_root)
+    _dirs, expected_files = _collect_canonical_entries(source_dir, arc_root)
     expected_map = {rel: path.read_bytes() for rel, path in expected_files}
 
     with tempfile.TemporaryDirectory(prefix="hrai_detzip_parity_") as td:
@@ -231,6 +265,7 @@ def verify_reproducible_build(
     extract_to: Path | None = None,
 ) -> dict[str, object]:
     """Build two independent deterministic ZIPs from `source_dir`, verify bit-for-bit equality & extract parity."""
+    _validate_source_dir_no_symlink(source_dir)
     with tempfile.TemporaryDirectory(prefix="hrai_detzip_repro_") as td:
         td_path = Path(td)
         zip1 = td_path / "build_1.zip"
@@ -262,6 +297,7 @@ def verify_reproducible_build(
         "dir_count": meta1["dir_count"],
         "root_name": meta1["root_name"],
         "timestamp": timestamp,
+        "normalized_utc_dos_tuple": meta1["normalized_utc_dos_tuple"],
         "parity": parity,
         "extracted_root": extracted_path,
     }
@@ -327,7 +363,7 @@ def main(argv: list[str] | None = None) -> int:
         "--timestamp",
         type=str,
         default=CANONICAL_V1051_TIMESTAMP,
-        help="Fixed UTC-neutral ISO-8601 timestamp with even seconds (default: 2026-11-24T12:00:00)",
+        help="Strict UTC/offset ISO-8601 timestamp with even seconds (default: 2026-11-24T12:00:00)",
     )
     parser.add_argument(
         "--verify-reproducible",

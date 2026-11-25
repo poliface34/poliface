@@ -57,7 +57,8 @@ jobs:
       - name: Verify frozen release immutability & v1.0.5.1 bit-for-bit deterministic rebuild
         run: |
           set -euo pipefail
-          python3 -m ci.verify_immutability > /tmp/ci_immutability.json
+          python3 -m ci.verify_immutability \
+            --expected-manifest-sha256 818089a7d066c44a1f26527b878fa5134ff4d9734640d0a2b73c0d5c0044fdf8 > /tmp/ci_immutability.json
           cat /tmp/ci_immutability.json
 
       - name: Run WP-1 CI assurance unit tests
@@ -178,6 +179,7 @@ jobs:
           probe = json.load(open("/tmp/ci_probe.json"))
 
           assert imm["status"] == "PASS"
+          assert imm["manifest_integrity"]["passed"] is True
           assert det["status"] == "PASS" and det["reproducible"] is True
           assert strict["ci_audit"]["exit_code"] == 0
           assert strict["independent_cross_validation_tag"] == "INDEPENDENT_CROSS_VALIDATION=PASSED"
