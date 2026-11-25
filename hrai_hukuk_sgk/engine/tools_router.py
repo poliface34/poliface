@@ -24,6 +24,7 @@ from .models import LegalKnowledgeCard, LegalSourceRecord, NormReference, Preced
 from .norm_hierarchy import evaluate_precedent_application, resolve_norm_conflict
 from .precedent_verifier import load_precedent_registry, verify_response_citations
 from .source_validator import load_source_registry, resolve_effective_article, resolve_effective_sources
+from .trust_chain import EvidenceBackedLegalAnswerBuilder, EvidenceRegistry
 
 TOKEN_RE = re.compile(r"[a-zçğıöşü0-9]+", re.IGNORECASE)
 
@@ -103,6 +104,7 @@ class HukukSGKToolRouter:
         expected_chain_digest_sha256: str | None = None,
         external_trust_anchor_provider: Any | None = None,
         expected_app_project_id: str | None = None,
+        evidence_registry: EvidenceRegistry | None = None,
     ) -> None:
         base_dir = Path(__file__).resolve().parent.parent
         src_path = Path(source_registry_path) if source_registry_path else base_dir / "config" / "legal_sources_registry.json"
@@ -166,6 +168,7 @@ class HukukSGKToolRouter:
         self.external_trust_anchor_provider = external_trust_anchor_provider
         self.expected_app_project_id = expected_app_project_id
         self.document_fetcher = document_fetcher
+        self.evidence_registry: EvidenceRegistry | None = evidence_registry
 
     def dispatch(self, tool_name: str, arguments: dict[str, Any]) -> dict[str, Any]:
         if tool_name == "lookup_verified_source_and_precedent":
@@ -188,6 +191,8 @@ class HukukSGKToolRouter:
             return self._handle_evaluate_precedent_application(arguments)
         if tool_name == "evaluate_hr_legal_scenario":
             return self._handle_evaluate_hr_legal_scenario(arguments)
+        if tool_name == "build_evidence_linked_answer":
+            return self._handle_build_evidence_linked_answer(arguments)
         if tool_name == "escalate_to_legal_counsel":
             return self._handle_escalate(arguments)
         if tool_name in V1_1_PLANNED_TOOLS:
@@ -522,3 +527,54 @@ class HukukSGKToolRouter:
             "required_approver": args.get("required_approver", "Şirket Avukatı / İş Hukuku Müşaviri"),
             "payroll_handoff_blocked": True,
         }
+
+    def build_evidence_linked_answer(
+        self,
+        *,
+        query: str,
+        answer_text: str,
+        evidence_ids: list[str] | tuple[str, ...],
+        as_of_date: str,
+        evidence_registry: EvidenceRegistry | None = None,
+        require_live_verified: bool = False,
+        allow_historical_superseded: bool = False,
+        historical_disclosure_text: str | None = None,
+        scenario_evaluation: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Connect an `@HukukSGK` legal answer directly to verified EvidenceRegistry records (WP2.6)."""
+        reg = evidence_registry if evidence_registry is not None else self.evidence_registry
+        if reg is None:
+            raise ValueError(
+                "Kanıta dayalı hukuki cevap oluşturmak için `evidence_registry` sağlanmalıdır "
+                "(HukukSGKToolRouter(evidence_registry=...) veya doğrudan argüman)."
+            )
+        builder = EvidenceBackedLegalAnswerBuilder(reg)
+        linked = builder.build_answer(
+            query=query,
+            answer_text=answer_text,
+            evidence_ids=evidence_ids,
+            as_of_date=as_of_date,
+            require_live_verified=require_live_verified,
+            allow_historical_superseded=allow_historical_superseded,
+            historical_disclosure_text=historical_disclosure_text,
+            router_payload=scenario_evaluation,
+        )
+        return linked.to_dict()
+
+    def _handle_build_evidence_linked_answer(self, args: dict[str, Any]) -> dict[str, Any]:
+        scenario_payload: dict[str, Any] | None = None
+        if isinstance(args.get("scenario_request"), dict):
+            scenario_payload = self._handle_evaluate_hr_legal_scenario(args["scenario_request"])
+        elif isinstance(args.get("scenario_evaluation"), dict):
+            scenario_payload = args["scenario_evaluation"]
+        return self.build_evidence_linked_answer(
+            query=str(args.get("query", "")),
+            answer_text=str(args.get("answer_text", "")),
+            evidence_ids=list(args.get("evidence_ids", [])),
+            as_of_date=str(args.get("as_of_date", "")),
+            require_live_verified=bool(args.get("require_live_verified", False)),
+            allow_historical_superseded=bool(args.get("allow_historical_superseded", False)),
+            historical_disclosure_text=args.get("historical_disclosure_text"),
+            scenario_evaluation=scenario_payload,
+        )
+
