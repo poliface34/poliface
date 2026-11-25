@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.6-wp1",
+  "description": "Immutability manifest for frozen historical releases (v1.0.5, v1.0.5.1) and protected core files in poliface34/poliface.",
+  "frozen_archives": [
+    {
+      "release": "v1.0.5",
+      "path": "kadroai_hukuk_sgk.zip",
+      "expected_sha256": "97a555dcc20ef28adbeb8ff33f31ebe8a5cad2548a3ceeded099a2761039ea5e",
+      "expected_bytes": 697340,
+      "expected_root_dir": "kadroai_hukuk_sgk",
+      "expected_file_count": 106,
+      "expected_dir_count": 17,
+      "expected_internal_files_sha256": {
+        "kadroai_hukuk_sgk/engine/esign5070/xmldsig.py": "b16207b5fb71d7c0d0372838411c7795459ac460c2ff232766ae230b9cbacf85"
+      },
+      "deterministic_rebuild_timestamp": null
+    },
+    {
+      "release": "v1.0.5.1",
+      "path": "hrai_hukuk_sgk_v1.0.5.1.zip",
+      "expected_sha256": "69b67a5f9aee3377f6bc50c0ae1463cb8d205b550a9a2a9b1cfe0b5af67369bc",
+      "expected_bytes": 782246,
+      "expected_root_dir": "hrai_hukuk_sgk",
+      "expected_file_count": 159,
+      "expected_dir_count": 19,
+      "expected_internal_files_sha256": {
+        "hrai_hukuk_sgk/engine/esign5070/xmldsig.py": "b16207b5fb71d7c0d0372838411c7795459ac460c2ff232766ae230b9cbacf85"
+      },
+      "deterministic_rebuild_timestamp": "2026-11-24T12:00:00"
+    }
+  ],
+  "immutable_files": [
+    {
+      "name": "xmldsig_core_invariant",
+      "path": "hrai_hukuk_sgk/engine/esign5070/xmldsig.py",
+      "expected_sha256": "b16207b5fb71d7c0d0372838411c7795459ac460c2ff232766ae230b9cbacf85",
+      "expected_bytes": 82205
+    }
+  ]
+}
