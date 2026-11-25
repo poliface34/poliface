@@ -1,0 +1,167 @@
+{
+  "schema_version": "1.0.6-wp4.2",
+  "benchmark_name": "hrAI_HukukSGK_WP4_2_HR_Retrieval_Benchmark",
+  "kpi_thresholds": {
+    "critical_provision_recall_min": 1.0,
+    "temporal_leakage_rate_max": 0.0,
+    "unverified_exclusion_rate_min": 1.0,
+    "precedent_isolation_rate_min": 1.0,
+    "abstention_attachment_rate_min": 1.0
+  },
+  "cases": [
+    {
+      "case_id": "RET-01",
+      "description": "Performans düşüklüğü / davranış feshinde yazılı savunma ve iş güvencesi + YİBBGK 2017/9 ayrımı",
+      "query_text": "4857 madde 18 19 performans düşüklüğü fesih yazılı savunma 30 işçi kıdem",
+      "as_of_date": "2026-03-10",
+      "document_kinds": ["STATUTORY_PROVISION", "INTERPRETATION_CARD"],
+      "expected_any_provision_ids": ["4857:m-18:f-1", "4857:m-19:f-1-2", "CARD-4857-M18", "CARD-4857-M19"],
+      "forbidden_active_source_ids": ["GIB-TEBLIG-332-20251231"],
+      "precedent_followup": {
+        "query_text": "YIBBGK 2017/9 2018/10 sağlık raporu savunma fesih",
+        "expected_precedent_id": "YIBBGK-2017-9-2018-10"
+      }
+    },
+    {
+      "case_id": "RET-02",
+      "description": "24.07.2025 sonrası 4857 m.109 KEP fesih yasağı (7555 m.23) + eski sürüm dışlama",
+      "query_text": "4857 madde 109 7555 KEP yazılı fesih bildirimi m.25 haklı fesih",
+      "as_of_date": "2025-09-01",
+      "document_kinds": ["STATUTORY_PROVISION"],
+      "include_historical": true,
+      "expected_any_provision_ids": ["4857:m-109"],
+      "expected_active_provision_versions": ["4857:m-109@DV-RG-7555-20250724"],
+      "forbidden_active_provision_versions": ["4857:m-109@DV-MEVZUAT-4857-V1"],
+      "expected_historical_provision_versions": ["4857:m-109@DV-MEVZUAT-4857-V1"],
+      "expected_companion_rule_ids": ["INT-4857-M109-7555-BOUNDARY"]
+    },
+    {
+      "case_id": "RET-03",
+      "description": "24.07.2025 öncesi tarihte eski 4857 m.109 yürürlükte; 7555 sürümü henüz yürürlükte değil",
+      "query_text": "4857 madde 109 yazılı bildirim imza tutanak tebligat",
+      "as_of_date": "2025-07-10",
+      "document_kinds": ["STATUTORY_PROVISION"],
+      "expected_any_provision_ids": ["4857:m-109"],
+      "expected_active_provision_versions": ["4857:m-109@DV-MEVZUAT-4857-V1"],
+      "forbidden_active_provision_versions": ["4857:m-109@DV-RG-7555-20250724"]
+    },
+    {
+      "case_id": "RET-04",
+      "description": "2026 Ar-Ge uzaktan çalışma oranı 10766 CK aktif, mülga 9368 CK yalnızca tarihsel kovada",
+      "query_text": "10766 9368 Ar-Ge teknokent uzaktan çalışma oranları bilişim 2026",
+      "as_of_date": "2026-04-01",
+      "document_kinds": ["SECONDARY_REGULATION"],
+      "include_historical": true,
+      "expected_active_source_ids": ["RG-10766-20251225"],
+      "forbidden_active_source_ids": ["RG-9368-20241228"],
+      "expected_historical_source_ids": ["RG-9368-20241228"]
+    },
+    {
+      "case_id": "RET-05",
+      "description": "PENDING_REVIEW statüsündeki GİB 332 Tebliği aktif havuzdan kesin dışlanır ve uyarı döner",
+      "query_text": "332 tebliğ 2026 yemek istisnası 300 TL gelir vergisi tarifesi",
+      "as_of_date": "2026-02-01",
+      "forbidden_active_source_ids": ["GIB-TEBLIG-332-20251231"],
+      "expected_excluded_source_ids": ["GIB-TEBLIG-332-20251231"]
+    },
+    {
+      "case_id": "RET-06",
+      "description": "Bayram ikramiyesi tek taraflı kesintide 4857 m.22 yazılı rıza ve L6 şablon uyarısı",
+      "query_text": "4857 madde 22 bayram ikramiyesi yerleşik işyeri uygulaması esaslı değişiklik yazılı rıza",
+      "as_of_date": "2026-06-01",
+      "expected_any_provision_ids": ["4857:m-22:f-1"],
+      "forbidden_active_document_kinds": ["AUTONOMOUS_NORM"],
+      "expected_companion_rule_ids": ["INT-4857-M22-WORKPLACE-PRACTICE"],
+      "expected_excluded_statuses": ["REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION"]
+    },
+    {
+      "case_id": "RET-07",
+      "description": "4857 m.26 6 iş günü hesabında akdi Cumartesi, m.46 hafta tatili ve arife durma sınırı",
+      "query_text": "4857 madde 26 altı iş günü madde 46 hafta tatili cumartesi arife maddi çıkar",
+      "as_of_date": "2026-05-01",
+      "document_kinds": ["STATUTORY_PROVISION", "INTERPRETATION_CARD"],
+      "expected_any_provision_ids": ["4857:m-26:f-1", "4857:m-46:f-1", "CARD-4857-M26"],
+      "expected_companion_rule_ids": ["INT-4857-M26-DEADLINE-CALENDAR"]
+    },
+    {
+      "case_id": "RET-08",
+      "description": "6698 KVKK m.6 (01.06.2024 7499 sonrası) biyometrik PDKS / adli sicil + eski sürüm dışlama",
+      "query_text": "6698 kvkk madde 6 7499 biyometrik pdks adli sicil sağlık verisi ölçülülük",
+      "as_of_date": "2026-03-15",
+      "document_kinds": ["STATUTORY_PROVISION", "INTERPRETATION_CARD"],
+      "include_historical": true,
+      "expected_any_provision_ids": ["6698:m-6:f-1-3", "CARD-6698-M05-M06-M10"],
+      "expected_active_doc_version_ids": ["DV-MEVZUAT-6698-V2-POST7499"],
+      "forbidden_active_doc_version_ids": ["DV-MEVZUAT-6698-V1-PRE7499"],
+      "expected_historical_doc_version_ids": ["DV-MEVZUAT-6698-V1-PRE7499"],
+      "expected_companion_rule_ids": ["INT-6698-M06-7499-BOUNDARY"]
+    },
+    {
+      "case_id": "RET-09",
+      "description": "2026 7566 sonrası 5510 m.82 9 kat SPEK tavanı aktif, 7.5 kat eski sürüm yalnızca tarihsel",
+      "query_text": "5510 madde 82 7566 9 kat SPEK PEK prime esas kazanç üst sınır 2026",
+      "as_of_date": "2026-04-15",
+      "document_kinds": ["STATUTORY_PROVISION", "SECONDARY_REGULATION", "INTERPRETATION_CARD"],
+      "include_historical": true,
+      "expected_any_provision_ids": ["5510:m-82:f-1", "CARD-SGK-2026-PEK-SINIR", "CARD-5510-M80-M82"],
+      "expected_active_provision_versions": ["5510:m-82:f-1@DV-RG-7566-20251219"],
+      "forbidden_active_provision_versions": ["5510:m-82:f-1@DV-MEVZUAT-5510-V1"],
+      "expected_historical_provision_versions": ["5510:m-82:f-1@DV-MEVZUAT-5510-V1"]
+    },
+    {
+      "case_id": "RET-10",
+      "description": "İş kazası 3 iş günü SGK bildirimi: 6331 m.14 ve 5510 m.13",
+      "query_text": "6331 madde 14 5510 madde 13 iş kazası 3 iş günü sgk bildirimi",
+      "as_of_date": "2026-03-20",
+      "document_kinds": ["STATUTORY_PROVISION", "INTERPRETATION_CARD"],
+      "expected_any_provision_ids": ["6331:m-14:f-2", "5510:m-13:f-2", "CARD-6331-M14"]
+    },
+    {
+      "case_id": "RET-11",
+      "description": "Belirli süreli sözleşme cezai şartı 6098 m.420 & YİBBGK 2017/10-2019/1",
+      "query_text": "6098 madde 420 ceza koşulu tek taraflı ibra 4857 madde 11",
+      "as_of_date": "2026-04-01",
+      "document_kinds": ["STATUTORY_PROVISION", "INTERPRETATION_CARD"],
+      "expected_any_provision_ids": ["6098:m-420:f-1-2", "CARD-6098-M420", "CARD-4857-M11"],
+      "precedent_followup": {
+        "query_text": "2017/10 2019/1 belirli süreli cezai şart",
+        "expected_precedent_id": "YIBBGK-2017-10-2019-1"
+      }
+    },
+    {
+      "case_id": "RET-12",
+      "description": "Negatif kalite kapısı testi (test suite içinde REJECTED_CONTENT_MISMATCH / UNPARSEABLE / UNREACHABLE enjeksiyonu)",
+      "mode": "UNIT_NEGATIVE_QUALITY_GATE"
+    },
+    {
+      "case_id": "RET-13",
+      "description": "Mevzuat ile içtihat havuzunun sıkı document_kind izolasyonu",
+      "query_text": "4857 sağlık raporu savunma fesih",
+      "as_of_date": "2026-04-01",
+      "document_kinds": ["STATUTORY_PROVISION"],
+      "forbidden_active_document_kinds": ["JUDICIAL_PRECEDENT"]
+    },
+    {
+      "case_id": "RET-14",
+      "description": "Danıştay ve Yargıtay içtihat havuzlarının ayrımı (test fixture Danıştay + built-in pending quarantine)",
+      "mode": "UNIT_DANISTAY_SEPARATION"
+    },
+    {
+      "case_id": "RET-15",
+      "description": "Olay tarihi (as_of_date) olmadan retrieval fail-closed reddi",
+      "mode": "UNIT_MISSING_AS_OF_DATE"
+    },
+    {
+      "case_id": "RET-16",
+      "description": "Atomik fıkra/bent ayrımı: 4857 m.25/II-e vs m.25/I-b üst sıra doğrulaması",
+      "query_text": "4857 m.25/II-e ahlak ve iyi niyet güveni kötüye kullanma hırsızlık kıdem yok",
+      "as_of_date": "2026-04-01",
+      "document_kinds": ["STATUTORY_PROVISION"],
+      "expected_top1_provision_id": "4857:m-25:f-2:b-e",
+      "reverse_pair_query": {
+        "query_text": "4857 m.25/I-b sağlık sebepleri 6 hafta bildirim bekleme süresi",
+        "expected_top1_provision_id": "4857:m-25:f-1:b-b"
+      }
+    }
+  ]
+}
