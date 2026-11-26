@@ -2,15 +2,21 @@
 
 from __future__ import annotations
 
+import ast
+import base64
 from dataclasses import replace
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
+import time
 import unittest
 
 from engine.answer import AnswerGenerationRequest, EightSectionAnswer, HukukSgkAnswerOrchestrator
+from engine.attestation_verifier import canonical_json_bytes, sign_canonical_payload, verify_asymmetric_signature
 from engine.evaluation import (
     ACTION_APPROVE,
     ACTION_OVERRIDE_FATAL,
@@ -18,6 +24,9 @@ from engine.evaluation import (
     ACTION_REVOKE,
     ACTION_SUPERSEDE_REAPPROVE,
     CASE_MINOR_BUDGET_CAP,
+    CAT_IS_KANUNU_SOZLESME,
+    CAT_KVKK_6698,
+    CAT_UCRET_SURE_IZIN,
     CATEGORY_SPLIT_TARGETS,
     CATEGORY_TARGET_COUNTS,
     DEFECT_FIXED_PENALTIES,
@@ -28,12 +37,16 @@ from engine.evaluation import (
     MONETARY_CLASS_CALCULATED_PAYMENT,
     MONETARY_CLASS_STATUTORY_THRESHOLD,
     MONETARY_CLASS_USER_INPUT,
+    OFFICIAL_STATUS_BELOW_THRESHOLD,
+    OFFICIAL_STATUS_FAILED_FATAL_VETO,
+    OFFICIAL_STATUS_PASSED,
     OFFICIAL_STATUS_RUN_INVALID_INFRA,
     OFFICIAL_STATUS_UNVERIFIED_ZERO_APPROVED,
     REVIEW_APPROVED_FOR_BENCHMARK,
     REVIEW_PENDING_LEGAL_REVIEW,
     RUN_VALIDITY_INVALID,
     RUN_VALIDITY_VALID,
+    SIGNATURE_ALGORITHM_PARAMS,
     SIGNOFF_REVOKED,
     SIGNOFF_STALE,
     SIGNOFF_VERIFIED_APPROVED,
@@ -58,6 +71,7 @@ from engine.evaluation import (
     TrustedLegalApproverRecord,
     TrustedLegalApproverRegistry,
     classify_monetary_mentions,
+    classify_score_band,
     compute_cross_split_jaccard,
     compute_public_key_fingerprint,
     create_signed_answer_key_approval_envelope,
@@ -66,6 +80,7 @@ from engine.evaluation import (
     verify_dataset_anti_leakage,
     verify_detached_legal_signoffs,
 )
+from engine.evaluation.runner import _git_sha_safe
 from engine.rag import HukukSgkRagEngine, RagQueryRequest
 from engine.trust_root import run_live_integration_probe
 
@@ -509,6 +524,167 @@ class TestEvaluationWp45V106(unittest.TestCase):
             self.assertFalse(st_rsa_bad.approved)
             self.assertIn("CRYPTO_SIGNATURE_INVALID", st_rsa_bad.failure_codes)
 
+            # Bit-flipped RSA signature_b64 & algorithm metadata mismatch on envelope
+            rsa_sig_raw = bytearray(base64.b64decode(env_rsa.signature_b64))
+            rsa_sig_raw[0] ^= 0x01
+            bad_sig_env = replace(env_rsa, signature_b64=base64.b64encode(bytes(rsa_sig_raw)).decode("ascii"))
+            st_rsa_bitflip = verify_detached_legal_signoffs(case=c_dev, envelopes=(bad_sig_env,), registry=rsa_reg)
+            self.assertFalse(st_rsa_bitflip.approved)
+            self.assertIn("CRYPTO_SIGNATURE_INVALID", st_rsa_bitflip.failure_codes)
+
+            bad_alg_env = replace(env_rsa, algorithm="ED25519")
+            st_rsa_alg_mismatch = verify_detached_legal_signoffs(case=c_dev, envelopes=(bad_alg_env,), registry=rsa_reg)
+            self.assertFalse(st_rsa_alg_mismatch.approved)
+
+            # K-01(g): SIGNATURE_ALGORITHM_PARAMS & düşük seviye OpenSSL RFC 8032 / RSA-PSS-SHA256 negatif vektörleri
+            self.assertEqual(SIGNATURE_ALGORITHM_PARAMS["ED25519"]["standard"], "RFC 8032 PureEd25519")
+            self.assertFalse(SIGNATURE_ALGORITHM_PARAMS["ED25519"]["prehash"])
+            self.assertEqual(SIGNATURE_ALGORITHM_PARAMS["RSA-PSS-SHA256"]["min_rsa_key_bits"], 2048)
+            self.assertEqual(SIGNATURE_ALGORITHM_PARAMS["RSA-PSS-SHA256"]["hash_algorithm"], "SHA-256")
+            self.assertEqual(SIGNATURE_ALGORITHM_PARAMS["RSA-PSS-SHA256"]["mgf"], "MGF1-SHA256")
+            self.assertEqual(SIGNATURE_ALGORITHM_PARAMS["RSA-PSS-SHA256"]["salt_length_bytes"], 32)
+
+            with tempfile.TemporaryDirectory(prefix="wp45_k01_neg_") as td_neg:
+                neg_dir = Path(td_neg)
+                ed_a_priv_p = neg_dir / "ed_a_priv.pem"
+                ed_a_pub_p = neg_dir / "ed_a_pub.pem"
+                ed_b_priv_p = neg_dir / "ed_b_priv.pem"
+                ed_b_pub_p = neg_dir / "ed_b_pub.pem"
+                for priv_p, pub_p in ((ed_a_priv_p, ed_a_pub_p), (ed_b_priv_p, ed_b_pub_p)):
+                    subprocess.run(
+                        ["openssl", "genpkey", "-algorithm", "ED25519", "-out", str(priv_p)],
+                        check=True,
+                        stdin=subprocess.DEVNULL,
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                        timeout=15,
+                    )
+                    subprocess.run(
+                        ["openssl", "pkey", "-in", str(priv_p), "-pubout", "-out", str(pub_p)],
+                        check=True,
+                        stdin=subprocess.DEVNULL,
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                        timeout=15,
+                    )
+                ed_a_priv = ed_a_priv_p.read_text(encoding="utf-8")
+                ed_a_pub = ed_a_pub_p.read_text(encoding="utf-8")
+                ed_b_pub = ed_b_pub_p.read_text(encoding="utf-8")
+
+                rsa_a_priv_p = neg_dir / "rsa_a_priv.pem"
+                rsa_a_pub_p = neg_dir / "rsa_a_pub.pem"
+                rsa_b_priv_p = neg_dir / "rsa_b_priv.pem"
+                rsa_b_pub_p = neg_dir / "rsa_b_pub.pem"
+                for priv_p, pub_p in ((rsa_a_priv_p, rsa_a_pub_p), (rsa_b_priv_p, rsa_b_pub_p)):
+                    subprocess.run(
+                        ["openssl", "genpkey", "-algorithm", "RSA", "-pkeyopt", "rsa_keygen_bits:2048", "-out", str(priv_p)],
+                        check=True,
+                        stdin=subprocess.DEVNULL,
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                        timeout=20,
+                    )
+                    subprocess.run(
+                        ["openssl", "pkey", "-in", str(priv_p), "-pubout", "-out", str(pub_p)],
+                        check=True,
+                        stdin=subprocess.DEVNULL,
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                        timeout=15,
+                    )
+                rsa_a_priv = rsa_a_priv_p.read_text(encoding="utf-8")
+                rsa_a_pub = rsa_a_pub_p.read_text(encoding="utf-8")
+                rsa_b_pub = rsa_b_pub_p.read_text(encoding="utf-8")
+
+                # Ed25519 (RFC 8032): pozitif + ham OpenSSL çapraz doğrulama + bozuk mesaj + bit-flip + yanlış anahtar + alg uyuşmazlığı
+                p_ed = {"case_id": c_dev.case_id, "sha": c_dev.expected_answer_key_sha256(), "alg": "ED25519"}
+                sig_ed = sign_canonical_payload(p_ed, ed_a_priv, "ED25519")
+                self.assertTrue(verify_asymmetric_signature(p_ed, sig_ed, ed_a_pub, "ED25519")[0])
+                msg_ed_p = neg_dir / "msg_ed.bin"
+                sig_ed_p = neg_dir / "sig_ed.bin"
+                msg_ed_p.write_bytes(canonical_json_bytes(p_ed))
+                sig_ed_p.write_bytes(base64.b64decode(sig_ed))
+                ossl_ed_ok = subprocess.run(
+                    ["openssl", "pkeyutl", "-verify", "-pubin", "-inkey", str(ed_a_pub_p), "-rawin", "-in", str(msg_ed_p), "-sigfile", str(sig_ed_p)],
+                    stdin=subprocess.DEVNULL,
+                    capture_output=True,
+                    text=True,
+                    timeout=15,
+                    check=False,
+                )
+                self.assertEqual(ossl_ed_ok.returncode, 0)
+                ed_flip = bytearray(base64.b64decode(sig_ed))
+                ed_flip[0] ^= 0x01
+                self.assertFalse(verify_asymmetric_signature({**p_ed, "case_id": "TAMPERED"}, sig_ed, ed_a_pub, "ED25519")[0])
+                self.assertFalse(verify_asymmetric_signature(p_ed, base64.b64encode(bytes(ed_flip)).decode("ascii"), ed_a_pub, "ED25519")[0])
+                self.assertFalse(verify_asymmetric_signature(p_ed, sig_ed, ed_b_pub, "ED25519")[0])
+                self.assertFalse(verify_asymmetric_signature(p_ed, sig_ed, ed_a_pub, "RSA-PSS-SHA256")[0])
+
+                # RSA-PSS-SHA256 (saltlen=32, MGF1-SHA256): pozitif + saltlen=16 reddi + PKCS#1 v1.5 reddi + tahrifat + yanlış anahtar
+                p_rsa = {"case_id": c_dev.case_id, "sha": c_dev.expected_answer_key_sha256(), "alg": "RSA-PSS-SHA256"}
+                sig_rsa = sign_canonical_payload(p_rsa, rsa_a_priv, "RSA-PSS-SHA256")
+                self.assertTrue(verify_asymmetric_signature(p_rsa, sig_rsa, rsa_a_pub, "RSA-PSS-SHA256")[0])
+                msg_rsa_p = neg_dir / "msg_rsa.bin"
+                sig_rsa_p = neg_dir / "sig_rsa.bin"
+                msg_rsa_p.write_bytes(canonical_json_bytes(p_rsa))
+                sig_rsa_p.write_bytes(base64.b64decode(sig_rsa))
+                ossl_rsa_ok = subprocess.run(
+                    [
+                        "openssl", "dgst", "-sha256",
+                        "-sigopt", "rsa_padding_mode:pss",
+                        "-sigopt", "rsa_pss_saltlen:32",
+                        "-verify", str(rsa_a_pub_p),
+                        "-signature", str(sig_rsa_p),
+                        str(msg_rsa_p),
+                    ],
+                    stdin=subprocess.DEVNULL,
+                    capture_output=True,
+                    text=True,
+                    timeout=15,
+                    check=False,
+                )
+                self.assertEqual(ossl_rsa_ok.returncode, 0)
+
+                sig_salt16_p = neg_dir / "sig_salt16.bin"
+                subprocess.run(
+                    [
+                        "openssl", "dgst", "-sha256",
+                        "-sigopt", "rsa_padding_mode:pss",
+                        "-sigopt", "rsa_pss_saltlen:16",
+                        "-sign", str(rsa_a_priv_p),
+                        "-out", str(sig_salt16_p),
+                        str(msg_rsa_p),
+                    ],
+                    check=True,
+                    stdin=subprocess.DEVNULL,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    timeout=15,
+                )
+                sig_salt16_b64 = base64.b64encode(sig_salt16_p.read_bytes()).decode("ascii")
+                ok_s16, msg_s16 = verify_asymmetric_signature(p_rsa, sig_salt16_b64, rsa_a_pub, "RSA-PSS-SHA256")
+                self.assertFalse(ok_s16)
+                self.assertIn("salt", msg_s16.lower())
+
+                sig_pkcs1_p = neg_dir / "sig_pkcs1.bin"
+                subprocess.run(
+                    ["openssl", "dgst", "-sha256", "-sign", str(rsa_a_priv_p), "-out", str(sig_pkcs1_p), str(msg_rsa_p)],
+                    check=True,
+                    stdin=subprocess.DEVNULL,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    timeout=15,
+                )
+                sig_pkcs1_b64 = base64.b64encode(sig_pkcs1_p.read_bytes()).decode("ascii")
+                self.assertFalse(verify_asymmetric_signature(p_rsa, sig_pkcs1_b64, rsa_a_pub, "RSA-PSS-SHA256")[0])
+
+                rsa_flip = bytearray(base64.b64decode(sig_rsa))
+                rsa_flip[0] ^= 0x01
+                self.assertFalse(verify_asymmetric_signature({**p_rsa, "alg": "TAMPERED"}, sig_rsa, rsa_a_pub, "RSA-PSS-SHA256")[0])
+                self.assertFalse(verify_asymmetric_signature(p_rsa, base64.b64encode(bytes(rsa_flip)).decode("ascii"), rsa_a_pub, "RSA-PSS-SHA256")[0])
+                self.assertFalse(verify_asymmetric_signature(p_rsa, sig_rsa, rsa_b_pub, "RSA-PSS-SHA256")[0])
+                self.assertFalse(verify_asymmetric_signature(p_rsa, sig_rsa, rsa_a_pub, "ED25519")[0])
+
     def test_04_k02_thresholds_y01_fixed_penalties_y02_na_policy_and_o03_minor_cap(self) -> None:
         """EV-04 (K-02, Y-01, Y-02, O-03): PASS>=85, PARTIAL 80..84.99, FAIL_SCORE<80, sabit cezalar & MINOR tavan."""
         orch = self.runner._orch
@@ -611,6 +787,185 @@ class TestEvaluationWp45V106(unittest.TestCase):
         self.assertIsNone(ret_dim.raw_score)
         self.assertEqual(ret_dim.normalized_weight_pct, 0.0)
         self.assertAlmostEqual(sum(d.normalized_weight_pct for d in adv_rpt.dimension_scores if d.applicable), 100.0, places=2)
+
+        # K-02 Seviye 1 (classify_score_band sınır değerleri & veto önceliği)
+        self.assertEqual(classify_score_band(85.00), (85.0, VERDICT_PASS))
+        self.assertEqual(classify_score_band(84.99), (84.99, VERDICT_PARTIAL_REVIEW))
+        self.assertEqual(classify_score_band(80.00), (80.0, VERDICT_PARTIAL_REVIEW))
+        self.assertEqual(classify_score_band(79.99), (79.99, VERDICT_FAIL_SCORE))
+        self.assertEqual(classify_score_band(95.00, major_count=1), (65.0, VERDICT_FAIL_MAJOR))
+        self.assertEqual(classify_score_band(95.00, fatal_count=1), (0.0, VERDICT_FAIL_FATAL))
+        self.assertEqual(classify_score_band(95.00, is_infra_failure=True), (None, VERDICT_EVALUATION_INFRA_FAILURE))
+        self.assertEqual(classify_score_band(None), (None, VERDICT_EVALUATION_INFRA_FAILURE))
+
+        # K-02 Seviye 2 (Kategori & Split düzeyinde score_tier & veto_present doğrulaması - 100 vaka raporu)
+        cat_map = {c.category: c for c in self.report.engineering_diagnostic_metrics.category_summaries}
+        self.assertEqual(cat_map[CAT_IS_KANUNU_SOZLESME].score_tier, VERDICT_PASS)
+        self.assertEqual(cat_map[CAT_UCRET_SURE_IZIN].score_tier, VERDICT_PARTIAL_REVIEW)
+        self.assertEqual(cat_map[CAT_KVKK_6698].score_tier, VERDICT_FAIL_SCORE)
+        for cat_sum in cat_map.values():
+            self.assertGreaterEqual(cat_sum.avg_score or 0.0, 75.0)
+            self.assertEqual(cat_sum.score_tier, classify_score_band(cat_sum.avg_score)[1])
+            self.assertEqual(cat_sum.veto_present, (cat_sum.fatal_count > 0 or cat_sum.major_count > 0))
+            if cat_sum.fatal_count > 0:
+                self.assertEqual(
+                    classify_score_band(
+                        cat_sum.avg_score,
+                        fatal_count=cat_sum.fatal_count,
+                        major_count=cat_sum.major_count,
+                    )[1],
+                    VERDICT_FAIL_FATAL,
+                )
+        for sp_sum in self.report.engineering_diagnostic_metrics.split_summaries:
+            self.assertEqual(sp_sum.score_tier, classify_score_band(sp_sum.avg_score)[1])
+            self.assertEqual(sp_sum.veto_present, (sp_sum.fatal_count > 0 or sp_sum.major_count > 0))
+
+        # K-02 Seviye 3 (OfficialBenchmarkMetrics kabul eşiği, 80-84.99 PARTIAL_REVIEW ve <75 kategori tabanı)
+        c_d1 = next(c for c in self.dataset.cases if c.case_id == "EVAL-001")
+        c_h1 = next(c for c in self.dataset.cases if c.case_id == "EVAL-083")
+        c_h2 = next(c for c in self.dataset.cases if c.case_id == "EVAL-091")
+        c_kvkk = next(c for c in self.dataset.cases if c.case_id == "EVAL-071")
+        c_fatal = next(c for c in self.dataset.cases if c.case_id == "EVAL-028")
+
+        with tempfile.TemporaryDirectory(prefix="wp45_k02_l3_") as td_l3:
+            td_l3_p = Path(td_l3)
+            priv_p = td_l3_p / "l3_ed_priv.pem"
+            pub_p = td_l3_p / "l3_ed_pub.pem"
+            subprocess.run(
+                ["openssl", "genpkey", "-algorithm", "ED25519", "-out", str(priv_p)],
+                check=True,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=15,
+            )
+            subprocess.run(
+                ["openssl", "pkey", "-in", str(priv_p), "-pubout", "-out", str(pub_p)],
+                check=True,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=15,
+            )
+            l3_priv = priv_p.read_text(encoding="utf-8")
+            l3_pub = pub_p.read_text(encoding="utf-8")
+            l3_fp = compute_public_key_fingerprint(l3_pub)
+            l3_reg = TrustedLegalApproverRegistry(
+                registry_version="reg-k02-l3-v1",
+                approvers=(
+                    TrustedLegalApproverRecord(
+                        approver_id="COUNSEL-K02-L3",
+                        approver_role="INDEPENDENT_LABOR_LAW_COUNSEL",
+                        bar_association_ref="İstanbul Barosu / 77001",
+                        enrollment_status="ENROLLED",
+                        key_id="KEY-K02-L3",
+                        key_version="v1",
+                        algorithm="ED25519",
+                        public_key_pem=l3_pub,
+                        public_key_fingerprint_sha256=l3_fp,
+                        valid_from_utc="2026-01-01T00:00:00Z",
+                        valid_until_utc="2027-12-31T23:59:59Z",
+                    ),
+                ),
+            )
+
+            def _sign_l3(c_obj, idx: int):
+                return create_signed_answer_key_approval_envelope(
+                    case=c_obj,
+                    dataset_version="k02-l3",
+                    envelope_id=f"ENV-K02-{idx}",
+                    nonce=f"nonce-k02-{idx:04d}",
+                    approver_id="COUNSEL-K02-L3",
+                    approver_role="INDEPENDENT_LABOR_LAW_COUNSEL",
+                    key_id="KEY-K02-L3",
+                    key_version="v1",
+                    algorithm="ED25519",
+                    private_key_pem=l3_priv,
+                    public_key_fingerprint_sha256=l3_fp,
+                    signed_at_utc="2026-11-26T06:40:00Z",
+                    legal_rationale="K-02 seviye 3 resmi ölçüm onayı.",
+                )
+
+            # 3a) Temiz resmî benchmark (>=85 genel, >=85 holdout, >=80 makro, tüm kategoriler >=75, 0 FATAL) -> PASSED
+            ds_pass = EvaluationDataset("k02-l3", "2026-11-26T06:40:00Z", (c_d1, c_h1, c_h2), "k02-pass")
+            rpt_pass = self.runner.run_suite(
+                ds_pass,
+                legal_signoff_envelopes=tuple(_sign_l3(c, i) for i, c in enumerate(ds_pass.cases, 1)),
+                approver_registry=l3_reg,
+                blind_holdout_mode=False,
+            )
+            self.assertEqual(rpt_pass.official_benchmark_metrics.official_status, OFFICIAL_STATUS_PASSED)
+            self.assertTrue(rpt_pass.official_benchmark_metrics.official_pass_eligible)
+
+            # 3b) PARTIAL_REVIEW (80.0..84.99) resmi benchmark -> BELOW_THRESHOLD (geçemez)
+            c_h1_partial = replace(
+                c_h1,
+                include_historical=True,
+                ground_truth=replace(
+                    c_h1.ground_truth,
+                    expected_historical_source_ids=(
+                        "HIST-M1", "HIST-M2", "HIST-M3", "HIST-M4",
+                        "HIST-M5", "HIST-M6", "HIST-M7", "HIST-M8",
+                    ),
+                ),
+            )
+            ds_partial = EvaluationDataset("k02-l3", "2026-11-26T06:40:00Z", (c_h1_partial,), "k02-partial")
+            rpt_partial = self.runner.run_suite(
+                ds_partial,
+                legal_signoff_envelopes=(_sign_l3(c_h1_partial, 10),),
+                approver_registry=l3_reg,
+                blind_holdout_mode=False,
+            )
+            off_partial = rpt_partial.official_benchmark_metrics
+            self.assertGreaterEqual(off_partial.official_approved_weighted_index or 0.0, 80.0)
+            self.assertLess(off_partial.official_approved_weighted_index or 100.0, 85.0)
+            self.assertFalse(off_partial.official_pass_eligible)
+            self.assertEqual(off_partial.official_status, OFFICIAL_STATUS_BELOW_THRESHOLD)
+
+            # 3c) Genel >=85, Holdout >=85, Makro >=80, 0 FATAL/MAJOR ama Tekil Kategori (KVKK) < 75.0 -> BELOW_THRESHOLD bloklaması!
+            c_kvkk_floor = replace(
+                c_kvkk,
+                include_historical=True,
+                ground_truth=replace(
+                    c_kvkk.ground_truth,
+                    expected_historical_source_ids=(
+                        "HIST-M1", "HIST-M2", "HIST-M3", "HIST-M4",
+                        "HIST-M5", "HIST-M6", "HIST-M7", "HIST-M8",
+                    ),
+                ),
+                expected_outcome=replace(
+                    c_kvkk.expected_outcome,
+                    expected_confidence_statuses=("UNMATCHED",),
+                    expected_missing_fields=("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9"),
+                ),
+            )
+            ds_floor = EvaluationDataset("k02-l3", "2026-11-26T06:40:00Z", (c_d1, c_h1, c_h2, c_kvkk_floor), "k02-floor")
+            rpt_floor = self.runner.run_suite(
+                ds_floor,
+                legal_signoff_envelopes=tuple(_sign_l3(c, i + 20) for i, c in enumerate(ds_floor.cases)),
+                approver_registry=l3_reg,
+                blind_holdout_mode=False,
+            )
+            off_floor = rpt_floor.official_benchmark_metrics
+            self.assertGreaterEqual(off_floor.official_approved_weighted_index or 0.0, 85.0)
+            self.assertGreaterEqual(off_floor.official_holdout_weighted_index or 0.0, 85.0)
+            self.assertGreaterEqual(off_floor.official_macro_category_index or 0.0, 80.0)
+            self.assertEqual(off_floor.official_fatal_auto_count, 0)
+            self.assertEqual(off_floor.official_major_count, 0)
+            self.assertFalse(off_floor.official_pass_eligible)
+            self.assertEqual(off_floor.official_status, OFFICIAL_STATUS_BELOW_THRESHOLD)
+            self.assertTrue(any("Tekil kategori tabanı < 75.0" in b for b in off_floor.blocking_reasons))
+
+            # 3d) FATAL veto -> FAILED_FATAL_VETO
+            ds_fatal = EvaluationDataset("k02-l3", "2026-11-26T06:40:00Z", (c_h1, c_fatal), "k02-fatal")
+            rpt_fatal = self.runner.run_suite(
+                ds_fatal,
+                legal_signoff_envelopes=tuple(_sign_l3(c, i + 40) for i, c in enumerate(ds_fatal.cases)),
+                approver_registry=l3_reg,
+                blind_holdout_mode=False,
+            )
+            self.assertFalse(rpt_fatal.official_benchmark_metrics.official_pass_eligible)
+            self.assertEqual(rpt_fatal.official_benchmark_metrics.official_status, OFFICIAL_STATUS_FAILED_FATAL_VETO)
 
     def test_05_full_100_case_manifest_dual_index_and_fixed_retrieval_o05(self) -> None:
         """EV-05 (Y-04, O-02, O-05): 100 vaka raporu, EvaluationRunManifest, çift endeks ve Recall@5/@10/MRR."""
@@ -775,6 +1130,97 @@ class TestEvaluationWp45V106(unittest.TestCase):
                     fail_on_holdout_contamination=True,
                 )
             self.assertIn("HOLDOUT_CONTAMINATION_RISK_HOLD", str(ctx.exception))
+
+    def test_10_ast_subprocess_isolation_timeout_and_nonzero_exit_audit(self) -> None:
+        """EV-10: AST subprocess güvenlik denetimi, sentetik ihlal yakalama, TimeoutExpired, non-zero çıkış ve FD/tmp sızıntısızlığı."""
+        target_methods = {"run", "Popen", "call", "check_call", "check_output"}
+
+        def _inspect_subprocess_ast(tree: ast.AST, label: str) -> tuple[int, list[str]]:
+            guarded = 0
+            found_violations: list[str] = []
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+                    if (
+                        isinstance(node.func.value, ast.Name)
+                        and node.func.value.id == "subprocess"
+                        and node.func.attr in target_methods
+                    ):
+                        kw_names = {kw.arg for kw in node.keywords if kw.arg}
+                        if "timeout" not in kw_names:
+                            found_violations.append(f"{label}:{getattr(node, 'lineno', 0)} missing timeout=")
+                        has_stdin = "stdin" in kw_names or "input" in kw_names
+                        if not has_stdin:
+                            found_violations.append(f"{label}:{getattr(node, 'lineno', 0)} missing stdin/input=")
+                        for kw in node.keywords:
+                            if kw.arg == "shell" and isinstance(kw.value, ast.Constant) and kw.value.value is True:
+                                found_violations.append(f"{label}:{getattr(node, 'lineno', 0)} shell=True forbidden")
+                        guarded += 1
+            return guarded, found_violations
+
+        # 1) Tüm engine/ ve tests/ altındaki .py dosyalarında gerçek AST taraması
+        total_calls = 0
+        all_violations: list[str] = []
+        for folder in (PROJECT_ROOT / "engine", PROJECT_ROOT / "tests"):
+            for py_path in sorted(folder.rglob("*.py")):
+                tree = ast.parse(py_path.read_text(encoding="utf-8"), filename=str(py_path))
+                calls, vios = _inspect_subprocess_ast(tree, str(py_path.relative_to(PROJECT_ROOT)))
+                total_calls += calls
+                all_violations.extend(vios)
+        self.assertGreaterEqual(total_calls, 30)
+        self.assertEqual(all_violations, [])
+
+        # 2) Sentetik ihlal yakalama kanıtı (AST kuralları gerçekten bozuk çağrıyı yakalar)
+        _, synth_vios = _inspect_subprocess_ast(ast.parse('subprocess.run(["echo", "unsafe"])'), "<synthetic-1>")
+        self.assertEqual(len(synth_vios), 2)
+        self.assertTrue(any("missing timeout=" in v for v in synth_vios))
+        self.assertTrue(any("missing stdin/input=" in v for v in synth_vios))
+        _, synth_shell = _inspect_subprocess_ast(
+            ast.parse('subprocess.run("echo", shell=True, timeout=1, stdin=subprocess.DEVNULL)'),
+            "<synthetic-2>",
+        )
+        self.assertTrue(any("shell=True forbidden" in v for v in synth_shell))
+
+        # 3) Başlangıç FD & geçici dizin durumu kaydet
+        proc_fd = Path("/proc/self/fd")
+        before_fds = len(list(proc_fd.iterdir())) if proc_fd.exists() else None
+        tmp_root = Path(tempfile.gettempdir())
+        before_calisora = {p.name for p in tmp_root.glob("calisora_*")}
+        before_wp45 = {p.name for p in tmp_root.glob("wp45_*")}
+
+        # 4) Non-zero exit fail-closed & clean extract uyumluluğu + TimeoutExpired testi
+        with tempfile.TemporaryDirectory(prefix="wp45_ev10_") as td10:
+            td10_p = Path(td10)
+            git_fail_dir = td10_p / "fake_git_repo"
+            (git_fail_dir / ".git").mkdir(parents=True)
+            self.assertEqual(_git_sha_safe(git_fail_dir, "rev-parse", "HEAD"), "UNKNOWN")
+
+            no_git_dir = td10_p / "clean_extract_dir"
+            no_git_dir.mkdir(parents=True)
+            self.assertEqual(_git_sha_safe(no_git_dir, "rev-parse", "HEAD"), "CLEAN_EXTRACT_NO_GIT")
+
+            with self.assertRaises(RuntimeError):
+                sign_canonical_payload({"k": "v"}, "NOT-A-VALID-PEM-KEY", "ED25519")
+
+            t0 = time.monotonic()
+            with self.assertRaises(subprocess.TimeoutExpired):
+                subprocess.run(
+                    [sys.executable, "-c", "import time; time.sleep(2.0)"],
+                    stdin=subprocess.DEVNULL,
+                    capture_output=True,
+                    text=True,
+                    timeout=0.05,
+                    check=False,
+                )
+            self.assertLess(time.monotonic() - t0, 1.0)
+
+        # 5) FD sızıntısı ve geçici dizin artığı olmamalı
+        after_calisora = {p.name for p in tmp_root.glob("calisora_*")}
+        after_wp45 = {p.name for p in tmp_root.glob("wp45_*")}
+        self.assertEqual(after_calisora, before_calisora)
+        self.assertEqual(after_wp45, before_wp45)
+        if before_fds is not None:
+            after_fds = len(list(proc_fd.iterdir()))
+            self.assertLessEqual(abs(after_fds - before_fds), 1)
 
 
 if __name__ == "__main__":

@@ -516,6 +516,12 @@ class HukukSgkEvaluationRunner:
                 reasons.append(f"Onaylı HOLDOUT endeksi eşik altında veya eksik ({off_hold_idx}).")
             if off_macro_idx is None or off_macro_idx < 80.0:
                 reasons.append(f"Kategori makro ortalaması eşik altında ({off_macro_idx}).")
+            for cat in CATEGORY_TARGET_COUNTS:
+                c_scores = [r.final_score for r in approved_rpts if r.category == cat and r.final_score is not None]
+                if c_scores:
+                    c_avg = sum(c_scores) / len(c_scores)
+                    if c_avg < 75.0:
+                        reasons.append(f"Tekil kategori tabanı < 75.0 ({cat}={c_avg:.2f}).")
             if off_dims.get(DIM_TEMPORAL_ACCURACY, 0.0) < 95.0:
                 reasons.append("TEMPORAL_ACCURACY < 95.0")
             if off_dims.get(DIM_CITATION_INTEGRITY, 0.0) < 98.0:

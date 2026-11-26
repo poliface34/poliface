@@ -104,6 +104,7 @@ from .models import (
     SingleCaseEvalReport,
     SplitMetricsSummary,
     canonical_eval_sha256,
+    classify_score_band,
     compute_case_answer_key_sha256,
     derive_applicable_dimensions,
 )
@@ -218,6 +219,7 @@ __all__ = [
     "build_answer_key_signoff_payload",
     "canonical_eval_sha256",
     "classify_monetary_mentions",
+    "classify_score_band",
     "compute_case_answer_key_sha256",
     "compute_cross_split_jaccard",
     "compute_public_key_fingerprint",

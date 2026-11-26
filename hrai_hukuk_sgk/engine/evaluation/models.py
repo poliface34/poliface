@@ -171,6 +171,29 @@ VERDICT_FAIL_MAJOR = "FAIL_MAJOR"
 VERDICT_FAIL_FATAL = "FAIL_FATAL"
 VERDICT_EVALUATION_INFRA_FAILURE = "EVALUATION_INFRA_FAILURE"
 
+
+def classify_score_band(
+    score: float | None,
+    *,
+    fatal_count: int = 0,
+    major_count: int = 0,
+    is_infra_failure: bool = False,
+) -> tuple[float | None, str]:
+    """K-02 Canonical 3-Level Threshold Classifier (PASS >= 85.0, PARTIAL_REVIEW 80..84.99, FAIL_SCORE < 80.0)."""
+    if is_infra_failure or score is None:
+        return None, VERDICT_EVALUATION_INFRA_FAILURE
+    if fatal_count > 0:
+        return 0.0, VERDICT_FAIL_FATAL
+    if major_count > 0:
+        return min(65.0, float(score)), VERDICT_FAIL_MAJOR
+    val = float(score)
+    if val >= 85.0:
+        return val, VERDICT_PASS
+    if val >= 80.0:
+        return val, VERDICT_PARTIAL_REVIEW
+    return val, VERDICT_FAIL_SCORE
+
+
 # K-03 Suite Run Validity
 RUN_VALIDITY_VALID = "VALID"
 RUN_VALIDITY_INVALID = "RUN_INVALID"
@@ -840,12 +863,23 @@ class CategoryMetricsSummary:
     def fatal_count(self) -> int:
         return self.fatal_auto_count + self.fatal_reviewer_count
 
+    @property
+    def score_tier(self) -> str:
+        _, tier = classify_score_band(self.avg_score)
+        return tier
+
+    @property
+    def veto_present(self) -> bool:
+        return self.fatal_count > 0 or self.major_count > 0
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "category": self.category,
             "total_cases": self.total_cases,
             "approved_cases": self.approved_cases,
             "avg_score": round(self.avg_score, 2) if self.avg_score is not None else None,
+            "score_tier": self.score_tier,
+            "veto_present": self.veto_present,
             "fatal_auto_count": self.fatal_auto_count,
             "fatal_reviewer_count": self.fatal_reviewer_count,
             "fatal_count": self.fatal_count,
@@ -864,12 +898,23 @@ class SplitMetricsSummary:
     major_count: int
     pass_count: int
 
+    @property
+    def score_tier(self) -> str:
+        _, tier = classify_score_band(self.avg_score)
+        return tier
+
+    @property
+    def veto_present(self) -> bool:
+        return self.fatal_count > 0 or self.major_count > 0
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "split": self.split,
             "total_cases": self.total_cases,
             "approved_cases": self.approved_cases,
             "avg_score": round(self.avg_score, 2) if self.avg_score is not None else None,
+            "score_tier": self.score_tier,
+            "veto_present": self.veto_present,
             "fatal_count": self.fatal_count,
             "major_count": self.major_count,
             "pass_count": self.pass_count,

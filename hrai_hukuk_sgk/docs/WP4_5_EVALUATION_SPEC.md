@@ -146,8 +146,10 @@ Yalnızca `"hesaplanan net \d+ TL"` gibi dar düzenli ifadeler yerine çıkarıl
 | Değerlendirme Seviyesi | Başarılı (`PASS`) | İnceleme Gerekli (`PARTIAL_REVIEW`) | Başarısız (`FAIL`) | Bağımsız Veto / Alt Koşullar |
 |---|---|---|---|---|
 | **1. Tekil Vaka Düzeyi** (`SingleCaseEvalReport`) | **`>= 85.0`** | **`80.0 – 84.99`** | **`< 80.0`** (`FAIL_SCORE`) | `FATAL > 0` $\implies$ `0.0` (`FAIL_FATAL`); `MAJOR > 0` $\implies$ `<= 65.0` (`FAIL_MAJOR`). |
-| **2. Küme / Kategori Düzeyi** (`DEV`, `VALIDATION`, `HOLDOUT` ve `7` Kategori) | **`>= 85.0`** *(özellikle `HOLDOUT >= 85.0` zorunlu)* | **`80.0 – 84.99`** | **`< 80.0`** | Kategori makro ortalaması (`macro_category_weighted_index`) `>= 80.0`; tekil kategori tabanı `>= 75.0`. |
-| **3. Genel Resmî Benchmark Düzeyi** (`OfficialBenchmarkMetrics`) | **`>= 85.0`** (`PASSED`) | **`80.0 – 84.99`** (`BELOW_THRESHOLD` — resmî onay alamaz) | **`< 80.0`** (`BELOW_THRESHOLD` / `FAILED_FATAL_VETO`) | `run_validity == "VALID"` (K-03), `100/100` K-01 kriptografik hukuk onayı, `0 FATAL`, `leakage_audit.passed == True` ve alt boyut eşikleri aynı anda sağlanır. |
+| **2. Küme / Kategori Düzeyi** (`DEV`, `VALIDATION`, `HOLDOUT` ve `7` Kategori) | **`>= 85.0`** *(özellikle `HOLDOUT >= 85.0` zorunlu)* | **`80.0 – 84.99`** | **`< 80.0`** | Kategori makro ortalaması (`macro_category_weighted_index`) `>= 80.0`; tekil kategori tabanı `>= 75.0`; `CategoryMetricsSummary`/`SplitMetricsSummary` ortogonal `.score_tier` + `.veto_present` alanları üretir. |
+| **3. Genel Resmî Benchmark Düzeyi** (`OfficialBenchmarkMetrics`) | **`>= 85.0`** (`PASSED`) | **`80.0 – 84.99`** (`BELOW_THRESHOLD` — resmî onay alamaz) | **`< 80.0`** (`BELOW_THRESHOLD` / `FAILED_FATAL_VETO`) | `run_validity == "VALID"` (K-03), `100/100` K-01 kriptografik hukuk onayı, `0 FATAL`, `leakage_audit.passed == True` ve alt boyut eşikleri (`HOLDOUT >= 85.0`, `macro >= 80.0`, tekil kategori `>= 75.0`) aynı anda sağlanır. |
+
+> **Kod Birliği Notu:** Üç seviyenin tamamı `classify_score_band` (`engine/evaluation/models.py`) üzerinden tek merkezde sınıflandırılır; `OfficialBenchmarkMetrics` ise tekil kategori `< 75.0` ihlallerini `Tekil kategori tabanı < 75.0` gerekçesiyle `BELOW_THRESHOLD` olarak bloklar.
 
 ### 4.3. K-03 Üçlü Eksik Ölçüm ve Altyapı Hatası Ayrımı
 
@@ -361,7 +363,7 @@ EvaluationRunManifest:
 | Bulgu | Uygulanan Dosya / Modül | Sağlanan Teknik Garanti |
 |---|---|---|
 | **K-01 / O-04** | `engine/evaluation/legal_signoff.py` + `dataset_loader.py` | Inline `APPROVED_FOR_BENCHMARK` reddi, `TrustedLegalApproverRegistry`, Ed25519 (RFC 8032) & RSA-PSS-SHA256 (`saltlen=32`) JCS imzası, `REVOKE` / `KEY_COMPROMISE` / `SUPERSEDE_REAPPROVE` ve çift-göz override itiraz tarihçesi. |
-| **K-02 / Y-01 / Y-02 / O-02 / O-03** | `engine/evaluation/models.py` + `rubric.py` | 3 seviyeli (`>=85 / 80–84.99 / <80`) karar matrisi, çakışmasız sabit ceza tablosu (`DEFECT_FIXED_PENALTIES`), tek zorunlu `RENORMALIZED_ACTIVE_WEIGHTS` + N/A `raw_score=None`, vaka bazlı `MINOR <= 5.0` bütçe ve vaka + makro kategori endeksi. |
+| **K-02 / Y-01 / Y-02 / O-02 / O-03** | `engine/evaluation/models.py` + `rubric.py` + `runner.py` | Ortak `classify_score_band` ile 3 seviyeli (`>=85 / 80–84.99 / <80`) karar matrisi, `CategoryMetricsSummary`/`SplitMetricsSummary` `.score_tier` + `.veto_present`, tekil kategori `< 75.0` taban bloğu, sabit ceza tablosu (`DEFECT_FIXED_PENALTIES`), `RENORMALIZED_ACTIVE_WEIGHTS` + N/A `raw_score=None` ve vaka bazlı `MINOR <= 5.0` bütçe. |
 | **K-03 / Y-04 / Y-05 / O-05** | `engine/evaluation/runner.py` + `rubric.py` | Altyapı hatasında `RUN_INVALID` (`score=None`) ayrımı, tam `EvaluationRunManifest`, KB/girdi farkındalı 4 sınıflı `MonetaryMentionClassifier` ve sabit `Recall@5` / `Recall@10` / `Source Hit@5` / `MRR`. |
 | **Y-03 / O-01** | `datasets/eval_dev_val_70_cases.json` + `eval_holdout_30_sealed.json` | Ayrık kasalar, `blind_holdout_mode=True` maskeleme, append-only `HoldoutAccessLedger` ve NFKC Türkçe 4-gram Jaccard normalizasyonu. |
-| **Doğrulama** | `tests/test_evaluation_wp45_v106.py` (`EV-01..EV-09`) | Tekrar üretilebilir temiz ZIP çıkarımı, `4` sıralamalı `302/302` tam regresyon, `strict`/`offline` X.509 ve kapalı kapı doğrulaması. |
+| **Doğrulama** | `tests/test_evaluation_wp45_v106.py` (`EV-01..EV-10`) | Tekrar üretilebilir temiz ZIP çıkarımı, `4` sıralamalı `303/303` tam regresyon, RFC 8032 Ed25519 / RSA-PSS-SHA256 (`saltlen=32`) negatif vektörleri, AST/`TimeoutExpired` alt-süreç denetimi, `strict`/`offline` X.509 ve kapalı kapı doğrulaması. |

@@ -56,6 +56,7 @@ from .models import (
     EvaluationIntegrityError,
     FailureDefectRecord,
     SingleCaseEvalReport,
+    classify_score_band,
 )
 
 _RISK_RANK: dict[str, int] = {"LOW": 1, "MEDIUM": 2, "HIGH": 3, "CRITICAL": 4}
@@ -981,23 +982,10 @@ class EvaluationRubricScorer:
         raw_weighted = sum(DIMENSION_WEIGHTS[d] * dim_scores[d] for d in evaluated_dims) / float(active_weight_sum)
 
         # K-02 Consistent Thresholds (PASS >= 85.0, PARTIAL_REVIEW 80.0..84.99, FAIL_SCORE < 80.0)
-        has_fatal = any(d.severity == SEVERITY_FATAL for d in defects)
-        has_major = any(d.severity == SEVERITY_MAJOR for d in defects)
-        if has_fatal:
-            final_score = 0.0
-            verdict = VERDICT_FAIL_FATAL
-        elif has_major:
-            final_score = min(65.0, raw_weighted)
-            verdict = VERDICT_FAIL_MAJOR
-        elif raw_weighted >= 85.0:
-            final_score = raw_weighted
-            verdict = VERDICT_PASS
-        elif raw_weighted >= 80.0:
-            final_score = raw_weighted
-            verdict = VERDICT_PARTIAL_REVIEW
-        else:
-            final_score = raw_weighted
-            verdict = VERDICT_FAIL_SCORE
+        fatal_cnt = sum(1 for d in defects if d.severity == SEVERITY_FATAL)
+        major_cnt = sum(1 for d in defects if d.severity == SEVERITY_MAJOR)
+        final_score, verdict = classify_score_band(raw_weighted, fatal_count=fatal_cnt, major_count=major_cnt)
+        assert final_score is not None
 
         root_tags = tuple(dict.fromkeys(d.root_cause_tag for d in defects if d.root_cause_tag != ROOT_CAUSE_NONE))
         dim_tuples = tuple(
