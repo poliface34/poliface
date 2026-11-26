@@ -347,8 +347,55 @@ class AnswerLegalReasoningEngine:
             )
 
         # 3. LEGAL_INTERPRETATION layer (interpretation cards + companion rules + L5/L6)
+        from ..precedent_verifier import (
+            LAW_CITATION_RE,
+            PRESIDENTIAL_DECISION_CITATION_RE,
+            PRESIDENTIAL_DECREE_CITATION_RE,
+            TEBLIG_CITATION_RE,
+        )
+        from ..source_validator import parse_iso_date
+
+        target_dt = parse_iso_date(as_of_date) if as_of_date else None
+
+        def _mentions_future_statute(txt: str) -> bool:
+            if not txt or target_dt is None or not self._sources:
+                return False
+            by_num: dict[str, list[LegalSourceRecord]] = {}
+            for s in self._sources.values():
+                by_num.setdefault(s.statute_number, []).append(s)
+            for pat in (
+                PRESIDENTIAL_DECISION_CITATION_RE,
+                PRESIDENTIAL_DECREE_CITATION_RE,
+                TEBLIG_CITATION_RE,
+                LAW_CITATION_RE,
+            ):
+                for m in pat.finditer(txt):
+                    num = m.group("num")
+                    cands = by_num.get(num, [])
+                    if not cands:
+                        continue
+                    has_active_or_past = any(
+                        (parse_iso_date(c.effective_from) is not None and parse_iso_date(c.effective_from) <= target_dt)
+                        for c in cands
+                    )
+                    if not has_active_or_past:
+                        return True
+            return False
+
+        top_norm_provs = {item.chunk.provision_id for item in temporal_report.active_normative_items[:5]}
+        top_norm_srcs = {item.chunk.source_id for item in temporal_report.active_normative_items[:5]}
+        relevant_interp_items = tuple(
+            item
+            for idx, item in enumerate(temporal_report.active_interpretation_items)
+            if (idx == 0 and not temporal_report.active_normative_items)
+            or item.rerank_score >= 0.55
+            or item.chunk.provision_id in top_norm_provs
+            or item.chunk.source_id in top_norm_srcs
+            or trace_bundle.intent_classification.intent == INTENT_PROCEDURE_AND_AUTONOMOUS_NORM
+        )
+
         seen_rules: set[str] = set()
-        for item in (*temporal_report.active_normative_items, *temporal_report.active_interpretation_items):
+        for item in (*temporal_report.active_normative_items, *relevant_interp_items):
             b_rec = bindings_by_chunk.get(item.chunk.chunk_id)
             for rule in item.companion_rules:
                 if rule.rule_id in seen_rules:
@@ -362,6 +409,8 @@ class AnswerLegalReasoningEngine:
                         f"[YORUM — {rule.topic}] Koşul: {sc.get('condition', '')} -> "
                         f"Kural: {sc.get('legal_rule', '')} ({sc.get('statutory_basis', '')})"
                     )
+                    if _mentions_future_statute(txt):
+                        continue
                     interpretation_claims.append(
                         AnswerClaimRecord(
                             claim_id=_next_id("INTP"),
@@ -387,26 +436,28 @@ class AnswerLegalReasoningEngine:
                         )
                     )
                 for exc in rule.exceptions:
-                    if exc not in exceptions_list:
+                    if not _mentions_future_statute(exc) and exc not in exceptions_list:
                         exceptions_list.append(exc)
                 for tr in rule.transitional_rules:
                     tr_note = (
                         f"Geçiş Hükmü ({tr.get('cutoff_date', '')}): Öncesi={tr.get('pre_cutoff_rule', '')} | "
                         f"Sonrası={tr.get('post_cutoff_rule', '')}"
                     )
-                    if tr_note not in exceptions_list:
+                    if not _mentions_future_statute(tr_note) and tr_note not in exceptions_list:
                         exceptions_list.append(tr_note)
                 for pit in rule.counter_arguments_and_pitfalls:
-                    if pit not in counter_args:
+                    if not _mentions_future_statute(pit) and pit not in counter_args:
                         counter_args.append(pit)
                 for doc in rule.required_documents:
                     if doc not in required_docs:
                         required_docs.append(doc)
 
         # Standalone interpretation card summary chunks not having companion_rules attached
-        for item in temporal_report.active_interpretation_items:
+        for item in relevant_interp_items:
             ch = item.chunk
             if not item.companion_rules and wl.contains_source(ch.source_id) and wl.contains_provision(ch.provision_id):
+                if _mentions_future_statute(ch.raw_text):
+                    continue
                 b_rec = bindings_by_chunk.get(ch.chunk_id)
                 interpretation_claims.append(
                     AnswerClaimRecord(
@@ -480,10 +531,7 @@ class AnswerLegalReasoningEngine:
 
         # Warn explicitly when unadopted L5/L6 templates were excluded
         has_m22_whitelisted = any(pid.startswith("4857:m-22") for pid in wl.allowed_provision_ids)
-        allow_m22_notice = (
-            has_m22_whitelisted
-            or trace_bundle.intent_classification.intent == INTENT_PROCEDURE_AND_AUTONOMOUS_NORM
-        )
+        allow_m22_notice = has_m22_whitelisted
         for notice in trace_bundle.excluded_unverified_notices:
             if notice.status == "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION":
                 consent_clause = (

@@ -55,6 +55,15 @@ CONTROLLED_LEGAL_ALIASES: tuple[tuple[str, str, tuple[str, ...]], ...] = (
     ("uzaktan çalışma", "10766 9368 uzaktan çalışma oranları yönetmelik", ("10766",)),
     ("fazla çalışma", "4857 madde 41 yıllık 270 saat fazla mesai", ("4857",)),
     ("yıllık izin", "4857 madde 53 yıllık ücretli izin süreleri", ("4857",)),
+    ("dinlenme hakkı", "4857 yıllık ücretli izin hafta tatili madde 53 anayasa m.11", ("4857",)),
+    ("norm hiyerarşisi", "anayasa m.11 uluslararası antlaşma 4857 yıllık ücretli izin", ("4857",)),
+    ("arabuluculuk", "7036 madde 3 iş mahkemeleri 4857 fesih", ("7036", "4857")),
+    ("2020/20", "SGK-GENELGE-2020-20 5510 m.80 yemek yol SPEK", ("5510", "2020/20")),
+    ("ikramiye", "4857 madde 22 işyeri uygulaması esaslı değişiklik yazılı rıza", ("4857",)),
+    ("adli sicil", "6698 kvkk madde 6 7499 adli sicil ölçülülük", ("6698",)),
+    ("fazla çalışma yönetmeliği", "YONETMELIK-FAZLA-CALISMA-20040406 CARD-YON-FAZLA-CALISMA 4857 m.41 m.7 m.9", ("4857",)),
+    ("yönetmelik m.7", "YONETMELIK-FAZLA-CALISMA-20040406 CARD-YON-FAZLA-CALISMA madde 7 4857 m.41 m.69", ("4857",)),
+    ("ssiy", "YONETMELIK-SSIY-20100512 CARD-SSIY-M11-M14 5510 madde 8 madde 9 işten ayrılış", ("5510",)),
 )
 
 _OUT_OF_DOMAIN_LITIGATION_PHRASES: tuple[str, ...] = (
@@ -95,6 +104,12 @@ _PAYROLL_EXCLUSION_HINTS: tuple[str, ...] = (
     "tarife",
     "istisna",
     "tavan",
+    "işçi sayısı",
+    "30 işçi",
+    "sayısı nasıl",
+    "hak düşürücü",
+    "izin süresi",
+    "çalışma süresi",
 )
 _PRECEDENT_HINTS: tuple[str, ...] = (
     "yargıtay",
@@ -188,6 +203,13 @@ _LABOR_HINTS: tuple[str, ...] = (
     "319",
     "yemek istisnası",
     "tbk",
+    "dinlenme hakkı",
+    "norm hiyerarşisi",
+    "anayasa madde 50",
+    "anayasa m.50",
+    "uluslararası antlaşma",
+    "ilo",
+    "arabuluculuk",
 )
 _SGK_HINTS: tuple[str, ...] = (
     "5510",
@@ -249,7 +271,16 @@ class QueryIntentAnalyzer:
 
         extracted_laws = tuple(dict.fromkeys(_LAW_NO_FIND_RE.findall(q_fold)))
         extracted_articles = tuple(dict.fromkeys(m.lower() for m in _ARTICLE_FIND_RE.findall(q_fold)))
-        extracted_cases = tuple(dict.fromkeys(_CASE_NO_FIND_RE.findall(q_fold)))
+        extracted_cases = tuple(
+            dict.fromkeys(
+                c_no
+                for c_no in _CASE_NO_FIND_RE.findall(q_fold)
+                if not re.search(
+                    rf"(?:sgk[\s\-]+(?:genelge\s*)?{re.escape(c_no)}|{re.escape(c_no)}\s*(?:sayılı\s*)?genelge)",
+                    q_fold,
+                )
+            )
+        )
         extracted_sgk_codes = tuple(dict.fromkeys(_SGK_CODE_FIND_RE.findall(q_fold)))
 
         # 1. Check strict Out-of-Domain / Av. K. m.35 Petition Boundaries FIRST
@@ -296,17 +327,42 @@ class QueryIntentAnalyzer:
         if any(h in q_fold for h in _KVKK_HINTS) or ("6698" in extracted_laws) or has_sağlık_raporu_case:
             matched_domains.append(DOMAIN_PERSONAL_DATA_PROTECTION)
 
+        def _has_auto_hint(token: str) -> bool:
+            if token in {"tis", "l5", "l6"}:
+                return bool(re.search(rf"(?<![a-zçğıöşü0-9]){re.escape(token)}(?![a-zçğıöşü0-9])", q_fold))
+            return token in q_fold
+
         # Fallback if a valid HR/SGK precedent or autonomous query didn't list numeric law tokens
         if not matched_domains:
-            if any(h in q_fold for h in _PRECEDENT_HINTS) or extracted_cases or any(h in q_fold for h in _AUTONOMOUS_NORM_HINTS):
+            if any(h in q_fold for h in _PRECEDENT_HINTS) or extracted_cases or any(_has_auto_hint(h) for h in _AUTONOMOUS_NORM_HINTS):
                 matched_domains.append(DOMAIN_LABOR_LAW)
 
         # 3. Intent classification
         has_payroll_calc = any(t in q_fold for t in _PAYROLL_CALC_TRIGGERS) and not any(ex in q_fold for ex in _PAYROLL_EXCLUSION_HINTS)
         has_precedent = bool(extracted_cases) or any(h in q_fold for h in ("yargıtay", "danıştay", "yibbgk", "hgk", "içtihat", "içtihadı", "iddk", "karararama", "aym"))
-        has_autonomous = any(h in q_fold for h in _AUTONOMOUS_NORM_HINTS)
-        has_scenario = any(h in q_fold for h in _SCENARIO_ACTION_HINTS)
-        has_lookup_verb = any(w in q_fold for w in ("nedir", "hükmü", "hükümleri", "metni", "dilimleri", "oranları", "yürürlük", "nelerdir", "tebliğ"))
+        has_autonomous = any(_has_auto_hint(h) for h in _AUTONOMOUS_NORM_HINTS)
+        has_concrete_event = any(h in q_fold for h in _SCENARIO_ACTION_HINTS if h != "geçerli mi") or (
+            "geçerli mi" in q_fold and "geçerli midir" not in q_fold
+        )
+        has_scenario = has_concrete_event
+        has_lookup_verb = any(
+            w in q_fold
+            for w in (
+                "nedir",
+                "hükmü",
+                "hükümleri",
+                "metni",
+                "dilimleri",
+                "oranları",
+                "yürürlük",
+                "nelerdir",
+                "tebliğ",
+                "geçerli midir",
+                "uygulanır mı",
+                "zorunlu mudur",
+                "aktarabilir miyiz",
+            )
+        )
 
         if has_payroll_calc:
             intent = INTENT_PAYROLL_DELEGATION_ONLY
@@ -316,7 +372,7 @@ class QueryIntentAnalyzer:
             intent = INTENT_PRECEDENT_CHECK
             primary_domain = DOMAIN_MIXED_MULTI_DOMAIN if len(matched_domains) >= 2 else (matched_domains[0] if matched_domains else DOMAIN_LABOR_LAW)
             secondary_domains = tuple(matched_domains) if len(matched_domains) >= 2 else ()
-        elif has_autonomous and not has_ohs and len(matched_domains) <= 1 and not (has_lookup_verb and extracted_articles):
+        elif has_autonomous and not has_ohs and len(matched_domains) <= 1 and not (has_lookup_verb and (extracted_articles or extracted_laws)):
             intent = INTENT_PROCEDURE_AND_AUTONOMOUS_NORM
             primary_domain = matched_domains[0] if matched_domains else DOMAIN_LABOR_LAW
             secondary_domains = ()
@@ -336,7 +392,7 @@ class QueryIntentAnalyzer:
                 sub_queries=(),
                 rewritten_query_text=clean,
             )
-        elif has_lookup_verb and not any(w in q_fold for w in ("yaptık", "geçti mi", "doldu mu", "çıkarma", "geçerli mi", "çalışan hakkında")):
+        elif has_lookup_verb and not has_concrete_event:
             intent = INTENT_STATUTE_LOOKUP
             primary_domain = DOMAIN_MIXED_MULTI_DOMAIN if len(matched_domains) >= 2 else matched_domains[0]
             secondary_domains = tuple(matched_domains) if len(matched_domains) >= 2 else ()
@@ -344,7 +400,7 @@ class QueryIntentAnalyzer:
             intent = INTENT_FACT_SCENARIO_ANALYSIS
             primary_domain = DOMAIN_MIXED_MULTI_DOMAIN if len(matched_domains) >= 2 else matched_domains[0]
             secondary_domains = tuple(matched_domains) if len(matched_domains) >= 2 else ()
-        elif len(matched_domains) >= 2 and any(w in q_fold for w in ("çıkarma", "fesih", "bildirim", "kodu", "iş kazası", "pdks", "rapor")):
+        elif len(matched_domains) >= 2 and any(w in q_fold for w in ("çıkarma", "fesih", "bildirim", "kodu", "iş kazası", "pdks", "rapor")) and "uygulanır mı" not in q_fold:
             intent = INTENT_FACT_SCENARIO_ANALYSIS
             primary_domain = DOMAIN_MIXED_MULTI_DOMAIN
             secondary_domains = tuple(matched_domains)

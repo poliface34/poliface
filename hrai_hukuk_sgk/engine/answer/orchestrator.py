@@ -89,7 +89,7 @@ class HukukSgkAnswerOrchestrator:
         self._precedents = precedent_registry or {}
         self._cards = knowledge_cards or {}
 
-        self._temporal = AnswerTemporalValidator()
+        self._temporal = AnswerTemporalValidator(source_registry=self._sources)
         self._reasoning = AnswerLegalReasoningEngine(
             source_registry=self._sources,
             precedent_registry=self._precedents,

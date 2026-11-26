@@ -685,19 +685,26 @@ def verify_response_citations(
             extracted_statutes.append((num, "SHORT_REF", match.start(), match.end()))
             article_mentions.append((num, art_label, match.start(), match.end()))
 
+    def _is_source_active_on_date(s: LegalSourceRecord) -> bool:
+        ef = parse_iso_date(s.effective_from)
+        et = parse_iso_date(s.effective_to)
+        if ef is None or et is None or not (ef <= target_dt <= et):
+            return False
+        if s.verification_status == "VERIFIED":
+            return True
+        if s.verification_status == "SUPERSEDED" and s.superseded_by:
+            succ = source_registry.get(s.superseded_by)
+            succ_ef = parse_iso_date(succ.effective_from) if succ is not None else None
+            if succ_ef is None or target_dt < succ_ef:
+                return True
+        return False
+
     actively_mentioned_ids: set[str] = set()
     for num, category, _, _ in extracted_statutes:
         for src in by_statute_no.get(num, []):
             if category in {"PRESIDENTIAL_DECISION", "PRESIDENTIAL_DECREE"} and src.norm_layer != category:
                 continue
-            eff_from = parse_iso_date(src.effective_from)
-            eff_to = parse_iso_date(src.effective_to)
-            if (
-                src.verification_status == "VERIFIED"
-                and eff_from is not None
-                and eff_to is not None
-                and eff_from <= target_dt <= eff_to
-            ):
+            if _is_source_active_on_date(src):
                 actively_mentioned_ids.add(src.source_id)
 
     seen_statute_checks: set[tuple[str, str]] = set()
@@ -743,10 +750,7 @@ def verify_response_citations(
         active_match: LegalSourceRecord | None = None
         inactive_match: LegalSourceRecord | None = None
         for src in candidates:
-            eff_from = parse_iso_date(src.effective_from)
-            eff_to = parse_iso_date(src.effective_to)
-            in_window = eff_from is not None and eff_to is not None and eff_from <= target_dt <= eff_to
-            if src.verification_status == "VERIFIED" and in_window:
+            if _is_source_active_on_date(src):
                 active_match = src
                 break
             inactive_match = src
@@ -859,7 +863,7 @@ def verify_response_citations(
                     remediation="Yalnızca tam metni doğrulanmış (VERIFIED) mevzuat kaynaklarını zikredin.",
                 )
             )
-        elif src.verification_status != "VERIFIED" or not in_window:
+        elif not _is_source_active_on_date(src):
             flags.append(
                 VerificationFlag(
                     code="EXPIRED_OR_REPEALED_STATUTE",

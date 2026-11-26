@@ -119,6 +119,12 @@ class HukukSgkRagEngine:
         self._abstention = AbstentionEvaluator()
 
         cfg_audit, cfg_urls = _build_audit_and_url_catalog(self._root)
+        from ..source_validator import load_source_registry
+
+        src_reg_path = self._root / "config" / "legal_sources_registry.json"
+        self._source_registry = (
+            load_source_registry(src_reg_path, strict=False) if src_reg_path.exists() else {}
+        )
         self._audit_by_doc_ver: dict[str, str] = {}
         self._url_by_doc_ver: dict[str, str] = {}
         self._audit_by_source: dict[str, str] = dict(cfg_audit)
@@ -344,6 +350,15 @@ class HukukSgkRagEngine:
                 if key not in excluded_map:
                     excluded_map[key] = n
 
+        from ..source_validator import parse_iso_date
+
+        target_dt = parse_iso_date(as_of_date)
+
+        def _is_src_expired(ch: Any) -> bool:
+            src = self._source_registry.get(ch.source_id)
+            src_et = parse_iso_date(src.effective_to) if src is not None and getattr(src, "effective_to", None) else None
+            return target_dt is not None and src_et is not None and target_dt > src_et
+
         # Bucket 1: Normative Legislation (STATUTORY_PROVISION + SECONDARY_REGULATION)
         res_norm_main = self._store.hybrid_search(
             KnowledgeSearchQuery(
@@ -355,7 +370,11 @@ class HukukSgkRagEngine:
             )
         )
         for h in res_norm_main.active_hits:
-            norm_hits_map[h.chunk.chunk_id] = h
+            if _is_src_expired(h.chunk):
+                if request.include_historical:
+                    hist_hits_map[h.chunk.chunk_id] = h
+            else:
+                norm_hits_map[h.chunk.chunk_id] = h
         for h in res_norm_main.historical_hits:
             hist_hits_map[h.chunk.chunk_id] = h
         _absorb_excluded(res_norm_main.excluded_unverified_notices)
@@ -373,6 +392,10 @@ class HukukSgkRagEngine:
                 )
             )
             for h in res_sub.active_hits:
+                if _is_src_expired(h.chunk):
+                    if request.include_historical:
+                        hist_hits_map.setdefault(h.chunk.chunk_id, h)
+                    continue
                 prev = norm_hits_map.get(h.chunk.chunk_id)
                 if prev is None or h.rrf_score > prev.rrf_score:
                     norm_hits_map[h.chunk.chunk_id] = h
@@ -390,6 +413,13 @@ class HukukSgkRagEngine:
                 top_k=max(top_k, 8),
             )
         )
+        active_interp_hits = []
+        for h in res_interp.active_hits:
+            if _is_src_expired(h.chunk):
+                if request.include_historical:
+                    hist_hits_map.setdefault(h.chunk.chunk_id, h)
+            else:
+                active_interp_hits.append(h)
         for h in res_interp.historical_hits:
             hist_hits_map.setdefault(h.chunk.chunk_id, h)
         _absorb_excluded(res_interp.excluded_unverified_notices)
@@ -425,7 +455,7 @@ class HukukSgkRagEngine:
         _absorb_excluded(res_auto.excluded_unverified_notices)
 
         audit_trail.append(
-            f"STAGE3_BUCKET_SEARCH:b1={len(norm_hits_map)},b2={len(res_interp.active_hits)},"
+            f"STAGE3_BUCKET_SEARCH:b1={len(norm_hits_map)},b2={len(active_interp_hits)},"
             f"b3={len(res_prec.active_hits)},b4={len(res_auto.active_hits)},hist={len(hist_hits_map)}"
         )
 
@@ -439,6 +469,7 @@ class HukukSgkRagEngine:
             store=self._store,
             as_of_date=as_of_date,
             seed_limit=3,
+            source_registry=self._source_registry,
         )
         ranked_norm = self._reranker.rerank_normative_bucket(
             expanded_norm_pairs,
@@ -447,7 +478,6 @@ class HukukSgkRagEngine:
             resolve_audit_fn=self._resolve_audit_log_id,
             resolve_url_fn=self._resolve_source_url,
         )
-
         # For PRECEDENT_CHECK where query didn't pull underlying statutory provision directly, hydrate interpreted anchors
         if intent_analysis.intent == INTENT_PRECEDENT_CHECK and res_prec.active_hits and not ranked_norm:
             extra_pairs: list[tuple[SearchHit, str]] = []
@@ -463,7 +493,8 @@ class HukukSgkRagEngine:
                         )
                     )
                     for ah in anc_res.active_hits:
-                        extra_pairs.append((ah, "CROSS_REF_EXPANSION"))
+                        if not _is_src_expired(ah.chunk):
+                            extra_pairs.append((ah, "CROSS_REF_EXPANSION"))
             if extra_pairs:
                 ranked_norm = self._reranker.rerank_normative_bucket(
                     extra_pairs,
@@ -474,11 +505,15 @@ class HukukSgkRagEngine:
                 )
 
         ranked_interp = self._reranker.rerank_interpretation_bucket(
-            card_hits=list(res_interp.active_hits),
+            card_hits=active_interp_hits,
             normative_items=ranked_norm,
             store=self._store,
             resolve_audit_fn=self._resolve_audit_log_id,
             resolve_url_fn=self._resolve_source_url,
+            query_text=request.query_text,
+            intent_analysis=intent_analysis,
+            as_of_date=as_of_date,
+            source_registry=self._source_registry,
         )
         ranked_prec = self._reranker.rerank_precedent_bucket(
             list(res_prec.active_hits),
@@ -486,6 +521,7 @@ class HukukSgkRagEngine:
             query_text=request.query_text,
             resolve_audit_fn=self._resolve_audit_log_id,
             resolve_url_fn=self._resolve_source_url,
+            intent_analysis=intent_analysis,
         )
         ranked_auto = self._reranker.wrap_autonomous_or_historical_hits(
             list(res_auto.active_hits),

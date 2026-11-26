@@ -99,7 +99,12 @@ class AnswerRiskAssessor:
                 "4857 m.26 hak düşürücü 6 iş günü süresi doğrulanmış resmî takvim olmadan kesin hesaplanamaz.",
             )
 
-        if facts.get("cross_border_saas_transfer") is True or any("KVKK_M9" in r for r in esc_reasons):
+        q_fold = trace_bundle.query_text.lower()
+        asks_kvkk_m9_transfer = (
+            ("6698" in q_fold or "kvkk" in q_fold)
+            and any(k in q_fold for k in ("yurt dış", "yurtdış", "madde 9", "m.9", "bulut", "saas"))
+        )
+        if facts.get("cross_border_saas_transfer") is True or asks_kvkk_m9_transfer or any("KVKK_M9" in r for r in esc_reasons):
             _push_risk(
                 "CRITICAL",
                 "BOTH",
@@ -109,6 +114,25 @@ class AnswerRiskAssessor:
             )
 
         # 2. High risks
+        defense_not_taken = (
+            facts.get("defense_taken_before_termination") is False
+            or str(facts.get("written_defense_status") or "").strip().upper() in {"NOT_TAKEN", "NONE", "FALSE"}
+        )
+        if defense_not_taken or any("M19_2_SAVUNMA" in r for r in esc_reasons):
+            _push_risk(
+                "HIGH",
+                "EMPLOYER",
+                "M19_2_SAVUNMA_EKSIGI_IHLALI",
+                "4857 m.19/2 uyarınca davranış veya verim (performans) feshinden önce işçinin yazılı savunmasının alınmaması emredici şekil şartı ihlalidir.",
+                "İşe iade davasında fesih doğrudan geçersiz sayılabilir; boşta geçen süre ücreti ve işe başlatmama tazminatı riski doğar.",
+            )
+            _push_risk(
+                "HIGH",
+                "EMPLOYEE",
+                "M19_2_EMPLOYEE_REINSTATEMENT_CLAIM",
+                "Savunması alınmadan işten çıkarılan işçi 1 ay içinde zorunlu arabuluculuk ve işe iade talebinde bulunabilir.",
+                "İşe iade ve geçersiz fesih talebi riski yüksektir.",
+            )
         if any("M109_7555" in r for r in esc_reasons):
             _push_risk(
                 "HIGH",

@@ -2178,10 +2178,14 @@ def _eval_termination_validity(
 
     reason_type = str(facts.get("termination_reason_type", "UNKNOWN")).upper()
     total_emp = facts.get("workplace_total_employees")
+    if total_emp is None:
+        total_emp = facts.get("company_size")
     tenure_months = facts.get("tenure_months")
     contract_type = str(facts.get("contract_term_type", "UNKNOWN")).upper()
     written_notice = facts.get("written_notice_with_clear_reason")
     defense_status = str(facts.get("written_defense_status", "UNKNOWN")).upper()
+    if defense_status == "UNKNOWN" and facts.get("defense_taken_before_termination") is not None:
+        defense_status = "OBTAINED_WRITTEN" if bool(facts.get("defense_taken_before_termination")) else "NOT_TAKEN"
     cba_requires_defense = bool(facts.get("cba_requires_written_defense_for_all_terminations", False))
     last_resort_checked = facts.get("last_resort_checked")
     discovery_date_s = facts.get("discovery_date")

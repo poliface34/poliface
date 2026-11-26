@@ -25,7 +25,16 @@ _SOURCE_CUTOFF_FLOOR: dict[str, str] = {
 class AnswerTemporalValidator:
     """Validates `as_of_date`, blocks retroactive statutes, and isolates historical/future items."""
 
-    def validate(self, trace_bundle: RetrievalTraceBundle) -> TemporalValidationReport:
+    def __init__(self, *, source_registry: dict[str, Any] | None = None) -> None:
+        self._sources = source_registry or {}
+
+    def validate(
+        self,
+        trace_bundle: RetrievalTraceBundle,
+        *,
+        source_registry: dict[str, Any] | None = None,
+    ) -> TemporalValidationReport:
+        sources = source_registry if source_registry is not None else self._sources
         as_of_date = trace_bundle.as_of_date
         target_dt = parse_iso_date(as_of_date) if as_of_date else None
         if (
@@ -52,12 +61,23 @@ class AnswerTemporalValidator:
                 eff_from = parse_iso_date(ch.effective_from)
                 eff_to = parse_iso_date(ch.effective_to) if ch.effective_to else date(2999, 12, 31)
 
+                src_rec = sources.get(ch.source_id)
+                src_eff_to = (
+                    parse_iso_date(src_rec.effective_to)
+                    if src_rec is not None and getattr(src_rec, "effective_to", None)
+                    else None
+                )
+                src_expired = src_eff_to is not None and target_dt > src_eff_to
+
                 # Explicit hard cutoff floor check against source_id and document_version_id
                 floor_str = _SOURCE_CUTOFF_FLOOR.get(ch.document_version_id) or _SOURCE_CUTOFF_FLOOR.get(ch.source_id)
                 floor_dt = parse_iso_date(floor_str) if floor_str else None
                 cutoff_violated = floor_dt is not None and target_dt < floor_dt
 
-                if eff_from is None or eff_to is None or not (eff_from <= target_dt <= eff_to) or cutoff_violated:
+                is_future_item = cutoff_violated or (eff_from is not None and target_dt < eff_from)
+                is_past_expired = (eff_to is not None and target_dt > eff_to) or src_expired
+
+                if eff_from is None or eff_to is None or is_future_item or is_past_expired:
                     rejected_retroactive.append(
                         {
                             "bucket": bucket_label,
@@ -68,13 +88,13 @@ class AnswerTemporalValidator:
                             "effective_from": ch.effective_from,
                             "effective_to": ch.effective_to,
                             "as_of_date": as_of_date,
-                            "reason": "TEMPORAL_RETROACTIVITY_VIOLATION_BLOCKED",
+                            "reason": "EXPIRED_OR_SUPERSEDED_SOURCE_EXCLUDED" if is_past_expired else "TEMPORAL_RETROACTIVITY_VIOLATION_BLOCKED",
                         }
                     )
                     if "TEMPORAL_RETROACTIVITY_VIOLATION_BLOCKED" not in temporal_flags:
                         temporal_flags.append("TEMPORAL_RETROACTIVITY_VIOLATION_BLOCKED")
-                    # Preserve superseded/expired items in historical context ONLY (effective_on_date=False)
-                    if item not in historical_items:
+                    # Preserve ONLY expired/superseded historical items in historical context — NEVER future laws!
+                    if is_past_expired and not is_future_item and item not in historical_items:
                         historical_items.append(item)
                     continue
 
@@ -103,8 +123,6 @@ class AnswerTemporalValidator:
                         "reason": "FUTURE_PRECEDENT_CANNOT_APPLY_RETROACTIVELY_AS_SETTLED",
                     }
                 )
-                if item not in historical_items:
-                    historical_items.append(item)
                 continue
 
             post_status = str((item.precedent_metadata or {}).get("post_decision_amendment_status") or "UNAFFECTED")

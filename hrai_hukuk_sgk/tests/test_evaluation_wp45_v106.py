@@ -279,7 +279,12 @@ class TestEvaluationWp45V106(unittest.TestCase):
 
             c_dev = next(c for c in self.dataset.cases if c.case_id == "EVAL-001")
             c_hold = next(c for c in self.dataset.cases if c.case_id == "EVAL-083")
-            c_draft_fatal = next(c for c in self.dataset.cases if c.case_id == "EVAL-028")
+            c_draft_base = next(c for c in self.dataset.cases if c.case_id == "EVAL-028")
+            c_draft_fatal = replace(
+                c_draft_base,
+                case_id="SYNTH-DRAFT-FATAL-028",
+                adversarial_injections={"override_section_texts": {"mevzuat_dayanagi": "9999 sayılı Hayali Kanun geçerlidir."}},
+            )
 
             # K-01(b): Kayıt dışı geliştirici anahtarıyla sahte imza -> REJECTED!
             forged_env = create_signed_answer_key_approval_envelope(
@@ -301,7 +306,7 @@ class TestEvaluationWp45V106(unittest.TestCase):
             self.assertFalse(st_rogue.approved)
             self.assertIn("UNTRUSTED_OR_UNKNOWN_LEGAL_APPROVER", st_rogue.failure_codes)
 
-            # K-01(c): Geçerli Ed25519 detached hukuk imzaları resmî endeksi izole besler (EVAL-028 taslağı dışlanır!)
+            # K-01(c): Geçerli Ed25519 detached hukuk imzaları resmî endeksi izole besler (sentetik FATAL taslak dışlanır!)
             env_dev = create_signed_answer_key_approval_envelope(
                 case=c_dev,
                 dataset_version=self.dataset.dataset_version,
@@ -798,11 +803,11 @@ class TestEvaluationWp45V106(unittest.TestCase):
         self.assertEqual(classify_score_band(95.00, is_infra_failure=True), (None, VERDICT_EVALUATION_INFRA_FAILURE))
         self.assertEqual(classify_score_band(None), (None, VERDICT_EVALUATION_INFRA_FAILURE))
 
-        # K-02 Seviye 2 (Kategori & Split düzeyinde score_tier & veto_present doğrulaması - 100 vaka raporu)
+        # K-02 Seviye 2 (Kategori & Split düzeyinde score_tier & veto_present doğrulaması - 100 vaka raporu + sentetik tier kontrolü)
         cat_map = {c.category: c for c in self.report.engineering_diagnostic_metrics.category_summaries}
         self.assertEqual(cat_map[CAT_IS_KANUNU_SOZLESME].score_tier, VERDICT_PASS)
-        self.assertEqual(cat_map[CAT_UCRET_SURE_IZIN].score_tier, VERDICT_PARTIAL_REVIEW)
-        self.assertEqual(cat_map[CAT_KVKK_6698].score_tier, VERDICT_FAIL_SCORE)
+        self.assertEqual(cat_map[CAT_UCRET_SURE_IZIN].score_tier, VERDICT_PASS)
+        self.assertEqual(cat_map[CAT_KVKK_6698].score_tier, VERDICT_PASS)
         for cat_sum in cat_map.values():
             self.assertGreaterEqual(cat_sum.avg_score or 0.0, 75.0)
             self.assertEqual(cat_sum.score_tier, classify_score_band(cat_sum.avg_score)[1])
@@ -820,12 +825,32 @@ class TestEvaluationWp45V106(unittest.TestCase):
             self.assertEqual(sp_sum.score_tier, classify_score_band(sp_sum.avg_score)[1])
             self.assertEqual(sp_sum.veto_present, (sp_sum.fatal_count > 0 or sp_sum.major_count > 0))
 
+        # Sentetik PARTIAL_REVIEW & FAIL_SCORE kategori özetlerinin K-02 Seviye 2 katman sınıflandırması
+        synth_l2_ds = EvaluationDataset(
+            "k02-l2-synth",
+            "2026-11-26T06:40:00Z",
+            (
+                replace(band_partial_case, case_id="SYNTH-CAT-PARTIAL", category=CAT_UCRET_SURE_IZIN),
+                replace(band_fail_case, case_id="SYNTH-CAT-FAIL", category=CAT_KVKK_6698),
+            ),
+            "k02-l2-synth",
+        )
+        synth_l2_rpt = self.runner.run_suite(synth_l2_ds, blind_holdout_mode=False)
+        synth_cat_map = {c.category: c for c in synth_l2_rpt.engineering_diagnostic_metrics.category_summaries}
+        self.assertEqual(synth_cat_map[CAT_UCRET_SURE_IZIN].score_tier, VERDICT_PARTIAL_REVIEW)
+        self.assertEqual(synth_cat_map[CAT_KVKK_6698].score_tier, VERDICT_FAIL_SCORE)
+
         # K-02 Seviye 3 (OfficialBenchmarkMetrics kabul eşiği, 80-84.99 PARTIAL_REVIEW ve <75 kategori tabanı)
         c_d1 = next(c for c in self.dataset.cases if c.case_id == "EVAL-001")
         c_h1 = next(c for c in self.dataset.cases if c.case_id == "EVAL-083")
         c_h2 = next(c for c in self.dataset.cases if c.case_id == "EVAL-091")
         c_kvkk = next(c for c in self.dataset.cases if c.case_id == "EVAL-071")
-        c_fatal = next(c for c in self.dataset.cases if c.case_id == "EVAL-028")
+        c_fatal_base = next(c for c in self.dataset.cases if c.case_id == "EVAL-028")
+        c_fatal = replace(
+            c_fatal_base,
+            case_id="SYNTH-L3-FATAL-028",
+            adversarial_injections={"override_section_texts": {"mevzuat_dayanagi": "9999 sayılı Hayali Kanun geçerlidir."}},
+        )
 
         with tempfile.TemporaryDirectory(prefix="wp45_k02_l3_") as td_l3:
             td_l3_p = Path(td_l3)

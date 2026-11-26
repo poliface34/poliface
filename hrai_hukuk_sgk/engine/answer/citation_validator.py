@@ -201,28 +201,46 @@ def _has_active_prior_article_rule(
     source_registry: dict[str, LegalSourceRecord],
     temporal_report: TemporalValidationReport | None,
 ) -> bool:
-    """Return True if an amended article has an in-force prior regime rule AND verified active chunk on as_of_date."""
+    """Return True if an amended article has an in-force prior regime (explicit rule or pre-amendment verified chunk)."""
     src = source_registry.get(source_id)
     target_dt = parse_iso_date(as_of_date)
-    if src is None or target_dt is None:
+    if src is None or target_dt is None or temporal_report is None:
         return False
 
-    has_prior_rule = False
-    for rule in src.article_effective_rules:
-        if rule.article_ref == art_label or rule.article_ref.startswith(f"{art_label} ("):
-            ef = parse_iso_date(rule.effective_from)
-            et = parse_iso_date(rule.effective_to)
-            if ef is not None and et is not None and ef <= target_dt <= et:
-                has_prior_rule = True
-                break
-    if not has_prior_rule or temporal_report is None:
+    src_ef = parse_iso_date(src.effective_from)
+    src_et = parse_iso_date(src.effective_to)
+    if src_ef is not None and src_et is not None and not (src_ef <= target_dt <= src_et):
+        return False
+
+    has_explicit_prior = False
+    has_future_only_rules = False
+    matching_rules = [
+        rule
+        for rule in src.article_effective_rules
+        if rule.article_ref == art_label or rule.article_ref.startswith(f"{art_label} (")
+    ]
+    for rule in matching_rules:
+        ef = parse_iso_date(rule.effective_from)
+        et = parse_iso_date(rule.effective_to)
+        if ef is not None and et is not None and ef <= target_dt <= et:
+            has_explicit_prior = True
+            break
+    if not has_explicit_prior and matching_rules:
+        # Check if ALL declared article rules start AFTER target_dt (post-amendment rules only)
+        if all(
+            (parse_iso_date(rule.effective_from) is not None and target_dt < parse_iso_date(rule.effective_from))
+            for rule in matching_rules
+        ):
+            has_future_only_rules = True
+
+    if not has_explicit_prior and not has_future_only_rules:
         return False
 
     art_num_m = re.search(r"(\d+)", art_label)
     target_art_num = str(int(art_num_m.group(1))) if art_num_m else ""
     for item in temporal_report.active_normative_items:
         ch = item.chunk
-        if ch.source_id != source_id or ch.verification_status != "VERIFIED":
+        if ch.source_id != source_id or ch.verification_status not in {"VERIFIED", "SUPERSEDED"}:
             continue
         ef = parse_iso_date(ch.effective_from)
         et = parse_iso_date(ch.effective_to) if ch.effective_to else parse_iso_date("2999-12-31")
@@ -333,11 +351,11 @@ class AnswerCitationValidator:
 
         # Layer A2: Prose Law + Article cross-check in active non-historical sections against whitelist
         allowed_pairs, allowed_laws = _extract_whitelisted_law_articles(wl, trace_bundle)
-        # Strip explicit historical & precedent quote blocks before checking strict active article refs
+        # Strip explicit historical & precedent & counter-argument quote blocks before checking strict active article refs
         active_mevzuat_head = sections.mevzuat_dayanagi.split("Tarihsel Bağlam", 1)[0]
-        # Inside hukuki_degerlendirme, exclude explicit [İÇTİHAT — ...] section from statutory provision matching
-        # because judicial rulings legitimately quote interpreted article numbers from official holdings
-        degerlendirme_parts = sections.hukuki_degerlendirme.split("[İÇTİHAT —", 1)
+        # Inside hukuki_degerlendirme, exclude explicit [İÇTİHAT — ...] and [KARŞI GÖRÜŞLER ...] blocks
+        degerlendirme_head = sections.hukuki_degerlendirme.split("[KARŞI GÖRÜŞLER", 1)[0]
+        degerlendirme_parts = degerlendirme_head.split("[İÇTİHAT —", 1)
         active_degerlendirme_stat = degerlendirme_parts[0]
         if len(degerlendirme_parts) > 1 and "[ÖZERKNORM" in degerlendirme_parts[1]:
             active_degerlendirme_stat += "\n" + degerlendirme_parts[1].split("[ÖZERKNORM", 1)[1]
@@ -362,8 +380,16 @@ class AnswerCitationValidator:
                 art = str(int(m.group("art")))
                 if (num, art) in _PRECEDENT_BOILERPLATE_ARTICLES:
                     continue
-                # Skip explicit counter-argument / historical pitfall context windows
-                ctx_win = active_prose[max(0, m.start() - 80) : min(len(active_prose), m.end() + 80)].lower()
+                # Skip explicit counter-argument / historical pitfall / precedent context lines & windows
+                line_start = active_prose.rfind("\n", 0, m.start()) + 1
+                line_end = active_prose.find("\n", m.end())
+                if line_end == -1:
+                    line_end = len(active_prose)
+                ctx_win = (
+                    active_prose[line_start:line_end].lower()
+                    + " "
+                    + active_prose[max(0, m.start() - 80) : min(len(active_prose), m.end() + 80)].lower()
+                )
                 if any(
                     mk in ctx_win
                     for mk in (
@@ -371,7 +397,9 @@ class AnswerCitationValidator:
                         "tarihsel bağlam",
                         "yaygın hata",
                         "karşı görüş",
+                        "[karşı görüş",
                         "sınırları",
+                        "kapsam dışı",
                     )
                 ):
                     continue
@@ -386,9 +414,12 @@ class AnswerCitationValidator:
                         )
                     )
                 elif (num, art) not in allowed_pairs:
-                    # Allow companion cross-references explicitly named inside verified rule summaries of allowed rules
-                    # unless it's an unwhitelisted article for an active statute!
-                    rule_text_blob = " ".join(c.statement for c in claims if c.claim_category == CLAIM_LEGAL_INTERPRETATION)
+                    # Allow companion cross-references explicitly named inside verified rule summaries/precedents of allowed rules
+                    rule_text_blob = " ".join(
+                        c.statement
+                        for c in claims
+                        if c.claim_category in {CLAIM_LEGAL_INTERPRETATION, CLAIM_JUDICIAL_PRECEDENT}
+                    )
                     if not re.search(rf"\b{re.escape(num)}\s+(?:m\.|madde\s*){re.escape(art)}\b", rule_text_blob, re.IGNORECASE):
                         blockers.append(
                             (
@@ -435,7 +466,7 @@ class AnswerCitationValidator:
             raw_blobs: list[str] = []
             for item in active_items:
                 ch = item.chunk
-                if ch.verification_status != "VERIFIED":
+                if ch.verification_status not in {"VERIFIED", "SUPERSEDED"}:
                     continue
                 if len(ch.context_header or "") >= 15:
                     raw_blobs.append(ch.context_header)

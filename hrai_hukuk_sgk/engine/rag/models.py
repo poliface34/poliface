@@ -190,6 +190,10 @@ class RankedEvidenceItem:
     precedent_metadata: dict[str, Any] = field(default_factory=dict)
     flags: tuple[str, ...] = ()
 
+    @property
+    def score(self) -> float:
+        return self.rerank_score
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "bucket": self.bucket,
