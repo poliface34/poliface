@@ -15,15 +15,15 @@
 
 | Bulgu Kodu | Öncelik | Çözülen Problem | İlgili Bölüm |
 |---|---|---|---|
-| **K-01** | Kritik | SHA-256 yalnız bütünlük kanıtlar; geliştiricinin kendiliğinden `APPROVED_FOR_BENCHMARK` yazmasını engellemek için ayrı depolu, asimetrik imzalı (`ED25519` / `RSA-PSS-SHA256`), kayıtlı hukukçu doğrulamalı ve iptal/yeniden onay geçmişli protokol eklendi. | Bölüm 6 |
-| **K-02** | Kritik | `PASS >= 80.0` ile resmî `>= 85.0` eşiği çelişkisi kaldırıldı: `PASS >= 85.0`, `PARTIAL_REVIEW` `80.0..84.99`, `FAIL_SCORE < 80.0`; `FATAL`/`MAJOR` bağımsız veto/tavan korundu. | Bölüm 5.2, 8.2 |
-| **K-03** | Kritik | Değerlendirme altyapısı / test aracı hatası (`EVALUATION_INFRA_FAILURE` $\implies$ `RUN_INVALID`, puan üretilmez) ile `@HukukSGK` çıktı sözleşme hatası (`MODEL_OUTPUT_SIGNAL_DEFECT` $\implies S_d=0.0$) kesin ayrıldı. | Bölüm 5.3 |
-| **Y-01** | Yüksek | `MAJOR` ceza aralığı (`-25..-40`) ile `-(20*eksik+10)` (`-10..-30`) çelişkisi kaldırıldı; her `DefectCode` için tek deterministik ceza değeri tanımlandı. | Bölüm 5.1 |
-| **Y-02** | Yüksek | Nötr `100.0` verme seçeneği kaldırıldı; tüm vakalar için tek zorunlu kural `RENORMALIZED_ACTIVE_WEIGHTS` olarak sabitlendi. | Bölüm 5.3.1 |
-| **Y-03** | Yüksek | `HOLDOUT` izolasyonu yalnız yasaklı anahtar kelimeden çıkarılıp ayrı kapalı kasa (`sealed vault`), kör agregat raporlama (`blind_holdout_mode`) ve append-only `HoldoutAccessLedger` denetim günlüğüne bağlandı. | Bölüm 7.3 |
-| **Y-04** | Yüksek | Tam tekrar üretilebilir `EvaluationRunManifest` şeması (model/prompt/KB/RAG ayarları, veri seti hash'leri, Python/ortam, tohum ve WP-4.3/WP-4.4/WP-4.5 commit SHA'ları) zorunlu kılındı. | Bölüm 8.1 |
-| **Y-05** | Yüksek | F-4 bordro sızıntısı yalnız regex yerine 4 sınıflı bağlamsal `MonetaryMentionClassifier` ile tasarlandı (`USER_PROVIDED_INPUT_AMOUNT`, `STATUTORY_LEGAL_THRESHOLD`, `DELEGATION_NOTICE_ONLY`, `CALCULATED_PAYMENT_AMOUNT`). | Bölüm 4.1 (F-4) |
-| **O-01..O-05** | Orta | Türkçe 4-gram Jaccard formalizasyonu (O-01), vaka-ağırlıklı + kategori-dengeli çift endeks (O-02), vaka geneli `MINOR` `-5.0` bütçe tavanı (O-03), çift-gözlü hukukçu `FATAL` override itiraz/tarihçe akışı (O-04) ve sabit `Recall@5`/`Recall@10`/`Source Hit Rate@5`/`MRR` (O-05) eklendi. | Bölüm 3, 4.2, 5.1, 7.2, 8.2 |
+| **K-01** | Kritik | SHA-256 yalnız bütünlük kanıtlar; geliştiricinin kendiliğinden `APPROVED_FOR_BENCHMARK` yazmasını engellemek için ayrı depolu, asimetrik imzalı (`ED25519` / `RSA-PSS-SHA256`), kayıtlı hukukçu doğrulamalı ve iptal/yeniden onay geçmişli protokol eklendi. | Bölüm 5, 7.2 |
+| **K-02** | Kritik | `PASS >= 80.0` ile resmî `>= 85.0` eşiği çelişkisi kaldırıldı: `PASS >= 85.0`, `PARTIAL_REVIEW` `80.0..84.99`, `FAIL_SCORE < 80.0`; `FATAL`/`MAJOR` bağımsız veto/tavan korundu. | Bölüm 4.2, 7.2 |
+| **K-03** | Kritik | Değerlendirme altyapısı / test aracı hatası (`EVALUATION_INFRA_FAILURE` $\implies$ `RUN_INVALID`, puan üretilmez) ile `@HukukSGK` çıktı sözleşme hatası (`MODEL_OUTPUT_SIGNAL_DEFECT` $\implies S_d=0.0$) kesin ayrıldı. | Bölüm 4.3 |
+| **Y-01** | Yüksek | `MAJOR` ceza aralığı (`-25..-40`) ile `-(20*eksik+10)` (`-10..-30`) çelişkisi kaldırıldı; her `DefectCode` için tek deterministik ceza değeri tanımlandı. | Bölüm 4.1 |
+| **Y-02** | Yüksek | Nötr `100.0` verme seçeneği kaldırıldı; tüm vakalar için tek zorunlu kural `RENORMALIZED_ACTIVE_WEIGHTS` olarak sabitlendi. | Bölüm 2, 4.2, 4.3 |
+| **Y-03** | Yüksek | `HOLDOUT` izolasyonu yalnız yasaklı anahtar kelimeden çıkarılıp ayrı kapalı kasa (`sealed vault`), kör agregat raporlama (`blind_holdout_mode`) ve append-only `HoldoutAccessLedger` denetim günlüğüne bağlandı. | Bölüm 6.3 |
+| **Y-04** | Yüksek | Tam tekrar üretilebilir `EvaluationRunManifest` şeması (model/prompt/KB/RAG ayarları, veri seti hash'leri, Python/ortam, tohum ve WP-4.3/WP-4.4/WP-4.5 commit SHA'ları) zorunlu kılındı. | Bölüm 7.1 |
+| **Y-05** | Yüksek | F-4 bordro sızıntısı yalnız regex yerine 4 sınıflı bağlamsal `MonetaryMentionClassifier` ile tasarlandı (`USER_PROVIDED_INPUT_AMOUNT`, `STATUTORY_LEGAL_THRESHOLD`, `DELEGATION_NOTICE_ONLY`, `CALCULATED_PAYMENT_AMOUNT`). | Bölüm 3.1 (F-4) |
+| **O-01..O-05** | Orta | Türkçe 4-gram Jaccard formalizasyonu (O-01), vaka-ağırlıklı + kategori-dengeli çift endeks (O-02), vaka geneli `MINOR` `-5.0` bütçe tavanı (O-03), çift-gözlü hukukçu `FATAL` override itiraz/tarihçe akışı (O-04) ve sabit `Recall@5`/`Recall@10`/`Source Hit Rate@5`/`MRR` (O-05) eklendi. | Bölüm 2, 3.2, 4.1, 6.2, 7.2 |
 
 ---
 
