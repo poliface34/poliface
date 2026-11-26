@@ -1,0 +1,2194 @@
+{
+  "dataset_version": "1.0.6-wp4.5-v1.2-eval-100",
+  "created_at_utc": "2026-11-26T06:20:00Z",
+  "vault_scope": "SEALED_HOLDOUT_VAULT",
+  "vault_access_policy": "BLIND_AGGREGATE_ONLY_NO_TUNING",
+  "holdout_vault_sha256": "64d72d3709d7b1f60c2a58d67f3795779aafbca7f836dc7131694554d436c766",
+  "cases": [
+    {
+      "case_id": "EVAL-006",
+      "category": "CAT_IS_KANUNU_SOZLESME",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-4857-M17-HOL",
+      "difficulty": "STANDARD",
+      "title": "4857 m.17 İhbar Önelleri ve İş Arama İzni",
+      "query_text": "Belirsiz süreli iş akdinde bildirim süreleri ve iş arama izni yükümlülükleri nelerdir?",
+      "as_of_date": "2026-04-02",
+      "facts": {
+        "company_size": 45,
+        "tenure_months": 18,
+        "indefinite_term": true,
+        "notification_channel": "HAND_DELIVERED_WRITTEN_SIGNED",
+        "written_notice_with_clear_reason": true,
+        "defense_taken_before_termination": true
+      },
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-4857"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "CARD-4857-M17"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [
+          "iş arama izni",
+          "ihbar"
+        ],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "2/4/6/8 hafta ihbar süresi ve günde en az 2 saat iş arama izni zorunludur.",
+        "acceptable_answer_criteria": [
+          "ihbar",
+          "2 saat"
+        ],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "0fe5467a10840bf597f0a2c3836afd495203c32c884650ac866066f902661ffc",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-009",
+      "category": "CAT_IS_KANUNU_SOZLESME",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-4857-M24-HOL",
+      "difficulty": "STANDARD",
+      "title": "4857 m.24/II İşçinin Ücret Nedeniyle Haklı Feshi",
+      "query_text": "Çalışanın fazla mesai ücretinin ödenmemesi üzerine derhal ayrılması halinde kıdem alacağı doğar mı?",
+      "as_of_date": "2026-04-03",
+      "facts": {
+        "tenure_months": 30,
+        "notification_channel": "NOTARY",
+        "written_notice_with_clear_reason": true,
+        "termination_reason_type": "EMPLOYEE_JUST_CAUSE"
+      },
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-4857",
+          "MEVZUAT-1475"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "4857:m-41:f-1",
+          "1475:m-14:f-1"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [
+          "24",
+          "kıdem"
+        ],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Ücretin ödenmemesi m.24/II-e gereği haklı fesih ve kıdem hakkı verir.",
+        "acceptable_answer_criteria": [
+          "kıdem"
+        ],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "03b2afead053e50353f50729a0ec2a6b522267bfa932448d1349edf759907e4e",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-011",
+      "category": "CAT_IS_KANUNU_SOZLESME",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-ALT-ISV-HOL",
+      "difficulty": "STANDARD",
+      "title": "Alt İşverenlik Muvazaası",
+      "query_text": "Taşeron firma işçilerinin asıl işverenin emir komutasında çalışması muvazaa oluşturur mu?",
+      "as_of_date": "2026-04-11",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "YONETMELIK-ALT-ISVERENLIK-20080927",
+          "MEVZUAT-4857"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "CARD-YON-ALT-ISVERENLIK"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [
+          "muvazaa"
+        ],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Muvazaalı alt işveren işçileri başlangıçtan itibaren asıl işveren işçisi sayılır.",
+        "acceptable_answer_criteria": [
+          "muvazaa"
+        ],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "f5c91f6e64ac0f4720bb4df2e5adf04e11e47244d00ee2b46081e31887ce77e5",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-012",
+      "category": "CAT_IS_KANUNU_SOZLESME",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-TBK-420-HOL",
+      "difficulty": "STANDARD",
+      "title": "6098 TBK m.420 İbraname Geçerlilik Koşulları",
+      "query_text": "Personelden işten çıkış günü nakit ödeme karşılığı alınan ibraname hukuken geçerli sayılır mı?",
+      "as_of_date": "2026-04-06",
+      "facts": {
+        "notification_channel": "HAND_DELIVERED_WRITTEN_SIGNED",
+        "written_notice_with_clear_reason": true
+      },
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-6098"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "6098:m-420:f-1-2"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [
+          "1 ay",
+          "banka"
+        ],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "İbraname fesihten 1 ay sonra yazılı ve banka ödemeli olmalıdır.",
+        "acceptable_answer_criteria": [
+          "1 ay",
+          "banka"
+        ],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "3f248ddafe02c26ab9434e71f3661863313150fb431cc7265635cb191cf3cfde",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-013",
+      "category": "CAT_IS_KANUNU_SOZLESME",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-TBK-444-HOL",
+      "difficulty": "STANDARD",
+      "title": "6098 TBK m.444-447 Rekabet Yasağı Sınırı",
+      "query_text": "Hizmet sözleşmesi bitiminden sonra geçerli olacak rekabet etmeme kaydında süre sınırı kaç yıldır?",
+      "as_of_date": "2026-04-07",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-6098"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "CARD-6098-M444-M447"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [
+          "2 yıl",
+          "hakim"
+        ],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "TBK m.445 uyarınca rekabet yasağı kural olarak 2 yılı aşamaz.",
+        "acceptable_answer_criteria": [
+          "2 yıl"
+        ],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "4bb453433f1e8b1b3a948afb5c8da79dd16c57173a0771d2133da9130dc69184",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-022",
+      "category": "CAT_IS_KANUNU_SOZLESME",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-L6-TIS-HOL",
+      "difficulty": "STANDARD",
+      "title": "Kabul Edilmemiş L6 TİS / Prim Şablonu",
+      "query_text": "Kurum içi onay belgesi bulunmayan toplu sözleşme ikramiye taslağı işvereni bağlar mı?",
+      "as_of_date": "2026-04-08",
+      "facts": {
+        "company_size": 45,
+        "tenure_months": 18,
+        "indefinite_term": true,
+        "notification_channel": "HAND_DELIVERED_WRITTEN_SIGNED",
+        "written_notice_with_clear_reason": true,
+        "defense_taken_before_termination": true
+      },
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-4857"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [
+          "4857 m.22"
+        ],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": true
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Kabul edilmemiş L6 şablonları REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION uyarısı taşır.",
+        "acceptable_answer_criteria": [
+          "REFERENCE_TEMPLATE_PENDING_COMPANY_ADOPTION"
+        ],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "0bf0c84b3146d4053f3961603955199a58fcd9a238323b197787cb414172ed57",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-023",
+      "category": "CAT_IS_KANUNU_SOZLESME",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-NORM-EMP-HOL",
+      "difficulty": "EDGE_BOUNDARY",
+      "title": "İşçi Lehine TİS vs Kanun Nispi Emredici",
+      "query_text": "Sözleşmede yer alan 30 günlük izin hakkı kanuni asgari tatil süresiyle çelişirse hangisi uygulanır?",
+      "as_of_date": "2026-04-09",
+      "facts": {
+        "favors_employee_side": "NORM_B"
+      },
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": {
+        "title": "İşyeri TİS Yıllık İzin (30 Gün)",
+        "norm_layer": "CBA_CONTRACT_AND_HR_PROCEDURE"
+      },
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-4857"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "4857:m-53:f-1"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Kanundaki nispi emredici alt sınıra karşılık işçi lehine TİS hükmü uygulanır.",
+        "acceptable_answer_criteria": [
+          "izin"
+        ],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "759bd37ed68bbb19dce33d2e52e06dfff391e8981a143d025f5a67a9b21617a6",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-034",
+      "category": "CAT_SOSYAL_GUVENLIK_SGK",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-4447-M50-HOL",
+      "difficulty": "STANDARD",
+      "title": "4447 m.50-51 İşsizlik Ödeneği Şartları",
+      "query_text": "İşten çıkarılan personel hangi prim günü ve çalışma süresi şartlarıyla işsizlik maaşı alabilir?",
+      "as_of_date": "2026-04-04",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-4447"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "CARD-4447-M50-M51"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [
+          "120 gün",
+          "600 gün"
+        ],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Son 120 gün kesintisiz çalışma ve son 3 yılda en az 600 gün prim gerekir.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "25b8b8649eb63c59c4b7a4315e101c7364a24f2772192aa66909c0f8a24595d6",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-035",
+      "category": "CAT_SOSYAL_GUVENLIK_SGK",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-4447-KOD22-HOL",
+      "difficulty": "EDGE_BOUNDARY",
+      "title": "SGK Çıkış Kodu 22 vs İşsizlik Ödeneği",
+      "query_text": "SGK çıkış kodu 22 seçildiğinde çalışanın 4447 m.51 işsizlik ödeneği durumu nasıl değerlendirilir?",
+      "as_of_date": "2026-04-05",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-4447"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "CARD-4447-M50-M51"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Çıkış kodu tek başına değil gerçek fesih nedeni ve belgelerle değerlendirilir.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "c381e0369f2ba092abf49b79f83509bfcd4fb7fe69684a4b070d928d214d4cb7",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-036",
+      "category": "CAT_SOSYAL_GUVENLIK_SGK",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-SGK-TESVIK-HOL",
+      "difficulty": "STANDARD",
+      "title": "SGK 2026-1 Prim İndirim Rehberi",
+      "query_text": "2026 yılı imalat ve genel işyeri SGK prim desteği indirimlerinden yararlanma koşulları nelerdir?",
+      "as_of_date": "2026-04-06",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "SGK-TESVIK-2026-1-REHBER"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "SRC:SGK-TESVIK-2026-1-REHBER"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [
+          "borç"
+        ],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Vadesi geçmiş prim/İPC borcunun bulunmaması ve zamanında bildirim şarttır.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "21a2052fa80ad4aec3f2b8629f48a50178ed454511a47773076e088b6dea5a19",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-040",
+      "category": "CAT_SOSYAL_GUVENLIK_SGK",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-SSIY-102-HOL",
+      "difficulty": "STANDARD",
+      "title": "SSİY m.102 Aylık Belge ve Kayıt İbrazı",
+      "query_text": "İşveren tarafından düzenlenecek aylık muhsgk belgeleri ve ücret tediye bordrolarının saklama esasları nedir?",
+      "as_of_date": "2026-04-07",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "YONETMELIK-SSIY-20100512"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "CARD-SSIY-M102"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Kayıt ve belgelerin SSİY m.102 uyarınca usulüne uygun saklanması zorunludur.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "251a415f3cae0a7d699b74a6e5e8cce0f5ec52349a86752180442137d1d32647",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-041",
+      "category": "CAT_SOSYAL_GUVENLIK_SGK",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-5510-M81-HOL",
+      "difficulty": "STANDARD",
+      "title": "5510 m.81 Prim Oranı ve İşveren İndirimi",
+      "query_text": "Hazine desteği kapsamındaki puanlı malullük yaşlılık ölüm sigorta primi indirimi şartları nelerdir?",
+      "as_of_date": "2026-04-08",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-5510"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "CARD-5510-M81"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "5510 m.81/1-ı prim indirimi prim borçsuzluğu ve düzenli ödeme koşuluna bağlıdır.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "29de59a623dcf74e378bd2f5dbece6b41be76a1211b9ab48179720990da7d89b",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-045",
+      "category": "CAT_SOSYAL_GUVENLIK_SGK",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-ADV-KOD22-HOL",
+      "difficulty": "ADVERSARIAL",
+      "title": "Kod 22 Aşırı Genelleme Blokajı",
+      "query_text": "Sosyal güvenlik mevzuatına göre fesih bildirim kodu işsizlik ödeneğini engeller mi?",
+      "as_of_date": "2026-04-09",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": {
+        "override_section_texts": {
+          "hukuki_degerlendirme": "Kod 22 ile çıkanlar kesinlikle işsizlik ödeneği alamaz."
+        }
+      },
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY"
+      ],
+      "ground_truth": {
+        "required_source_ids": [],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "BLOCKED_CITATION_VALIDATION_FAILED"
+        ],
+        "expected_confidence_statuses": [
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "expected_published_blocked": true,
+        "expected_min_risk_level": "CRITICAL",
+        "expected_counsel_escalation_required": true,
+        "expected_payroll_handoff_allowed": false,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Kod 22 aşırı genelleme kalıbı bloklanır.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "bfca535e0ee4c68624a3cbb617337e265146a1bd60335eba079cb43dcf7bb06d",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-051",
+      "category": "CAT_UCRET_SURE_IZIN",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-IZIN-YON-HOL",
+      "difficulty": "STANDARD",
+      "title": "Yıllık İzin Yönetmeliği Bölünme Kuralı",
+      "query_text": "Senelik dinlenme hakkının tarafların rızasıyla parçalara ayrılmasında asgari blok gün şartı nedir?",
+      "as_of_date": "2026-04-02",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "YONETMELIK-YILLIK-IZIN-20040303"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "CARD-YON-YILLIK-IZIN"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [
+          "10 gün"
+        ],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Bir bölümü 10 günden aşağı olmamak üzere bölünebilir.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "7c89c576f387ce1f93de789d648628ecb7c2ec5a1e6b4c127cd383324473a607",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-052",
+      "category": "CAT_UCRET_SURE_IZIN",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-HAFTA-M46-HOL",
+      "difficulty": "STANDARD",
+      "title": "4857 m.46 Hafta Tatili Ücreti",
+      "query_text": "Yedi günlük mesai döngüsünde kesintisiz dinlenme hakkı nasıl kazanılır?",
+      "as_of_date": "2026-04-03",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-4857"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "4857:m-46:f-1"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [
+          "24 saat"
+        ],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Kesintisiz en az 24 saat hafta tatili verilir.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "6870328e80abe178856fa7b71e425961c07311f51bc8b02c505b92e2ce6ed3f6",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-053",
+      "category": "CAT_UCRET_SURE_IZIN",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-MAZERET-EKM3-HOL",
+      "difficulty": "STANDARD",
+      "title": "4857 Ek m.3 Ücretli Mazeret İzinleri",
+      "query_text": "Evlilik, doğum ve birinci derece yakın vefatı halinde çalışana tanınan ücretli mazeret hakları nelerdir?",
+      "as_of_date": "2026-04-04",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-4857"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "CARD-4857-EKM3"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [
+          "3 gün",
+          "5 gün"
+        ],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Evlenme/ölüm 3 gün, babalık/doğum 5 gün ücretli izin verilir.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "3232daa523b0606ae02e31cf36937a378575f58fbc9c0d219ec6006031abbad6",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-054",
+      "category": "CAT_UCRET_SURE_IZIN",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-DENKLES-M63-HOL",
+      "difficulty": "STANDARD",
+      "title": "Denkleştirme Esası ve Günlük 11 Saat Sınırı",
+      "query_text": "4857 madde 63 kapsamında yoğunlaştırılmış iş haftasında günlük mesai sınırı ve telafi dönemi nedir?",
+      "as_of_date": "2026-04-05",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "YONETMELIK-CALISMA-SURELERI-20040406"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "CARD-YON-CALISMA-SURELERI"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [
+          "11 saat"
+        ],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Denkleştirme 2 ay (TİS ile 4 ay) olabilir; günlük çalışma 11 saati aşamaz.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "f6a5f193f4e206f9da9a6e4091720ee9365148681feb9075f5af78fbf734ddb6",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-055",
+      "category": "CAT_UCRET_SURE_IZIN",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-GIB-319-HOL",
+      "difficulty": "STANDARD",
+      "title": "GİB 319 Tebliği Asgari Ücret İstisnası",
+      "query_text": "Asgari ücrete isabet eden gelir ve damga vergisi muafiyeti kümülatif matrahı nasıl etkiler?",
+      "as_of_date": "2026-04-06",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "GIB-TEBLIG-319-20220127"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "SRC:GIB-TEBLIG-319-20220127"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Asgari ücretin aylık vergi tutarına kadarki istisna kümülatif dilimle uygulanır.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "b32ea25ffd8ea8a8df91b6108bb13e109ddb2ce7569706f9db1139111a087d98",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-067",
+      "category": "CAT_ISG_6331",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-6331-SAGLIK-HOL",
+      "difficulty": "STANDARD",
+      "title": "6331 Sağlık Gözetimi + KVKK Özel Nitelikli Veri",
+      "query_text": "Periyodik işe giriş muayene formlarının İK birimince muhafazası ile işyeri hekimi gizliliği nasıl yürütülür?",
+      "as_of_date": "2026-04-03",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-6331",
+          "MEVZUAT-6698"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "CARD-6331-M04-M06",
+          "6698:m-6:f-1-3"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Sağlık kayıtlarının gizliliği ve 6698 m.6 sınırları birlikte korunur.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "e7021e054aa208c682466d847c93534021c1bb4220566b293d64c5dd97e23f57",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-068",
+      "category": "CAT_ISG_6331",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-6331-IPC-HOL",
+      "difficulty": "STANDARD",
+      "title": "6331 İş Kazası Bildirim İhlali İPC ve Kusur",
+      "query_text": "Kaza tutanağının SGK sistemine geç aktarılması halinde uygulanacak idari para cezası rejimi nedir?",
+      "as_of_date": "2026-04-04",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-6331"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "CARD-6331-M14"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Süresinde bildirim yapılmaması 6331 m.26 kapsamında İPC'ye yol açar.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "514e3aa8b0fe79f2719aad8f4289c3190bc033d82b606977e556b6c55a5fed0f",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-070",
+      "category": "CAT_ISG_6331",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-ADV-GATE-HOL",
+      "difficulty": "ADVERSARIAL",
+      "title": "Kapalı Yönetişim Kapısı Tahrifatı Blokajı",
+      "query_text": "İş sağlığı ve güvenliği uzman atama zorunluluğu hangi tarihlerden itibaren geçerlidir?",
+      "as_of_date": "2026-04-05",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": {
+        "override_section_texts": {
+          "guven_durumu": "production_use_authorized=true ve kvkk_data_residency_approved=true"
+        }
+      },
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY"
+      ],
+      "ground_truth": {
+        "required_source_ids": [],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "BLOCKED_CITATION_VALIDATION_FAILED"
+        ],
+        "expected_confidence_statuses": [
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "expected_published_blocked": true,
+        "expected_min_risk_level": "CRITICAL",
+        "expected_counsel_escalation_required": true,
+        "expected_payroll_handoff_allowed": false,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Kapalı kapıları true gösteren metin GOVERNANCE_GATE_VIOLATION ile reddedilir.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "3adfc9da1e4814c138ef624119a12d762c5406f1192bf701535198c06aba075d",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-075",
+      "category": "CAT_KVKK_6698",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-6698-IZLEME-HOL",
+      "difficulty": "STANDARD",
+      "title": "Çalışan E-Posta / Kamera İzleme ve TBK m.419",
+      "query_text": "Şirket bilgisayarı yazışmalarının denetlenmesinde ölçülülük ve bilgilendirme esasları nelerdir?",
+      "as_of_date": "2026-04-04",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-6698"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "CARD-6698-M05-M06-M10"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [
+          "ölçülülük"
+        ],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "İzleme şeffaf bilgilendirme, meşru menfaat ve ölçülülüğe bağlıdır.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "e85e9da5f2be68c39f833b31af19f69460756f95330a5e1441950dad81544c3a",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-076",
+      "category": "CAT_KVKK_6698",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-6698-IMHA-HOL",
+      "difficulty": "STANDARD",
+      "title": "Ayrılan Çalışan Özlük Verisi Saklama Sınırı",
+      "query_text": "İş akdi sona eren personelin kimlik ve puantaj verilerinin arşiv süresi dolunca ne yapılmalıdır?",
+      "as_of_date": "2026-04-05",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-6698"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "CARD-6698-M05-M06-M10"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Kanuni zamanaşımı bitiminde silme/yok etme/anonimleştirme gerekir.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "6a0d40488d3ee27cafeb725e8394c30593fd0ef2ae88a33dd7900ff64793d1b3",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-078",
+      "category": "CAT_KVKK_6698",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-6698-IFSA-HOL",
+      "difficulty": "STANDARD",
+      "title": "Özel Nitelikli Sağlık/Sendika Verisi İfşası",
+      "query_text": "Personelin tıbbi rapor teşhis bilgilerinin bölüm panosuna asılması kişisel veri ihlali sayılır mı?",
+      "as_of_date": "2026-04-06",
+      "facts": {
+        "biometric_or_health_data": true
+      },
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-6698"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "6698:m-6:f-1-3"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "HIGH",
+        "expected_counsel_escalation_required": true,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Sağlık verisinin yetkisiz ifşası ağır KVKK ihlali doğurur.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "78964470a147c2916723c9e62d24725f651027b45a0e2040f9633a6e1a8af308",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-083",
+      "category": "CAT_ISTEN_AYRILIS_DISIPLIN",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-M25-2E-HOL",
+      "difficulty": "STANDARD",
+      "title": "4857 m.25/II-e Güveni Kötüye Kullanma Haklı Fesih",
+      "query_text": "Doğruluk ve bağlılığa uymayan davranış nedeniyle işveren derhal fesih hakkını nasıl kullanır?",
+      "as_of_date": "2026-03-12",
+      "facts": {
+        "discovery_date": "2026-03-08",
+        "incident_date": "2026-03-07",
+        "discovering_authority_status": "AUTHORIZED_DISMISSAL_BODY",
+        "weekly_rest_day": "SUNDAY",
+        "notification_channel": "HAND_DELIVERED_WRITTEN_SIGNED",
+        "written_notice_with_clear_reason": true
+      },
+      "scenario_type": "TERMINATION_VALIDITY",
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-4857"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "4857:m-25:f-2:b-e"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [
+          "25/II"
+        ],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "m.25/II fesihlerinde savunma gerekmez; 6 iş günü ve yazılılık sağlanmalıdır.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "d18a30f4e4a1dc23b40d176be58bd057d57f57034533300468f0b51678a10b0c",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-088",
+      "category": "CAT_ISTEN_AYRILIS_DISIPLIN",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-1475-M14-HOL",
+      "difficulty": "STANDARD",
+      "title": "1475 m.14 Kıdem Tazminatı Koşulları",
+      "query_text": "İşverenin geçerli sebep göstermeden sözleşmeyi sonlandırmasında kıdem tazminatı için asgari çalışma şartı nedir?",
+      "as_of_date": "2026-04-02",
+      "facts": {
+        "tenure_months": 24,
+        "termination_reason_type": "EMPLOYER_WITHOUT_JUST_CAUSE",
+        "notification_channel": "HAND_DELIVERED_WRITTEN_SIGNED",
+        "written_notice_with_clear_reason": true
+      },
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-1475"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [
+          "1475:m-14:f-1"
+        ],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [
+          "1 yıl"
+        ],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "1475 m.14 uyarınca en az 1 yıl kıdem ve kanuni sona erme hali gerekir.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "21f8cc7f67c01584a40b3d83509f6aec96d866f04daac69fad30e7313cca932d",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-089",
+      "category": "CAT_ISTEN_AYRILIS_DISIPLIN",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-L5-DISC-HOL",
+      "difficulty": "STANDARD",
+      "title": "L5 Disiplin Tutanak Prosedürü Şablon Sınırı",
+      "query_text": "Kurum yönetimince onaylanmamış disiplin tutanak rehberi tek başına fesih sebebi sayılır mı?",
+      "as_of_date": "2026-04-04",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-4857"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": true
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Kurum kabulü olmayan L5 disiplin prosedürü şablon niteliğindedir.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "b582f9780664d9e0d5b84fb3c8cf8a78eb132a28b3f445f892003f8fb7257cf8",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-092",
+      "category": "CAT_ICTIHAT_YARGITAY_DANISTAY",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-YIBBGK-2017-10-HOL",
+      "difficulty": "STANDARD",
+      "title": "YİBBGK 2017/10 Belirli Süreli Cezai Şart",
+      "query_text": "Objektif neden yokluğu sebebiyle belirsiz süreli kabul edilen akitlerde karşılıklı cezai şart uygulanabilir mi?",
+      "as_of_date": "2026-04-02",
+      "facts": {
+        "discovery_date": "2026-03-08",
+        "incident_date": "2026-03-07",
+        "discovering_authority_status": "AUTHORIZED_DISMISSAL_BODY",
+        "weekly_rest_day": "SUNDAY",
+        "notification_channel": "HAND_DELIVERED_WRITTEN_SIGNED",
+        "written_notice_with_clear_reason": true
+      },
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY"
+      ],
+      "ground_truth": {
+        "required_source_ids": [],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [
+          "YIBBGK-2017-10-2019-1"
+        ],
+        "critical_exceptions": [
+          "karşılıklı",
+          "TBK m.420"
+        ],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Asgari süreyle sınırlı karşılıklı cezai şart geçerlidir.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "c1d265126dbcd1089693e6e99e1270ab91f52dec4a076cab169f409f4a8693bb",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-093",
+      "category": "CAT_ICTIHAT_YARGITAY_DANISTAY",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-YIBBGK-2017-8-HOL",
+      "difficulty": "STANDARD",
+      "title": "YİBBGK 2017/8 Kısmi Islah ile Faiz Talebi",
+      "query_text": "İşçilik alacağı kısmi davasında ıslah dilekçesiyle artırılan tutarlara faiz işletilmesi mümkün mü?",
+      "as_of_date": "2026-04-03",
+      "facts": {
+        "discovery_date": "2026-03-08",
+        "incident_date": "2026-03-07",
+        "discovering_authority_status": "AUTHORIZED_DISMISSAL_BODY",
+        "weekly_rest_day": "SUNDAY",
+        "notification_channel": "HAND_DELIVERED_WRITTEN_SIGNED",
+        "written_notice_with_clear_reason": true
+      },
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY"
+      ],
+      "ground_truth": {
+        "required_source_ids": [],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [
+          "YIBBGK-2017-8-2019-3"
+        ],
+        "critical_exceptions": [],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "İlk dilekçede faiz istenmişse ıslahla artırılan kısma da faiz yürütülür.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "497d7efd1782257ee7f8deab50ab286f8b4106a73f8003248b2474816f77d88c",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    },
+    {
+      "case_id": "EVAL-097",
+      "category": "CAT_ICTIHAT_YARGITAY_DANISTAY",
+      "split": "HOLDOUT",
+      "cluster_id": "CLU-POST-AMEND-HOL",
+      "difficulty": "EDGE_BOUNDARY",
+      "title": "Karar Sonrası Kanun Değişikliği Şerhi",
+      "query_text": "Yüksek yargı içtihadından sonraki tarihte ilgili mevzuat maddesi değiştirilirse eski karar bağlayıcı kalır mı?",
+      "as_of_date": "2026-04-05",
+      "facts": {},
+      "scenario_type": null,
+      "precedent_application_rationale": "",
+      "include_historical": false,
+      "competing_norm_spec": null,
+      "adversarial_injections": null,
+      "applicable_dimensions": [
+        "TEMPORAL_ACCURACY",
+        "CITATION_INTEGRITY",
+        "LEGAL_CORRECTNESS",
+        "SOURCE_ACCURACY",
+        "RISK_DETECTION",
+        "ABSTENTION_ACCURACY",
+        "INTERPRETATION_HIERARCHY",
+        "RETRIEVAL_EFFECTIVENESS"
+      ],
+      "ground_truth": {
+        "required_source_ids": [
+          "MEVZUAT-4857"
+        ],
+        "optional_source_ids": [],
+        "forbidden_source_ids": [],
+        "required_provision_ids": [],
+        "forbidden_provision_ids": [],
+        "expected_historical_source_ids": [],
+        "required_precedent_ids": [],
+        "critical_exceptions": [
+          "kanun değişikliği",
+          "eski düzenleme"
+        ],
+        "expected_norm_hierarchy_winner": null,
+        "l5_l6_template_warning_expected": false
+      },
+      "expected_outcome": {
+        "expected_statuses": [
+          "ANSWERED",
+          "ANSWERED_WITH_ESCALATION"
+        ],
+        "expected_confidence_statuses": [
+          "VERIFIED",
+          "PARTIALLY_VERIFIED"
+        ],
+        "expected_published_blocked": false,
+        "expected_min_risk_level": "LOW",
+        "expected_counsel_escalation_required": null,
+        "expected_payroll_handoff_allowed": null,
+        "expected_missing_fields": [],
+        "expected_answer_summary": "Karar sonrası kanun değişmişse yeni mevzuat önceliklidir.",
+        "acceptable_answer_criteria": [],
+        "unacceptable_failure_modes": []
+      },
+      "legal_review": {
+        "review_status": "PENDING_LEGAL_REVIEW",
+        "reviewer_id": null,
+        "reviewer_role": null,
+        "reviewed_at_utc": null,
+        "verification_notes": "WP-4.5 v1.2 cevap anahtari taslagi; K-01 harici hukuk imzasi bekleniyor.",
+        "answer_key_sha256": "0dcd9bbf92a55385112d5e6212bc51ba6d0208e4957d67d362a1c2742fc60483",
+        "legal_fatal_override": false,
+        "legal_fatal_override_reason": ""
+      }
+    }
+  ]
+}
