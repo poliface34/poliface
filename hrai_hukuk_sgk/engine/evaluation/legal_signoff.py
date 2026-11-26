@@ -63,6 +63,24 @@ SIGNOFF_REVOKED = "REVOKED_LEGAL_SIGN_OFF"
 SIGNOFF_STALE = "STALE_KEY_MODIFIED_REAPPROVAL_REQUIRED"
 SIGNOFF_REJECTED = "REJECTED_INVALID_SIGNOFF"
 
+SIGNATURE_ALGORITHM_PARAMS: dict[str, dict[str, Any]] = {
+    "ED25519": {
+        "standard": "RFC 8032 PureEd25519",
+        "canonicalization": "RFC 8785 (JCS UTF-8 raw bytes)",
+        "prehash": False,
+        "key_bits": 256,
+    },
+    "RSA-PSS-SHA256": {
+        "standard": "RFC 8017 RSASSA-PSS",
+        "canonicalization": "RFC 8785 (JCS UTF-8 bytes)",
+        "min_rsa_key_bits": 2048,
+        "hash_algorithm": "SHA-256",
+        "mgf": "MGF1-SHA256",
+        "salt_length_bytes": 32,
+        "padding": "PSS",
+    },
+}
+
 
 def compute_public_key_fingerprint(public_key_pem: str) -> str:
     """Normalized SHA-256 fingerprint of a PEM public key."""

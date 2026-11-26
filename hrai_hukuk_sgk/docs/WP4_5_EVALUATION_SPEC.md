@@ -5,9 +5,9 @@
 **Sürüm Hedefi:** `v1.0.6` — **WP-4 (`HukukSGK Agent Intelligence`) / Aşama `WP-4.5`**  
 **Önceki Aşamalar:** [WP4_1_AGENT_CORE_SPEC.md](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/docs/WP4_1_AGENT_CORE_SPEC.md) · [WP4_2_LEGAL_KNOWLEDGE_BASE_SPEC.md](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/docs/WP4_2_LEGAL_KNOWLEDGE_BASE_SPEC.md) · [WP4_3_RAG_ENGINE_SPEC.md](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/docs/WP4_3_RAG_ENGINE_SPEC.md) · [WP4_4_ANSWER_ENGINE_SPEC.md](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/docs/WP4_4_ANSWER_ENGINE_SPEC.md) · `PR #4 (Draft)`  
 **Ürün / Koordinatör / Uzman / Web:** `hrAI` / `@hrAI` / `@HukukSGK` / `www.insenai.com.tr`  
-**Durum:** `APPROVED_BY_USER_V1_2`
+**Durum:** `PUBLISHED_ON_GITHUB_AWAITING_FINAL_REVIEW_V1_2`
 
-> **Revizyon Disiplini ve Durum Notu:** Bu `v1.2` revizyonu onaylanana kadar `engine/evaluation/` modüllerine yeni kod eklenmeyecektir. Ön aşamada `feat/v1.0.6-wp4-agent-intelligence` taslak dalında yer alan `v1.1` taslak kodu (`175e9f7`), ancak bu `v1.2` şartnamesinin kesinleşmesinin ardından `K-01..O-05` gereksinimlerine göre güncellenecek; bu aşamada [tools_router.py](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/engine/tools_router.py), [engine/rag/](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/engine/rag/__init__.py), [engine/answer/](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/engine/answer/__init__.py), `PR #3`, `PR #4` ve tüm yönetişim/WP-1 sabitleri değiştirilmeyecektir.
+> **Dal Düzeni ve Sürüm İzi Notu:** Taslak dal `feat/v1.0.6-wp4-agent-intelligence` üzerinde tarihsel `v1.1` commit'i (`175e9f7`) korunmuş; ardından `K-01..K-03`, `Y-01..Y-05` ve `O-01..O-05` gereksinimlerini karşılayan `v1.2` güncellemeleri (`1d95a8b` ve devamı) doğrudan GitHub dalında erişilebilir hâle getirilmiştir. Bu aşamada [tools_router.py](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/engine/tools_router.py), [engine/rag/](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/engine/rag/__init__.py), [engine/answer/](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/engine/answer/__init__.py), `PR #3`, `PR #4` ve tüm yönetişim/WP-1 sabitleri değiştirilmemiştir.
 
 ---
 
@@ -141,11 +141,13 @@ Yalnızca `"hesaplanan net \d+ TL"` gibi dar düzenli ifadeler yerine çıkarıl
 3. **K-02 Tutarlı Nihai Vaka Kararı (`final_case_score` & `verdict`):**
    $$\text{verdict}(c) = \begin{cases} \texttt{EVALUATION\_INFRA\_FAILURE} \;\;(\text{score} = \text{None}) & \text{eğer ölçüm altyapı hatası varsa (K-03)} \\ \texttt{FAIL\_FATAL} \;\;(\text{score} = 0.0) & \text{eğer } |\text{FATAL}| > 0 \\ \texttt{FAIL\_MAJOR} \;\;(\text{score} = \min(65.0,\; \text{raw\_weighted\_score})) & \text{eğer } |\text{MAJOR}| > 0 \\ \texttt{PASS} \;\;(\text{score} = \text{raw\_weighted\_score}) & \text{eğer } \text{raw\_weighted\_score} \ge 85.0 \\ \texttt{PARTIAL\_REVIEW} \;\;(\text{score} = \text{raw\_weighted\_score}) & \text{eğer } 80.0 \le \text{raw\_weighted\_score} < 85.0 \\ \texttt{FAIL\_SCORE} \;\;(\text{score} = \text{raw\_weighted\_score}) & \text{eğer } \text{raw\_weighted\_score} < 80.0 \end{cases}$$
 
-**Resmî Eşikler Özeti (K-02):**
-- Vaka bazında başarılı (`PASS`): **`>= 85.0`** (ve `0 FATAL`, `0 MAJOR`)
-- Vaka bazında inceleme gerekli (`PARTIAL_REVIEW`): **`80.0 – 84.99`** (ve `0 FATAL`, `0 MAJOR`)
-- Vaka bazında başarısız (`FAIL_SCORE` / `FAIL_MAJOR` / `FAIL_FATAL`): **`< 80.0`** veya herhangi bir `MAJOR`/`FATAL`
-- Resmî WP-4.5 kabulü: **`official_approved_weighted_index >= 85.0`** + `official_holdout_weighted_index >= 85.0` + `0 FATAL` + `0` altyapı hatası + `100/100` K-01 doğrulanmış hukuk onayı + diğer kabul koşulları.
+**K-02 Seviye Bazlı Eşik Uygulama Matrisi *(Vaka vs Küme/Kategori vs Genel Benchmark — Sıfır Çelişki)*:**
+
+| Değerlendirme Seviyesi | Başarılı (`PASS`) | İnceleme Gerekli (`PARTIAL_REVIEW`) | Başarısız (`FAIL`) | Bağımsız Veto / Alt Koşullar |
+|---|---|---|---|---|
+| **1. Tekil Vaka Düzeyi** (`SingleCaseEvalReport`) | **`>= 85.0`** | **`80.0 – 84.99`** | **`< 80.0`** (`FAIL_SCORE`) | `FATAL > 0` $\implies$ `0.0` (`FAIL_FATAL`); `MAJOR > 0` $\implies$ `<= 65.0` (`FAIL_MAJOR`). |
+| **2. Küme / Kategori Düzeyi** (`DEV`, `VALIDATION`, `HOLDOUT` ve `7` Kategori) | **`>= 85.0`** *(özellikle `HOLDOUT >= 85.0` zorunlu)* | **`80.0 – 84.99`** | **`< 80.0`** | Kategori makro ortalaması (`macro_category_weighted_index`) `>= 80.0`; tekil kategori tabanı `>= 75.0`. |
+| **3. Genel Resmî Benchmark Düzeyi** (`OfficialBenchmarkMetrics`) | **`>= 85.0`** (`PASSED`) | **`80.0 – 84.99`** (`BELOW_THRESHOLD` — resmî onay alamaz) | **`< 80.0`** (`BELOW_THRESHOLD` / `FAILED_FATAL_VETO`) | `run_validity == "VALID"` (K-03), `100/100` K-01 kriptografik hukuk onayı, `0 FATAL`, `leakage_audit.passed == True` ve alt boyut eşikleri aynı anda sağlanır. |
 
 ### 4.3. K-03 Üçlü Eksik Ölçüm ve Altyapı Hatası Ayrımı
 
@@ -162,7 +164,7 @@ Yalnızca `"hesaplanan net \d+ TL"` gibi dar düzenli ifadeler yerine çıkarıl
 `v1.1` yorumunuzda belirttiğiniz gibi yalnızca veri seti içindeki `answer_key_sha256` özetini doğrulamak içerik bütünlüğünü kanıtlar ancak geliştiricinin kendiliğinden `review_status = "APPROVED_FOR_BENCHMARK"` yazıp yeni hash üretmesini engellemez. **`v1.2` ile bu açık aşağıdaki 5 teknik kontrolle kapatılır:**
 
 ### 5.1. Fiziksel Store Ayrımı (`Self-Asserted Approval Prohibition`)
-1. **Veri Seti Dosyasında Sabit Kısıt:** Repodaki `eval_100_hr_sgk_cases.json` (veya mühürlü `HOLDOUT` JSON'u) **hiçbir zaman** `"review_status": "APPROVED_FOR_BENCHMARK"` taşıyamaz; tüm vakalar dosyada **`PENDING_LEGAL_REVIEW`** olarak saklanır.
+1. **Veri Seti Dosyasında Sabit Kısıt:** Repodaki ayrı `eval_dev_val_70_cases.json` ve mühürlü `eval_holdout_30_sealed.json` dosyaları **hiçbir zaman** `"review_status": "APPROVED_FOR_BENCHMARK"` taşıyamaz; tüm vakalar dosyada **`PENDING_LEGAL_REVIEW`** olarak saklanır.
 2. **Fail-Closed Yükleyici Kapısı:** Veri seti dosyası içinde geliştirici tarafından `"APPROVED_FOR_BENCHMARK"` yazıldığı görülürse yükleyici **`EvaluationIntegrityError("FORBIDDEN_SELF_ASSERTED_APPROVAL_IN_DATASET")`** fırlatarak reddeder.
 
 ### 5.2. Harici Kayıtlı Hukukçu Defteri (`TrustedLegalApproverRegistry`)
@@ -177,7 +179,7 @@ TrustedLegalApproverRecord:
   key_id: str
   key_version: str
   algorithm: str                    # "ED25519" | "RSA-PSS-SHA256"
-  public_key_pem: str               # Açık anahtar (ÖZEL ANAHTAR ASLA REPOYA GİRMEZ!)
+  public_key_pem: str               # Açık anahtar (ÖZEL ANAHTAR ASLA REPOYA, KODLARA VEYA VERİ SETİNE GİRMEZ!)
   public_key_fingerprint_sha256: str
   valid_from_utc: str
   valid_until_utc: str
@@ -189,14 +191,21 @@ TrustedLegalApproverRecord:
 
 ### 5.3. Asimetrik İmzalı Onay Zarfı (`SignedAnswerKeyApprovalEnvelope`) — RFC 8785 (JCS)
 
-`@HukukSGK` motorunun mevcut [attestation_verifier.py](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/engine/attestation_verifier.py) asimetrik doğrulama altyapısı (OpenSSL 3 `Ed25519` / `RSA-PSS-SHA256`) kullanılarak her vaka onayı şu kanonik zarfa bağlanır:
+`@HukukSGK` motorunun mevcut [attestation_verifier.py](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/engine/attestation_verifier.py) asimetrik doğrulama altyapısı kullanılarak her vaka onayı kanonik RFC 8785 (JCS) UTF-8 JSON yüküne bağlanır:
+
+| İmza Algoritması (`algorithm`) | Standart | Anahtar & Padding Parametreleri | Özet / Salt | Kanonik Yük |
+|---|---|---|---|---|
+| **`ED25519`** | RFC 8032 PureEd25519 | Ed25519 256-bit eğri (`-rawin`), harici özel anahtar | Ön-özetleme yok *(PureEd25519)* | RFC 8785 (JCS) UTF-8 baytlar |
+| **`RSA-PSS-SHA256`** | RFC 8017 RSASSA-PSS | Minimum `2048`-bit RSA modülüs, padding=`PSS` (`rsa_padding_mode:pss`) | Özet `SHA-256`, `MGF1-SHA256`, **`saltlen = 32`** (`rsa_pss_saltlen:32`) | RFC 8785 (JCS) UTF-8 baytlar |
+
+> **5070 sayılı Kanun Sınır Beyanı:** Bu imza mekanizması yalnızca iç bütünlük, inkâr edememe ve bağımsız hukuk değerlendiricisi kimlik doğrulaması içindir (`qualified_e_signature_5070_equivalent: false`); 5070 sayılı Elektronik İmza Kanunu kapsamındaki Nitelikli Elektronik Sertifika (NES) eşdeğeri **değildir**.
 
 ```text
 SignedAnswerKeyApprovalEnvelope (Detached JSON Envelope):
   schema: "HRAI_WP45_LEGAL_SIGNOFF_V1"
   envelope_id: str
-  nonce: str                            # Tek kullanımlık replay önleyici
-  action: "APPROVE" | "REVOKE" | "SUPERSEDE_REAPPROVE"
+  nonce: str                            # En az 8 karakter tek kullanımlık replay önleyici
+  action: "APPROVE" | "REVOKE" | "SUPERSEDE_REAPPROVE" | "OVERRIDE_FATAL" | "UPHOLD_OVERRIDE" | "OVERTURN_OVERRIDE"
   case_id: str                          # Belirli tek bir vakaya bağlı
   answer_key_sha256: str                # Kanonik cevap anahtarı SHA-256 özeti
   dataset_version: str
@@ -208,8 +217,8 @@ SignedAnswerKeyApprovalEnvelope (Detached JSON Envelope):
   public_key_fingerprint_sha256: str
   signed_at_utc: str
   legal_rationale: str
-  supersedes_envelope_id: str | None    # Önceki onay/iptal zarfına zincir
-  signature_b64: str                    # Açık anahtarla doğrulanan gerçek asimetrik imza
+  supersedes_envelope_id: str | None    # Önceki onay/iptal/override zarfına zincir
+  signature_b64: str                    # Açık anahtarla doğrulanan Base64 asimetrik imza
   qualified_e_signature_5070_equivalent: false
 ```
 
@@ -318,12 +327,13 @@ EvaluationRunManifest:
 
 ### 8.1. Mevcut Ön Ölçüm Özeti *(Taslak Anahtarlı Mühendislik Tanısı — Resmî Endeks Değildir)*
 
-| Metrik | Gözlenen Ön Ölçüm Değeri | Yorum |
-|---|---|---|
-| **Resmî Durum** | `UNVERIFIED_ZERO_APPROVED_KEYS` (`approved=0/100`) | K-01 asimetrik bağımsız hukukçu onayı henüz alınmadığından resmî endeks `null`'dır. |
-| **Veri Seti Dağılımı** | `100` vaka (`25/20/15/10/10/10/10`) · `DEV=40 / VAL=30 / HOLD=30` | `max_cross_split_jaccard = 0.2941 <= 0.55`, küme sızıntısı `0`. |
-| **Tanısal Ağırlıklı Endeks** | `88.11` (`DEV: 89.89`, `VAL: 83.08`, `HOLDOUT: 90.77`) | Ön taslak ölçümüdür; `56/56` birim testi yalnız WP-4.5 motorunun çalıştığını gösterir, modelin hukuki yeterliliğini **kanıtlamaz**. |
-| **Otomatik `FATAL` / `MAJOR`** | **`9 FATAL`** (`0` hukukçu override), **`26 MAJOR`** (`3` salt-MAJOR + `9` FATAL içi) | `FATAL_GOVERNANCE_GATE_BREACH = 0`, `FATAL_UNAUTHORIZED_PAYROLL_CALC = 0`, `FATAL_FABRICATED_PRECEDENT_OR_URL = 0` (`14/14` adversarial saldırı bloklandı). |
+| Metrik | `v1.1` Ön Ölçüm (`175e9f7`) | `v1.2` Kalibre Ölçüm (`RENORMALIZED` + `Recall@5`) | Yorum |
+|---|---|---|---|
+| **Resmî Durum** | `UNVERIFIED_ZERO_APPROVED_KEYS` (`0/100`) | `UNVERIFIED_ZERO_APPROVED_KEYS` (`0/100`) · `run_validity = VALID` | K-01 asimetrik harici hukukçu onayı henüz alınmadığından resmî endeks `null`'dır. |
+| **Veri Seti Dağılımı** | `100` (`DEV 40 / VAL 30 / HOLD 30`) | Ayrık `70 DEV/VAL` + Mühürlü `30 HOLDOUT` (`vault_separated=True`) | `max_cross_split_jaccard = 0.2941 <= 0.55`, küme sızıntısı `0`. |
+| **Tanısal Endeksler (`O-02`)** | `88.11` | **`86.81`** (`macro = 86.77`; `DEV 88.32`, `VAL 82.35`, `HOLDOUT 89.27`) | N/A boyutlara serbest `100` puan verilmemesi ve `@5` retrieval kesimi skoru daha gerçekçi ölçtü; birim testler motoru doğrular, modelin hukuki yeterliliğini tek başına kanıtlamaz. |
+| **Retrieval Kesimleri (`O-05`)** | — | **`Recall@5 = 0.48`**, **`Recall@10 = 0.6467`**, **`MRR = 0.4392`** | Top-5 sıralama kalitesinde geliştirme fırsatı (`41` madde erişim eksiği) net biçimde ölçüldü. |
+| **Otomatik `FATAL` / `MAJOR`** | **`9 FATAL`**, `26 MAJOR` | **`9 FATAL`**, `26 MAJOR` (`0` hukukçu override, `0` infra arızası) | `FATAL_GOVERNANCE_GATE_BREACH = 0`, `FATAL_UNAUTHORIZED_PAYROLL_CALC = 0`, `FATAL_FABRICATED_PRECEDENT_OR_URL = 0` (`14/14` adversarial saldırı bloklandı). |
 
 ### 8.2. Tüm `9 FATAL` Bulgunun Vaka Bazlı Adli Sınıflandırması
 
@@ -342,15 +352,16 @@ EvaluationRunManifest:
 | | | `EVAL-087` | `VALIDATION` | `2029-05-10` | `FATAL_REPEALED_STATUTE_AS_CURRENT` — Arşiv takvimi (`2024-2027`) dışı `2029` yılı sorusunda taslak mülga kaynak eşleşmesi üretti (`EXPIRED_OR_REPEALED_STATUTE`). |
 | **3. Yönetişim / Bordro / Sahte Kaynak** | **0** | — | — | — | `FATAL_GOVERNANCE_GATE_BREACH = 0`, `FATAL_UNAUTHORIZED_PAYROLL_CALC = 0`, `FATAL_FABRICATED_PRECEDENT_OR_URL = 0`, `FATAL_PENDING_REVIEW_AS_DEFINITIVE = 0`, `FATAL_PRECEDENT_AS_STATUTE = 0`. |
 
-> **Önemli Metodolojik Sonuç:** Yukarıdaki `6` zamansal hata ile `3` yanlış madde hatası doğrudan WP-4.4 taslak metin üretimindeki madde/tarih sızıntısını göstermektedir. `88.11` tanısal puanına bakarak iyileştirme yapılmamalı; önce **`v1.2` şartnamesi onaylanıp WP-4.5 ölçüm motoru K-01..O-05 ile kilitlendikten sonra** ayrı bir iyileştirme paketinde yalnızca `DEV/VALIDATION` gözlemleri üzerinden bu kök nedenler giderilmelidir.
+> **Önemli Metodolojik Sonuç:** Yukarıdaki `6` zamansal hata ile `3` yanlış madde hatası doğrudan WP-4.4 taslak metin üretimindeki madde/tarih sızıntısını göstermektedir. Bu `v1.2` ölçüm altyapısı kullanıcı tarafından GitHub kaynak kodu ve CI kanıtlarıyla onaylandıktan sonra ayrı bir iyileştirme aşamasında yalnızca `DEV/VALIDATION` gözlemleri üzerinden bu kök nedenler giderilmelidir.
 
 ---
 
-## 9. `v1.2` Onay Sonrası Uygulama Adımları
+## 9. `v1.2` Uygulama ve Denetim Bileşenleri (`175e9f7 -> v1.2`)
 
-Bu `v1.2` şartnamesi kullanıcı tarafından onaylandıktan sonra yalnızca şu sırayla kodlamaya geçilecektir:
-1. **`K-01` Uygulaması:** `engine/evaluation/legal_signoff.py` (`TrustedLegalApproverRegistry`, `SignedAnswerKeyApprovalEnvelope` — [attestation_verifier.py](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/engine/attestation_verifier.py) Ed25519/RSA-PSS RFC 8785 JCS altyapısıyla, `FORBIDDEN_SELF_ASSERTED_APPROVAL_IN_DATASET` yükleyici kilidi, iptal & yeniden onay zinciri + O-04 çift-göz itiraz tarihçesi).
-2. **`K-02` & `Y-01` & `Y-02` & `O-02` & `O-03` Güncellemesi:** `rubric.py` / `models.py` içinde `PASS >= 85.0`, `PARTIAL_REVIEW 80.0..84.99`, `FAIL_SCORE < 80.0`, sabit tekil cezalar, zorunlu `RENORMALIZED_ACTIVE_WEIGHTS` politikası, vaka-bazlı `MINOR -5.0` bütçe tavanı ve çift `weighted_case_index` / `macro_category_weighted_index` raporlaması.
-3. **`K-03` & `Y-04` & `Y-05` & `O-05` Güncellemesi:** `EVALUATION_INFRA_FAILURE` -> `RUN_INVALID` izolatörü, tam `EvaluationRunManifest`, 4 sınıflı bağlamsal `MonetaryMentionClassifier` ve sabit `Recall@5` / `Recall@10` / `Source Hit Rate@5` / `MRR`.
-4. **`Y-03` & `O-01` Güncellemesi:** Ayrılmış `eval_dev_val_70.json` + mühürlü `eval_holdout_30_sealed.json`, `blind_holdout_mode`, `HoldoutAccessLedger` ve formalize `4-gram` Jaccard normalizasyonu.
-5. **Doğrulama & Temiz Extract CI:** Tüm yeni ve mevcut testler + 4 sıralamalı temiz ZIP tam regresyon + GitHub Actions CI kanıtı.
+| Bulgu | Uygulanan Dosya / Modül | Sağlanan Teknik Garanti |
+|---|---|---|
+| **K-01 / O-04** | `engine/evaluation/legal_signoff.py` + `dataset_loader.py` | Inline `APPROVED_FOR_BENCHMARK` reddi, `TrustedLegalApproverRegistry`, Ed25519 (RFC 8032) & RSA-PSS-SHA256 (`saltlen=32`) JCS imzası, `REVOKE` / `KEY_COMPROMISE` / `SUPERSEDE_REAPPROVE` ve çift-göz override itiraz tarihçesi. |
+| **K-02 / Y-01 / Y-02 / O-02 / O-03** | `engine/evaluation/models.py` + `rubric.py` | 3 seviyeli (`>=85 / 80–84.99 / <80`) karar matrisi, çakışmasız sabit ceza tablosu (`DEFECT_FIXED_PENALTIES`), tek zorunlu `RENORMALIZED_ACTIVE_WEIGHTS` + N/A `raw_score=None`, vaka bazlı `MINOR <= 5.0` bütçe ve vaka + makro kategori endeksi. |
+| **K-03 / Y-04 / Y-05 / O-05** | `engine/evaluation/runner.py` + `rubric.py` | Altyapı hatasında `RUN_INVALID` (`score=None`) ayrımı, tam `EvaluationRunManifest`, KB/girdi farkındalı 4 sınıflı `MonetaryMentionClassifier` ve sabit `Recall@5` / `Recall@10` / `Source Hit@5` / `MRR`. |
+| **Y-03 / O-01** | `datasets/eval_dev_val_70_cases.json` + `eval_holdout_30_sealed.json` | Ayrık kasalar, `blind_holdout_mode=True` maskeleme, append-only `HoldoutAccessLedger` ve NFKC Türkçe 4-gram Jaccard normalizasyonu. |
+| **Doğrulama** | `tests/test_evaluation_wp45_v106.py` (`EV-01..EV-09`) | Tekrar üretilebilir temiz ZIP çıkarımı, `4` sıralamalı `302/302` tam regresyon, `strict`/`offline` X.509 ve kapalı kapı doğrulaması. |

@@ -101,6 +101,32 @@ def _generate_runtime_ed25519_keypair(tmp_dir: Path, prefix: str) -> tuple[str, 
     return priv_pem, pub_pem, fp
 
 
+def _generate_runtime_rsa2048_keypair(tmp_dir: Path, prefix: str) -> tuple[str, str, str]:
+    """Generate ephemeral 2048-bit RSA keypair via OpenSSL 3 at test runtime for RSA-PSS-SHA256 tests."""
+    priv = tmp_dir / f"{prefix}_rsa_priv.pem"
+    pub = tmp_dir / f"{prefix}_rsa_pub.pem"
+    subprocess.run(
+        ["openssl", "genpkey", "-algorithm", "RSA", "-pkeyopt", "rsa_keygen_bits:2048", "-out", str(priv)],
+        check=True,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        timeout=20,
+    )
+    subprocess.run(
+        ["openssl", "pkey", "-in", str(priv), "-pubout", "-out", str(pub)],
+        check=True,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        timeout=15,
+    )
+    priv_pem = priv.read_text(encoding="utf-8")
+    pub_pem = pub.read_text(encoding="utf-8")
+    fp = compute_public_key_fingerprint(pub_pem)
+    return priv_pem, pub_pem, fp
+
+
 def _get_shared_eval() -> tuple[HukukSgkEvaluationRunner, EvaluationDataset, EvaluationSuiteRunReport]:
     resolved = PROJECT_ROOT.resolve()
     if resolved not in _SHARED_EVAL:
@@ -438,6 +464,50 @@ class TestEvaluationWp45V106(unittest.TestCase):
             )
             self.assertFalse(st_overturned.legal_fatal_override_active)
             self.assertGreaterEqual(len(st_overturned.override_history), 4)
+
+            # K-01(f): RSA-PSS-SHA256 (2048-bit RSA, MGF1-SHA256, saltlen=32) imza ve tahrifat reddi doğrulaması
+            rsa_priv, rsa_pub, rsa_fp = _generate_runtime_rsa2048_keypair(td_path, "counsel_rsa")
+            rsa_reg = TrustedLegalApproverRegistry(
+                registry_version="reg-rsa-v1",
+                approvers=(
+                    TrustedLegalApproverRecord(
+                        approver_id="COUNSEL-RSA-03",
+                        approver_role="EXTERNAL_LEGAL_COUNSEL",
+                        bar_association_ref="IZM-BAR-30003",
+                        enrollment_status="ENROLLED",
+                        key_id="KEY-RSA-2026",
+                        key_version="v1",
+                        algorithm="RSA-PSS-SHA256",
+                        public_key_pem=rsa_pub,
+                        public_key_fingerprint_sha256=rsa_fp,
+                        valid_from_utc="2026-01-01T00:00:00Z",
+                        valid_until_utc="2027-12-31T23:59:59Z",
+                    ),
+                ),
+            )
+            env_rsa = create_signed_answer_key_approval_envelope(
+                case=c_dev,
+                dataset_version=self.dataset.dataset_version,
+                envelope_id="ENV-RSA-001",
+                nonce="nonce-rsa-000001",
+                approver_id="COUNSEL-RSA-03",
+                approver_role="EXTERNAL_LEGAL_COUNSEL",
+                key_id="KEY-RSA-2026",
+                key_version="v1",
+                algorithm="RSA-PSS-SHA256",
+                private_key_pem=rsa_priv,
+                public_key_fingerprint_sha256=rsa_fp,
+                signed_at_utc="2026-11-26T06:33:00Z",
+                legal_rationale="RSA-PSS-SHA256 (saltlen=32) ile harici hukuk onayı.",
+            )
+            self.assertFalse(env_rsa.qualified_e_signature_5070_equivalent)
+            st_rsa_ok = verify_detached_legal_signoffs(case=c_dev, envelopes=(env_rsa,), registry=rsa_reg)
+            self.assertTrue(st_rsa_ok.approved)
+            self.assertEqual(st_rsa_ok.signoff_status, SIGNOFF_VERIFIED_APPROVED)
+            tampered_env_rsa = replace(env_rsa, legal_rationale="Tahrif edilmis gerekce.")
+            st_rsa_bad = verify_detached_legal_signoffs(case=c_dev, envelopes=(tampered_env_rsa,), registry=rsa_reg)
+            self.assertFalse(st_rsa_bad.approved)
+            self.assertIn("CRYPTO_SIGNATURE_INVALID", st_rsa_bad.failure_codes)
 
     def test_04_k02_thresholds_y01_fixed_penalties_y02_na_policy_and_o03_minor_cap(self) -> None:
         """EV-04 (K-02, Y-01, Y-02, O-03): PASS>=85, PARTIAL 80..84.99, FAIL_SCORE<80, sabit cezalar & MINOR tavan."""
