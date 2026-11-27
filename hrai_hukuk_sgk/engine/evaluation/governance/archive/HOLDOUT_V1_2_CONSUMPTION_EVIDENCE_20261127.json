@@ -1,0 +1,83 @@
+{
+  "schema": "hrai.holdout_consumption_evidence.v1",
+  "evidence_id": "HOLDOUT-V1.2-CONSUMPTION-EVIDENCE-20261127",
+  "recorded_at_utc": "2026-11-27T14:30:00Z",
+  "recorded_by": "WP-4.6 implementation (Claude Code session, requested by repository owner)",
+  "vault_id": "HOLDOUT-WP45-V1.2-30-SEALED-20261126",
+  "scope_notice": "Bu kayıt mevcut 30 vakalık HOLDOUT kasasının tüketildiğini ve körlüğünün bozulduğunu belgeler. HOLDOUT vaka içerikleri bu dosyaya kopyalanmamıştır; yalnızca git nesne özetleri ve kaynak konumları referans verilir.",
+  "archived_artifacts": [
+    {
+      "artifact": "HOLDOUT veri dosyası (değiştirilmeden yerinde korunuyor)",
+      "path": "hrai_hukuk_sgk/engine/evaluation/datasets/eval_holdout_30_sealed.json",
+      "added_in_commit": "1d95a8b9462b79a337a3ee6f54d5ab8e2c2ce8bd",
+      "git_blob_sha1": "542fa53d2d86dfebd88207d5231cf876859e6dd2",
+      "file_sha256": "b809245fa04ee6de2daf4189c115ba03860b1bd54213dfc88b86ce7a1625730f",
+      "declared_holdout_vault_sha256": "64d72d3709d7b1f60c2a58d67f3795779aafbca7f836dc7131694554d436c766",
+      "modified_after_creation": false
+    },
+    {
+      "artifact": "WP4_5_EVALUATION_SPEC.md v1.2 (HOLDOUT kök neden ifşası içeren son sürüm)",
+      "path": "hrai_hukuk_sgk/docs/WP4_5_EVALUATION_SPEC.md",
+      "commit": "813202ca5422552062e166b1c4d6ac0ba6aa0e24",
+      "git_blob_sha1": "9a633ff4766857fa824da3ede59faae87c08e783",
+      "note": "Özgün metin git geçmişinde değiştirilmeden durur; v1.3 bu satırdaki kök neden ayrıntısını kaldırır ve körlük ihlali olarak işaretler."
+    },
+    {
+      "artifact": "WP-4.5 test paketi (HOLDOUT dahil maskesiz değerlendiren son sürüm)",
+      "path": "hrai_hukuk_sgk/tests/test_evaluation_wp45_v106.py",
+      "commit": "d1dd8ef06cc43972d10631cadc9d6f05dc2eb10f",
+      "git_blob_sha1": "83c09e887f47893951f7d1b204c33471feec3f95"
+    }
+  ],
+  "blindness_breaches": [
+    {
+      "code": "CI_NON_BLIND_EVALUATION",
+      "description": "Test paketi (_get_shared_eval) her çalıştırmada load_evaluation_dataset() ile 100 vakanın tamamını, HOLDOUT dahil, blind_holdout_mode=False ile değerlendirdi. Bu yol her push ve PR CI koşusunda 4 sıralamada çalıştı.",
+      "first_commit": "175e9f76921dc412c88fff2d536e92a5ee97679b",
+      "last_commit": "d1dd8ef06cc43972d10631cadc9d6f05dc2eb10f"
+    },
+    {
+      "code": "TEST_ASSERTIONS_DEPEND_ON_HOLDOUT",
+      "description": "d1dd8ef kategori score_tier beklentilerini 100 vakalık rapora göre PASS olarak sabitledi; bu kategorilerde HOLDOUT vakaları vardı (UCRET_SURE_IZIN: 5, KVKK_6698: 3).",
+      "commit": "d1dd8ef06cc43972d10631cadc9d6f05dc2eb10f"
+    },
+    {
+      "code": "SPEC_ROOT_CAUSE_DISCLOSURE",
+      "description": "WP4_5_EVALUATION_SPEC.md bölüm 8.2, bir HOLDOUT vakasını kimliği ve FATAL kök nedeniyle listeledi; bilgi WP-4.3/WP-4.4 iyileştirmelerinden önce görünürdü.",
+      "first_commit": "1d95a8b9462b79a337a3ee6f54d5ab8e2c2ce8bd",
+      "last_commit": "813202ca5422552062e166b1c4d6ac0ba6aa0e24"
+    },
+    {
+      "code": "PRE_REMEDIATION_HOLDOUT_MEASUREMENT",
+      "description": "Spec bölüm 8.1, iyileştirme öncesi ölçümde HOLDOUT ortalamasını (89.27) raporladı; kasa aynı sürümde birden fazla kez ölçüldü."
+    },
+    {
+      "code": "NON_PERSISTENT_ACCESS_LEDGER",
+      "description": "WP-4.5 HoldoutAccessLedger yol verilmediğinde kaydı yalnızca bellekte tutuyordu; access_count_for_version=1 değeri gerçek erişim geçmişini kanıtlamaz."
+    },
+    {
+      "code": "WP46_PRE_CHANGE_SUITE_EXECUTION",
+      "description": "2026-11-27 tarihinde WP-4.6 değişikliklerinden önce, mevcut (değişiklik öncesi) test paketi geliştirme konteynerinde bir kez çalıştırıldı (303/303 OK). Bu çalıştırma eski kodun HOLDOUT'u bellekte maskesiz değerlendirmesini içerir; vaka düzeyi sonuçlar görüntülenmedi, kaydedilmedi ve hiçbir değişiklikte kullanılmadı."
+    }
+  ],
+  "prior_access_records": {
+    "status": "NOT_FOUND",
+    "searched_locations": [
+      "Depo ağacı, feat/v1.0.6-wp4-agent-intelligence @ d1dd8ef (ledger/rapor/jsonl dosyası yok)",
+      "GitHub Actions artifact listesi, run 45862325957 (push) ve 45862334610 (PR): 0 artifact",
+      "PR #4 yorumları: 0"
+    ],
+    "not_searched": [
+      "Antigravity yerel çalışma alanı (/home/antigravity/poliface34/poliface ve ~/.gemini/antigravity): bu oturuma erişim izni verilmedi"
+    ],
+    "fabrication_policy": "Bulunamayan erişim kayıtları yeniden oluşturulmadı ve uydurulmadı. Kalıcı ledger, yalnızca WP-4.6 sonrası erişimleri kaydeder."
+  },
+  "reported_unverified_claims": [
+    {
+      "source": "PR #4 açıklaması (head d1dd8ef, güncelleme 2026-11-26T16:53:21Z) ve 2026-11-27 devir notu",
+      "claim": "Kör HOLDOUT koşusu: purpose=FINAL_BLIND_HOLDOUT_VERIFICATION_POST_WP43_WP44_REMEDIATION, operator=ANTIGRAVITY_VERIFIER, access_count_for_version=1, contamination_risk_hold=false, holdout_redacted_count=30; 30 vaka, 91.39 ortalama, 0 FATAL, 4 MAJOR, 27/30 PASS.",
+      "verification_status": "UNVERIFIED_NO_PERSISTENT_LEDGER_OR_RUN_REPORT_FOUND",
+      "permitted_use": "AUDIT_ONLY_NOT_A_BLIND_VALIDATION_RESULT"
+    }
+  ]
+}
