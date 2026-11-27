@@ -1,0 +1,32 @@
+{
+  "schema": "hrai.holdout_vault_registry.v1",
+  "registry_version": "wp4.6-2026-11-27-r1",
+  "description": "WP-4.6 HOLDOUT kasa ve emanetçi (custodian) kayıt defteri. Normal CI bu dosyayı yalnızca izolasyon ve erişim politikası kontrolleri için okur; HOLDOUT vaka içeriği okunmaz.",
+  "access_policy": {
+    "ledger": "Kalıcı, hash zincirli, append-only JSONL; depo çalışma ağacı dışında (HRAI_HOLDOUT_LEDGER_PATH). Bellek içi ledger yasak.",
+    "authorization": "Kayıtlı ve ACTIVE bir emanetçinin Ed25519 veya RSA-PSS-SHA256 ile imzaladığı RFC 8785 kanonik erişim isteği.",
+    "allowed_purposes": ["FINAL_BLIND_VERIFICATION", "INDEPENDENT_AUDIT"],
+    "ci": "CI ortamında HOLDOUT erişimi koşulsuz reddedilir.",
+    "grant_scope": "Bir grant tek bir kasa okuması ve tek bir blind koşu içindir.",
+    "consumed_vaults": "CONSUMED_BLINDNESS_COMPROMISED durumundaki kasalara grant verilmez (max_authorized_runs=0)."
+  },
+  "vaults": [
+    {
+      "vault_id": "HOLDOUT-WP45-V1.2-30-SEALED-20261126",
+      "dataset_version": "1.0.6-wp4.5-v1.2-eval-100",
+      "file_relpath": "engine/evaluation/datasets/eval_holdout_30_sealed.json",
+      "file_sha256": "b809245fa04ee6de2daf4189c115ba03860b1bd54213dfc88b86ce7a1625730f",
+      "case_set_sha256": "64d72d3709d7b1f60c2a58d67f3795779aafbca7f836dc7131694554d436c766",
+      "case_set_sha256_basis": "Dosya başlığında beyan edilen WP-4.5 holdout_vault_sha256 (dosya sırası). Kasa tüketildiği için içerik yeniden ayrıştırılmadı.",
+      "case_count": 30,
+      "status": "CONSUMED_BLINDNESS_COMPROMISED",
+      "max_authorized_runs": 0,
+      "consumed_recorded_at_utc": "2026-11-27T14:30:00Z",
+      "consumption_evidence_relpath": "engine/evaluation/governance/archive/HOLDOUT_V1_2_CONSUMPTION_EVIDENCE_20261127.json",
+      "consumption_evidence_sha256": "3414d78d438b9f0f154c2f405f81506b7210a12631d0d0fef6cae4d965eab199",
+      "permitted_use": "AUDIT_ONLY. Yeniden değerlendirme, optimizasyon ve yeni blind PASS üretimi yasak."
+    }
+  ],
+  "custodians": [],
+  "custodian_enrollment_policy": "Emanetçi kaydı yalnızca gerçek kimlik ve yetki doğrulamasından sonra, depo sahibinin ayrı onayıyla eklenir. Sentetik veya test anahtarı bu dosyaya eklenemez."
+}

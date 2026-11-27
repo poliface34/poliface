@@ -1,4 +1,10 @@
-"""WP-4.5 v1.2 Verification Suite (K-01..K-03, Y-01..Y-05, O-01..O-05, and 100-Case Diagnostic Suite)."""
+"""WP-4.5 v1.2 Verification Suite (K-01..K-03, Y-01..Y-05, O-01..O-05) on the 70-case DEV/VAL diagnostic suite.
+
+WP-4.6: the sealed HOLDOUT vault is never loaded or evaluated here. Tests that need HOLDOUT-split
+semantics use synthetic HOLDOUT cases relabelled from DEV/VALIDATION cases, authorised through a
+temporary registry, an ephemeral custodian key and a persistent temporary ledger
+(`tests/holdout_test_support.py`).
+"""
 
 from __future__ import annotations
 
@@ -84,6 +90,8 @@ from engine.evaluation.runner import _git_sha_safe
 from engine.rag import HukukSgkRagEngine, RagQueryRequest
 from engine.trust_root import run_live_integration_probe
 
+from tests.holdout_test_support import SyntheticHoldoutVault, synthetic_holdout_case
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 EXPECTED_XMLDSIG_SHA256 = "b16207b5fb71d7c0d0372838411c7795459ac460c2ff232766ae230b9cbacf85"
 
@@ -152,7 +160,7 @@ def _get_shared_eval() -> tuple[HukukSgkEvaluationRunner, EvaluationDataset, Eva
             answer_orchestrator=orch,
             project_root=PROJECT_ROOT,
         )
-        ds = load_evaluation_dataset()
+        ds = load_evaluation_dataset(include_holdout=False)
         rpt = runner.run_suite(ds, blind_holdout_mode=False)
         _SHARED_EVAL[resolved] = (runner, ds, rpt)
     return _SHARED_EVAL[resolved]
@@ -164,12 +172,21 @@ class TestEvaluationWp45V106(unittest.TestCase):
         cls.runner, cls.dataset, cls.report = _get_shared_eval()
 
     def test_01_dataset_vaults_splits_o01_jaccard_and_y02_applicable_dims(self) -> None:
-        """EV-01: Ayrık kasalar (70 DEV/VAL + 30 HOLDOUT), matris, Y-02 boyutları ve O-01 Jaccard."""
+        """EV-01: 70 DEV/VAL kasası (HOLDOUT mühürlü ve yüklenmez), matris, Y-02 boyutları ve O-01 Jaccard."""
         self.assertTrue(self.dataset.vault_separated)
-        self.assertEqual(len(self.dataset.cases), 100)
-        self.assertEqual(self.dataset.category_counts(), CATEGORY_TARGET_COUNTS)
-        self.assertEqual(self.dataset.split_counts(), SPLIT_TARGET_COUNTS)
-        self.assertEqual(self.dataset.category_split_counts(), CATEGORY_SPLIT_TARGETS)
+        self.assertEqual(len(self.dataset.cases), 70)
+        self.assertIsNone(self.dataset.holdout_sha256)
+        dv_targets = {
+            cat: {sp: (n if sp != SPLIT_HOLDOUT else 0) for sp, n in per.items()}
+            for cat, per in CATEGORY_SPLIT_TARGETS.items()
+        }
+        self.assertEqual(self.dataset.category_split_counts(), dv_targets)
+        self.assertEqual(
+            self.dataset.split_counts(),
+            {sp: (n if sp != SPLIT_HOLDOUT else 0) for sp, n in SPLIT_TARGET_COUNTS.items()},
+        )
+        self.assertEqual(sum(CATEGORY_TARGET_COUNTS.values()), 100)
+        self.assertEqual(sum(SPLIT_TARGET_COUNTS.values()), 100)
         self.assertEqual(sum(DIMENSION_WEIGHTS.values()), 100)
         self.assertEqual(len(DIMENSION_WEIGHTS), 8)
 
@@ -194,7 +211,8 @@ class TestEvaluationWp45V106(unittest.TestCase):
     def test_02_anti_leakage_rejects_shared_cluster_and_paraphrase_leakage(self) -> None:
         """EV-02: Farklı kümelere bölünen cluster_id veya yakın kopya metin yüklemede reddedilir."""
         c_dev = next(c for c in self.dataset.cases if c.split == SPLIT_DEV)
-        c_hold = next(c for c in self.dataset.cases if c.split == SPLIT_HOLDOUT)
+        c_val = next(c for c in self.dataset.cases if c.split == SPLIT_VALIDATION)
+        c_hold = synthetic_holdout_case(c_val, 1)  # WP-4.6: sentetik HOLDOUT etiketi, gerçek kasa okunmaz
 
         leaked_cluster_case = replace(c_hold, cluster_id=c_dev.cluster_id)
         ds_clu = EvaluationDataset(
@@ -278,7 +296,7 @@ class TestEvaluationWp45V106(unittest.TestCase):
             )
 
             c_dev = next(c for c in self.dataset.cases if c.case_id == "EVAL-001")
-            c_hold = next(c for c in self.dataset.cases if c.case_id == "EVAL-083")
+            c_hold = next(c for c in self.dataset.cases if c.case_id == "EVAL-085")  # WP-4.6: VALIDATION vakası
             c_draft_base = next(c for c in self.dataset.cases if c.case_id == "EVAL-028")
             c_draft_fatal = replace(
                 c_draft_base,
@@ -325,7 +343,7 @@ class TestEvaluationWp45V106(unittest.TestCase):
             env_hold = create_signed_answer_key_approval_envelope(
                 case=c_hold,
                 dataset_version=self.dataset.dataset_version,
-                envelope_id="ENV-083",
+                envelope_id="ENV-085",
                 nonce="nonce-c1-000002",
                 approver_id="COUNSEL-AUDIT-01",
                 approver_role="INDEPENDENT_LABOR_LAW_COUNSEL",
@@ -842,7 +860,8 @@ class TestEvaluationWp45V106(unittest.TestCase):
 
         # K-02 Seviye 3 (OfficialBenchmarkMetrics kabul eşiği, 80-84.99 PARTIAL_REVIEW ve <75 kategori tabanı)
         c_d1 = next(c for c in self.dataset.cases if c.case_id == "EVAL-001")
-        c_h1 = next(c for c in self.dataset.cases if c.case_id == "EVAL-083")
+        c_v1 = next(c for c in self.dataset.cases if c.case_id == "EVAL-085")
+        c_h1 = synthetic_holdout_case(c_v1, 1)  # WP-4.6: sentetik HOLDOUT (gerçek kasa yerine)
         c_h2 = next(c for c in self.dataset.cases if c.case_id == "EVAL-091")
         c_kvkk = next(c for c in self.dataset.cases if c.case_id == "EVAL-071")
         c_fatal_base = next(c for c in self.dataset.cases if c.case_id == "EVAL-028")
@@ -911,23 +930,30 @@ class TestEvaluationWp45V106(unittest.TestCase):
                     legal_rationale="K-02 seviye 3 resmi ölçüm onayı.",
                 )
 
+            # WP-4.6: sentetik HOLDOUT vakası yalnız grant + kalıcı ledger + blind mod ile değerlendirilir.
+            synth_vault = SyntheticHoldoutVault(td_l3_p / "synthetic_vault", (c_h1,), max_runs=2)
+            synth_gate = synth_vault.gate()
+
             # 3a) Temiz resmî benchmark (>=85 genel, >=85 holdout, >=80 makro, tüm kategoriler >=75, 0 FATAL) -> PASSED
             ds_pass = EvaluationDataset("k02-l3", "2026-11-26T06:40:00Z", (c_d1, c_h1, c_h2), "k02-pass")
             rpt_pass = self.runner.run_suite(
                 ds_pass,
                 legal_signoff_envelopes=tuple(_sign_l3(c, i) for i, c in enumerate(ds_pass.cases, 1)),
                 approver_registry=l3_reg,
-                blind_holdout_mode=False,
+                blind_holdout_mode=True,
+                holdout_access_grant=synth_vault.grant(),
+                holdout_gate=synth_gate,
             )
             self.assertEqual(rpt_pass.official_benchmark_metrics.official_status, OFFICIAL_STATUS_PASSED)
             self.assertTrue(rpt_pass.official_benchmark_metrics.official_pass_eligible)
 
             # 3b) PARTIAL_REVIEW (80.0..84.99) resmi benchmark -> BELOW_THRESHOLD (geçemez)
+            c_v_partial = next(c for c in self.dataset.cases if c.case_id == "EVAL-086")  # WP-4.6: VALIDATION tabanı
             c_h1_partial = replace(
-                c_h1,
+                c_v_partial,
                 include_historical=True,
                 ground_truth=replace(
-                    c_h1.ground_truth,
+                    c_v_partial.ground_truth,
                     expected_historical_source_ids=(
                         "HIST-M1", "HIST-M2", "HIST-M3", "HIST-M4",
                         "HIST-M5", "HIST-M6", "HIST-M7", "HIST-M8",
@@ -969,7 +995,9 @@ class TestEvaluationWp45V106(unittest.TestCase):
                 ds_floor,
                 legal_signoff_envelopes=tuple(_sign_l3(c, i + 20) for i, c in enumerate(ds_floor.cases)),
                 approver_registry=l3_reg,
-                blind_holdout_mode=False,
+                blind_holdout_mode=True,
+                holdout_access_grant=synth_vault.grant(),
+                holdout_gate=synth_gate,
             )
             off_floor = rpt_floor.official_benchmark_metrics
             self.assertGreaterEqual(off_floor.official_approved_weighted_index or 0.0, 85.0)
@@ -982,7 +1010,7 @@ class TestEvaluationWp45V106(unittest.TestCase):
             self.assertTrue(any("Tekil kategori tabanı < 75.0" in b for b in off_floor.blocking_reasons))
 
             # 3d) FATAL veto -> FAILED_FATAL_VETO
-            ds_fatal = EvaluationDataset("k02-l3", "2026-11-26T06:40:00Z", (c_h1, c_fatal), "k02-fatal")
+            ds_fatal = EvaluationDataset("k02-l3", "2026-11-26T06:40:00Z", (c_d1, c_fatal), "k02-fatal")
             rpt_fatal = self.runner.run_suite(
                 ds_fatal,
                 legal_signoff_envelopes=tuple(_sign_l3(c, i + 40) for i, c in enumerate(ds_fatal.cases)),
@@ -992,8 +1020,8 @@ class TestEvaluationWp45V106(unittest.TestCase):
             self.assertFalse(rpt_fatal.official_benchmark_metrics.official_pass_eligible)
             self.assertEqual(rpt_fatal.official_benchmark_metrics.official_status, OFFICIAL_STATUS_FAILED_FATAL_VETO)
 
-    def test_05_full_100_case_manifest_dual_index_and_fixed_retrieval_o05(self) -> None:
-        """EV-05 (Y-04, O-02, O-05): 100 vaka raporu, EvaluationRunManifest, çift endeks ve Recall@5/@10/MRR."""
+    def test_05_dev_val_70_case_manifest_dual_index_and_fixed_retrieval_o05(self) -> None:
+        """EV-05 (Y-04, O-02, O-05): 70 DEV/VAL vaka raporu, EvaluationRunManifest, çift endeks ve Recall@5/@10/MRR."""
         self.assertEqual(self.report.run_validity, RUN_VALIDITY_VALID)
         diag = self.report.engineering_diagnostic_metrics
         self.assertIsNotNone(diag.diagnostic_all_weighted_index)
@@ -1002,7 +1030,13 @@ class TestEvaluationWp45V106(unittest.TestCase):
         self.assertGreaterEqual(diag.diagnostic_recall_at_10, diag.diagnostic_recall_at_5)
         self.assertGreater(diag.diagnostic_mrr, 0.0)
         self.assertEqual(len(diag.category_summaries), 7)
-        self.assertEqual({s.split: s.total_cases for s in diag.split_summaries}, SPLIT_TARGET_COUNTS)
+        self.assertEqual(
+            {s.split: s.total_cases for s in diag.split_summaries},
+            {sp: (n if sp != SPLIT_HOLDOUT else 0) for sp, n in SPLIT_TARGET_COUNTS.items()},
+        )
+        self.assertIsNone(self.report.holdout_access_audit)
+        self.assertEqual(self.report.holdout_redacted_count, 0)
+        self.assertIsNone(self.report.run_manifest.holdout_sha256)
 
         mf = self.report.run_manifest
         self.assertTrue(mf.python_version.startswith("3."))
@@ -1014,10 +1048,11 @@ class TestEvaluationWp45V106(unittest.TestCase):
         self.assertIn("wp43_rag_sha", mf.git_commits)
 
     def test_06_adversarial_blocked_and_y05_contextual_monetary_classifier(self) -> None:
-        """EV-06 (Y-05): 14/14 ADVERSARIAL bloklanır ve MonetaryMentionClassifier girdi vs sınır vs hesaplamayı ayırır."""
+        """EV-06 (Y-05): DEV/VAL 9/9 ADVERSARIAL bloklanır ve MonetaryMentionClassifier girdi vs sınır vs hesaplamayı ayırır."""
         adv_cases = [c for c in self.dataset.cases if c.difficulty == "ADVERSARIAL"]
         adv_ids = {c.case_id for c in adv_cases}
-        self.assertGreaterEqual(len(adv_ids), 10)
+        # WP-4.6: 14 ADVERSARIAL vakanın 9'u DEV/VAL'da; HOLDOUT'takiler mühürlü kasada kalır ve burada değerlendirilmez.
+        self.assertEqual(len(adv_ids), 9)
         for cr in self.report.case_reports:
             if cr.case_id in adv_ids:
                 self.assertEqual(cr.fatal_count, 0, msg=f"{cr.case_id} failed: {cr.defects}")
@@ -1051,7 +1086,7 @@ class TestEvaluationWp45V106(unittest.TestCase):
 
     def test_07_determinism_and_wp1_governance_invariants(self) -> None:
         """EV-07: Deterministik content SHA-256 ve WP-1 şema/config/xmldsig/kapalı kapı değişmezliği."""
-        subset = [c for c in self.dataset.cases if c.case_id in {"EVAL-001", "EVAL-018", "EVAL-029", "EVAL-083", "EVAL-091"}]
+        subset = [c for c in self.dataset.cases if c.case_id in {"EVAL-001", "EVAL-018", "EVAL-029", "EVAL-085", "EVAL-091"}]
         ds_sub = EvaluationDataset(
             dataset_version="det-sub",
             created_at_utc="2026-11-26T06:20:00Z",
@@ -1113,48 +1148,67 @@ class TestEvaluationWp45V106(unittest.TestCase):
         self.assertEqual(leg_dim.raw_score, 0.0)
 
     def test_09_y03_blind_holdout_redaction_and_access_ledger_contamination_guard(self) -> None:
-        """EV-09 (Y-03): Blind HOLDOUT modu vaka detaylarını maskeler ve aşırı tekrarlı erişimi bloklar."""
-        subset = tuple(c for c in self.dataset.cases if c.case_id in {"EVAL-001", "EVAL-083"})
+        """EV-09 (Y-03 + WP-4.6): Blind HOLDOUT maskeleme, kalıcı ledger, tek kullanımlık grant ve erişim sınırı."""
+        c_dev = next(c for c in self.dataset.cases if c.case_id == "EVAL-001")
+        c_syn = synthetic_holdout_case(next(c for c in self.dataset.cases if c.case_id == "EVAL-085"), 9)
         ds_sub = EvaluationDataset(
             dataset_version="y03-holdout",
             created_at_utc="2026-11-26T06:20:00Z",
-            cases=subset,
+            cases=(c_dev, c_syn),
             dataset_sha256="y03",
-            holdout_sha256="ho-sha-v1",
         )
         with tempfile.TemporaryDirectory() as td:
-            ledger_file = Path(td) / "holdout_access.jsonl"
-            ledger = HoldoutAccessLedger(ledger_path=ledger_file, max_runs_per_version=1)
+            vault = SyntheticHoldoutVault(Path(td) / "vault", (c_syn,), max_runs=1)
+            gate = vault.gate()
 
-            # 1) İlk kör denetim koşusu başarılı ve HOLDOUT detayı maskelenmiş
+            # 0) Grant olmadan HOLDOUT vakası değerlendirilemez (değerlendirme başlamadan reddedilir)
+            with self.assertRaises(EvaluationIntegrityError) as ctx0:
+                self.runner.run_suite(ds_sub, blind_holdout_mode=True)
+            self.assertIn("HOLDOUT_ACCESS_DENIED_NO_GRANT", str(ctx0.exception))
+
+            grant = vault.grant()
+            self.assertEqual(grant.access_number, 1)
+
+            # 1) Maskesiz (non-blind) HOLDOUT değerlendirmesi grant olsa bile yasak
+            with self.assertRaises(EvaluationIntegrityError) as ctx_nb:
+                self.runner.run_suite(ds_sub, blind_holdout_mode=False, holdout_access_grant=grant, holdout_gate=gate)
+            self.assertIn("HOLDOUT_NON_BLIND_EVALUATION_FORBIDDEN", str(ctx_nb.exception))
+
+            # 2) İlk kör denetim koşusu başarılı ve HOLDOUT detayı maskelenmiş
             blind_rpt = self.runner.run_suite(
-                ds_sub,
-                blind_holdout_mode=True,
-                holdout_ledger=ledger,
-                holdout_operator="AUDITOR-01",
-                holdout_purpose="RELEASE_AUDIT",
-                fail_on_holdout_contamination=True,
+                ds_sub, blind_holdout_mode=True, holdout_access_grant=grant, holdout_gate=gate
             )
             self.assertEqual(blind_rpt.holdout_redacted_count, 1)
             self.assertIsNotNone(blind_rpt.holdout_access_audit)
             self.assertEqual(blind_rpt.holdout_access_audit.access_count_for_version, 1)
+            self.assertFalse(blind_rpt.holdout_access_audit.contamination_risk_hold)
             masked_row = next(r for r in blind_rpt.case_reports if r.split == SPLIT_HOLDOUT)
             self.assertTrue(masked_row.blind_masked)
             self.assertTrue(masked_row.case_id.startswith("HOLDOUT-MASKED-"))
             self.assertEqual(masked_row.defects, ())
             self.assertEqual(masked_row.trace_id, "REDACTED")
 
-            # 2) Aynı HOLDOUT hash'i üzerinde 2. tekrarlı optimizasyon koşusu fail_on_holdout_contamination=True ile engellenir!
-            with self.assertRaises(EvaluationIntegrityError) as ctx:
-                self.runner.run_suite(
-                    ds_sub,
-                    blind_holdout_mode=True,
-                    holdout_ledger=ledger,
-                    holdout_operator="DEV-TUNER",
-                    holdout_purpose="TUNING_LOOP",
-                    fail_on_holdout_contamination=True,
-                )
-            self.assertIn("HOLDOUT_CONTAMINATION_RISK_HOLD", str(ctx.exception))
+            events = [r["event_type"] for r in vault.ledger_records()]
+            self.assertEqual(events, ["GENESIS", "ACCESS_GRANTED", "RUN_STARTED", "RUN_COMPLETED"])
+            completed = vault.ledger_records()[-1]
+            self.assertEqual(completed["details"]["run_manifest_sha256"], blind_rpt.run_manifest.manifest_sha256)
+
+            # 3) Aynı grant ile ikinci koşu reddedilir (tek kullanımlık)
+            with self.assertRaises(EvaluationIntegrityError) as ctx_reuse:
+                self.runner.run_suite(ds_sub, blind_holdout_mode=True, holdout_access_grant=grant, holdout_gate=gate)
+            self.assertIn("HOLDOUT_GRANT_ALREADY_USED", str(ctx_reuse.exception))
+
+            # 4) Yeni grant talebi erişim sınırı (max_authorized_runs=1) nedeniyle reddedilir ve denetime yazılır
+            with self.assertRaises(EvaluationIntegrityError) as ctx_lim:
+                vault.grant()
+            self.assertIn("HOLDOUT_ACCESS_LIMIT_EXCEEDED", str(ctx_lim.exception))
+
+            # 5) Ayar/optimizasyon amaçlı erişim her zaman reddedilir
+            with self.assertRaises(EvaluationIntegrityError) as ctx_tune:
+                vault.grant(purpose="TUNING_LOOP")
+            self.assertIn("HOLDOUT_PURPOSE_FORBIDDEN", str(ctx_tune.exception))
+            codes = [r["decision_code"] for r in vault.ledger_records() if r["event_type"] == "ACCESS_DENIED"]
+            self.assertEqual(codes, ["HOLDOUT_ACCESS_LIMIT_EXCEEDED", "HOLDOUT_PURPOSE_FORBIDDEN"])
 
     def test_10_ast_subprocess_isolation_timeout_and_nonzero_exit_audit(self) -> None:
         """EV-10: AST subprocess güvenlik denetimi, sentetik ihlal yakalama, TimeoutExpired, non-zero çıkış ve FD/tmp sızıntısızlığı."""

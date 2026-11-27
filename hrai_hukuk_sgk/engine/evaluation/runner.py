@@ -21,7 +21,14 @@ from ..answer import (
 from ..models import NormReference
 from ..rag import HukukSgkRagEngine, RagQueryRequest
 from ..trust_root import run_live_integration_probe
-from .dataset_loader import HoldoutAccessLedger, load_evaluation_dataset, verify_dataset_anti_leakage
+from .dataset_loader import load_evaluation_dataset, verify_dataset_anti_leakage
+from .holdout_governance import (
+    DENY_NO_GRANT,
+    HoldoutAccessDenied,
+    HoldoutAccessGate,
+    HoldoutAccessGrant,
+    compute_holdout_case_set_sha256,
+)
 from .legal_signoff import (
     SIGNOFF_PENDING,
     SIGNOFF_REVOKED,
@@ -391,10 +398,8 @@ class HukukSgkEvaluationRunner:
         splits: frozenset[str] | None = None,
         categories: frozenset[str] | None = None,
         blind_holdout_mode: bool = True,
-        holdout_ledger: HoldoutAccessLedger | None = None,
-        holdout_operator: str = "SYSTEM_EVALUATOR",
-        holdout_purpose: str = "AUDIT_VERIFICATION",
-        fail_on_holdout_contamination: bool = False,
+        holdout_access_grant: HoldoutAccessGrant | None = None,
+        holdout_gate: HoldoutAccessGate | None = None,
         infra_fault_case_ids: dict[str, str] | None = None,
         ordering_mode: str = "CANONICAL_CASE_ID",
         random_seed: int | None = 0,
@@ -408,6 +413,24 @@ class HukukSgkEvaluationRunner:
             if (splits is None or c.split in splits)
             and (categories is None or c.category in categories)
         ]
+
+        # WP-4.6: HOLDOUT cases are evaluated only blind, only with a ledger-backed grant, and only
+        # over exactly the registered case set. The check and the RUN_STARTED claim happen BEFORE
+        # any HOLDOUT case is evaluated (fail-closed).
+        holdout_selected = [c for c in selected if c.split == SPLIT_HOLDOUT]
+        gate: HoldoutAccessGate | None = None
+        if holdout_selected:
+            if holdout_access_grant is None:
+                raise HoldoutAccessDenied(
+                    DENY_NO_GRANT,
+                    "HOLDOUT vakaları WP-4.6 HoldoutAccessGrant olmadan değerlendirilemez.",
+                )
+            gate = holdout_gate or HoldoutAccessGate(ledger_path=holdout_access_grant.ledger_path)
+            gate.begin_blind_run(
+                holdout_access_grant,
+                holdout_case_set_sha256=compute_holdout_case_set_sha256(holdout_selected),
+                blind_holdout_mode=blind_holdout_mode,
+            )
 
         fault_map = infra_fault_case_ids or {}
         signoff_by_id: dict[str, VerifiedCaseSignoffState] = {}
@@ -698,17 +721,25 @@ class HukukSgkEvaluationRunner:
         # Y-03 Blind Holdout Masking & Access Ledger Audit
         has_holdout = any(r.split == SPLIT_HOLDOUT for r in raw_reports)
         holdout_audit: HoldoutAccessRecord | None = None
-        if has_holdout:
-            ledger = holdout_ledger if holdout_ledger is not None else HoldoutAccessLedger()
-            holdout_audit = ledger.record_access(
-                run_id=f"RUN-{run_manifest.content_manifest_sha256[:12].upper()}",
-                holdout_dataset_version=ds.dataset_version,
-                holdout_sha256=ds.holdout_sha256 or ds.dataset_sha256,
-                operator_id=holdout_operator,
-                purpose=holdout_purpose,
+        holdout_run_id = f"RUN-{run_manifest.content_manifest_sha256[:12].upper()}"
+        holdout_redactions = sum(1 for r in raw_reports if r.split == SPLIT_HOLDOUT) if blind_holdout_mode else 0
+        if has_holdout and gate is not None and holdout_access_grant is not None:
+            gate.complete_blind_run(
+                holdout_access_grant,
+                run_id=holdout_run_id,
+                run_manifest_sha256=run_manifest.manifest_sha256,
+                holdout_redacted_count=holdout_redactions,
+            )
+            holdout_audit = HoldoutAccessRecord(
+                run_id=holdout_run_id,
+                holdout_dataset_version=holdout_access_grant.dataset_version,
+                holdout_sha256=holdout_access_grant.case_set_sha256,
+                operator_id=holdout_access_grant.operator_id,
+                purpose=holdout_access_grant.purpose,
                 executed_at_utc=now_utc,
                 run_manifest_sha256=run_manifest.manifest_sha256,
-                fail_on_contamination=fail_on_holdout_contamination,
+                access_count_for_version=holdout_access_grant.access_number,
+                contamination_risk_hold=False,
             )
 
         exposed_reports: list[SingleCaseEvalReport] = []

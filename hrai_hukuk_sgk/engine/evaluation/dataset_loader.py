@@ -1,4 +1,9 @@
-"""WP-4.5 Evaluation v1.2 dataset loader: K-01 self-approval blocker, Y-02 applicable_dimensions, Y-03 split vaults & HoldoutAccessLedger, and O-01 formal 4-gram Jaccard."""
+"""WP-4.5 Evaluation v1.2 dataset loader (WP-4.6 HOLDOUT governance): K-01 self-approval blocker, Y-02 applicable_dimensions, Y-03 split vaults, O-01 formal 4-gram Jaccard.
+
+WP-4.6: HOLDOUT cases are never loaded by default. Loading a HOLDOUT vault requires a
+`HoldoutAccessGrant` issued by `HoldoutAccessGate`; the raw file hash is checked and the read is
+recorded in the persistent ledger BEFORE any HOLDOUT byte is parsed.
+"""
 
 from __future__ import annotations
 
@@ -31,11 +36,20 @@ from .models import (
     EvaluationIntegrityError,
     ExpectedOutcomeSpec,
     GroundTruthSpec,
-    HoldoutAccessRecord,
     IndependentLegalReviewRecord,
     LeakageAuditReport,
     canonical_eval_sha256,
     derive_applicable_dimensions,
+)
+from .holdout_governance import (
+    DENY_CASE_SET_MISMATCH,
+    DENY_NO_GRANT,
+    HoldoutAccessDenied,
+    HoldoutAccessGate,
+    HoldoutAccessGrant,
+    HoldoutAccessLedger,
+    assert_no_unauthorised_holdout_bytes,
+    compute_holdout_case_set_sha256,
 )
 
 DATASETS_DIR = Path(__file__).resolve().parent / "datasets"
@@ -325,15 +339,32 @@ def load_evaluation_dataset(
     dataset_path: str | Path | None = None,
     *,
     holdout_path: str | Path | None = None,
-    include_holdout: bool = True,
+    include_holdout: bool = False,
+    holdout_access_grant: HoldoutAccessGrant | None = None,
+    holdout_gate: HoldoutAccessGate | None = None,
     enforce_target_counts: bool = True,
     enforce_anti_leakage: bool = True,
     verify_hashes: bool = True,
     allow_inline_self_asserted_approval: bool = False,
 ) -> EvaluationDataset:
-    """Load & validate separated DEV/VAL + sealed HOLDOUT vaults (or an explicit single file path)."""
+    """Load & validate DEV/VAL (default) or, with a WP-4.6 grant, DEV/VAL + one sealed HOLDOUT vault.
+
+    WP-4.6 fail-closed rules:
+    - `include_holdout` defaults to False; HOLDOUT is never part of the normal development/CI flow.
+    - `include_holdout=True` without a `HoldoutAccessGrant` raises `HOLDOUT_ACCESS_DENIED_NO_GRANT`
+      before the HOLDOUT file is opened.
+    - With a grant, the raw file SHA-256 is checked and a single VAULT_READ is recorded in the
+      persistent ledger before parsing; the parsed case set must match the registered case-set hash.
+    - An explicit `dataset_path` whose bytes match a registered vault, or which contains HOLDOUT
+      cases, is refused without a grant.
+    """
     if dataset_path is not None:
         path = Path(dataset_path)
+        if holdout_access_grant is None:
+            assert_no_unauthorised_holdout_bytes(path)
+        else:
+            gate = holdout_gate or HoldoutAccessGate(ledger_path=holdout_access_grant.ledger_path)
+            gate.record_vault_read(holdout_access_grant, holdout_path=path)
         payload = json.loads(path.read_text(encoding="utf-8"))
         raw_cases = payload.get("cases") or []
         cases: list[EvaluationCase] = []
@@ -352,15 +383,28 @@ def load_evaluation_dataset(
         created = str(payload.get("created_at_utc") or "")
         dev_val_cases = [c for c in cases if c.split != SPLIT_HOLDOUT]
         holdout_cases = [c for c in cases if c.split == SPLIT_HOLDOUT]
+        if holdout_cases and holdout_access_grant is None:
+            raise HoldoutAccessDenied(
+                DENY_NO_GRANT, "Açık veri seti dosyası HOLDOUT vakası içeriyor; WP-4.6 grant olmadan yüklenemez."
+            )
         dv_sha = canonical_eval_sha256([c.to_dict() for c in dev_val_cases])
-        ho_sha = canonical_eval_sha256([c.to_dict() for c in holdout_cases]) if holdout_cases else None
+        ho_sha = compute_holdout_case_set_sha256(holdout_cases) if holdout_cases else None
+        if holdout_access_grant is not None and ho_sha != holdout_access_grant.case_set_sha256:
+            raise HoldoutAccessDenied(DENY_CASE_SET_MISMATCH, "Yüklenen HOLDOUT vaka kümesi grant ile uyuşmuyor.")
         vault_sep = False
     else:
         dv_ds = load_dev_val_dataset(DEFAULT_DEV_VAL_PATH, verify_hashes=verify_hashes)
         all_cases = list(dv_ds.cases)
         ho_sha: str | None = None
         if include_holdout:
+            if holdout_access_grant is None:
+                raise HoldoutAccessDenied(
+                    DENY_NO_GRANT,
+                    "HOLDOUT kasası yalnız HoldoutAccessGate tarafından verilmiş grant ile okunabilir (WP-4.6).",
+                )
             h_path = Path(holdout_path) if holdout_path is not None else DEFAULT_HOLDOUT_PATH
+            gate = holdout_gate or HoldoutAccessGate(ledger_path=holdout_access_grant.ledger_path)
+            gate.record_vault_read(holdout_access_grant, holdout_path=h_path)
             h_payload = json.loads(h_path.read_text(encoding="utf-8"))
             h_raw = h_payload.get("cases") or []
             seen_ids = {c.case_id for c in all_cases}
@@ -377,12 +421,15 @@ def load_evaluation_dataset(
                     raise EvaluationIntegrityError(f"Yinelenen vaka kimliği: '{c.case_id}'.")
                 seen_ids.add(c.case_id)
                 h_cases.append(c)
-            ho_sha = canonical_eval_sha256([c.to_dict() for c in h_cases])
+            file_order_sha = canonical_eval_sha256([c.to_dict() for c in h_cases])
             declared_vault_sha = str(h_payload.get("holdout_vault_sha256") or "")
-            if verify_hashes and declared_vault_sha and declared_vault_sha != ho_sha:
+            if verify_hashes and declared_vault_sha and declared_vault_sha != file_order_sha:
                 raise EvaluationIntegrityError(
-                    f"HOLDOUT kasa bütünlük özeti uyuşmuyor: beklenen={ho_sha}, kayıtlı={declared_vault_sha}."
+                    f"HOLDOUT kasa bütünlük özeti uyuşmuyor: beklenen={file_order_sha}, kayıtlı={declared_vault_sha}."
                 )
+            ho_sha = compute_holdout_case_set_sha256(h_cases)
+            if ho_sha != holdout_access_grant.case_set_sha256:
+                raise HoldoutAccessDenied(DENY_CASE_SET_MISMATCH, "Yüklenen HOLDOUT vaka kümesi grant ile uyuşmuyor.")
             all_cases.extend(h_cases)
             all_cases.sort(key=lambda item: item.case_id)
         cases = all_cases
@@ -401,9 +448,17 @@ def load_evaluation_dataset(
         vault_separated=vault_sep,
     )
 
-    if enforce_target_counts:
-        if not include_holdout:
-            raise EvaluationIntegrityError("100 vaka hedef matrisi yalnızca HOLDOUT dahil tam yüklemede doğrulanır.")
+    if enforce_target_counts and ho_sha is None:
+        # WP-4.6: normal flow validates only the 70-case DEV/VAL matrix (HOLDOUT stays sealed).
+        dv_expected = {
+            cat: {sp: (n if sp != SPLIT_HOLDOUT else 0) for sp, n in per.items()}
+            for cat, per in CATEGORY_SPLIT_TARGETS.items()
+        }
+        if ds.category_split_counts() != dv_expected:
+            raise EvaluationIntegrityError(
+                f"WP-4.6 DEV/VAL kategori x küme matrisi uyuşmuyor: {ds.category_split_counts()} != {dv_expected}."
+            )
+    elif enforce_target_counts:
         counts = ds.category_counts()
         if counts != CATEGORY_TARGET_COUNTS:
             raise EvaluationIntegrityError(
@@ -426,83 +481,3 @@ def load_evaluation_dataset(
             raise EvaluationIntegrityError(f"WP-4.5 anti-leakage ihlali tespit edildi: {leak.to_dict()}")
 
     return ds
-
-
-class HoldoutAccessLedger:
-    """Y-03: Append-only access audit log & optimization guard for sealed HOLDOUT vault."""
-
-    def __init__(
-        self,
-        *,
-        ledger_path: str | Path | None = None,
-        max_runs_per_version: int = 1,
-    ) -> None:
-        self._path = Path(ledger_path) if ledger_path is not None else None
-        self._max_runs = max(1, int(max_runs_per_version))
-        self._memory_records: list[HoldoutAccessRecord] = []
-
-    def load_records(self) -> tuple[HoldoutAccessRecord, ...]:
-        if self._path is not None and self._path.exists():
-            items: list[HoldoutAccessRecord] = []
-            for line in self._path.read_text(encoding="utf-8").splitlines():
-                if not line.strip():
-                    continue
-                d = json.loads(line)
-                items.append(
-                    HoldoutAccessRecord(
-                        run_id=d["run_id"],
-                        holdout_dataset_version=d["holdout_dataset_version"],
-                        holdout_sha256=d["holdout_sha256"],
-                        operator_id=d["operator_id"],
-                        purpose=d["purpose"],
-                        executed_at_utc=d["executed_at_utc"],
-                        run_manifest_sha256=d["run_manifest_sha256"],
-                        access_count_for_version=int(d["access_count_for_version"]),
-                        contamination_risk_hold=bool(d["contamination_risk_hold"]),
-                    )
-                )
-            return tuple(items)
-        return tuple(self._memory_records)
-
-    def record_access(
-        self,
-        *,
-        run_id: str,
-        holdout_dataset_version: str,
-        holdout_sha256: str,
-        operator_id: str,
-        purpose: str,
-        executed_at_utc: str,
-        run_manifest_sha256: str,
-        fail_on_contamination: bool = False,
-    ) -> HoldoutAccessRecord:
-        existing = self.load_records()
-        same_ver = sum(1 for r in existing if r.holdout_sha256 == holdout_sha256)
-        new_count = same_ver + 1
-        purpose_norm = str(purpose or "").upper().strip()
-        is_tuning = "TUNING" in purpose_norm or "OPTIMIZ" in purpose_norm
-        contamination = is_tuning or (new_count > self._max_runs)
-
-        rec = HoldoutAccessRecord(
-            run_id=run_id,
-            holdout_dataset_version=holdout_dataset_version,
-            holdout_sha256=holdout_sha256,
-            operator_id=operator_id,
-            purpose=purpose_norm or "AUDIT",
-            executed_at_utc=executed_at_utc,
-            run_manifest_sha256=run_manifest_sha256,
-            access_count_for_version=new_count,
-            contamination_risk_hold=contamination,
-        )
-        if contamination and fail_on_contamination:
-            raise EvaluationIntegrityError(
-                f"HOLDOUT_CONTAMINATION_RISK_HOLD: holdout_sha256={holdout_sha256[:12]} için izin verilen "
-                f"erişim sınırı ({self._max_runs}) aşıldı veya amaç='{purpose_norm}' yasaklı."
-            )
-
-        self._memory_records.append(rec)
-        if self._path is not None:
-            self._path.parent.mkdir(parents=True, exist_ok=True)
-            with self._path.open("a", encoding="utf-8") as fh:
-                fh.write(json.dumps(rec.to_dict(), ensure_ascii=False) + "\n")
-        return rec

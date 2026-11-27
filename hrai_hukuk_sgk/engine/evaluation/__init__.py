@@ -1,10 +1,29 @@
-"""WP-4.5 Evaluation Engine Package (`v1.2`) for `@HukukSGK` (`hrAI`)."""
+"""WP-4.5 Evaluation Engine Package (`v1.2`, WP-4.6 HOLDOUT governance) for `@HukukSGK` (`hrAI`)."""
 
+from .holdout_governance import (
+    ALLOWED_PURPOSES,
+    DEFAULT_HOLDOUT_REGISTRY_PATH,
+    HOLDOUT_LEDGER_PATH_ENV,
+    VAULT_STATUS_CONSUMED,
+    VAULT_STATUS_SEALED_AVAILABLE,
+    HoldoutAccessDenied,
+    HoldoutAccessGate,
+    HoldoutAccessGrant,
+    HoldoutAccessLedger,
+    HoldoutAccessRequest,
+    HoldoutCustodianRecord,
+    HoldoutLedgerIntegrityError,
+    HoldoutVaultRecord,
+    HoldoutVaultRegistry,
+    compute_holdout_case_set_sha256,
+    detect_ci_environment,
+    load_holdout_vault_registry,
+    sha256_file_bytes,
+)
 from .dataset_loader import (
     DATASETS_DIR,
     DEFAULT_DEV_VAL_PATH,
     DEFAULT_HOLDOUT_PATH,
-    HoldoutAccessLedger,
     compute_cross_split_jaccard,
     load_dev_val_dataset,
     load_evaluation_dataset,
@@ -120,6 +139,23 @@ from .rubric import (
 from .runner import HukukSgkEvaluationRunner
 
 __all__ = [
+    "ALLOWED_PURPOSES",
+    "DEFAULT_HOLDOUT_REGISTRY_PATH",
+    "HOLDOUT_LEDGER_PATH_ENV",
+    "VAULT_STATUS_CONSUMED",
+    "VAULT_STATUS_SEALED_AVAILABLE",
+    "HoldoutAccessDenied",
+    "HoldoutAccessGate",
+    "HoldoutAccessGrant",
+    "HoldoutAccessRequest",
+    "HoldoutCustodianRecord",
+    "HoldoutLedgerIntegrityError",
+    "HoldoutVaultRecord",
+    "HoldoutVaultRegistry",
+    "compute_holdout_case_set_sha256",
+    "detect_ci_environment",
+    "load_holdout_vault_registry",
+    "sha256_file_bytes",
     "ACTION_APPROVE",
     "ACTION_OVERRIDE_FATAL",
     "ACTION_OVERTURN_OVERRIDE",

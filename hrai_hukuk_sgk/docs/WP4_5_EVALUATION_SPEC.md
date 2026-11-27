@@ -1,13 +1,28 @@
 # `WP4_5_EVALUATION_SPEC.md` — hrAI `@HukukSGK` WP-4.5 Evaluation Teknik Şartnamesi ve Veri Modeli
 
 **Belge Kodu:** `WP4-5-EVALUATION-SPEC`  
-**Revizyon:** `v1.2` *(K-01..K-03, Y-01..Y-05 ve O-01..O-05 bulgularının tamamı çözüldü)*  
+**Revizyon:** `v1.3` *(WP-4.6 HOLDOUT yönetişimi: H-01..H-07; v1.2 K/Y/O hükümleri aynen geçerli)*  
 **Sürüm Hedefi:** `v1.0.6` — **WP-4 (`HukukSGK Agent Intelligence`) / Aşama `WP-4.5`**  
-**Önceki Aşamalar:** [WP4_1_AGENT_CORE_SPEC.md](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/docs/WP4_1_AGENT_CORE_SPEC.md) · [WP4_2_LEGAL_KNOWLEDGE_BASE_SPEC.md](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/docs/WP4_2_LEGAL_KNOWLEDGE_BASE_SPEC.md) · [WP4_3_RAG_ENGINE_SPEC.md](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/docs/WP4_3_RAG_ENGINE_SPEC.md) · [WP4_4_ANSWER_ENGINE_SPEC.md](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/docs/WP4_4_ANSWER_ENGINE_SPEC.md) · `PR #4 (Draft)`  
+**Önceki Aşamalar:** [WP4_1_AGENT_CORE_SPEC.md](./WP4_1_AGENT_CORE_SPEC.md) · [WP4_2_LEGAL_KNOWLEDGE_BASE_SPEC.md](./WP4_2_LEGAL_KNOWLEDGE_BASE_SPEC.md) · [WP4_3_RAG_ENGINE_SPEC.md](./WP4_3_RAG_ENGINE_SPEC.md) · [WP4_4_ANSWER_ENGINE_SPEC.md](./WP4_4_ANSWER_ENGINE_SPEC.md) · `PR #4 (Draft)`  
 **Ürün / Koordinatör / Uzman / Web:** `hrAI` / `@hrAI` / `@HukukSGK` / `www.insenai.com.tr`  
-**Durum:** `PUBLISHED_ON_GITHUB_AWAITING_FINAL_REVIEW_V1_2`
+**Durum:** `DRAFT_V1_3_WP46_HOLDOUT_GOVERNANCE_AWAITING_REVIEW`  
+**Mevcut HOLDOUT Kasası:** `HOLDOUT-WP45-V1.2-30-SEALED-20261126` → **`CONSUMED_BLINDNESS_COMPROMISED`** (yalnız denetim amaçlı; yeniden değerlendirme, optimizasyon ve yeni kör PASS üretimi yasak)
 
-> **Dal Düzeni ve Sürüm İzi Notu:** Taslak dal `feat/v1.0.6-wp4-agent-intelligence` üzerinde tarihsel `v1.1` commit'i (`175e9f7`) korunmuş; ardından `K-01..K-03`, `Y-01..Y-05` ve `O-01..O-05` gereksinimlerini karşılayan `v1.2` güncellemeleri (`1d95a8b` ve devamı) doğrudan GitHub dalında erişilebilir hâle getirilmiştir. Bu aşamada [tools_router.py](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/engine/tools_router.py), [engine/rag/](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/engine/rag/__init__.py), [engine/answer/](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/engine/answer/__init__.py), `PR #3`, `PR #4` ve tüm yönetişim/WP-1 sabitleri değiştirilmemiştir.
+> **Dal Düzeni ve Sürüm İzi Notu:** Taslak dal `feat/v1.0.6-wp4-agent-intelligence` üzerinde tarihsel `v1.1` commit'i (`175e9f7`) korunmuş; ardından `K-01..K-03`, `Y-01..Y-05` ve `O-01..O-05` gereksinimlerini karşılayan `v1.2` güncellemeleri (`1d95a8b` ve devamı) doğrudan GitHub dalında erişilebilir hâle getirilmiştir. Bu aşamada [tools_router.py](../engine/tools_router.py), [engine/rag/](../engine/rag/__init__.py), [engine/answer/](../engine/answer/__init__.py), `PR #3`, `PR #4` ve tüm yönetişim/WP-1 sabitleri değiştirilmemiştir.
+
+---
+
+## Revizyon İzlenebilirlik Matrisi (`v1.2 -> v1.3`, WP-4.6)
+
+| Kod | Öncelik | Çözülen Problem | İlgili Bölüm |
+|---|---|---|---|
+| **H-01** | Kritik | Normal test/CI akışı 100 vakanın tamamını (HOLDOUT dahil) `blind_holdout_mode=False` ile değerlendiriyordu. HOLDOUT artık varsayılan yüklemede yer almaz; `include_holdout=True` grant olmadan dosya açılmadan reddedilir; CI ortamında erişim koşulsuz reddedilir. | Bölüm 6.3, 10.1 |
+| **H-02** | Kritik | `HoldoutAccessLedger` yol verilmediğinde bellekte çalışıyordu. Ledger artık kalıcı, hash zincirli, RFC 8785 kanonik, append-only JSONL'dir; depo dışında tutulur; yoksa veya bozuksa erişim reddedilir. | Bölüm 10.2 |
+| **H-03** | Kritik | Erişim yetkisi yoktu. Her erişim, kayıtlı emanetçinin Ed25519 / RSA-PSS-SHA256 imzalı isteği ile `HoldoutAccessGate` üzerinden verilir; grant tek okuma + tek kör koşu içindir. | Bölüm 10.3 |
+| **H-04** | Kritik | Erişim sınırı süreç içi sayaçla uygulanıyordu. Sınır kontrolü ve ledger yazımı tek bir özel dosya kilidi altında atomik yapılır. | Bölüm 10.2 |
+| **H-05** | Kritik | Mevcut 30 vakalık HOLDOUT'un körlüğü bozuldu (CI maskesiz değerlendirme, kök neden ifşası, kalıcı olmayan ledger). Kasa `CONSUMED_BLINDNESS_COMPROMISED` olarak kaydedildi; grant verilemez. | Bölüm 8.3, 10.4 |
+| **H-06** | Yüksek | Bölüm 8.2'deki HOLDOUT vakası kök nedeni körlük ihlalidir; v1.3'te ayrıntı kaldırıldı, özgün metin git geçmişinde (`813202c`) değiştirilmeden durur. | Bölüm 8.2 |
+| **H-07** | Yüksek | Yeni bağımsız HOLDOUT kohortu için kontrollü erişim tasarımı (emanetçi kaydı, depo dışı kasa, tek seferlik kör koşu) tanımlandı. | Bölüm 10.5 |
 
 ---
 
@@ -30,9 +45,9 @@
 ## Zorunlu Proje ve Yönetişim Sınırları
 
 1. **Şartname Onay Kilidi:** `v1.2` şartnamesi onaylanana kadar `hrai_hukuk_sgk/engine/evaluation/` kodlarında `v1.2` uygulaması başlatılmaz ve yeni kod commit/push yapılmaz.
-2. **Önceki Aşama İzolasyonu:** [tools_router.py](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/engine/tools_router.py) entegrasyonu yapılmaz; [engine/rag/](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/engine/rag/__init__.py) (WP-4.3) ve [engine/answer/](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/engine/answer/__init__.py) (WP-4.4) kodları korunur.
+2. **Önceki Aşama İzolasyonu:** [tools_router.py](../engine/tools_router.py) entegrasyonu yapılmaz; [engine/rag/](../engine/rag/__init__.py) (WP-4.3) ve [engine/answer/](../engine/answer/__init__.py) (WP-4.4) kodları korunur.
 3. **PR ve Sürüm Sınırı:** `PR #3` (`c28bbd162af9d69b5bd0e15c48e13abf26fcf5c9`) ve Draft `PR #4` merge edilmez; etiket veya sürüm çıkılmaz.
-4. **WP-1 CI Sabitleri:** `schemas/` = `13` `.schema.json`, `config/` = `9` `.json`, sıfır harici çalışma zamanı bağımlılığı (yalnızca Python 3.12 stdlib + standart OpenSSL 3 imza doğrulama yolu), donmuş `v1.0.5` / `v1.0.5.1` arşivleri ve [xmldsig.py](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/engine/esign5070/xmldsig.py) (`b16207b5...`) korunur.
+4. **WP-1 CI Sabitleri:** `schemas/` = `13` `.schema.json`, `config/` = `9` `.json`, sıfır harici çalışma zamanı bağımlılığı (yalnızca Python 3.12 stdlib + standart OpenSSL 3 imza doğrulama yolu), donmuş `v1.0.5` / `v1.0.5.1` arşivleri ve [xmldsig.py](../engine/esign5070/xmldsig.py) (`b16207b5...`) korunur.
 5. **Kapalı Kapılar:** `production_use_authorized=false`, `qualified_e_signature_5070_production_ready=false`, `qualified_e_signature_5070_equivalent=false`, `kvkk_data_residency_approved=false`.
 
 ---
@@ -193,7 +208,7 @@ TrustedLegalApproverRecord:
 
 ### 5.3. Asimetrik İmzalı Onay Zarfı (`SignedAnswerKeyApprovalEnvelope`) — RFC 8785 (JCS)
 
-`@HukukSGK` motorunun mevcut [attestation_verifier.py](file:///home/antigravity/poliface34/poliface/hrai_hukuk_sgk/engine/attestation_verifier.py) asimetrik doğrulama altyapısı kullanılarak her vaka onayı kanonik RFC 8785 (JCS) UTF-8 JSON yüküne bağlanır:
+`@HukukSGK` motorunun mevcut [attestation_verifier.py](../engine/attestation_verifier.py) asimetrik doğrulama altyapısı kullanılarak her vaka onayı kanonik RFC 8785 (JCS) UTF-8 JSON yüküne bağlanır:
 
 | İmza Algoritması (`algorithm`) | Standart | Anahtar & Padding Parametreleri | Özet / Salt | Kanonik Yük |
 |---|---|---|---|---|
@@ -267,9 +282,11 @@ SignedAnswerKeyApprovalEnvelope (Detached JSON Envelope):
 
 1. **Fiziksel Küme Ayrımı:** `DEV + VALIDATION` (`70` vaka) ile `HOLDOUT` (`30` vaka) ayrı sürüm mühürlü dosyalara ayrılır (`eval_dev_val_70.json` vs kapalı erişimli `eval_holdout_30_sealed.json`). Geliştirme ortamında rutin mühendislik iterasyonları yalnızca `DEV + VALIDATION` üzerinde yürütülür.
 2. **Kör Çıktı İlkesi (`blind_holdout_mode = True`):** `HOLDOUT` kümesi koşulduğunda model geliştirme ekibine vaka bazlı soru/cevap dökümleri (`case_reports` detayları) maskelenir; yalnızca küme düzeyinde özet telemetri (`avg_score`, `fatal_count`, `major_count`, 8 boyut ortalaması) açılır.
-3. **Optimizasyon ve Tekrarlı Test Yasağı (`HoldoutAccessLedger`):**
-   - `HOLDOUT` kümesine yapılan her okuma/koşum, append-only denetim günlüğüne (`run_id`, `holdout_dataset_version`, `holdout_sha256`, `operator_id`, `timestamp_utc`, `purpose`, `run_manifest_sha256`) yazılır.
-   - `HOLDOUT` sonuçlarına bakılarak aynı `HOLDOUT` sürümü üzerinde hiperparametre/kural/sözlük optimizasyon döngüsü yürütülemez. Mühendislik iyileştirmesi yapılacaksa yalnız `DEV/VAL` analizine dayanılır; aşırı tekrarlanan `HOLDOUT` koşusu tespit edilirse `HOLDOUT_CONTAMINATION_RISK_HOLD` bayrağı kalkar.
+3. **Optimizasyon ve Tekrarlı Test Yasağı (`HoldoutAccessLedger`, v1.3 / WP-4.6):**
+   - `HOLDOUT` kümesine yapılan her yetki kararı, okuma ve koşu; depo dışındaki kalıcı, hash zincirli ledger'a yazılır (Bölüm 10.2). Bellek içi ledger yasaktır.
+   - `HOLDOUT` sonuçlarına bakılarak aynı `HOLDOUT` sürümü üzerinde hiperparametre/kural/sözlük optimizasyon döngüsü yürütülemez. Mühendislik iyileştirmesi yalnız `DEV/VAL` analizine dayanır. Ayar, kalibrasyon, hata ayıklama veya optimizasyon amaçlı istekler (`TUNING`, `OPTIMIZ`, `CALIBRAT`, `DEBUG`, `TRAIN`, `FIX`) reddedilir.
+   - *v1.2'deki "aşırı tekrar tespit edilince `HOLDOUT_CONTAMINATION_RISK_HOLD` bayrağı kalkar" kuralı, erişimi önceden engellemediği için yetersizdi; v1.3'te sınır aşımı erişimi koşudan önce reddeder.*
+4. **Normal CI Akışı (v1.3):** Normal CI ve birim testleri `HOLDOUT` vaka içeriği yüklemez ve değerlendirmez. CI yalnız izolasyon ve erişim politikası kontrollerini çalıştırır (kasa dosyasının ham bayt SHA-256 sabitlemesi, kayıt defteri durumu, yetkisiz erişimin dosya okunmadan reddi). `HOLDOUT` semantiği gereken testler, `DEV/VAL` vakalarından türetilmiş sentetik `HOLDOUT` etiketli vakaları geçici kasa, geçici kayıt defteri, çalışma zamanında üretilen geçici emanetçi anahtarı ve geçici kalıcı ledger ile kullanır.
 
 ---
 
@@ -344,7 +361,7 @@ EvaluationRunManifest:
 | Sınıf | Sayı | Vaka ID | Küme | Olay Tarihi | Tespit Edilen `DefectCode` & Gerçek Kök Neden |
 |---|---:|---|---|---|---|
 | **1. Yanlış Madde Atfı Blokajı** | **3** | `EVAL-002` | `DEV` | `2026-03-15` | `FATAL_WRONG_ARTICLE_OR_SOURCE_CITED` — `4857 m.18` "aynı işkolu 30 işçi" sorusunda taslak cevap `CitationWhitelist` dışı madde ürettiği için `WRONG_ARTICLE_OR_PROVISION_CITED` ile bloklandı. |
-| | | `EVAL-052` | `HOLDOUT` | `2026-04-03` | `FATAL_WRONG_ARTICLE_OR_SOURCE_CITED` — `4857 m.46` hafta tatili sorusunda taslak metni whitelist dışı madde numarası üreterek bloklandı. |
+| | | `[HOLDOUT — REDACTED]` | `HOLDOUT` | `[REDACTED]` | **v1.3 / H-06:** Bu satırdaki HOLDOUT vaka kimliği, olay tarihi ve kök neden ayrıntısı körlük ihlali olarak kaldırılmıştır (özgün metin `813202c` sürümünde git geçmişinde değiştirilmeden durur; bkz. Bölüm 8.3). |
 | | | `EVAL-056` | `DEV` | `2026-04-01` | `FATAL_WRONG_ARTICLE_OR_SOURCE_CITED` — `GİB 331` Ar-Ge 40 kat istisnası sorusunda taslak metni `WRONG_ARTICLE_OR_PROVISION_CITED` ile bloklandı. |
 | **2. Zamansal Geçiş / Mülga Düzenleme Sızıntısı** | **6** | `EVAL-017` | `VALIDATION` | `2017-06-01` | `FATAL_RETROACTIVE_LAW_APPLICATION` — `7036 m.3` (`01.01.2018` yürürlük) öncesi olaya sonraki düzenleme taslakta aktif sunuldu (`ARTICLE_NOT_EFFECTIVE_ON_DATE`). |
 | | | `EVAL-028` | `DEV` | `2025-12-01` | `FATAL_RETROACTIVE_LAW_APPLICATION` — `7566` (`01.01.2026` 9 kat SPEK) öncesi `2025-12-01` vakasında mülga/sonraki hüküm taslağa sızdı (`EXPIRED_OR_REPEALED_STATUTE`, `ARTICLE_NOT_EFFECTIVE_ON_DATE`). |
@@ -358,6 +375,28 @@ EvaluationRunManifest:
 
 ---
 
+### 8.3. v1.3 (WP-4.6) Ölçüm Durumu ve HOLDOUT Körlük İhlali Kaydı
+
+| Ölçüm | Değer | Geçerlilik |
+|---|---|---|
+| `DEV + VALIDATION` (`70` vaka, `d1dd8ef` motoru, WP-4.6 izole akış) | `99.47` ağırlıklı / `99.51` makro, `0` FATAL, `0` MAJOR, `70/70 PASS`, `Recall@5 = 0.9490`, `Recall@10 = 0.9796`, `MRR = 0.8335` | Mühendislik tanısı. İyileştirmeler bu kümeler üzerinde yapıldığı için iyimserdir; resmî endeks değildir. |
+| Mevcut `HOLDOUT` (`30` vaka) — PR #4'te bildirilen koşu | `91.39`, `0` FATAL, `4` MAJOR, `27/30 PASS` | **`AUDIT_ONLY` / `UNVERIFIED`**: kalıcı ledger veya koşu raporu bulunamadı; kasa körlüğü bozulmuş durumdadır. Kör doğrulama sonucu olarak kullanılamaz. |
+| `100` vaka birleşik endeksler (`97.04` vb.) | — | HOLDOUT bileşeni geçersiz olduğundan birleşik endeks kör doğrulama kanıtı değildir. |
+| Resmî benchmark | `UNVERIFIED_ZERO_APPROVED_KEYS` (`0/100`) | Değişmedi. Yeni HOLDOUT kohortu ve gerçek hukukçu onayları olmadan resmî `PASSED` üretilemez. |
+
+**Körlük ihlali kanıtları** (ayrıntı: `engine/evaluation/governance/archive/HOLDOUT_V1_2_CONSUMPTION_EVIDENCE_20261127.json`):
+
+1. `CI_NON_BLIND_EVALUATION` — test paketi her CI koşusunda HOLDOUT'u maskesiz değerlendirdi (`175e9f7` … `d1dd8ef`).
+2. `TEST_ASSERTIONS_DEPEND_ON_HOLDOUT` — `d1dd8ef` kategori beklentileri HOLDOUT vakaları içeren 100 vakalık rapora bağlandı.
+3. `SPEC_ROOT_CAUSE_DISCLOSURE` — bu belgenin 8.2 bölümü bir HOLDOUT vakasının kök nedenini iyileştirmeden önce ifşa etti (`1d95a8b` … `813202c`).
+4. `PRE_REMEDIATION_HOLDOUT_MEASUREMENT` — HOLDOUT aynı sürümde iyileştirme öncesinde de ölçüldü (8.1, `89.27`).
+5. `NON_PERSISTENT_ACCESS_LEDGER` — v1.2 ledger'ı varsayılan olarak bellekteydi; `access_count_for_version = 1` gerçek geçmişi kanıtlamaz.
+6. `WP46_PRE_CHANGE_SUITE_EXECUTION` — WP-4.6 değişikliklerinden önce değişiklik öncesi test paketi geliştirme ortamında bir kez çalıştırıldı (vaka sonuçları görüntülenmedi, kullanılmadı).
+
+Önceki erişim kayıtları depo, CI artifact'leri ve PR #4 yorumlarında bulunamadı (`NOT_FOUND`); kayıt uydurulmadı veya geçmiş yeniden oluşturulmadı.
+
+---
+
 ## 9. `v1.2` Uygulama ve Denetim Bileşenleri (`175e9f7 -> v1.2`)
 
 | Bulgu | Uygulanan Dosya / Modül | Sağlanan Teknik Garanti |
@@ -365,5 +404,60 @@ EvaluationRunManifest:
 | **K-01 / O-04** | `engine/evaluation/legal_signoff.py` + `dataset_loader.py` | Inline `APPROVED_FOR_BENCHMARK` reddi, `TrustedLegalApproverRegistry`, Ed25519 (RFC 8032) & RSA-PSS-SHA256 (`saltlen=32`) JCS imzası, `REVOKE` / `KEY_COMPROMISE` / `SUPERSEDE_REAPPROVE` ve çift-göz override itiraz tarihçesi. |
 | **K-02 / Y-01 / Y-02 / O-02 / O-03** | `engine/evaluation/models.py` + `rubric.py` + `runner.py` | Ortak `classify_score_band` ile 3 seviyeli (`>=85 / 80–84.99 / <80`) karar matrisi, `CategoryMetricsSummary`/`SplitMetricsSummary` `.score_tier` + `.veto_present`, tekil kategori `< 75.0` taban bloğu, sabit ceza tablosu (`DEFECT_FIXED_PENALTIES`), `RENORMALIZED_ACTIVE_WEIGHTS` + N/A `raw_score=None` ve vaka bazlı `MINOR <= 5.0` bütçe. |
 | **K-03 / Y-04 / Y-05 / O-05** | `engine/evaluation/runner.py` + `rubric.py` | Altyapı hatasında `RUN_INVALID` (`score=None`) ayrımı, tam `EvaluationRunManifest`, KB/girdi farkındalı 4 sınıflı `MonetaryMentionClassifier` ve sabit `Recall@5` / `Recall@10` / `Source Hit@5` / `MRR`. |
-| **Y-03 / O-01** | `datasets/eval_dev_val_70_cases.json` + `eval_holdout_30_sealed.json` | Ayrık kasalar, `blind_holdout_mode=True` maskeleme, append-only `HoldoutAccessLedger` ve NFKC Türkçe 4-gram Jaccard normalizasyonu. |
+| **Y-03 / O-01** | `datasets/eval_dev_val_70_cases.json` + `eval_holdout_30_sealed.json` + (v1.3) `holdout_governance.py` | Ayrık kasalar, `blind_holdout_mode=True` maskeleme, (v1.3) kalıcı hash zincirli `HoldoutAccessLedger`, imzalı erişim grant'i ve NFKC Türkçe 4-gram Jaccard normalizasyonu. |
 | **Doğrulama** | `tests/test_evaluation_wp45_v106.py` (`EV-01..EV-10`) | Tekrar üretilebilir temiz ZIP çıkarımı, `4` sıralamalı `303/303` tam regresyon, RFC 8032 Ed25519 / RSA-PSS-SHA256 (`saltlen=32`) negatif vektörleri, AST/`TimeoutExpired` alt-süreç denetimi, `strict`/`offline` X.509 ve kapalı kapı doğrulaması. |
+
+---
+
+## 10. WP-4.6 HOLDOUT Erişim Yönetişimi (v1.3)
+
+Uygulama: `engine/evaluation/holdout_governance.py`, kayıt defteri `engine/evaluation/governance/holdout_vault_registry.json`, testler `tests/test_holdout_governance_wp46_v106.py`.
+
+### 10.1. Erişim Yolları (Önce / Sonra)
+
+| Yol | v1.2 (önce) | v1.3 (sonra) |
+|---|---|---|
+| `load_evaluation_dataset()` varsayılanı | 100 vaka, HOLDOUT dahil | Yalnız 70 `DEV/VAL`; HOLDOUT dosyası açılmaz |
+| `load_evaluation_dataset(include_holdout=True)` | Serbest | Grant yoksa `HOLDOUT_ACCESS_DENIED_NO_GRANT`, dosya açılmadan |
+| Açık `dataset_path` ile HOLDOUT dosyası | Serbest | Ham bayt özeti kayıtlı kasa ile eşleşirse veya dosyada HOLDOUT vakası varsa grant'siz reddedilir |
+| `HukukSgkEvaluationRunner.run_suite()` varsayılanı | 100 vaka, ledger bellekte | 70 `DEV/VAL` |
+| `run_suite` içinde HOLDOUT vakası | Maskeli veya maskesiz serbest | Grant + `blind_holdout_mode=True` + kayıtlı vaka kümesi özeti zorunlu; kontrol ve `RUN_STARTED` kaydı değerlendirmeden önce |
+| Test paketi (`test_evaluation_wp45_v106.py`) | Her CI koşusunda HOLDOUT maskesiz | Yalnız `DEV/VAL`; HOLDOUT semantiği sentetik kasa ile |
+| CI ortamı (`CI`, `GITHUB_ACTIONS`, …) | — | HOLDOUT erişimi koşulsuz `HOLDOUT_ACCESS_FORBIDDEN_IN_CI` |
+
+### 10.2. Kalıcı Ledger Şeması ve Saklama
+
+- **Biçim:** JSONL; her satır RFC 8785 (JCS) kanonik JSON ve `\n` ile biter. Şema: `hrai.holdout_access_ledger.v1`.
+- **Alanlar:** `schema`, `seq`, `ledger_id`, `event_type` (`GENESIS`, `ACCESS_GRANTED`, `ACCESS_DENIED`, `VAULT_READ`, `RUN_STARTED`, `RUN_COMPLETED`), `recorded_at_utc`, `vault_id`, `vault_file_sha256`, `request_id`, `nonce`, `grant_id`, `operator_id`, `custodian_id`, `purpose`, `decision_code`, `details`, `previous_record_sha256`, `record_sha256`.
+- **Zincir:** `record_sha256 = SHA-256(JCS(kayıt − record_sha256))`; `previous_record_sha256` önceki kayda bağlanır; ilk kayıt `GENESIS` ve `previous_record_sha256 = 0…0`.
+- **Doğrulama:** her okuma ve her ekleme öncesinde tüm zincir doğrulanır: alan kümesi, kanonik bayt eşitliği, ardışık `seq`, tek `GENESIS`, sabit `ledger_id`, zincir bağlantısı, kayıt özeti, tamamlanmış son satır.
+- **Değiştirilemezlik:** kayıt düzenleme/silme API'si yoktur; `initialize` mevcut dosyanın üzerine yazmayı reddeder (`O_EXCL`); her ekleme `O_APPEND` + `fsync` ile yazılır.
+- **Atomiklik:** tekrar (replay) kontrolü, erişim sınırı sayımı ve ekleme tek bir özel dosya kilidi (`fcntl.flock`; Windows'ta `msvcrt.locking`) altında yapılır.
+- **Saklama yeri:** `HRAI_HOLDOUT_LEDGER_PATH` ile verilen, depo çalışma ağacı **dışındaki** yol; depo içi yol `HOLDOUT_LEDGER_INSIDE_REPOSITORY` ile reddedilir.
+- **Bilinen sınır:** hash zinciri, son kaydın birlikte yeniden yazılmasını tek başına engelleyemez. Bu nedenle ledger başı (`seq`, `record_sha256`) her koşudan sonra harici olarak (ör. imzalı checkpoint veya ayrı depo) sabitlenmelidir (açık iş).
+
+### 10.3. Yetkilendirme ve Fail-Closed Kontroller
+
+Kontrol sırası (`HoldoutAccessGate.authorize`): CI ortamı → ledger yapılandırılmış / mevcut / depo dışında / zinciri geçerli → kayıt defteri şeması → kasa kayıtlı → kasa `SEALED_AVAILABLE` → istek dosya özeti = kayıt → amaç izinli ve ayar amaçlı değil → emanetçi kayıtlı, `ACTIVE`, geçerlilik penceresinde → anahtar kimliği/algoritma eşleşir → Ed25519 / RSA-PSS-SHA256 imza geçerli → istek zaman penceresi (≤ 24 saat, süresi dolmamış) → atomik tekrar kontrolü ve erişim sınırı → `ACCESS_GRANTED`.
+
+Grant kullanımı: `VAULT_READ` (ham bayt özeti grant ve kayıtla eşleşmeden ayrıştırma yok; grant başına bir kez) → `RUN_STARTED` (yalnız `blind_holdout_mode=True` ve kayıtlı vaka kümesi özeti; grant başına bir kez; değerlendirmeden önce) → `RUN_COMPLETED` (koşu manifesti özeti ile).
+
+Reddedilen istekler, ledger kullanılabilir olduğunda `ACCESS_DENIED` olarak gerekçesiyle yazılır. Ledger yoksa veya bozuksa hiçbir şey yazılamaz ve erişim reddedilir.
+
+### 10.4. Mevcut Kasa (`CONSUMED_BLINDNESS_COMPROMISED`)
+
+`HOLDOUT-WP45-V1.2-30-SEALED-20261126`: dosya SHA-256 `b809245f…730f` (değiştirilmedi), `max_authorized_runs = 0`, kayıtlı emanetçi yok. Kasa dosyası yalnız denetim ve bağımsız inceleme amacıyla korunur; normal CI dosyanın yalnız ham bayt özetini doğrular.
+
+### 10.5. Yeni HOLDOUT Kohortu İçin Kontrollü Erişim Tasarımı
+
+1. Kohort, geliştirme ekibi ve geliştirme ajanları dışında hazırlanır ve **depo dışında** (ayrı erişim kontrollü depo veya şifreli arşiv) tutulur; depoya yalnız dosya ve vaka kümesi özetleri girer.
+2. Kayıt defterine yeni kasa `SEALED_AVAILABLE`, `max_authorized_runs = 1` ile eklenir; ekleme depo sahibinin ayrı onayına tabidir.
+3. Emanetçi, gerçek kimlik ve yetki doğrulamasından sonra kayıt defterine açık anahtarı ile eklenir; sentetik veya test anahtarı kayıt defterine eklenemez.
+4. Kör koşu CI dışında, kalıcı ledger ile, `FINAL_BLIND_VERIFICATION` amacıyla bir kez yapılır; yalnız maskeli rapor ve ledger başı yayımlanır.
+5. Koşu sonrası kasa `CONSUMED_BLINDNESS_COMPROMISED` (veya sonraki sürümde tanımlanacak `CONSUMED_AFTER_BLIND_RUN`) durumuna alınır.
+
+### 10.6. Açık İşler
+
+- Ledger başının harici imzalı checkpoint ile sabitlenmesi.
+- Emanetçi kaydı ile K-01 hukukçu defteri ve `config/authorized_approvers.json` (WP-1) arasındaki ilişkinin kararlaştırılması.
+- Yeni kohortun hazırlanması ve gerçek emanetçi kaydı (depo sahibi onayı gerekir).
