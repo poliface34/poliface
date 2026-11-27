@@ -75,6 +75,13 @@ from engine.trust_root.rfc3161_tsa import (
     Rfc3161TimestampAuthorityAdapter,
 )
 
+from tests.repo_scan_support import (
+    assert_scan_routine_on_synthetic_fixture,
+    assert_vaults_pinned_by_metadata,
+    repository_scan_files,
+    scan_files_for_markers,
+)
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 from tests.pki_test_helpers import (
@@ -1036,12 +1043,15 @@ class TestLaw5070NesCadesXadesV104(unittest.TestCase):
         pem_prefix = "-----" + "BEGIN "
         pem_suffix = "PRIVATE" + " KEY-----"
         markers = [f"{pem_prefix}{k}{pem_suffix}" for k in ("", "RSA ", "EC ", "ENCRYPTED ", "OPENSSH ")]
-        for path in PROJECT_ROOT.rglob("*"):
-            if not path.is_file() or "__pycache__" in path.parts or path.suffix in {".pyc", ".zip"}:
-                continue
-            text = path.read_text(encoding="utf-8", errors="ignore")
-            for mk in markers:
-                self.assertNotIn(mk, text, f"Private key marker found in {path}")
+        # WP-4.7: registered HOLDOUT vault paths are skipped by path (never opened) and pinned by metadata;
+        # the same scan routine is also exercised on a controlled synthetic fixture.
+        def _include(path):
+            return "__pycache__" not in path.parts and path.suffix not in {".pyc", ".zip"}
+
+        scan_files = repository_scan_files(PROJECT_ROOT, _include)
+        self.assertEqual(scan_files_for_markers(scan_files, markers), [], "Private key marker found")
+        self.assertGreaterEqual(assert_vaults_pinned_by_metadata(self, PROJECT_ROOT), 1)
+        assert_scan_routine_on_synthetic_fixture(self, markers, _include)
 
 
 if __name__ == "__main__":

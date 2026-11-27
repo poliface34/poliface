@@ -82,6 +82,13 @@ from engine.source_validator import (
 )
 from engine.tools_router import HukukSGKToolRouter
 
+from tests.repo_scan_support import (
+    assert_scan_routine_on_synthetic_fixture,
+    assert_vaults_pinned_by_metadata,
+    repository_scan_files,
+    scan_files_for_markers,
+)
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SOURCES_PATH = PROJECT_ROOT / "config" / "legal_sources_registry.json"
 PRECEDENTS_PATH = PROJECT_ROOT / "config" / "yargitay_precedents.json"
@@ -6317,17 +6324,21 @@ class TestV102c5SourceContentSignatureIdentityAndAuditChain(unittest.TestCase):
             f"{dash}BEGIN OPENSSH {pk}{dash}",
             f"{dash}BEGIN ENCRYPTED {pk}{dash}",
         ]
-        scanned_files = 0
-        for p in sorted(PROJECT_ROOT.rglob("*")):
-            if not p.is_file() or "__pycache__" in p.parts or ".git" in p.parts:
-                continue
-            if p.suffix.lower() in {".pyc", ".zip", ".png", ".jpg", ".pdf"}:
-                continue
-            scanned_files += 1
-            content = p.read_text(encoding="utf-8", errors="ignore")
-            for marker in forbidden_markers:
-                self.assertNotIn(marker, content, f"Özel anahtar başlığı bulundu: {p}")
+        # WP-4.7: registered HOLDOUT vault paths are skipped by path (never opened) and pinned by metadata;
+        # the same scan routine is also exercised on a controlled synthetic fixture.
+        def _include(p):
+            return (
+                "__pycache__" not in p.parts
+                and ".git" not in p.parts
+                and p.suffix.lower() not in {".pyc", ".zip", ".png", ".jpg", ".pdf"}
+            )
+
+        scan_files = repository_scan_files(PROJECT_ROOT, _include)
+        scanned_files = len(scan_files)
+        self.assertEqual(scan_files_for_markers(scan_files, forbidden_markers), [], "Özel anahtar başlığı bulundu")
         self.assertGreaterEqual(scanned_files, 45)
+        self.assertGreaterEqual(assert_vaults_pinned_by_metadata(self, PROJECT_ROOT), 1)
+        assert_scan_routine_on_synthetic_fixture(self, forbidden_markers, _include)
 
         # Production config/authorized_approvers.json must have NO test keys in production & NO private keys
         appr_cfg = json.loads(APPROVERS_PATH.read_text(encoding="utf-8"))

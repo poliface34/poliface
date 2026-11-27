@@ -191,7 +191,7 @@ class TestHoldoutGovernanceWp46(unittest.TestCase):
         self.assertEqual(ref.file_sha256, REAL_VAULT_FILE_SHA256)
         git_meta = verify_holdout_git_metadata(PROJECT_ROOT, vault.file_relpath, ref.git_blob_sha1)
         if git_meta["mode"] == "GIT":
-            self.assertEqual(git_meta["working_tree"], "CLEAN")
+            self.assertEqual(git_meta["working_tree"], "SIZE_MATCHES_HISTORICAL_REFERENCE")
         else:
             pkg = load_package_exclusion_manifest(PROJECT_ROOT)
             self.assertIsNotNone(pkg, "Git dışı paket/extract PACKAGE_EXCLUSION_MANIFEST içermeli (ci.release_package_policy).")

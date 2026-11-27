@@ -1,5 +1,12 @@
 """CALISORA @HukukSGK v1.0.4: Hardened Verification Engine, Legal Reasoning, Production Trust Root & Law No. 5070 NES/CAdES/XAdES Verification."""
 
+# WP-4.7: install the process-wide HOLDOUT access guard before any other engine module can touch a file
+# (HOLDOUT_ACCESS_ALLOWED=false by default; see engine/holdout_access_guard.py).
+from .holdout_access_guard import install_holdout_access_guard as _install_holdout_access_guard
+
+_install_holdout_access_guard()
+
+
 from .esign5070.interfaces import (
     CertificateRevocationProvider,
     EshsTrustListProvider,

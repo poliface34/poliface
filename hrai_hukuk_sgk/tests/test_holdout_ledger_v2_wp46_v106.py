@@ -408,7 +408,7 @@ class TestSpecV13AndWp1Pins(unittest.TestCase):
                     "Paket/extract PACKAGE_EXCLUSION_MANIFEST içermiyor: kasa dosyası pakete girmiş olabilir; "
                     "paket ci.release_package_policy ile üretilmelidir.",
                 )
-                self.assertEqual(git_meta, {"mode": "GIT", "git_blob_sha1": ref.git_blob_sha1, "working_tree": "CLEAN"})
+                self.assertEqual(git_meta, {"mode": "GIT", "git_blob_sha1": ref.git_blob_sha1, "working_tree": "SIZE_MATCHES_HISTORICAL_REFERENCE"})
 
             # (5) + (6) Absence is never read as a completed migration; unverified vault => NOT_VERIFIED.
             status = hv.load_vault_migration_status()

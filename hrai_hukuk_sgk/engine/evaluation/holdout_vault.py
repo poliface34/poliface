@@ -413,12 +413,19 @@ def load_package_exclusion_manifest(project_root: str | Path) -> dict[str, Any] 
     return raw
 
 
-def verify_holdout_git_metadata(project_root: str | Path, file_relpath: str, expected_blob_sha1: str) -> dict[str, str]:
-    """Verify the committed blob id and clean working-tree state via Git metadata only.
+def verify_holdout_git_metadata(
+    project_root: str | Path,
+    file_relpath: str,
+    expected_blob_sha1: str,
+    expected_size_bytes: int = HISTORICAL_HOLDOUT_SIZE_BYTES,
+) -> dict[str, str]:
+    """Verify the committed blob id (Git index) and the on-disk size (stat) via metadata only.
 
-    Uses `git ls-files -s` (index blob id) and `git status --porcelain` (working-tree state). This code
-    never opens the file; any internal re-hash Git performs is invisible to the caller and no content is
-    returned. Returns `{"mode": "NO_GIT"}` when no Git work tree is available (e.g. clean package extract).
+    WP-4.7: runs `git ls-files -s` WITHOUT naming the file (so no Git command is pointed at it and the
+    process-wide HOLDOUT guard never sees the path in argv) and filters the index listing in Python.
+    `git status` / `git diff` are not used because they may re-hash the working-tree file. The working
+    tree copy is checked by `os.stat` size only; this code never opens the file. Returns
+    `{"mode": "NO_GIT"}` when no Git work tree is available (e.g. clean package extract).
     """
     root = Path(project_root).resolve()
     git = shutil.which("git")
@@ -439,28 +446,31 @@ def verify_holdout_git_metadata(project_root: str | Path, file_relpath: str, exp
     except ValueError:
         return {"mode": "NO_GIT"}
     ls = subprocess.run(
-        [git, "ls-files", "-s", "--", repo_rel], cwd=repo_root, stdin=subprocess.DEVNULL,
-        capture_output=True, text=True, timeout=20, check=False,
+        [git, "ls-files", "-s", "-z"], cwd=repo_root, stdin=subprocess.DEVNULL,
+        capture_output=True, timeout=60, check=False,
     )
     if ls.returncode != 0:
         raise VaultOperationRefused(VAULT_REFERENCE_INCONSISTENT, "git ls-files başarısız oldu.")
-    parts = ls.stdout.split()
-    if len(parts) < 2:
+    blob = None
+    for rec in ls.stdout.split(b"\0"):
+        meta, sep, name = rec.partition(b"\t")
+        if sep and name.decode("utf-8", "replace") == repo_rel:
+            parts = meta.split()
+            blob = parts[1].decode("ascii") if len(parts) >= 2 else None
+            break
+    if blob is None:
         raise VaultOperationRefused(VAULT_REFERENCE_INCONSISTENT, "Kasa dosyası Git dizininde izlenmiyor.")
-    blob = parts[1]
     if blob != expected_blob_sha1:
         raise VaultOperationRefused(
             VAULT_REFERENCE_INCONSISTENT, f"Git blob kimliği tarihsel referansla uyuşmuyor ({blob})."
         )
-    st = subprocess.run(
-        [git, "status", "--porcelain=v1", "--", repo_rel], cwd=repo_root, stdin=subprocess.DEVNULL,
-        capture_output=True, text=True, timeout=20, check=False,
-    )
-    if st.returncode != 0 or st.stdout.strip():
-        raise VaultOperationRefused(
-            VAULT_REFERENCE_INCONSISTENT, "Kasa dosyası çalışma ağacında değiştirilmiş, silinmiş veya izlenmiyor."
-        )
-    return {"mode": "GIT", "git_blob_sha1": blob, "working_tree": "CLEAN"}
+    try:
+        st = os.stat(root / file_relpath)
+    except OSError as exc:
+        raise VaultOperationRefused(VAULT_REFERENCE_INCONSISTENT, "Kasa dosyası çalışma ağacında yok.") from exc
+    if st.st_size != expected_size_bytes:
+        raise VaultOperationRefused(VAULT_REFERENCE_INCONSISTENT, "Kasa dosyasının boyutu tarihsel referansla uyuşmuyor.")
+    return {"mode": "GIT", "git_blob_sha1": blob, "working_tree": "SIZE_MATCHES_HISTORICAL_REFERENCE"}
 
 
 # ---------------------------------------------------------------------------

@@ -38,6 +38,7 @@ from ..attestation_verifier import (
     verify_asymmetric_signature,
 )
 from .models import EvaluationIntegrityError, canonical_eval_sha256
+from ..holdout_access_guard import HoldoutFileAccessBlocked
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 GOVERNANCE_DIR = Path(__file__).resolve().parent / "governance"
@@ -1197,6 +1198,8 @@ def assert_no_unauthorised_holdout_bytes(path: str | Path, registry_path: str | 
     """Refuse (before parsing) a dataset file whose raw bytes match any registered HOLDOUT vault."""
     try:
         file_sha = sha256_file_bytes(path)
+    except HoldoutFileAccessBlocked:
+        raise  # WP-4.7: a guard refusal is never swallowed as "unreadable file"
     except OSError:
         return
     registry = load_holdout_vault_registry(registry_path)

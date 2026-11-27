@@ -69,6 +69,13 @@ from engine.knowledge_card_validator import load_knowledge_cards, validate_centr
 from engine.precedent_verifier import load_precedent_registry
 from engine.source_validator import load_source_registry
 
+from tests.repo_scan_support import (
+    assert_scan_routine_on_synthetic_fixture,
+    assert_vaults_pinned_by_metadata,
+    repository_scan_files,
+    scan_files_for_markers,
+)
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
@@ -1075,13 +1082,17 @@ class TestV103LiveIntegrationProbeAndGovernance(unittest.TestCase):
             f"{pem_prefix}{kind}{pem_suffix}"
             for kind in ("", "RSA ", "EC ", "ENCRYPTED ", "OPENSSH ")
         ]
-        for path in PROJECT_ROOT.rglob("*"):
-            if not path.is_file() or "__pycache__" in path.parts:
-                continue
-            if path.suffix.lower() in {".py", ".json", ".md", ".html", ".txt", ".pem", ".key"}:
-                content = path.read_text(encoding="utf-8", errors="ignore")
-                for marker in priv_markers:
-                    self.assertNotIn(marker, content, f"Özel anahtar izi tespit edildi: {path}")
+        # WP-4.7: registered HOLDOUT vault paths are skipped by path (never opened) and pinned by metadata;
+        # the same scan routine is also exercised on a controlled synthetic fixture.
+        def _include(path):
+            return "__pycache__" not in path.parts and path.suffix.lower() in {
+                ".py", ".json", ".md", ".html", ".txt", ".pem", ".key"
+            }
+
+        scan_files = repository_scan_files(PROJECT_ROOT, _include)
+        self.assertEqual(scan_files_for_markers(scan_files, priv_markers), [], "Özel anahtar izi tespit edildi")
+        self.assertGreaterEqual(assert_vaults_pinned_by_metadata(self, PROJECT_ROOT), 1)
+        assert_scan_routine_on_synthetic_fixture(self, priv_markers, _include)
 
 
 if __name__ == "__main__":
