@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -46,6 +47,35 @@ _SKIP_SUFFIXES = (".pyc", ".pyo")
 
 class PackagePolicyError(RuntimeError):
     """Raised when the exclusion policy cannot be applied or verified (fail-closed)."""
+
+
+GUARD_RELPATH = "engine/holdout_access_guard.py"
+_GUARD_MODULES: dict[str, object] = {}
+
+
+def install_source_access_guard(source_dir: Path) -> tuple[str, ...]:
+    """WP-4.7: install the project's process-wide HOLDOUT access guard (audit hook) for `source_dir`.
+
+    Loaded by file path (stdlib only, no `engine` package import). After this, any attempt in this
+    process to open/copy/rename a registered vault file, including from the unchanged WP-1 builder, is
+    refused before the OS opens it. Fails closed when the guard module or registry is missing.
+    """
+    guard_path = (source_dir / GUARD_RELPATH).resolve()
+    if not guard_path.is_file():
+        raise PackagePolicyError(f"HOLDOUT access guard missing: {GUARD_RELPATH}")
+    mod = _GUARD_MODULES.get("guard")
+    if mod is None:
+        spec = importlib.util.spec_from_file_location("hrai_holdout_access_guard_ci", guard_path)
+        if spec is None or spec.loader is None:
+            raise PackagePolicyError("Cannot load HOLDOUT access guard.")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)  # type: ignore[union-attr]
+        _GUARD_MODULES["guard"] = mod
+    try:
+        paths = mod.install_holdout_access_guard(source_dir)  # type: ignore[attr-defined]
+    except Exception as exc:  # noqa: BLE001 - any guard failure must stop packaging
+        raise PackagePolicyError(f"HOLDOUT access guard could not be installed: {exc}") from exc
+    return tuple(str(p) for p in paths)
 
 
 def _sha256_file(path: Path) -> str:
@@ -188,6 +218,8 @@ def build_package(
     registry_relpath: str = DEFAULT_REGISTRY_RELPATH,
 ) -> dict[str, object]:
     exclusions = load_exclusions(source_dir, registry_relpath)
+    if (source_dir / GUARD_RELPATH).exists():
+        install_source_access_guard(source_dir)
     with tempfile.TemporaryDirectory(prefix="hrai_pkgpolicy_") as td:
         staging = Path(td) / root_name
         staging.mkdir()
@@ -271,6 +303,7 @@ def main(argv: list[str] | None = None) -> int:
                 registry_relpath=args.registry_relpath,
             )
         else:
+            install_source_access_guard(args.source)
             report = verify_artifacts(args.paths, load_exclusions(args.source, args.registry_relpath))
     except (PackagePolicyError, DeterministicZipError) as exc:
         print(json.dumps({"status": "FAILED", "error": str(exc)}, indent=2), file=sys.stderr)
