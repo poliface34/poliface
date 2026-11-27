@@ -1,0 +1,92 @@
+{
+  "schema": "hrai.holdout_audit_archive_manifest.v1",
+  "manifest_id": "HOLDOUT-V1.2-AUDIT-ARCHIVE-MANIFEST-20261127",
+  "vault_id": "HOLDOUT-WP45-V1.2-30-SEALED-20261126",
+  "vault_status": {
+    "consumption": "CONSUMED",
+    "blindness": "CONTAMINATED",
+    "registry_status": "CONSUMED_BLINDNESS_COMPROMISED",
+    "max_authorized_runs": 0
+  },
+  "prepared_at_utc": "2026-11-27T15:30:00Z",
+  "prepared_by": "WP-4.6 implementation (Claude Code session, requested by repository owner)",
+  "archive_method": "Kayıtlar değiştirilmeden yerinde korunur ve git nesne kimliği + SHA-256 ile sabitlenir. HOLDOUT vaka içerikleri bu manifeste veya başka bir dosyaya kopyalanmamıştır. Dosya boyutu ve SHA-256 ham baytlar üzerinden hesaplanmıştır; HOLDOUT dosyası JSON olarak ayrıştırılmamıştır.",
+  "timestamp_note": "Git dosya oluşturma zamanı saklamaz; zaman alanları ilgili commit'in committer zamanıdır. Konteynerdeki dosya sistemi mtime değerleri yeni klon zamanını gösterdiğinden kanıt değeri yoktur ve kullanılmamıştır.",
+  "entries": [
+    {
+      "file_name": "eval_holdout_30_sealed.json",
+      "source_location": "git: hrai_hukuk_sgk/engine/evaluation/datasets/eval_holdout_30_sealed.json (ilk ve son commit 1d95a8b9462b79a337a3ee6f54d5ab8e2c2ce8bd)",
+      "size_bytes": 78895,
+      "sha256": "b809245fa04ee6de2daf4189c115ba03860b1bd54213dfc88b86ce7a1625730f",
+      "git_blob_sha1": "542fa53d2d86dfebd88207d5231cf876859e6dd2",
+      "created_or_modified_utc": "2026-11-26T14:35:59Z (commit zamanı; dosya o tarihten beri değişmedi)",
+      "verification_status": "VERIFIED_UNCHANGED",
+      "verification_method": "Ham bayt SHA-256 = kayıt defteri file_sha256; git log tek commit gösterir."
+    },
+    {
+      "file_name": "WP4_5_EVALUATION_SPEC.md (v1.2, HOLDOUT kök neden ifşası içeren sürüm)",
+      "source_location": "git: hrai_hukuk_sgk/docs/WP4_5_EVALUATION_SPEC.md @ 813202ca5422552062e166b1c4d6ac0ba6aa0e24",
+      "size_bytes": 42640,
+      "sha256": "568c265dc6e3c21db5a59594367a6948b3d487a2b5349e2dccda774946023ca4",
+      "git_blob_sha1": "9a633ff4766857fa824da3ede59faae87c08e783",
+      "created_or_modified_utc": "2026-11-26T15:47:31Z (commit zamanı)",
+      "verification_status": "VERIFIED_IN_GIT_HISTORY",
+      "verification_method": "git cat-file; özgün metin geçmişte değiştirilmeden durur."
+    },
+    {
+      "file_name": "test_evaluation_wp45_v106.py (HOLDOUT'u maskesiz değerlendiren son sürüm)",
+      "source_location": "git: hrai_hukuk_sgk/tests/test_evaluation_wp45_v106.py @ d1dd8ef06cc43972d10631cadc9d6f05dc2eb10f",
+      "size_bytes": 66049,
+      "sha256": "1d28d99246961a4e917cdccfded637e4da97a939d82c1814a44be5307f65c47f",
+      "git_blob_sha1": "83c09e887f47893951f7d1b204c33471feec3f95",
+      "created_or_modified_utc": "2026-11-26T16:49:39Z (commit zamanı)",
+      "verification_status": "VERIFIED_IN_GIT_HISTORY",
+      "verification_method": "git cat-file."
+    },
+    {
+      "file_name": "HOLDOUT_V1_2_CONSUMPTION_EVIDENCE_20261127.json",
+      "source_location": "git: hrai_hukuk_sgk/engine/evaluation/governance/archive/ @ f0c8cf8a842d581e03e19c978028d96f4f1e7889",
+      "size_bytes": 5242,
+      "sha256": "3414d78d438b9f0f154c2f405f81506b7210a12631d0d0fef6cae4d965eab199",
+      "created_or_modified_utc": "2026-11-27T14:24:14Z (commit zamanı)",
+      "verification_status": "VERIFIED_UNCHANGED",
+      "verification_method": "SHA-256 kayıt defterindeki consumption_evidence_sha256 ile eşleşir (test ile sabit)."
+    }
+  ],
+  "unavailable_records": [
+    {
+      "record": "ANTIGRAVITY_VERIFIER kör HOLDOUT koşusunun koşu manifesti (EvaluationRunManifest)",
+      "status": "UNAVAILABLE",
+      "searched": ["depo ağacı ve git geçmişi", "izlenmeyen ve .gitignore kapsamındaki dosyalar (yok)", "GitHub Actions artifact'leri", "PR #4 yorumları"]
+    },
+    {
+      "record": "ANTIGRAVITY_VERIFIER koşusuna ait HOLDOUT erişim ledger dosyası",
+      "status": "UNAVAILABLE",
+      "note": "v1.2 ledger'ı yol verilmediğinde bellekte çalışıyordu; kalıcı dosya bulunamadı."
+    },
+    {
+      "record": "ANTIGRAVITY_VERIFIER koşu raporu (vaka düzeyi maskeli/maskesiz sonuçlar)",
+      "status": "UNAVAILABLE"
+    },
+    {
+      "record": "access_count_for_version=1 iddiası",
+      "status": "UNVERIFIED_CLAIM",
+      "note": "Yalnız PR #4 açıklaması ve devir notunda geçer; doğrulanmış gerçek olarak gösterilmez. Geçmiş erişim sayısı tahmin edilmez ve sıfır varsayılmaz."
+    },
+    {
+      "record": "HOLDOUT 91.39 / 0 FATAL / 4 MAJOR / 27/30 sonucu ve kategori/kusur dağılımı",
+      "status": "UNVERIFIED_CLAIM",
+      "note": "Toplam değerler yalnız PR #4 açıklamasında ve devir notunda var. Kategori ve kusur sınıfı dağılımı hiçbir erişilebilir kayıtta yok; yeniden puanlama yasak olduğu için üretilmedi."
+    }
+  ],
+  "searched_locations": [
+    {"location": "Depo ağacı (feat/v1.0.6-wp4-agent-intelligence, f0c8cf8)", "result": "Yukarıdaki 4 kayıt dışında ledger, koşu manifesti veya rapor yok."},
+    {"location": "İzlenmeyen ve .gitignore kapsamındaki dosyalar (yeni klon)", "result": "Yalnız __pycache__; ilgili kayıt yok."},
+    {"location": "Geliştirme konteyneri geçici dizinleri ve dosya sistemi (holdout/antigravity adlı dosya taraması)", "result": "İlgili kayıt yok (yalnız Python standart kütüphanesindeki antigravity.py)."},
+    {"location": "GitHub Actions artifact'leri: run 45862325957 (push, d1dd8ef) ve 45862334610 (PR, d1dd8ef)", "result": "0 artifact."},
+    {"location": "GitHub Actions logları (d1dd8ef ve öncesi)", "result": "İş akışı betiği unittest çıktısını /dev/null'a yönlendirir ve yalnız sıralama özetini yazar (ci-assurance.yml'den doğrulandı); loglarda HOLDOUT erişim kaydı bulunamaz. CI'ın HOLDOUT'u maskesiz değerlendirmesi CI_NON_BLIND_EVALUATION ihlali olarak kayıtlıdır."},
+    {"location": "PR #4 yorumları", "result": "0 yorum."},
+    {"location": "Antigravity yerel çalışma alanı (/home/antigravity/poliface34/poliface, ~/.gemini/antigravity)", "result": "UNAVAILABLE: bu oturuma erişim izni verilmedi; erişim isteği otomatik izin denetimiyle reddedildi ve tekrar denenmedi."}
+  ],
+  "fabrication_policy": "Bulunamayan kayıtlar yeniden oluşturulmadı, tahmin edilmedi ve uydurulmadı. Kalıcı ledger yalnız WP-4.6 sonrası erişimleri kaydeder."
+}

@@ -1,7 +1,7 @@
 # `WP4_5_EVALUATION_SPEC.md` — hrAI `@HukukSGK` WP-4.5 Evaluation Teknik Şartnamesi ve Veri Modeli
 
 **Belge Kodu:** `WP4-5-EVALUATION-SPEC`  
-**Revizyon:** `v1.3` *(WP-4.6 HOLDOUT yönetişimi: H-01..H-07; v1.2 K/Y/O hükümleri aynen geçerli)*  
+**Revizyon:** `v1.3` *(WP-4.6 HOLDOUT yönetişimi ve bağımsız onay altyapısı: H-01..H-11; v1.2 K/Y/O hükümleri ve eşikleri aynen geçerli)*  
 **Sürüm Hedefi:** `v1.0.6` — **WP-4 (`HukukSGK Agent Intelligence`) / Aşama `WP-4.5`**  
 **Önceki Aşamalar:** [WP4_1_AGENT_CORE_SPEC.md](./WP4_1_AGENT_CORE_SPEC.md) · [WP4_2_LEGAL_KNOWLEDGE_BASE_SPEC.md](./WP4_2_LEGAL_KNOWLEDGE_BASE_SPEC.md) · [WP4_3_RAG_ENGINE_SPEC.md](./WP4_3_RAG_ENGINE_SPEC.md) · [WP4_4_ANSWER_ENGINE_SPEC.md](./WP4_4_ANSWER_ENGINE_SPEC.md) · `PR #4 (Draft)`  
 **Ürün / Koordinatör / Uzman / Web:** `hrAI` / `@hrAI` / `@HukukSGK` / `www.insenai.com.tr`  
@@ -23,6 +23,18 @@
 | **H-05** | Kritik | Mevcut 30 vakalık HOLDOUT'un körlüğü bozuldu (CI maskesiz değerlendirme, kök neden ifşası, kalıcı olmayan ledger). Kasa `CONSUMED_BLINDNESS_COMPROMISED` olarak kaydedildi; grant verilemez. | Bölüm 8.3, 10.4 |
 | **H-06** | Yüksek | Bölüm 8.2'deki HOLDOUT vakası kök nedeni körlük ihlalidir; v1.3'te ayrıntı kaldırıldı, özgün metin git geçmişinde (`813202c`) değiştirilmeden durur. | Bölüm 8.2 |
 | **H-07** | Yüksek | Yeni bağımsız HOLDOUT kohortu için kontrollü erişim tasarımı (emanetçi kaydı, depo dışı kasa, tek seferlik kör koşu) tanımlandı. | Bölüm 10.5 |
+| **H-08** | Kritik | Ledger kayıtları `event_id`, `dataset_*`, `access_count_for_version`, `authorization_status`, `result_status`, `signature*` alanlarını taşımıyordu. Ledger şeması `v2`: sayaç ve statüler her okumada zincirden yeniden hesaplanır; `ACCESS_GRANTED` kayıtlarındaki emanetçi imzası her kullanımda kayıt defterine karşı yeniden doğrulanır. | Bölüm 10.2, 10.3 |
+| **H-09** | Yüksek | Grant ve emanetçi yetkisi geri alınamıyordu; okunamayan ledger ayrı bir ret koduyla ele alınmıyordu. `GRANT_REVOKED` olayı, emanetçi iptalinin bekleyen grant'leri geçersiz kılması, veri seti sürümü kontrolü ve `HOLDOUT_LEDGER_UNREADABLE` eklendi. | Bölüm 10.3 |
+| **H-10** | Yüksek | 8.1 ölçüm tablosu iyileştirme öncesi/sonrası ve DEV+VAL/HOLDOUT ayrımını göstermiyordu. Tablo ayrıştırıldı; HOLDOUT ve 100 vakalık birleşik endeksler tarihsel/denetim kaydı olarak işaretlendi. | Bölüm 8.1 |
+| **H-11** | Yüksek | Bağımsız hukukçu onay süreci, onayçı defteri tek kaynak kararı ve yeni kohort operasyonu yalnız kısaca anılıyordu. Teknik tasarımlar ayrı belgelere bağlandı; uygulama ayrıca onaya tabidir. | Bölüm 11 |
+
+### Sürüm Geçmişi
+
+| Sürüm | Commit | Özet |
+|---|---|---|
+| `v1.1` | `175e9f7` | İlk WP-4.5 değerlendirme şartnamesi ve 100 vakalık veri seti. |
+| `v1.2` | `1d95a8b` … `813202c` | K-01..K-03, Y-01..Y-05, O-01..O-05: asimetrik hukuk onayı, 3 seviyeli eşik, koşu manifesti, HOLDOUT kasa ayrımı. |
+| `v1.3` | WP-4.6 (`f0c8cf8` ve devamı) | H-01..H-11: HOLDOUT'un CI'dan tamamen ayrılması, kalıcı imza doğrulamalı ledger (`v2`), mevcut kasanın `CONSUMED_BLINDNESS_COMPROMISED` kaydı, 8.1/8.2 düzeltmeleri, bağımsız onay ve yeni kohort tasarımları. Eşikler, rubric ve WP-1 kuralları değişmedi. |
 
 ---
 
@@ -344,7 +356,11 @@ EvaluationRunManifest:
 
 ## 8. 100 Vakalık Veri Seti Durumu ve `9 FATAL` Bulgunun Vaka Bazlı Adli Analizi
 
-### 8.1. Mevcut Ön Ölçüm Özeti *(Taslak Anahtarlı Mühendislik Tanısı — Resmî Endeks Değildir)*
+### 8.1. Ölçüm Özeti *(Taslak Anahtarlı Mühendislik Tanısı — Resmî Endeks Değildir)*
+
+> **v1.3 notu:** Aşağıdaki iki tablo birbirinden ayrıdır. **8.1.a** iyileştirme öncesi tarihsel ölçümdür ve değiştirilmemiştir. **8.1.b** WP-4.3/WP-4.4 iyileştirmeleri sonrasıdır (`d1dd8ef`). Her iki tablodaki HOLDOUT değerleri ve HOLDOUT içeren 100 vakalık birleşik endeksler artık **bağımsız kör genelleme ölçüsü değildir** (kasa `CONSUMED_BLINDNESS_COMPROMISED`, bkz. 8.3).
+
+#### 8.1.a. İyileştirme Öncesi Tarihsel Ölçüm (`v1.1` / `v1.2`, değiştirilmedi)
 
 | Metrik | `v1.1` Ön Ölçüm (`175e9f7`) | `v1.2` Kalibre Ölçüm (`RENORMALIZED` + `Recall@5`) | Yorum |
 |---|---|---|---|
@@ -353,6 +369,20 @@ EvaluationRunManifest:
 | **Tanısal Endeksler (`O-02`)** | `88.11` | **`86.81`** (`macro = 86.77`; `DEV 88.32`, `VAL 82.35`, `HOLDOUT 89.27`) | N/A boyutlara serbest `100` puan verilmemesi ve `@5` retrieval kesimi skoru daha gerçekçi ölçtü; birim testler motoru doğrular, modelin hukuki yeterliliğini tek başına kanıtlamaz. |
 | **Retrieval Kesimleri (`O-05`)** | — | **`Recall@5 = 0.48`**, **`Recall@10 = 0.6467`**, **`MRR = 0.4392`** | Top-5 sıralama kalitesinde geliştirme fırsatı (`41` madde erişim eksiği) net biçimde ölçüldü. |
 | **Otomatik `FATAL` / `MAJOR`** | **`9 FATAL`**, `26 MAJOR` | **`9 FATAL`**, `26 MAJOR` (`0` hukukçu override, `0` infra arızası) | `FATAL_GOVERNANCE_GATE_BREACH = 0`, `FATAL_UNAUTHORIZED_PAYROLL_CALC = 0`, `FATAL_FABRICATED_PRECEDENT_OR_URL = 0` (`14/14` adversarial saldırı bloklandı). |
+
+*v1.3 işareti:* Bu tablodaki `HOLDOUT 89.27` değeri, kasanın iyileştirmeden önce ölçüldüğünü gösterir ve körlük ihlali kanıtlarından biridir (`PRE_REMEDIATION_HOLDOUT_MEASUREMENT`).
+
+#### 8.1.b. İyileştirme Sonrası Ölçüm (`d1dd8ef`, WP-4.3 / WP-4.4)
+
+| Küme | Vaka | Ağırlıklı / Makro | `FATAL` | `MAJOR` | `PASS` | Retrieval | Geçerlilik |
+|---|---:|---|---:|---:|---|---|---|
+| `DEV` | 40 | `99.31` | 0 | 0 | 40/40 | — | Mühendislik tanısı; iyileştirme bu kümede yapıldı. |
+| `VALIDATION` | 30 | `99.68` | 0 | 0 | 30/30 | — | Mühendislik tanısı; iyileştirme bu kümede yapıldı. |
+| **`DEV + VALIDATION`** | **70** | **`99.47` / `99.51`** | **0** | **0** | **70/70** | `Recall@5 = 0.9490`, `Recall@10 = 0.9796`, `MRR = 0.8335` | WP-4.6'da izole akışla yeniden üretildi. İyimserdir; resmî endeks değildir. |
+| `HOLDOUT` (mevcut kasa) | 30 | `91.39` | 0 | 4 | 27/30 | — | **Tarihsel / `AUDIT_ONLY` / `UNVERIFIED`.** Koşu raporu ve kalıcı ledger bulunamadı; kasa körlüğü bozulmuş. Bağımsız kör genelleme ölçüsü değildir. |
+| `100` vaka birleşik | 100 | `97.04` / `97.17` | 0 | 4 | 97/100 | `Recall@5 = 0.7667`, `Recall@10 = 0.7867`, `MRR = 0.6209` | HOLDOUT bileşeni geçersiz olduğundan **kör doğrulama kanıtı değildir**; yalnız iyileştirme öncesi `86.81` / `86.77` ile tarihsel karşılaştırma için tutulur. |
+
+`0 FATAL / 4 MAJOR` HOLDOUT bilgisi tarihsel değerlendirme sonucu olarak korunur; bu bulgular üzerinden kod, prompt, retrieval, reranking, puanlama veya rubric değişikliği yapılmaz (maskeli toplu analiz: [WP4_6_MASKED_HOLDOUT_ERROR_ANALYSIS.md](./WP4_6_MASKED_HOLDOUT_ERROR_ANALYSIS.md)).
 
 ### 8.2. Tüm `9 FATAL` Bulgunun Vaka Bazlı Adli Sınıflandırması
 
@@ -411,7 +441,7 @@ EvaluationRunManifest:
 
 ## 10. WP-4.6 HOLDOUT Erişim Yönetişimi (v1.3)
 
-Uygulama: `engine/evaluation/holdout_governance.py`, kayıt defteri `engine/evaluation/governance/holdout_vault_registry.json`, testler `tests/test_holdout_governance_wp46_v106.py`.
+Uygulama: `engine/evaluation/holdout_governance.py`, kayıt defteri `engine/evaluation/governance/holdout_vault_registry.json`, testler `tests/test_holdout_governance_wp46_v106.py` ve `tests/test_holdout_ledger_v2_wp46_v106.py`.
 
 ### 10.1. Erişim Yolları (Önce / Sonra)
 
@@ -427,14 +457,17 @@ Uygulama: `engine/evaluation/holdout_governance.py`, kayıt defteri `engine/eval
 
 ### 10.2. Kalıcı Ledger Şeması ve Saklama
 
-- **Biçim:** JSONL; her satır RFC 8785 (JCS) kanonik JSON ve `\n` ile biter. Şema: `hrai.holdout_access_ledger.v1`.
-- **Alanlar:** `schema`, `seq`, `ledger_id`, `event_type` (`GENESIS`, `ACCESS_GRANTED`, `ACCESS_DENIED`, `VAULT_READ`, `RUN_STARTED`, `RUN_COMPLETED`), `recorded_at_utc`, `vault_id`, `vault_file_sha256`, `request_id`, `nonce`, `grant_id`, `operator_id`, `custodian_id`, `purpose`, `decision_code`, `details`, `previous_record_sha256`, `record_sha256`.
-- **Zincir:** `record_sha256 = SHA-256(JCS(kayıt − record_sha256))`; `previous_record_sha256` önceki kayda bağlanır; ilk kayıt `GENESIS` ve `previous_record_sha256 = 0…0`.
-- **Doğrulama:** her okuma ve her ekleme öncesinde tüm zincir doğrulanır: alan kümesi, kanonik bayt eşitliği, ardışık `seq`, tek `GENESIS`, sabit `ledger_id`, zincir bağlantısı, kayıt özeti, tamamlanmış son satır.
+- **Biçim:** JSONL; her satır RFC 8785 (JCS) kanonik JSON ve `\n` ile biter. Şema: `hrai.holdout_access_ledger.v2` (v1 şeması hiçbir gerçek ledger'da kullanılmadı).
+- **Alanlar:** `schema`, `seq`, `event_id`, `ledger_id`, `event_type` (`GENESIS`, `ACCESS_GRANTED`, `ACCESS_DENIED`, `VAULT_READ`, `RUN_STARTED`, `RUN_COMPLETED`, `GRANT_REVOKED`), `timestamp_utc`, `dataset_id`, `dataset_version`, `dataset_sha256`, `request_id`, `nonce`, `grant_id`, `operator_id`, `custodian_id`, `purpose`, `access_count_for_version`, `authorization_status`, `result_status`, `decision_code`, `signature`, `signature_algorithm`, `signature_key_id`, `details`, `previous_record_hash`, `record_hash`.
+- **Zincir:** `record_hash = SHA-256(JCS(kayıt − record_hash))`; `previous_record_hash` önceki kayda bağlanır; ilk kayıt `GENESIS` ve `previous_record_hash = 0…0`.
+- **Türetilmiş alanlar:** `access_count_for_version` (aynı dosya özeti + sürüm için o ana kadarki `ACCESS_GRANTED` sayısı), `authorization_status` ve `result_status` olay türünden türetilir ve her okumada yeniden hesaplanır. Özet yeniden hesaplanmış olsa bile tutarsız sayaç/statü doğrulamayı bozar.
+- **İmza:** `ACCESS_GRANTED` kaydı emanetçinin ayrık istek imzasını (`signature`, `signature_algorithm`, `signature_key_id`) ve imzalı yükün yeniden kurulması için gereken alanları taşır. Diğer olaylarda imza alanları `null` olmak zorundadır. `verify_signatures`, her grant imzasını kayıt defterindeki açık anahtara karşı yeniden doğrular (Ed25519 RFC 8032 PureEd25519, prehash yok; RSA-PSS-SHA256 RFC 8017, ≥ 2048 bit, MGF1-SHA256, salt 32; JCS UTF-8 bayt). Kayıt defteri geçmiş emanetçi anahtarlarını saklamak zorundadır; silinen anahtar ledger'ı doğrulanamaz kılar ve erişim kapanır.
+- **Doğrulama:** her okuma ve her ekleme öncesinde tüm zincir doğrulanır: alan kümesi, kanonik bayt eşitliği, ardışık `seq`, tek `GENESIS`, benzersiz `event_id`, sabit `ledger_id`, zincir bağlantısı, kayıt özeti, türetilmiş alanlar, imza alanı yerleşimi, tamamlanmış son satır.
 - **Değiştirilemezlik:** kayıt düzenleme/silme API'si yoktur; `initialize` mevcut dosyanın üzerine yazmayı reddeder (`O_EXCL`); her ekleme `O_APPEND` + `fsync` ile yazılır.
-- **Atomiklik:** tekrar (replay) kontrolü, erişim sınırı sayımı ve ekleme tek bir özel dosya kilidi (`fcntl.flock`; Windows'ta `msvcrt.locking`) altında yapılır.
+- **Atomiklik:** tekrar (replay) kontrolü, erişim sınırı sayımı ve ekleme tek bir özel dosya kilidi (`fcntl.flock`; Windows'ta `msvcrt.locking`) altında yapılır. Sınır, sürüm etiketinden bağımsız olarak **dosya özeti** başına sayılır; sürüm etiketini değiştirmek tüketilmiş dosyayı yeniden açmaz.
 - **Saklama yeri:** `HRAI_HOLDOUT_LEDGER_PATH` ile verilen, depo çalışma ağacı **dışındaki** yol; depo içi yol `HOLDOUT_LEDGER_INSIDE_REPOSITORY` ile reddedilir.
-- **Bilinen sınır:** hash zinciri, son kaydın birlikte yeniden yazılmasını tek başına engelleyemez. Bu nedenle ledger başı (`seq`, `record_sha256`) her koşudan sonra harici olarak (ör. imzalı checkpoint veya ayrı depo) sabitlenmelidir (açık iş).
+- **Bellek içi sayaç kanıt değildir:** `HoldoutAccessGrant` nesnesi tek başına yetki sağlamaz; her kullanımda ledger'daki `ACCESS_GRANTED` kaydıyla (özet, kasa, sürüm, vaka kümesi) eşleşmelidir. Ledger yoksa geçmiş erişim sayısı sıfır varsayılmaz; erişim reddedilir.
+- **Bilinen sınır:** hash zinciri, son kaydın birlikte yeniden yazılmasını tek başına engelleyemez. Ledger başı (`seq`, `record_hash`) her koşudan sonra harici olarak (ör. `AUDIT_CHECKPOINT_SEAL` kapsamlı mühürleyici anahtarla imzalı checkpoint veya ayrı WORM depo) sabitlenmelidir (açık iş, KMS/HSM bağımlı).
 
 ### 10.3. Yetkilendirme ve Fail-Closed Kontroller
 
@@ -442,7 +475,11 @@ Kontrol sırası (`HoldoutAccessGate.authorize`): CI ortamı → ledger yapılan
 
 Grant kullanımı: `VAULT_READ` (ham bayt özeti grant ve kayıtla eşleşmeden ayrıştırma yok; grant başına bir kez) → `RUN_STARTED` (yalnız `blind_holdout_mode=True` ve kayıtlı vaka kümesi özeti; grant başına bir kez; değerlendirmeden önce) → `RUN_COMPLETED` (koşu manifesti özeti ile).
 
-Reddedilen istekler, ledger kullanılabilir olduğunda `ACCESS_DENIED` olarak gerekçesiyle yazılır. Ledger yoksa veya bozuksa hiçbir şey yazılamaz ve erişim reddedilir.
+Her grant kullanımında yeniden: ledger zinciri ve tüm grant imzaları → kasa hâlâ `SEALED_AVAILABLE` → grant `dataset_version` = kayıt (`HOLDOUT_DATASET_VERSION_MISMATCH`) → grant'ı imzalayan emanetçi hâlâ `ACTIVE` ve geçerlilik penceresinde (`HOLDOUT_CUSTODIAN_INACTIVE`) → grant iptal edilmemiş (`HOLDOUT_GRANT_REVOKED`).
+
+İptal: `HoldoutAccessGate.revoke_grant` bir `GRANT_REVOKED` olayı ekler; iptal edilen grant ile okuma veya koşu yapılamaz ve erişim hakkı iade edilmez (sınır sayımında kalır). Emanetçinin kayıt defterinde `REVOKED`/`SUSPENDED` yapılması bekleyen tüm grant'lerini geçersiz kılar.
+
+Reddedilen istekler, ledger kullanılabilir olduğunda `ACCESS_DENIED` olarak gerekçesiyle yazılır. Ledger yoksa (`HOLDOUT_LEDGER_MISSING`), okunamıyorsa (`HOLDOUT_LEDGER_UNREADABLE`) veya bozuksa (`HOLDOUT_LEDGER_INTEGRITY_FAILURE`) hiçbir şey yazılamaz ve erişim reddedilir.
 
 ### 10.4. Mevcut Kasa (`CONSUMED_BLINDNESS_COMPROMISED`)
 
@@ -456,8 +493,24 @@ Reddedilen istekler, ledger kullanılabilir olduğunda `ACCESS_DENIED` olarak ge
 4. Kör koşu CI dışında, kalıcı ledger ile, `FINAL_BLIND_VERIFICATION` amacıyla bir kez yapılır; yalnız maskeli rapor ve ledger başı yayımlanır.
 5. Koşu sonrası kasa `CONSUMED_BLINDNESS_COMPROMISED` (veya sonraki sürümde tanımlanacak `CONSUMED_AFTER_BLIND_RUN`) durumuna alınır.
 
+Ayrıntılı güvenlik ve operasyon tasarımı (rol ayrılığı, şifreli saklama, mühürleme töreni, kontrollü değerlendirme ortamı, maskeli rapor şablonu): [WP4_6_HOLDOUT_COHORT_SECURITY_DESIGN.md](./WP4_6_HOLDOUT_COHORT_SECURITY_DESIGN.md). Yeni kohort hazırlanmadan kör doğrulama `PASS` sonucu üretilemez.
+
 ### 10.6. Açık İşler
 
-- Ledger başının harici imzalı checkpoint ile sabitlenmesi.
-- Emanetçi kaydı ile K-01 hukukçu defteri ve `config/authorized_approvers.json` (WP-1) arasındaki ilişkinin kararlaştırılması.
+- Ledger başının harici imzalı checkpoint ile sabitlenmesi (KMS/HSM ve mühürleyici anahtar kaydı gerekir).
 - Yeni kohortun hazırlanması ve gerçek emanetçi kaydı (depo sahibi onayı gerekir).
+- Emanetçi kayıt defteri, K-01 hukukçu defteri ve `config/authorized_approvers.json` (WP-1) arasındaki tek kaynak kararı (Bölüm 11).
+
+---
+
+## 11. Bağımsız Hukukçu Onayı ve Onayçı Defteri (v1.3)
+
+**Durum:** Resmî benchmark `UNVERIFIED_ZERO_APPROVED_KEYS` (`0/100`). Bu bölüm süreci tanımlar; hiçbir gerçek onay, hukukçu kimliği veya üretim anahtarı oluşturmaz.
+
+1. **Onay yalnız ayrık imzalı zarfla verilir** (`SignedAnswerKeyApprovalEnvelope`, Bölüm 5.3). Veri seti dosyalarında satır içi onay reddedilir. İmza Ed25519 (RFC 8032 PureEd25519, RFC 8785 JCS, UTF-8 ham bayt, prehash yok) veya RSA-PSS-SHA256 (RFC 8017, ≥ 2048 bit, SHA-256, MGF1-SHA256, salt 32, PSS) olmalıdır; salt 16, PKCS#1 v1.5, bit çevirme, yanlış anahtar, bozuk mesaj ve algoritma uyuşmazlığı reddedilir.
+2. **Onayçı** `ENROLLED`, yetkili rol ve kapsam (`EVALUATION_ANSWER_KEY_APPROVAL`), baro sicil referansı, geçerli anahtar penceresi ve eşleşen açık anahtar parmak izi ile kayıtlı olmalıdır. Kimlik ve yetki doğrulama kanıtları, bağımsızlık ve çıkar çatışması beyanı süreç belgesinde tanımlıdır.
+3. **Test anahtarları üretim güven kökü değildir:** `test_sandbox_keys_allowed_in_production = false`; testlerdeki geçici anahtarlar hiçbir defterde kalıcı değildir ve onay sayısına girmez.
+4. **Onaylı vaka sayısı:** yalnız `CRYPTOGRAPHICALLY_VERIFIED_APPROVED` durumundaki, güncel cevap anahtarı özetine bağlı, iptal edilmemiş zarflar sayılır. Resmî benchmark için 100/100 gerekir; eksik onay `UNVERIFIED_*` olarak kalır.
+5. **Tek kaynak kararı:** `TrustedLegalApproverRegistry` (bellekte kurulan) ile `config/authorized_approvers.json` (WP-1 korumalı) veri modeli farklıdır. Önerilen mimari ve geçiş planı [WP4_6_APPROVER_SINGLE_SOURCE_DESIGN.md](./WP4_6_APPROVER_SINGLE_SOURCE_DESIGN.md) belgesindedir; WP-1 dosyası değiştirilmemiştir ve geçiş ayrıca onaya tabidir.
+6. **İnceleme ve imza paketi:** vaka inceleme biçimi, durumlar (onay / ret / düzeltme / yeniden inceleme), iptal ve yeniden onay, audit trail: [WP4_6_LEGAL_REVIEW_SIGNATURE_PACKAGE_DESIGN.md](./WP4_6_LEGAL_REVIEW_SIGNATURE_PACKAGE_DESIGN.md).
+7. **Eşikler değişmez:** tekil vaka `>= 85.0` PASS, `80.0–84.99` PARTIAL_REVIEW, `< 80.0` FAIL_SCORE; `MAJOR`/`FATAL` vetosu eşikten bağımsızdır; kategori skoru ile veto ayrı tutulur ve `< 75.0` kategori tabanı bloklayıcıdır.
