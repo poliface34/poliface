@@ -31,7 +31,7 @@ Durum dosyasının yükleyicisi (`load_vault_migration_status`) bu değerler dı
 | P-3 | Saklama süresi (retention) ve Bucket Lock onayı | Açık |
 | P-4 | KMS koruma seviyesi (HSM/SOFTWARE/EXTERNAL) ve rotasyon politikası | Açık |
 | P-5 | Faturalama hesabı ve organizasyon/klasör yerleşimi | Açık |
-| P-6 | WP-1 korumalı CI iş akışı değişikliğinin (paket hariç tutma) depo sahibince onaylanması | Onay bekliyor |
+| P-6 | WP-1 korumalı CI iş akışı değişikliği (paket hariç tutma) | Depo sahibince onaylandı ve hazırlık branch'ine uygulandı (2026-11-27); ana dala birleştirme ayrı karar |
 
 Ön koşullar kapanmadan hiçbir kaynak oluşturulmaz.
 

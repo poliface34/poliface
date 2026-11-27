@@ -30,6 +30,7 @@ import unittest
 import zipfile
 
 from ci import deterministic_zip as dz
+from ci import release_package_policy as rpp
 from ci import verify_immutability as vi
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -155,9 +156,12 @@ class TestWp1CiAssurance(unittest.TestCase):
                 dz.build_deterministic_zip(src_a, base / "bad_symlink.zip", root_name="pkg")
 
     def test_04_active_branch_double_build_reproducibility_and_clean_extract_parity(self) -> None:
-        report = dz.verify_reproducible_build(
+        # WP-4.6: the active package is built through the registered-vault exclusion policy, which wraps
+        # dz.verify_reproducible_build on a staged tree (registered vault files omitted by path, never read).
+        report = rpp.build_package(
             REPO_ROOT / "hrai_hukuk_sgk",
             root_name="hrai_hukuk_sgk",
+            verify_reproducible=True,
         )
         self.assertTrue(report["reproducible"])
         self.assertEqual(report["build_1_sha256"], report["build_2_sha256"])
@@ -200,7 +204,8 @@ class TestWp1CiAssurance(unittest.TestCase):
             "python3 -m ci.verify_immutability",
             f"--expected-manifest-sha256 {vi.DEFAULT_EXPECTED_MANIFEST_SHA256}",
             "python3 -m unittest discover -s ci/tests",
-            "python3 -m ci.deterministic_zip",
+            "python3 -m ci.release_package_policy build",
+            "python3 -m ci.release_package_policy verify-artifacts",
             "--verify-reproducible",
             "tests.cross_validate_x509 --mode strict",
             "tests.cross_validate_x509 --mode offline",
@@ -382,6 +387,7 @@ class TestWp1CiAssurance(unittest.TestCase):
             "/ci/release_immutability_manifest.json",
             "/ci/verify_immutability.py",
             "/ci/deterministic_zip.py",
+            "/ci/release_package_policy.py",
             "/.github/workflows/ci-assurance.yml",
             "/kadroai_hukuk_sgk.zip",
             "/hrai_hukuk_sgk_v1.0.5.1.zip",

@@ -37,7 +37,7 @@ Tüketilmiş (`CONSUMED` + `CONTAMINATED`) 30 vakalık HOLDOUT kasası ve ilerid
 | Kayıt | Ledger v2 (yerel, depo dışı JSONL) | Ledger v2 + Cloud Audit Logs (Data Access) + imzalı harici checkpoint |
 | Değiştirilemezlik | Git geçmişi | Object Versioning + Retention Policy + Bucket Lock (WORM) |
 | Bütünlük | Arşiv manifesti (SHA-256, Git blob) | SHA-256 migration manifesti + KMS imzalı arşiv checkpoint'i |
-| Paketler/CI | Hariç tutma aracı hazır; CI iş akışı değişikliği WP-1 korumalı olduğu için **onay bekliyor** | Hiçbir paket ve CI artifact'inde kasa dosyası yok |
+| Paketler/CI | Hariç tutma aracı CI iş akışında etkin (WP-1 korumalı dosya değişikliği depo sahibinin 2026-11-27 onayıyla uygulandı); kasa dosyası Git ağacında ve geçmişinde duruyor | Hiçbir paket ve CI artifact'inde kasa dosyası yok |
 
 ## 3. Hedef bileşenler (öneri)
 

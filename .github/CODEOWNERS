@@ -4,6 +4,8 @@
 /ci/release_immutability_manifest.json @poliface34
 /ci/verify_immutability.py @poliface34
 /ci/deterministic_zip.py @poliface34
+/ci/release_package_policy.py @poliface34
+/ci/tests/test_release_package_policy.py @poliface34
 /ci/tests/test_wp1_ci_assurance.py @poliface34
 /.github/workflows/ci-assurance.yml @poliface34
 /.github/CODEOWNERS @poliface34
