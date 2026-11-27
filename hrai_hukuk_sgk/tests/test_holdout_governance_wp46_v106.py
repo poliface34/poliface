@@ -47,6 +47,11 @@ from engine.evaluation import (
     sha256_file_bytes,
 )
 from engine.evaluation import holdout_governance as hg
+from engine.evaluation.holdout_vault import (
+    load_historical_holdout_reference,
+    load_package_exclusion_manifest,
+    verify_holdout_git_metadata,
+)
 from engine.rag import HukukSgkRagEngine
 
 from tests.holdout_test_support import SyntheticHoldoutVault, ephemeral_keypair, synthetic_holdout_case
@@ -179,9 +184,19 @@ class TestHoldoutGovernanceWp46(unittest.TestCase):
         self.assertEqual(vault.max_authorized_runs, 0)
         self.assertEqual(vault.case_count, 30)
         self.assertEqual(reg.custodians, ())
-        # Raw-byte hash only (no JSON parse of HOLDOUT content).
         self.assertEqual(vault.file_sha256, REAL_VAULT_FILE_SHA256)
-        self.assertEqual(sha256_file_bytes(DEFAULT_HOLDOUT_PATH), REAL_VAULT_FILE_SHA256)
+        # WP-4.6 vault preparation: byte pinning via metadata only (registry + archive manifest + Git blob
+        # id); the HOLDOUT file is not read and is absent from release packages / the CI clean extract.
+        ref = load_historical_holdout_reference()
+        self.assertEqual(ref.file_sha256, REAL_VAULT_FILE_SHA256)
+        git_meta = verify_holdout_git_metadata(PROJECT_ROOT, vault.file_relpath, ref.git_blob_sha1)
+        if git_meta["mode"] == "GIT":
+            self.assertEqual(git_meta["working_tree"], "CLEAN")
+        else:
+            pkg = load_package_exclusion_manifest(PROJECT_ROOT)
+            self.assertIsNotNone(pkg, "Git dışı paket/extract PACKAGE_EXCLUSION_MANIFEST içermeli (ci.release_package_policy).")
+            assert pkg is not None
+            self.assertEqual({e["registered_sha256"] for e in pkg["excluded"]}, {REAL_VAULT_FILE_SHA256})
 
         raw = reg.raw["vaults"][0]
         ev_path = PROJECT_ROOT / raw["consumption_evidence_relpath"]
@@ -287,10 +302,15 @@ class TestHoldoutGovernanceWp46(unittest.TestCase):
             self.assertEqual(c3.exception.code, hg.DENY_VAULT_CONSUMED)
         self.assertEqual(tr.hits, [])
 
-        # Explicit dataset_path pointing at the real vault: refused after a raw-byte hash, never parsed.
-        with _HoldoutReadTracker() as tr2:
+        # Explicit dataset_path pointing at a registered vault: refused after a raw-byte hash, never parsed.
+        # WP-4.6 vault preparation: exercised on a synthetic registered vault (the real HOLDOUT file is not
+        # read by tests and is excluded from release packages / the CI clean extract).
+        synth = self._vault(name="explicit_path_vault")
+        tr2 = _HoldoutReadTracker()
+        tr2.target = synth.vault_path.resolve()
+        with mock.patch.object(hg, "DEFAULT_HOLDOUT_REGISTRY_PATH", synth.registry_path), tr2:
             with self.assertRaises(HoldoutAccessDenied) as c4:
-                load_evaluation_dataset(DEFAULT_HOLDOUT_PATH, enforce_target_counts=False, enforce_anti_leakage=False)
+                load_evaluation_dataset(synth.vault_path, enforce_target_counts=False, enforce_anti_leakage=False)
         self.assertEqual(c4.exception.code, hg.DENY_NO_GRANT)
         self.assertEqual(tr2.hits, ["read_bytes"])  # yalnız ham bayt özeti; read_text/JSON ayrıştırma yok
 

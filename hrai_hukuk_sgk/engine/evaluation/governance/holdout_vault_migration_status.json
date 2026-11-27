@@ -1,0 +1,41 @@
+{
+  "schema": "hrai.holdout_vault_migration_status.v1",
+  "status_version": "wp4.6-gcp-vault-prep-2026-11-27-r1",
+  "description": "WP-4.6 GCP HOLDOUT kasasına geçişin GERÇEK durumu. Bu dosya yalnız hazırlık durumunu kaydeder; hiçbir GCP kaynağı oluşturulmamış, HOLDOUT taşınmamış ve doğrulanmamıştır. PREPARATION_COMPLETE != VAULT_PROVISIONED != MIGRATION_VERIFIED.",
+  "vault_id": "HOLDOUT-WP45-V1.2-30-SEALED-20261126",
+  "status": {
+    "gcp_project": "NOT_CREATED",
+    "vault_bucket": "NOT_PROVISIONED",
+    "kms_key": "NOT_CREATED",
+    "data_region": "UNDECIDED",
+    "kvkk_review": "PENDING",
+    "custodian": "CORPORATE_CLOUD_ADMIN_ROLE_PENDING_NAMED_OWNER",
+    "vault_migration": "NOT_STARTED",
+    "restore_verification": "NOT_STARTED",
+    "migration_verification": "NOT_VERIFIED"
+  },
+  "custodian_model": "kurumsal_bulut",
+  "named_custodians": [],
+  "named_custodians_note": "Gerçek kişi adı belirlenmemiştir; isim uydurulmaz. Emanetçi kaydı holdout_vault_registry.json custodian_enrollment_policy kuralına tabidir.",
+  "safety_flags": {
+    "holdout_deletion_allowed": false,
+    "git_history_rewrite_allowed": false,
+    "repository_visibility_change_performed": false,
+    "gcp_resources_created_by_this_work": false,
+    "credentials_created_by_this_work": false
+  },
+  "package_exclusion": {
+    "source": "holdout_vault_registry.vaults[].file_relpath",
+    "applies_to": ["deterministic_release_zip", "ci_clean_extract", "ci_artifacts", "distribution_packages", "test_fixture_packages"],
+    "working_tree_copy_retained": true,
+    "absence_means_migrated": false,
+    "verification_method": "Dosya yolu ve metadata (yol listesi, kayıtlı SHA-256 ile artifact aday dosya özetlerinin karşılaştırılması). HOLDOUT dosyası okunmaz/ayrıştırılmaz."
+  },
+  "production_gates_unchanged": {
+    "production_use_authorized": false,
+    "qualified_e_signature_5070_production_ready": false,
+    "qualified_e_signature_5070_equivalent": false,
+    "kvkk_data_residency_approved": false,
+    "test_sandbox_keys_allowed_in_production": false
+  }
+}

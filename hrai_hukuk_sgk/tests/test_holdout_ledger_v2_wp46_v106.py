@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import replace
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import tempfile
@@ -28,7 +29,7 @@ from engine.evaluation import (
 )
 from engine.evaluation import holdout_governance as hg
 
-from tests.holdout_test_support import SyntheticHoldoutVault, synthetic_holdout_case
+from tests.holdout_test_support import RegisteredVaultFileReadGuard, SyntheticHoldoutVault, synthetic_holdout_case
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SPEC_PATH = PROJECT_ROOT / "docs" / "WP4_5_EVALUATION_SPEC.md"
@@ -348,33 +349,92 @@ class TestSpecV13AndWp1Pins(unittest.TestCase):
         trust = json.loads((PROJECT_ROOT / "config" / "production_trust_root_config.json").read_text(encoding="utf-8"))
         self.assertEqual(trust["deployment_status"], "NOT_CONFIGURED")
 
-    def test_16_audit_archive_manifest_matches_preserved_files(self) -> None:
-        """Arşiv manifestindeki boyut ve SHA-256 değerleri yerinde korunan dosyalarla eşleşir (ham bayt)."""
-        man_path = PROJECT_ROOT / "engine" / "evaluation" / "governance" / "archive" / "HOLDOUT_V1_2_AUDIT_ARCHIVE_MANIFEST_20261127.json"
-        man = json.loads(man_path.read_text(encoding="utf-8"))
-        self.assertEqual(man["vault_status"]["consumption"], "CONSUMED")
-        self.assertEqual(man["vault_status"]["blindness"], "CONTAMINATED")
-        # Paths come from the vault registry (no direct HOLDOUT path in test code; raw bytes only).
-        raw_vault = load_holdout_vault_registry().raw["vaults"][0]
-        holdout_rel = Path(raw_vault["file_relpath"])
-        on_disk = {
-            holdout_rel.name: PROJECT_ROOT / holdout_rel,
-            Path(raw_vault["consumption_evidence_relpath"]).name: PROJECT_ROOT / raw_vault["consumption_evidence_relpath"],
-        }
-        checked = 0
-        for entry in man["entries"]:
-            path = on_disk.get(entry["file_name"])
-            if path is None:
-                continue  # git-history-only entries (verified by blob id outside CI)
-            raw = path.read_bytes()
-            self.assertEqual(len(raw), entry["size_bytes"], entry["file_name"])
-            self.assertEqual(hashlib.sha256(raw).hexdigest(), entry["sha256"], entry["file_name"])
-            checked += 1
-        self.assertEqual(checked, 2)
+    def test_16_holdout_excluded_from_packages_and_archive_reference_pinned_without_reading(self) -> None:
+        """WP-4.6 vault hazırlığı: HOLDOUT yeni ZIP/CI artifact'lerinde yok; arşiv manifesti tarihsel referansla
+        tutarlı; yokluk taşıma sayılmaz (NOT_VERIFIED); kasa doğrulanmadan silme/geçmiş yeniden yazımı reddedilir.
+        HOLDOUT dosyası hiçbir adımda açılmaz, okunmaz veya ayrıştırılmaz (yalnız yol ve metadata)."""
+        from engine.evaluation import holdout_vault as hv
+
+        registry = load_holdout_vault_registry()
+        raw_vault = registry.raw["vaults"][0]
+        holdout_rel = raw_vault["file_relpath"]  # path from registry metadata (no direct path in test code)
+        holdout_name = Path(holdout_rel).name
+        target = PROJECT_ROOT / holdout_rel
+        ev_rel = raw_vault["consumption_evidence_relpath"]
+
+        with RegisteredVaultFileReadGuard([target]) as guard:
+            # (3) Archive manifest exists and keeps CONSUMED + CONTAMINATED.
+            man_path = hv.DEFAULT_AUDIT_ARCHIVE_MANIFEST_PATH
+            self.assertTrue(man_path.is_file())
+            man = json.loads(man_path.read_text(encoding="utf-8"))
+            self.assertEqual(man["vault_status"]["consumption"], "CONSUMED")
+            self.assertEqual(man["vault_status"]["blindness"], "CONTAMINATED")
+            self.assertEqual(man["vault_status"]["max_authorized_runs"], 0)
+
+            # (4) File identity + SHA-256 consistent with the pinned historical reference (no substitution).
+            ref = hv.load_historical_holdout_reference()
+            self.assertEqual(ref.vault_id, "HOLDOUT-WP45-V1.2-30-SEALED-20261126")
+            self.assertEqual(ref.file_sha256, "b809245fa04ee6de2daf4189c115ba03860b1bd54213dfc88b86ce7a1625730f")
+            self.assertEqual(ref.git_blob_sha1, "542fa53d2d86dfebd88207d5231cf876859e6dd2")
+            self.assertEqual(ref.size_bytes, 78895)
+            self.assertEqual(ref.file_name, holdout_name)
+            ho_entry = next(e for e in man["entries"] if e["file_name"] == holdout_name)
+            self.assertEqual(ho_entry["sha256"], raw_vault["file_sha256"])
+            # Consumption evidence is not HOLDOUT content: its raw bytes stay pinned by the manifest.
+            ev_entry = next(e for e in man["entries"] if e["file_name"] == Path(ev_rel).name)
+            ev_raw = (PROJECT_ROOT / ev_rel).read_bytes()
+            self.assertEqual(len(ev_raw), ev_entry["size_bytes"])
+            self.assertEqual(hashlib.sha256(ev_raw).hexdigest(), ev_entry["sha256"])
+
+            # (1) Not in new release ZIPs: the package plan (names only) excludes every registered vault file.
+            excluded = hv.package_exclusion_relpaths(registry)
+            self.assertIn(holdout_rel, excluded)
+            plan = hv.plan_release_package(PROJECT_ROOT, excluded)
+            self.assertNotIn(holdout_rel, plan)
+            self.assertFalse(any(Path(p).name == holdout_name for p in plan))
+
+            # (2) Not in CI artifacts: CI runs this suite on the clean package extract, which must carry the
+            # exclusion manifest and must not contain the file. From the source tree, Git metadata pins it.
+            pkg = hv.load_package_exclusion_manifest(PROJECT_ROOT)
+            if pkg is not None:
+                self.assertFalse(os.path.lexists(target))
+                self.assertEqual([e["relpath"] for e in pkg["excluded"]], list(excluded))
+                self.assertEqual(pkg["excluded"][0]["registered_sha256"], ref.file_sha256)
+                self.assertIs(pkg["absence_means_migrated"], False)
+            else:
+                git_meta = hv.verify_holdout_git_metadata(PROJECT_ROOT, holdout_rel, ref.git_blob_sha1)
+                self.assertEqual(
+                    git_meta.get("mode"), "GIT",
+                    "Paket/extract PACKAGE_EXCLUSION_MANIFEST içermiyor: kasa dosyası pakete girmiş olabilir; "
+                    "paket ci.release_package_policy ile üretilmelidir.",
+                )
+                self.assertEqual(git_meta, {"mode": "GIT", "git_blob_sha1": ref.git_blob_sha1, "working_tree": "CLEAN"})
+
+            # (5) + (6) Absence is never read as a completed migration; unverified vault => NOT_VERIFIED.
+            status = hv.load_vault_migration_status()
+            for present in (True, False, None):
+                self.assertEqual(hv.derive_migration_state(status, local_file_present=present), "NOT_VERIFIED")
+            self.assertEqual(status.get("vault_migration"), "NOT_STARTED")
+            self.assertEqual(status.get("restore_verification"), "NOT_STARTED")
+            self.assertEqual(status.get("vault_bucket"), "NOT_PROVISIONED")
+            self.assertEqual(hv.readiness_level(status, preparation_checks_passed=True), "PREPARATION_COMPLETE")
+
+            # (7) No deletion and no Git history rewrite before the vault is verified (even with two approvals).
+            approvals = (
+                hv.OperatorApproval("APPROVER-A", "AUTHORIZED_CUSTODIAN", "DELETE_IN_REPO_HOLDOUT"),
+                hv.OperatorApproval("APPROVER-B", "CORPORATE_CLOUD_ADMIN", "DELETE_IN_REPO_HOLDOUT"),
+            )
+            with self.assertRaises(hv.VaultOperationRefused) as c_del:
+                hv.authorize_holdout_deletion(status, requester_id="REQUESTER-X", approvals=approvals)
+            self.assertEqual(c_del.exception.code, hv.VAULT_DELETION_FORBIDDEN)
+            with self.assertRaises(hv.VaultOperationRefused) as c_git:
+                hv.authorize_git_history_rewrite(status)
+            self.assertEqual(c_git.exception.code, hv.VAULT_HISTORY_REWRITE_FORBIDDEN)
+
+        self.assertEqual(guard.hits, [])  # the HOLDOUT file was never opened or read
         statuses = {r["record"]: r["status"] for r in man["unavailable_records"]}
         self.assertTrue(all(v in {"UNAVAILABLE", "UNVERIFIED_CLAIM"} for v in statuses.values()))
         self.assertEqual(statuses["access_count_for_version=1 iddiası"], "UNVERIFIED_CLAIM")
-
 
 if __name__ == "__main__":
     unittest.main()

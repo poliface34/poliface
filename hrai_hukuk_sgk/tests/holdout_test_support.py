@@ -192,3 +192,66 @@ class SyntheticHoldoutVault:
 
     def ledger_records(self) -> tuple[dict[str, Any], ...]:
         return HoldoutAccessLedger(ledger_path=self.ledger_path).verify()
+
+
+class RegisteredVaultFileReadGuard:
+    """Records any attempt to open/read/stat-for-content a registered vault file (path from registry).
+
+    Used by WP-4.6 vault preparation tests to prove that the real HOLDOUT file is never opened. Paths
+    are taken from the vault registry metadata, so no HOLDOUT file name is hard-coded in test code.
+    """
+
+    def __init__(self, targets: "list[Path] | tuple[Path, ...]") -> None:
+        import builtins as _builtins
+        import os as _os
+        from unittest import mock as _mock
+
+        self._builtins = _builtins
+        self._os = _os
+        self._mock = _mock
+        self.targets = {Path(t).resolve() for t in targets}
+        self.hits: list[str] = []
+        self._patches: list[Any] = []
+
+    def _check(self, p: object, api: str) -> None:
+        try:
+            if Path(self._os.fspath(p)).resolve() in self.targets:  # type: ignore[arg-type]
+                self.hits.append(api)
+        except TypeError:
+            pass
+
+    def __enter__(self) -> "RegisteredVaultFileReadGuard":
+        real_open, real_os_open = self._builtins.open, self._os.open
+        real_rt, real_rb = Path.read_text, Path.read_bytes
+        guard = self
+
+        def t_open(file, *a, **k):
+            guard._check(file, "open")
+            return real_open(file, *a, **k)
+
+        def t_os_open(path, *a, **k):
+            guard._check(path, "os.open")
+            return real_os_open(path, *a, **k)
+
+        def t_rt(self_p, *a, **k):
+            guard._check(self_p, "read_text")
+            return real_rt(self_p, *a, **k)
+
+        def t_rb(self_p, *a, **k):
+            guard._check(self_p, "read_bytes")
+            return real_rb(self_p, *a, **k)
+
+        self._patches = [
+            self._mock.patch("builtins.open", t_open),
+            self._mock.patch("io.open", t_open),
+            self._mock.patch("os.open", t_os_open),
+            self._mock.patch.object(Path, "read_text", t_rt),
+            self._mock.patch.object(Path, "read_bytes", t_rb),
+        ]
+        for p in self._patches:
+            p.start()
+        return self
+
+    def __exit__(self, *exc: object) -> None:
+        for p in reversed(self._patches):
+            p.stop()
