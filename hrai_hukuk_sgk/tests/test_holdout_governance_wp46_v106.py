@@ -296,7 +296,7 @@ class TestHoldoutGovernanceWp46(unittest.TestCase):
 
         denied = [r for r in HoldoutAccessLedger(ledger_path=ledger_path).verify() if r["event_type"] == "ACCESS_DENIED"]
         self.assertEqual([r["decision_code"] for r in denied], [hg.DENY_VAULT_CONSUMED])
-        self.assertEqual(denied[0]["vault_id"], REAL_VAULT_ID)
+        self.assertEqual(denied[0]["dataset_id"], REAL_VAULT_ID)
 
     def test_06_consumed_status_blocks_even_valid_custodian(self) -> None:
         """Kasa CONSUMED işaretlenince geçerli emanetçi imzası da grant üretemez; HOLDOUT içeren dosya grant'siz yüklenemez."""
@@ -358,8 +358,8 @@ class TestHoldoutGovernanceWp46(unittest.TestCase):
         def rehash_middle(ls):
             rec = json.loads(ls[1])
             rec["operator_id"] = "SOMEONE-ELSE"
-            body = {k: v for k, v in rec.items() if k != "record_sha256"}
-            rec["record_sha256"] = hg._record_sha256(body)
+            body = {k: v for k, v in rec.items() if k != "record_hash"}
+            rec["record_hash"] = hg._record_hash(body)
             from engine.attestation_verifier import canonical_json_bytes
 
             ls[1] = canonical_json_bytes(rec).decode("utf-8") + "\n"
@@ -493,15 +493,17 @@ class TestHoldoutGovernanceWp46(unittest.TestCase):
         self.assertEqual(g["operator_id"], "AUDITOR-E2E")
         self.assertEqual(g["custodian_id"], vault.custodian_id)
         self.assertEqual(g["purpose"], "FINAL_BLIND_VERIFICATION")
-        self.assertEqual(g["vault_file_sha256"], vault.file_sha256)
+        self.assertEqual(g["dataset_sha256"], vault.file_sha256)
         self.assertEqual(g["details"]["case_set_sha256"], vault.case_set_sha256)
-        self.assertEqual(len(g["details"]["request_signature_sha256"]), 64)
+        self.assertEqual(g["signature_algorithm"], "ED25519")
+        self.assertEqual(g["signature_key_id"], vault.key_id)
+        self.assertTrue(g["signature"])
         self.assertTrue(all(r["grant_id"] == grant.grant_id for r in recs[1:]))
         self.assertEqual(recs[2]["details"]["file_sha256"], vault.file_sha256)
         self.assertEqual(recs[4]["details"]["run_manifest_sha256"], rpt.run_manifest.manifest_sha256)
         self.assertEqual(recs[4]["details"]["holdout_redacted_count"], "1")
         for prev, cur in zip(recs, recs[1:]):
-            self.assertEqual(cur["previous_record_sha256"], prev["record_sha256"])
+            self.assertEqual(cur["previous_record_hash"], prev["record_hash"])
 
         # Vault bytes changed after registration -> refused before parsing.
         vault2 = self._vault("mutated", cases=(c_syn,))
